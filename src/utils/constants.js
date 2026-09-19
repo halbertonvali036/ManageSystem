@@ -1,0 +1,33 @@
+import {
+  Award,
+  BarChart3,
+  BookMarked,
+  BookOpen,
+  Building2,
+  ClipboardCheck,
+  GraduationCap,
+  LayoutDashboard,
+  School,
+  Settings,
+  ShieldCheck,
+  UserCog,
+  Users,
+} from 'lucide-react'
+
+export const APP_NAME = 'Student Management System'
+
+export const SIDEBAR_ITEMS = [
+  { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, section: 'Overview' },
+  { label: 'Students', path: '/students', icon: GraduationCap, section: 'Academic' },
+  { label: 'Teachers', path: '/teachers', icon: Users },
+  { label: 'Departments', path: '/departments', icon: Building2 },
+  { label: 'Subjects', path: '/subjects', icon: BookMarked },
+  { label: 'Courses', path: '/courses', icon: BookOpen },
+  { label: 'Classes', path: '/classes', icon: School },
+  { label: 'Attendance', path: '/attendance', icon: ClipboardCheck },
+  { label: 'Grades', path: '/grades', icon: Award },
+  { label: 'Reports', path: '/reports', icon: BarChart3, section: 'Insights' },
+  { label: 'Users', path: '/users', icon: UserCog, section: 'System' },
+  { label: 'Roles', path: '/roles', icon: ShieldCheck },
+  { label: 'Settings', path: '/settings', icon: Settings },
+]

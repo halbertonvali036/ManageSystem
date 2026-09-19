@@ -1,0 +1,124 @@
+/* ============================================================
+   Teacher Panel
+   Role-specific layer on top of the shared admin design system.
+   Reuses layout tokens and primitives from global.css / motion.css.
+   ============================================================ */
+
+/* ── Sidebar — teal accent, same shell as the admin sidebar ── */
+.teacher-sidebar {
+  background:
+    radial-gradient(
+      420px 320px at 0% 0%,
+      rgba(20, 184, 166, 0.16),
+      transparent 60%
+    ),
+    linear-gradient(180deg, #071313 0%, #0a2430 100%);
+}
+
+.teacher-sidebar .sidebar__link--active,
+.teacher-sidebar .sidebar__link--active:hover {
+  background: linear-gradient(90deg, #0d9488 0%, #0f766e 100%);
+  box-shadow: 0 8px 18px -8px rgba(13, 148, 136, 0.7);
+}
+
+.teacher-sidebar .sidebar__brand-logo {
+  box-shadow: 0 6px 16px -6px rgba(13, 148, 136, 0.6);
+}
+
+.brand-logo.teacher-brand-logo {
+  background: linear-gradient(135deg, #14b8a6, #0d9488);
+  box-shadow: 0 6px 16px -6px rgba(13, 148, 136, 0.6);
+}
+
+/* ── Topbar — role context pill ───────────────────────────── */
+.app-header__start {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.teacher-context {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 5px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0f766e;
+  background: rgba(13, 148, 136, 0.12);
+  border: 1px solid rgba(13, 148, 136, 0.28);
+  border-radius: var(--radius-full);
+}
+
+/* ── Placeholder module pages ─────────────────────────────── */
+.teacher-placeholder__badge {
+  display: inline-flex;
+  align-items: center;
+  margin-top: var(--space-4);
+  padding: 6px 14px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #0f766e;
+  background: rgba(13, 148, 136, 0.12);
+  border: 1px solid rgba(13, 148, 136, 0.28);
+  border-radius: var(--radius-full);
+}
+
+/* ── Teacher tables / summary cards ───────────────────────── */
+.teacher-table-id,
+.teacher-table-cell {
+  min-width: 0;
+}
+
+.teacher-table-cell {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.teacher-table-id {
+  white-space: nowrap;
+}
+
+.summary-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.summary-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 5px 12px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.summary-chip__count {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.summary-average {
+  margin-bottom: var(--space-4);
+  font-size: 0.9rem;
+  color: var(--color-text-soft);
+}
+
+.summary-average strong {
+  color: var(--color-text);
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .teacher-context {
+    display: none;
+  }
+}

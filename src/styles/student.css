@@ -1,0 +1,388 @@
+/* ============================================================
+   Student Panel
+   Role-specific layer on top of the shared admin design system.
+   Reuses layout tokens and primitives from global.css / motion.css.
+   ============================================================ */
+
+/* ── Sidebar — amber accent, same shell as the admin sidebar ── */
+.student-sidebar {
+  background:
+    radial-gradient(
+      420px 320px at 0% 0%,
+      rgba(245, 158, 11, 0.14),
+      transparent 60%
+    ),
+    linear-gradient(180deg, #191002 0%, #2c1a06 100%);
+}
+
+.student-sidebar .sidebar__link--active,
+.student-sidebar .sidebar__link--active:hover {
+  background: linear-gradient(90deg, #d97706 0%, #b45309 100%);
+  box-shadow: 0 8px 18px -8px rgba(217, 119, 6, 0.7);
+}
+
+.student-sidebar .sidebar__brand-logo {
+  box-shadow: 0 6px 16px -6px rgba(217, 119, 6, 0.6);
+}
+
+.brand-logo.student-brand-logo {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 6px 16px -6px rgba(217, 119, 6, 0.6);
+}
+
+/* ── Topbar — role context pill ───────────────────────────── */
+.student-context {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 5px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #b45309;
+  background: rgba(217, 119, 6, 0.12);
+  border: 1px solid rgba(217, 119, 6, 0.28);
+  border-radius: var(--radius-full);
+}
+
+/* ── Placeholder module pages ─────────────────────────────── */
+.student-placeholder__badge {
+  display: inline-flex;
+  align-items: center;
+  margin-top: var(--space-4);
+  padding: 6px 14px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #b45309;
+  background: rgba(217, 119, 6, 0.12);
+  border: 1px solid rgba(217, 119, 6, 0.28);
+  border-radius: var(--radius-full);
+}
+
+/* ── Student Schedule ─────────────────────────────────────── */
+.student-schedule-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.student-schedule-nav__group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.student-schedule-mode {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.student-schedule-mode__btn {
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-soft);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.student-schedule-mode__btn:hover:not(:disabled) {
+  color: var(--color-text);
+}
+
+.student-schedule-mode__btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.student-schedule-mode__btn--active {
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.student-schedule-nav__arrow {
+  color: var(--color-text-muted);
+}
+
+.student-schedule-nav__arrow:hover:not(:disabled) {
+  color: var(--color-text);
+}
+
+.student-schedule-nav__label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.student-schedule-nav__picker-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-soft);
+}
+
+.student-schedule-nav__picker {
+  width: auto;
+}
+
+.student-schedule-week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(150px, 1fr));
+  gap: var(--space-3);
+  overflow-x: auto;
+  align-items: stretch;
+}
+
+.student-schedule-week__day {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-height: 140px;
+  padding: var(--space-3);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.student-schedule-week__day--today {
+  border-color: rgba(217, 119, 6, 0.55);
+  background: rgba(217, 119, 6, 0.04);
+}
+
+.student-schedule-week__day-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.student-schedule-week__day-name {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.student-schedule-week__day-date {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.student-schedule-week__day-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.student-schedule-week__empty {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.student-schedule-day {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.student-schedule-day__heading {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.student-schedule-day__empty {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.student-schedule-day__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.student-schedule-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-card-bg, var(--color-bg));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.student-schedule-item__time {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.student-schedule-item__time .status-badge {
+  margin-left: auto;
+}
+
+.student-schedule-item__class {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+
+.student-schedule-item__course,
+.student-schedule-item__teacher,
+.student-schedule-item__room,
+.student-schedule-item__date {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--color-text-soft);
+  overflow-wrap: anywhere;
+}
+
+.student-schedule-item__date {
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.student-schedule-item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.student-schedule-item__actions .btn {
+  white-space: nowrap;
+}
+
+.profile-header .card__body {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.profile-header__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.profile-header__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.profile-header__name {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-header__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.profile-header__meta-value {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.profile-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+.profile-header__actions .btn {
+  white-space: nowrap;
+}
+
+.student-grade-stats {
+  margin-bottom: var(--space-4);
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .student-context {
+    display: none;
+  }
+
+  .student-schedule-nav {
+    align-items: stretch;
+  }
+
+  .student-schedule-nav__group {
+    justify-content: center;
+  }
+
+  .student-schedule-week {
+    grid-template-columns: 1fr;
+    overflow-x: visible;
+  }
+
+  .profile-header__actions {
+    margin-left: 0;
+    width: 100%;
+  }
+}
