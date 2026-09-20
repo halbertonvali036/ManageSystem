@@ -17,6 +17,9 @@ const buildQuery = (params) => {
   if (params.academicYear) {
     query.set('academicYear', params.academicYear)
   }
+  if (params.semester) {
+    query.set('semester', params.semester)
+  }
   if (params.status) {
     query.set('status', params.status)
   }

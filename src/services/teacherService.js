@@ -5,6 +5,7 @@ const TEACHER_CLASSES_PATH = '/teacher/classes'
 const TEACHER_STUDENTS_PATH = '/teacher/students'
 const TEACHER_ATTENDANCE_PATH = '/teacher/attendance'
 const TEACHER_GRADES_PATH = '/teacher/grades'
+const TEACHER_ASSESSMENTS_PATH = '/teacher/assessments'
 const TEACHER_SCHEDULE_PATH = '/teacher/schedule'
 
 const ensureBackendConnection = () => {
@@ -158,6 +159,9 @@ const buildGradeQuery = (params) => {
   if (params.assessmentType) {
     query.set('assessmentType', params.assessmentType)
   }
+  if (params.assessmentId) {
+    query.set('assessmentId', params.assessmentId)
+  }
   const queryString = query.toString()
   return queryString ? `?${queryString}` : ''
 }
@@ -184,6 +188,37 @@ const saveMyBulkGrades = async (context, records) => {
     ...context,
     records,
   })
+  return response
+}
+
+const buildAssessmentQuery = (params) => {
+  const query = new URLSearchParams()
+  if (params.search) {
+    query.set('search', params.search)
+  }
+  if (params.type) {
+    query.set('type', params.type)
+  }
+  if (params.status) {
+    query.set('status', params.status)
+  }
+  const queryString = query.toString()
+  return queryString ? `?${queryString}` : ''
+}
+
+const getMyAssessments = async (params = {}) => {
+  if (!config.api.baseUrl) {
+    return []
+  }
+  const response = await httpClient.get(
+    `${TEACHER_ASSESSMENTS_PATH}${buildAssessmentQuery(params)}`,
+  )
+  return Array.isArray(response) ? response : response.data ?? []
+}
+
+const getMyAssessment = async (id) => {
+  ensureBackendConnection()
+  const response = await httpClient.get(`${TEACHER_ASSESSMENTS_PATH}/${id}`)
   return response
 }
 
@@ -237,6 +272,8 @@ const teacherService = {
   getMyGrades,
   createMyGrade,
   saveMyBulkGrades,
+  getMyAssessments,
+  getMyAssessment,
   getMySchedule,
   getMyScheduleByDate,
   getMyScheduleByWeek,

@@ -2,8 +2,10 @@ import {
   Award,
   CalendarDays,
   ClipboardCheck,
+  ClipboardList,
   GraduationCap,
   LayoutDashboard,
+  Megaphone,
   School,
   UserCircle,
 } from 'lucide-react'
@@ -17,6 +19,8 @@ export const TEACHER_NAV_ITEMS = [
   { label: 'My Students', path: '/teacher/students', icon: GraduationCap },
   { label: 'Attendance', path: '/teacher/attendance', icon: ClipboardCheck },
   { label: 'Grades', path: '/teacher/grades', icon: Award },
+  { label: 'Assessments', path: '/teacher/assessments', icon: ClipboardList },
+  { label: 'Announcements', path: '/teacher/announcements', icon: Megaphone },
   { label: 'Schedule', path: '/teacher/schedule', icon: CalendarDays },
   { label: 'Profile', path: '/teacher/profile', icon: UserCircle, section: 'Account' },
 ]

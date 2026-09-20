@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Save } from 'lucide-react'
+import { useSearchParams } from 'react-router-dom'
 import Card from '@/components/common/Card'
 import BulkGradeControls from '@/components/grades/BulkGradeControls'
 import BulkGradeTable from '@/components/grades/BulkGradeTable'
@@ -19,6 +20,21 @@ const UNAVAILABLE_HINT = {
 }
 
 function TeacherBulkGradesPage() {
+  const [searchParams] = useSearchParams()
+  const { handleContextChange } = useTeacherBulkGrades()
+  const prefilledAssessmentRef = useRef(false)
+
+  useEffect(() => {
+    const searchParamAssessmentId = searchParams.get('assessmentId')
+    if (
+      searchParamAssessmentId &&
+      !prefilledAssessmentRef.current
+    ) {
+      prefilledAssessmentRef.current = true
+      handleContextChange('assessmentId', searchParamAssessmentId)
+    }
+  }, [searchParams, handleContextChange])
+
   const {
     classId,
     courseId,
@@ -26,7 +42,6 @@ function TeacherBulkGradesPage() {
     assessmentName,
     maxScore,
     date,
-    handleContextChange,
     rows,
     isLoadingStudents,
     loadError,

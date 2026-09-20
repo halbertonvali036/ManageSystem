@@ -1,6 +1,10 @@
 import { Link, useLocation } from 'react-router-dom'
 import { TEACHER_NAV_ITEMS } from '@/utils/teacherConstants'
 
+const FALLBACK_TITLES = {
+  '/notifications': 'Notifications',
+}
+
 const findPageTitle = (pathname) => {
   const match = TEACHER_NAV_ITEMS.find(
     (item) => pathname === item.path || pathname.startsWith(`${item.path}/`),
@@ -8,7 +12,7 @@ const findPageTitle = (pathname) => {
   if (match) {
     return match.label
   }
-  return 'Teacher'
+  return FALLBACK_TITLES[pathname] ?? 'Teacher'
 }
 
 function TeacherPageHeader() {

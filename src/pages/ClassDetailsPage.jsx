@@ -4,6 +4,7 @@ import { School } from 'lucide-react'
 import Card from '@/components/common/Card'
 import ConfirmDialog from '@/components/common/ConfirmDialog'
 import ClassProfile from '@/components/classes/ClassProfile'
+import ClassRosterCard from '@/components/enrollments/ClassRosterCard'
 import useClass from '@/hooks/useClass'
 import useDeleteClass from '@/hooks/useDeleteClass'
 import { formatClassCourseName, formatClassName } from '@/models/class'
@@ -81,6 +82,7 @@ function ClassDetails({ classId }) {
         onEdit={() => navigate(`/classes/${classId}/edit`)}
         onDelete={() => setShowDeleteDialog(true)}
       />
+      <ClassRosterCard classId={classId} classRecord={classRecord} />
       <ConfirmDialog
         open={showDeleteDialog}
         title="Delete class"

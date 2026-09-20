@@ -200,6 +200,8 @@ export const formatGradeDate = (value) => {
  * @property {string | Object} [course] - Course name or object.
  * @property {string | Object} [class] - Class name or object.
  * @property {keyof typeof GRADE_ASSESSMENT_TYPES | string} [assessmentType]
+ * @property {string} [assessmentName] - Assessment name for display.
+ * @property {string} [assessmentId] - Optional linked assessment reference.
  * @property {number | string} [score]
  * @property {number | string} [maximumScore]
  * @property {number | string} [percentage]

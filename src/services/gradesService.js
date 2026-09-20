@@ -26,6 +26,9 @@ const buildQuery = (params) => {
   if (params.assessmentType) {
     query.set('assessmentType', params.assessmentType)
   }
+  if (params.assessmentId) {
+    query.set('assessmentId', params.assessmentId)
+  }
   const queryString = query.toString()
   return queryString ? `?${queryString}` : ''
 }

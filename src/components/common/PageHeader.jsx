@@ -3,6 +3,7 @@ import { SIDEBAR_ITEMS } from '@/utils/constants'
 
 const FALLBACK_TITLES = {
   '/403': 'Access denied',
+  '/notifications': 'Notifications',
 }
 
 const findPageTitle = (pathname) => {

@@ -1,4 +1,6 @@
 import { Menu } from 'lucide-react'
+import CommandPaletteTrigger from '@/components/commandPalette/CommandPaletteTrigger'
+import NotificationBell from '@/components/notifications/NotificationBell'
 import UserMenu from '@/components/layout/UserMenu'
 
 function AppHeader({ onOpenMobile }) {
@@ -12,7 +14,11 @@ function AppHeader({ onOpenMobile }) {
       >
         <Menu size={22} aria-hidden="true" />
       </button>
-      <UserMenu />
+      <div className="app-header__actions">
+        <CommandPaletteTrigger />
+        <NotificationBell />
+        <UserMenu />
+      </div>
     </header>
   )
 }

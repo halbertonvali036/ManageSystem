@@ -1,13 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
 import studentsService from '@/services/studentsService'
 
-function useStudents(filters = {}) {
+function useStudents(filters = {}, options = {}) {
   const { search, classId, status } = filters
+  const enabled = options.enabled !== false
   const [students, setStudents] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
+    if (!enabled) {
+      return undefined
+    }
     let isActive = true
 
     studentsService
@@ -33,9 +37,12 @@ function useStudents(filters = {}) {
     return () => {
       isActive = false
     }
-  }, [search, classId, status])
+  }, [search, classId, status, enabled])
 
   const refetch = useCallback(() => {
+    if (!enabled) {
+      return
+    }
     setIsLoading(true)
     setError(null)
     studentsService
@@ -46,7 +53,7 @@ function useStudents(filters = {}) {
         setStudents([])
       })
       .finally(() => setIsLoading(false))
-  }, [search, classId, status])
+  }, [search, classId, status, enabled])
 
   return { students, isLoading, error, refetch }
 }

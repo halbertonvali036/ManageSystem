@@ -96,6 +96,16 @@ const getMyGrade = async (id) => {
   return response
 }
 
+const getMyAssessments = async (params = {}) => {
+  if (!config.api.baseUrl) {
+    return []
+  }
+  const response = await httpClient.get(
+    `${STUDENT_PATH}/assessments${buildQuery(params)}`,
+  )
+  return toList(response)
+}
+
 const getMyProfile = async () => {
   if (!config.api.baseUrl) {
     return null
@@ -140,6 +150,7 @@ const studentService = {
   getMyAttendanceRecord,
   getMyGrades,
   getMyGrade,
+  getMyAssessments,
   getMyProfile,
   updateMyProfile,
   changeMyPassword,

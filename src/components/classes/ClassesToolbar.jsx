@@ -8,19 +8,46 @@ const STATUS_OPTIONS = [
   { value: CLASS_STATUS.COMPLETED, label: 'Completed' },
 ]
 
+const toAcademicYearValue = (academicYear) =>
+  academicYear?.name ??
+  academicYear?.academicYear ??
+  (typeof academicYear === 'string' ? academicYear : academicYear?.id) ??
+  ''
+
+const toSemesterValue = (semester) =>
+  semester?.name ??
+  semester?.semester ??
+  (typeof semester === 'string' ? semester : semester?.id) ??
+  ''
+
 function ClassesToolbar({
   search,
   onSearchChange,
   academicYears = [],
+  academicYearsLoading = false,
   academicYearFilter,
   onAcademicYearChange,
+  semesters = [],
+  semestersLoading = false,
+  semesterFilter,
+  onSemesterChange,
   statusFilter,
   onStatusChange,
   onClearFilters,
   onAdd,
 }) {
   const hasActiveFilters =
-    search !== '' || academicYearFilter !== 'all' || statusFilter !== 'all'
+    search !== '' ||
+    academicYearFilter !== 'all' ||
+    semesterFilter !== 'all' ||
+    statusFilter !== 'all'
+
+  const yearsAvailable = academicYears.length > 0
+  const semesterOptions = semesters.map((semester) => ({
+    value: String(toSemesterValue(semester)).trim(),
+    label: toSemesterValue(semester) || '—',
+  }))
+  const semestersAvailable = semesterOptions.length > 0
 
   return (
     <div className="students-toolbar">
@@ -42,11 +69,60 @@ function ClassesToolbar({
           value={academicYearFilter}
           onChange={(event) => onAcademicYearChange(event.target.value)}
           aria-label="Filter by academic year"
+          disabled={academicYearsLoading || !yearsAvailable}
+          title={
+            academicYearsLoading
+              ? 'Loading academic years\u2026'
+              : yearsAvailable
+                ? 'Filter by academic year'
+                : 'No academic years available yet'
+          }
         >
-          <option value="all">All academic years</option>
-          {academicYears.map((academicYear) => (
-            <option key={academicYear} value={academicYear}>
-              {academicYear}
+          <option value="all">
+            {academicYearsLoading
+              ? 'Loading academic years\u2026'
+              : yearsAvailable
+                ? 'All academic years'
+                : 'No academic years available'}
+          </option>
+          {academicYears.map((academicYear) => {
+            const value = toAcademicYearValue(academicYear)
+            return (
+              <option key={value} value={value}>
+                {value}
+              </option>
+            )
+          })}
+        </select>
+
+        <select
+          className="field-select"
+          value={semesterFilter}
+          onChange={(event) => onSemesterChange(event.target.value)}
+          aria-label="Filter by semester"
+          disabled={!academicYearFilter || academicYearFilter === 'all' || semestersLoading}
+          title={
+            academicYearFilter === 'all'
+              ? 'Select an academic year first'
+              : semestersLoading
+                ? 'Loading semesters\u2026'
+                : semestersAvailable
+                  ? 'Filter by semester'
+                  : 'No semesters for this academic year'
+          }
+        >
+          <option value="all">
+            {semestersLoading && academicYearFilter !== 'all'
+              ? 'Loading semesters\u2026'
+              : academicYearFilter === 'all'
+                ? 'All semesters'
+                : semestersAvailable
+                  ? 'All semesters'
+                  : 'No semesters available'}
+          </option>
+          {semesterOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
             </option>
           ))}
         </select>

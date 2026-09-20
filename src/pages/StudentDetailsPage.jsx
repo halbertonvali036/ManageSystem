@@ -4,6 +4,7 @@ import { Users } from 'lucide-react'
 import Card from '@/components/common/Card'
 import ConfirmDialog from '@/components/common/ConfirmDialog'
 import StudentProfile from '@/components/students/StudentProfile'
+import StudentEnrollmentsCard from '@/components/enrollments/StudentEnrollmentsCard'
 import useDeleteStudent from '@/hooks/useDeleteStudent'
 import useStudent from '@/hooks/useStudent'
 import { formatStudentName } from '@/models/student'
@@ -81,6 +82,7 @@ function StudentDetails({ studentId }) {
         onEdit={() => navigate(`/students/${studentId}/edit`)}
         onDelete={() => setShowDeleteDialog(true)}
       />
+      <StudentEnrollmentsCard studentId={studentId} />
       <ConfirmDialog
         open={showDeleteDialog}
         title="Delete student"

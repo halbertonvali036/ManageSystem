@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import Card from '@/components/common/Card'
 import ClassForm from '@/components/classes/ClassForm'
+import useAcademicYears from '@/hooks/useAcademicYears'
 import useCreateClass from '@/hooks/useCreateClass'
 import useCourses from '@/hooks/useCourses'
 import useTeachers from '@/hooks/useTeachers'
@@ -10,6 +11,7 @@ function AddClassPage() {
   const { isSubmitting, submitError, fieldErrors, submit } = useCreateClass()
   const { courses, isLoading: coursesLoading } = useCourses()
   const { teachers, isLoading: teachersLoading } = useTeachers()
+  const { academicYears, isLoading: academicYearsLoading } = useAcademicYears()
 
   const handleCancel = () => {
     navigate('/classes')
@@ -36,8 +38,10 @@ function AddClassPage() {
           serverFieldErrors={fieldErrors}
           courses={courses}
           teachers={teachers}
+          academicYears={academicYears}
           coursesLoading={coursesLoading}
           teachersLoading={teachersLoading}
+          academicYearsLoading={academicYearsLoading}
         />
       </Card>
     </div>

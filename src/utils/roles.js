@@ -29,6 +29,10 @@ export const roleMatchesPortal = (role, pathname) => {
   if (pathname === '/login') {
     return true
   }
+  // Shared notifications page is available to every authenticated role.
+  if (pathname === '/notifications') {
+    return true
+  }
   if (pathname === '/student' || pathname.startsWith('/student/')) {
     return role === ROLES.STUDENT
   }

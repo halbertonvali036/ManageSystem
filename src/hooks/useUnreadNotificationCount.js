@@ -1,38 +1,29 @@
 import { useCallback, useEffect, useState } from 'react'
-import dashboardService from '@/services/dashboardService'
+import notificationsService from '@/services/notificationsService'
 
-const EMPTY_SUMMARY = {
-  totalStudents: 0,
-  totalTeachers: 0,
-  totalCourses: 0,
-  activeClasses: 0,
-  attendance: null,
-  recentActivity: [],
-  upcomingClasses: [],
-}
-
-function useDashboard() {
-  const [summary, setSummary] = useState(EMPTY_SUMMARY)
+function useUnreadNotificationCount() {
+  const [unreadCount, setUnreadCount] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
     let isActive = true
 
-    dashboardService
-      .getSummary()
-      .then((data) => {
+    notificationsService
+      .getUnreadCount()
+      .then((count) => {
         if (!isActive) {
           return
         }
-        setSummary(data)
+        setError(null)
+        setUnreadCount(Number.isFinite(count) ? count : 0)
       })
       .catch((requestError) => {
         if (!isActive) {
           return
         }
         setError(requestError)
-        setSummary(EMPTY_SUMMARY)
+        setUnreadCount(0)
       })
       .finally(() => {
         if (!isActive) {
@@ -49,21 +40,21 @@ function useDashboard() {
   const refetch = useCallback(() => {
     setIsLoading(true)
     setError(null)
-    dashboardService
-      .getSummary()
-      .then((data) => {
-        setSummary(data)
+    notificationsService
+      .getUnreadCount()
+      .then((count) => {
+        setUnreadCount(Number.isFinite(count) ? count : 0)
       })
       .catch((requestError) => {
         setError(requestError)
-        setSummary(EMPTY_SUMMARY)
+        setUnreadCount(0)
       })
       .finally(() => {
         setIsLoading(false)
       })
   }, [])
 
-  return { summary, isLoading, error, refetch }
+  return { unreadCount, isLoading, error, refetch }
 }
 
-export default useDashboard
+export default useUnreadNotificationCount

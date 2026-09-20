@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import useSemesters from '@/hooks/useSemesters'
 import { CLASS_STATUS_LABELS } from '@/models/class'
 import { formatTeacherName } from '@/models/teacher'
 import { extractClassPayload, toClassFormValues } from '@/utils/classForm'
@@ -39,6 +40,18 @@ const toTeacherOptions = (teachers) =>
     return { value: String(value).trim(), label }
   })
 
+const toAcademicYearValue = (academicYear) =>
+  academicYear?.name ??
+  academicYear?.academicYear ??
+  (typeof academicYear === 'string' ? academicYear : academicYear?.id) ??
+  ''
+
+const toSemesterValue = (semester) =>
+  semester?.name ??
+  semester?.semester ??
+  (typeof semester === 'string' ? semester : semester?.id) ??
+  ''
+
 function ClassForm({
   initialValues = EMPTY_VALUES,
   submitLabel = 'Create Class',
@@ -49,8 +62,10 @@ function ClassForm({
   serverFieldErrors,
   courses = [],
   teachers = [],
+  academicYears = [],
   coursesLoading = false,
   teachersLoading = false,
+  academicYearsLoading = false,
 }) {
   const [values, setValues] = useState(() => toClassFormValues(initialValues))
   const [clientErrors, setClientErrors] = useState({})
@@ -59,6 +74,24 @@ function ClassForm({
   const teacherOptions = toTeacherOptions(teachers)
   const coursesAvailable = courseOptions.length > 0
   const teachersAvailable = teacherOptions.length > 0
+
+  const academicYearOptions = academicYears.map((academicYear) => ({
+    value: String(toAcademicYearValue(academicYear)).trim(),
+    label: toAcademicYearValue(academicYear) || '—',
+  }))
+  const yearsAvailable = academicYearOptions.length > 0
+
+  const selectedAcademicYear = academicYears.find(
+    (academicYear) =>
+      String(toAcademicYearValue(academicYear)).trim() === values.academicYear,
+  )
+  const selectedYearId = selectedAcademicYear?.id ?? null
+  const { semesters, isLoading: semestersLoading } = useSemesters(selectedYearId)
+  const semesterOptions = semesters.map((semester) => ({
+    value: String(toSemesterValue(semester)).trim(),
+    label: toSemesterValue(semester) || '—',
+  }))
+  const semestersAvailable = semesterOptions.length > 0
 
   const validate = (toValidate = values) => {
     const errors = {}
@@ -89,11 +122,31 @@ function ClassForm({
       errors.course = 'Course is required.'
     }
 
-    if (!toValidate.academicYear.trim()) {
+    if (
+      toValidate.academicYear &&
+      yearsAvailable &&
+      !academicYearOptions.some(
+        (option) => option.value === String(toValidate.academicYear).trim(),
+      )
+    ) {
+      errors.academicYear = 'Select a valid academic year.'
+    } else if (yearsAvailable && !toValidate.academicYear) {
       errors.academicYear = 'Academic year is required.'
     }
 
-    if (!toValidate.semester.trim()) {
+    if (
+      toValidate.semester &&
+      semestersAvailable &&
+      !semesterOptions.some(
+        (option) => option.value === String(toValidate.semester).trim(),
+      )
+    ) {
+      errors.semester = 'Select a valid semester.'
+    } else if (
+      toValidate.academicYear &&
+      !toValidate.semester &&
+      semestersAvailable
+    ) {
       errors.semester = 'Semester is required.'
     }
 
@@ -145,7 +198,13 @@ function ClassForm({
   }
 
   const setField = (field) => (event) => {
-    setValues((prev) => ({ ...prev, [field]: event.target.value }))
+    const nextValue = event.target.value
+    setValues((prev) => {
+      if (field === 'academicYear') {
+        return { ...prev, academicYear: nextValue, semester: '' }
+      }
+      return { ...prev, [field]: nextValue }
+    })
     setClientErrors((prev) => ({ ...prev, [field]: undefined }))
   }
 
@@ -176,6 +235,10 @@ function ClassForm({
 
   const courseSelectDisabled = isSubmitting || coursesLoading || !coursesAvailable
   const teacherSelectDisabled = isSubmitting || teachersLoading || !teachersAvailable
+  const academicYearSelectDisabled =
+    isSubmitting || academicYearsLoading || !yearsAvailable
+  const semesterSelectDisabled =
+    isSubmitting || semestersLoading || !values.academicYear
 
   return (
     <form className="class-form" onSubmit={handleSubmit} noValidate>
@@ -319,36 +382,81 @@ function ClassForm({
           <label className="form__label" htmlFor="class-academicYear">
             Academic Year <span className="form__required">*</span>
           </label>
-          <input
+          <select
             id="class-academicYear"
-            className={inputClass('academicYear')}
-            type="text"
-            autoComplete="off"
+            className="form__input form__select"
             value={values.academicYear}
             onChange={setField('academicYear')}
             onBlur={handleBlur('academicYear')}
-            placeholder="e.g. 2025-2026"
-            disabled={isSubmitting}
-          />
-          {renderedError('academicYear')}
+            disabled={academicYearSelectDisabled}
+          >
+            {academicYearsLoading ? (
+              <option value="">Loading academic years&hellip;</option>
+            ) : yearsAvailable ? (
+              <>
+                <option value="">Select academic year</option>
+                {academicYearOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </>
+            ) : (
+              <option value="">No academic years available yet</option>
+            )}
+          </select>
+          {!academicYearsLoading && !yearsAvailable ? (
+            <p className="form__hint">
+              Academic year options will appear here once academic year records
+              exist.
+            </p>
+          ) : (
+            renderedError('academicYear')
+          )}
         </div>
 
         <div className="form__field">
           <label className="form__label" htmlFor="class-semester">
             Semester <span className="form__required">*</span>
           </label>
-          <input
+          <select
             id="class-semester"
-            className={inputClass('semester')}
-            type="text"
-            autoComplete="off"
+            className="form__input form__select"
             value={values.semester}
             onChange={setField('semester')}
             onBlur={handleBlur('semester')}
-            placeholder="e.g. Fall 2026"
-            disabled={isSubmitting}
-          />
-          {renderedError('semester')}
+            disabled={semesterSelectDisabled}
+          >
+            {values.academicYear ? (
+              semestersLoading ? (
+                <option value="">Loading semesters&hellip;</option>
+              ) : semestersAvailable ? (
+                <>
+                  <option value="">Select semester</option>
+                  {semesterOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </>
+              ) : (
+                <option value="">No semesters for this academic year</option>
+              )
+            ) : (
+              <option value=""></option>
+            )}
+          </select>
+          {values.academicYear &&
+          !semestersLoading &&
+          yearsAvailable &&
+          !semestersAvailable ? (
+            <p className="form__hint">
+              No semester records exist for this academic year yet. Add
+              semesters from the academic year details page first.
+            </p>
+          ) : (
+            renderedError('semester')
+          )}
         </div>
 
         <div className="form__field">

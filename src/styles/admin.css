@@ -1,0 +1,112 @@
+/* ============================================================
+   Admin Panel
+   Role-specific layer on top of the shared admin design system.
+   Reuses layout tokens and primitives from global.css / motion.css.
+   ============================================================ */
+
+/* ── Admin dashboard upgrade ──────────────────────────────── */
+.admin-dashboard .stat-card-link {
+  display: block;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.admin-dashboard .stat-card-link .stat-card {
+  height: 100%;
+}
+
+.admin-dashboard .dashboard-chip--admin {
+  color: #4338ca;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.28);
+}
+
+.dashboard-chip__link {
+  text-decoration: none;
+}
+
+.dashboard-chip__link:hover,
+.dashboard-chip__link:focus-visible {
+  filter: brightness(1.05);
+}
+
+/* ── Enrollment widget ────────────────────────────────────── */
+.class-item__count {
+  flex-shrink: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+
+.class-item__count-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+/* ── Reports quick access widget ──────────────────────────── */
+.reports-quick {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reports-quick__item + .reports-quick__item {
+  border-top: 1px solid var(--color-border);
+}
+
+.reports-quick__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+}
+
+.reports-quick__link:hover,
+.reports-quick__link:focus-visible {
+  color: var(--color-primary);
+}
+
+.reports-quick__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.reports-quick__title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.reports-quick__link:hover .reports-quick__title,
+.reports-quick__link:focus-visible .reports-quick__title {
+  color: var(--color-primary);
+}
+
+.reports-quick__description {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.reports-quick__icon {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .admin-dashboard .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5);
+  }
+}

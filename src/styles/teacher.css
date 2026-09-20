@@ -1,3 +1,124 @@
+/* ── Teacher dashboard upgrade ─────────────────────────────── */
+.teacher-dashboard .stat-card-link {
+  display: block;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.teacher-dashboard .stat-card-link .stat-card {
+  height: 100%;
+}
+
+.dashboard-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.dashboard-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 4px 11px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: #0f766e;
+  background: rgba(13, 148, 136, 0.12);
+  border: 1px solid rgba(13, 148, 136, 0.28);
+  border-radius: var(--radius-full);
+}
+
+.attendance-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.widget-actions {
+  margin-top: var(--space-4);
+}
+
+.widget-caption {
+  margin: 0 0 var(--space-3);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.widget-empty--compact {
+  padding-block: var(--space-3);
+}
+
+.class-item__subject-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.class-item__subject-link:hover .class-item__subject,
+.class-item__subject-link:focus-visible .class-item__subject {
+  color: var(--color-primary);
+}
+
+.assessments-overview {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.assessments-overview__item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+}
+
+.assessments-overview__item + .assessments-overview__item {
+  border-top: 1px solid var(--color-border);
+}
+
+.assessments-overview__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.assessments-overview__title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+
+.assessments-overview__meta {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.assessments-overview__side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.assessments-overview__grade {
+  font-size: 0.82rem;
+}
+
 /* ============================================================
    Teacher Panel
    Role-specific layer on top of the shared admin design system.
@@ -117,6 +238,13 @@
 }
 
 /* ── Responsive ───────────────────────────────────────────── */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .teacher-dashboard .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-5);
+  }
+}
+
 @media (max-width: 767px) {
   .teacher-context {
     display: none;

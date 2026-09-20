@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { School } from 'lucide-react'
 import Card from '@/components/common/Card'
 import ClassForm from '@/components/classes/ClassForm'
+import useAcademicYears from '@/hooks/useAcademicYears'
 import useClass from '@/hooks/useClass'
 import useCourses from '@/hooks/useCourses'
 import useTeachers from '@/hooks/useTeachers'
@@ -15,6 +16,7 @@ function EditClassContent({ classId }) {
     useUpdateClass(classId)
   const { courses, isLoading: coursesLoading } = useCourses()
   const { teachers, isLoading: teachersLoading } = useTeachers()
+  const { academicYears, isLoading: academicYearsLoading } = useAcademicYears()
 
   const handleCancel = () => {
     navigate(`/classes/${classId}`)
@@ -82,8 +84,10 @@ function EditClassContent({ classId }) {
           serverFieldErrors={fieldErrors}
           courses={courses}
           teachers={teachers}
+          academicYears={academicYears}
           coursesLoading={coursesLoading}
           teachersLoading={teachersLoading}
+          academicYearsLoading={academicYearsLoading}
         />
       </Card>
     </div>

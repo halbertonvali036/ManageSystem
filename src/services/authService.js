@@ -1,5 +1,9 @@
+import config from '@/config'
+import httpClient, { BackendNotConnectedError } from '@/services/httpClient'
+
 const MOCK_LOGIN_DELAY_MS = 600
 const SESSION_STORAGE_KEY = 'managesystem-auth-session'
+const AUTH_PATH = '/auth'
 
 export const DEMO_ACCOUNTS = Object.freeze([
   {
@@ -50,6 +54,32 @@ const clearStoredSession = () => {
   localStorage.removeItem(SESSION_STORAGE_KEY)
 }
 
+// Recovery mutations deliberately refuse to run without a backend.
+// They must not simulate successful password changes or email sends.
+
+const ensureBackendConnection = (message) => {
+  if (!config.api.baseUrl) {
+    throw new BackendNotConnectedError(message)
+  }
+}
+
+const forgotPassword = async (email) => {
+  ensureBackendConnection(
+    'Password recovery is unavailable until the backend is connected.',
+  )
+  await httpClient.post(`${AUTH_PATH}/forgot-password`, { email })
+}
+
+const resetPassword = async (token, newPassword) => {
+  ensureBackendConnection(
+    'Password reset is unavailable until the backend is connected.',
+  )
+  await httpClient.post(`${AUTH_PATH}/reset-password`, {
+    token,
+    newPassword,
+  })
+}
+
 const login = async (credentials, { remember = false } = {}) => {
   await delay(MOCK_LOGIN_DELAY_MS)
 
@@ -84,6 +114,8 @@ const logout = () => {
 const authService = {
   login,
   logout,
+  forgotPassword,
+  resetPassword,
   getStoredSession: readStoredSession,
   clearStoredSession,
 }

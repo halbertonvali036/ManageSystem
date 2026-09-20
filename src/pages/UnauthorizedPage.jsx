@@ -1,15 +1,26 @@
 import { Link } from 'react-router-dom'
+import { Home, ShieldAlert } from 'lucide-react'
+import StatusPage from '@/components/common/StatusPage'
+import useAuth from '@/hooks/useAuth'
+import { getRoleDashboardPath } from '@/utils/roles'
 
 function UnauthorizedPage() {
+  const { user } = useAuth()
+  const dashboardPath = getRoleDashboardPath(user?.role)
+
   return (
-    <section className="page page--centered">
-      <h1>403</h1>
-      <h2>Access denied</h2>
-      <p>You do not have permission to view this page.</p>
-      <Link className="btn btn--primary" to="/dashboard">
-        Back to Dashboard
+    <StatusPage
+      code="403"
+      tone="danger"
+      icon={ShieldAlert}
+      title="Access denied"
+      description="Your account does not have permission to access this area. If you believe this is a mistake, please contact your administrator."
+    >
+      <Link to={dashboardPath} className="btn btn--primary">
+        <Home size={16} aria-hidden="true" />
+        Go to Dashboard
       </Link>
-    </section>
+    </StatusPage>
   )
 }
 

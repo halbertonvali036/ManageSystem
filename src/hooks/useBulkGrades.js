@@ -35,6 +35,7 @@ function useBulkGrades() {
   const [courseId, setCourseId] = useState('')
   const [assessmentType, setAssessmentType] = useState('')
   const [assessmentName, setAssessmentName] = useState('')
+  const [assessmentId, setAssessmentId] = useState('')
   const [maxScore, setMaxScore] = useState('')
   const [date, setDate] = useState(() => toDateInputValue(new Date()))
 
@@ -78,6 +79,9 @@ function useBulkGrades() {
           break
         case 'assessmentName':
           setAssessmentName(value)
+          break
+        case 'assessmentId':
+          setAssessmentId(value)
           break
         case 'maxScore':
           setMaxScore(value)
@@ -214,6 +218,7 @@ function useBulkGrades() {
           courseId,
           assessmentType,
           assessmentName: assessmentName.trim(),
+          assessmentId: assessmentId || null,
           maxScore: maximum,
           date,
         },
@@ -232,13 +237,14 @@ function useBulkGrades() {
     } finally {
       setIsSaving(false)
     }
-  }, [classId, courseId, assessmentType, assessmentName, maxScore, date, rows])
+  }, [classId, courseId, assessmentType, assessmentName, assessmentId, maxScore, date, rows])
 
   return {
     classId,
     courseId,
     assessmentType,
     assessmentName,
+    assessmentId,
     maxScore,
     date,
     handleContextChange,

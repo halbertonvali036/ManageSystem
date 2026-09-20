@@ -1,92 +1,131 @@
-import { Award, ClipboardCheck, GraduationCap, School } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import {
+  CalendarClock,
+  ClipboardList,
+  GraduationCap,
+  School,
+} from 'lucide-react'
 import StatCard from '@/components/common/StatCard'
-import AttendanceOverviewCard from '@/components/teacher/dashboard/AttendanceOverviewCard'
+import AssessmentsOverviewCard from '@/components/teacher/dashboard/AssessmentsOverviewCard'
+import AttendanceQuickActionsCard from '@/components/teacher/dashboard/AttendanceQuickActionsCard'
 import GradeActivityCard from '@/components/teacher/dashboard/GradeActivityCard'
 import MyClassesCard from '@/components/teacher/dashboard/MyClassesCard'
-import StudentsOverviewCard from '@/components/teacher/dashboard/StudentsOverviewCard'
+import TeacherDashboardIntro from '@/components/teacher/dashboard/TeacherDashboardIntro'
 import TodaysScheduleCard from '@/components/teacher/dashboard/TodaysScheduleCard'
+import RecentAnnouncementsCard from '@/components/announcements/RecentAnnouncementsCard'
 import useAuth from '@/hooks/useAuth'
 import useTeacherDashboard from '@/hooks/teacher/useTeacherDashboard'
 
-const getPartOfDay = () => {
-  const hour = new Date().getHours()
-  if (hour < 12) {
-    return 'morning'
-  }
-  if (hour < 17) {
-    return 'afternoon'
-  }
-  return 'evening'
-}
+const displayCount = (value) => (value == null ? '—' : value.toLocaleString())
 
 function TeacherDashboardPage() {
-  const { summary, error, refetch } = useTeacherDashboard()
+  const { summary, errors, isLoading, refetch } = useTeacherDashboard()
   const { user } = useAuth()
-
-  const greeting = `Good ${getPartOfDay()}${user?.name ? `, ${user.name}` : ''}`
 
   const stats = [
     {
       label: 'My Classes',
-      value: summary.classCount.toLocaleString(),
+      value: displayCount(summary.assignedClassesCount),
       icon: School,
       accent: 'primary',
+      to: '/teacher/classes',
     },
     {
       label: 'My Students',
-      value: summary.studentCount.toLocaleString(),
+      value: displayCount(summary.assignedStudentsCount),
       icon: GraduationCap,
       accent: 'success',
+      to: '/teacher/students',
     },
     {
-      label: 'Attendance Records',
-      value: summary.attendanceCount.toLocaleString(),
-      icon: ClipboardCheck,
+      label: 'Active Assessments',
+      value: displayCount(summary.activeAssessmentsCount),
+      icon: ClipboardList,
       accent: 'warning',
+      to: '/teacher/assessments',
     },
     {
-      label: 'Grades Entered',
-      value: summary.gradesEntered.toLocaleString(),
-      icon: Award,
+      label: "Today's Lessons",
+      value: displayCount(summary.todayLessonsCount),
+      icon: CalendarClock,
       accent: 'danger',
+      to: '/teacher/schedule',
     },
   ]
 
   return (
     <div className="dashboard teacher-dashboard">
-      {error ? (
-        <div className="alert alert--error" role="alert">
-          Failed to load teacher dashboard data. ({error.message})
-          <button type="button" className="btn" onClick={refetch}>
-            Retry
-          </button>
-        </div>
-      ) : null}
-
-      <div className="dashboard__intro">
-        <p className="dashboard__greeting">{greeting}</p>
-        <p className="dashboard__subtitle">
-          Here&rsquo;s an overview of your classes, students, attendance, and grades.
-        </p>
-      </div>
+      <TeacherDashboardIntro
+        user={user}
+        currentAcademicYear={summary.currentAcademicYear}
+        currentSemester={summary.currentSemester}
+      />
 
       <div className="stats-grid">
         {stats.map((stat) => (
-          <StatCard key={stat.label} {...stat} />
+          <Link key={stat.label} to={stat.to} className="stat-card-link">
+            <StatCard
+              icon={stat.icon}
+              label={stat.label}
+              value={stat.value}
+              accent={stat.accent}
+            />
+          </Link>
         ))}
       </div>
 
       <div className="dashboard-grid">
-        <MyClassesCard classes={summary.myClasses} />
-        <div className="dashboard-grid__stack">
-          <TodaysScheduleCard items={summary.todaySchedule} />
-          <AttendanceOverviewCard records={summary.attendanceRecords} />
-        </div>
+        <TodaysScheduleCard
+          items={summary.todaySchedule}
+          isLoading={isLoading}
+          error={errors.schedule}
+          onRetry={refetch}
+        />
+        <AttendanceQuickActionsCard
+          todayClasses={summary.pendingAttendanceClasses}
+          isLoading={isLoading}
+          error={errors.classes}
+          onRetry={refetch}
+        />
       </div>
 
       <div className="dashboard-grid">
-        <StudentsOverviewCard students={summary.students} total={summary.studentCount} />
-        <GradeActivityCard grades={summary.recentGrades} />
+        <MyClassesCard
+          classes={summary.myClasses}
+          isLoading={isLoading}
+          error={errors.classes}
+          onRetry={refetch}
+        />
+        <AssessmentsOverviewCard
+          assessments={summary.recentAssessments}
+          isLoading={isLoading}
+          error={errors.assessments}
+          onRetry={refetch}
+        />
+      </div>
+
+      <div className="dashboard-grid">
+        <GradeActivityCard
+          grades={summary.recentGrades}
+          count={summary.gradesCount}
+          isLoading={isLoading}
+          error={errors.grades}
+          onRetry={refetch}
+          title="Grades Overview"
+        />
+        <RecentAnnouncementsCard
+          title="Announcements"
+          announcements={summary.recentAnnouncements}
+          isLoading={isLoading}
+          error={errors.announcements}
+          onRetry={refetch}
+          limit={4}
+          action={
+            <Link to="/teacher/announcements" className="form__link">
+              View All
+            </Link>
+          }
+        />
       </div>
     </div>
   )

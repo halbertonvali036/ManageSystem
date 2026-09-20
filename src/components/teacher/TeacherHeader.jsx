@@ -1,4 +1,6 @@
 import { Menu } from 'lucide-react'
+import CommandPaletteTrigger from '@/components/commandPalette/CommandPaletteTrigger'
+import NotificationBell from '@/components/notifications/NotificationBell'
 import UserMenu from '@/components/layout/UserMenu'
 import { TEACHER_PORTAL_LABEL } from '@/utils/teacherConstants'
 
@@ -16,7 +18,11 @@ function TeacherHeader({ onOpenMobile }) {
         </button>
         <span className="teacher-context">{TEACHER_PORTAL_LABEL}</span>
       </div>
-      <UserMenu />
+      <div className="app-header__actions">
+        <CommandPaletteTrigger />
+        <NotificationBell />
+        <UserMenu />
+      </div>
     </header>
   )
 }

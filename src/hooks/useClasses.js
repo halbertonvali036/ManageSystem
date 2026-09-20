@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import classesService from '@/services/classesService'
 
 function useClasses(filters = {}) {
-  const { search, academicYear, status } = filters
+  const { search, academicYear, semester, status } = filters
   const [classes, setClasses] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -11,7 +11,7 @@ function useClasses(filters = {}) {
     let isActive = true
 
     classesService
-      .getClasses({ search, academicYear, status })
+      .getClasses({ search, academicYear, semester, status })
       .then((data) => {
         if (isActive) {
           setError(null)
@@ -33,20 +33,20 @@ function useClasses(filters = {}) {
     return () => {
       isActive = false
     }
-  }, [search, academicYear, status])
+  }, [search, academicYear, semester, status])
 
   const refetch = useCallback(() => {
     setIsLoading(true)
     setError(null)
     classesService
-      .getClasses({ search, academicYear, status })
+      .getClasses({ search, academicYear, semester, status })
       .then((data) => setClasses(data))
       .catch((requestError) => {
         setError(requestError)
         setClasses([])
       })
       .finally(() => setIsLoading(false))
-  }, [search, academicYear, status])
+  }, [search, academicYear, semester, status])
 
   return { classes, isLoading, error, refetch }
 }

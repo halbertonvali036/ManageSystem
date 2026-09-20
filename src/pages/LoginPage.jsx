@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { AlertCircle, Eye, EyeOff, LogIn } from 'lucide-react'
 import BrandLogo from '@/components/common/BrandLogo'
 import useAuth from '@/hooks/useAuth'
@@ -22,7 +22,6 @@ function LoginPage() {
   const [errors, setErrors] = useState({})
   const [formError, setFormError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [showForgotHint, setShowForgotHint] = useState(false)
 
   const { login } = useAuth()
   const navigate = useNavigate()
@@ -83,11 +82,6 @@ function LoginPage() {
     } finally {
       setIsLoading(false)
     }
-  }
-
-  const handleForgotClick = (event) => {
-    event.preventDefault()
-    setShowForgotHint(true)
   }
 
   return (
@@ -203,21 +197,10 @@ function LoginPage() {
             />
             <span>Remember me</span>
           </label>
-          <a
-            href="#forgot-password"
-            className="form__link"
-            onClick={handleForgotClick}
-            aria-disabled="true"
-          >
+          <Link to="/forgot-password" className="form__link">
             Forgot password?
-          </a>
+          </Link>
         </div>
-
-        {showForgotHint ? (
-          <p className="form__hint anim-fade-in">
-            Password reset is not available yet in the demo.
-          </p>
-        ) : null}
 
         <button
           type="submit"

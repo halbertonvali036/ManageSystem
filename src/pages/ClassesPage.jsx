@@ -3,27 +3,43 @@ import { useNavigate } from 'react-router-dom'
 import ConfirmDialog from '@/components/common/ConfirmDialog'
 import ClassesTable from '@/components/classes/ClassesTable'
 import ClassesToolbar from '@/components/classes/ClassesToolbar'
+import useAcademicYears from '@/hooks/useAcademicYears'
 import useClasses from '@/hooks/useClasses'
 import useDeleteClass from '@/hooks/useDeleteClass'
+import useSemesters from '@/hooks/useSemesters'
 import { formatClassCourseName, formatClassName } from '@/models/class'
+
+const toAcademicYearValue = (academicYear) =>
+  academicYear?.name ??
+  academicYear?.academicYear ??
+  (typeof academicYear === 'string' ? academicYear : academicYear?.id) ??
+  ''
 
 function ClassesPage() {
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
   const [academicYearFilter, setAcademicYearFilter] = useState('all')
+  const [semesterFilter, setSemesterFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
+
+  const { academicYears, isLoading: academicYearsLoading } = useAcademicYears()
+  const selectedAcademicYear = academicYears.find(
+    (academicYear) => toAcademicYearValue(academicYear) === academicYearFilter,
+  )
+  const { semesters, isLoading: semestersLoading } = useSemesters(
+    selectedAcademicYear?.id,
+  )
 
   const filters = {
     ...(search ? { search } : {}),
     ...(academicYearFilter !== 'all'
       ? { academicYear: academicYearFilter }
       : {}),
+    ...(semesterFilter !== 'all' ? { semester: semesterFilter } : {}),
     ...(statusFilter !== 'all' ? { status: statusFilter } : {}),
   }
 
   const { classes, isLoading, error, refetch } = useClasses(filters)
-
-  const academicYears = [...new Set(classes.map((c) => c.academicYear).filter(Boolean))]
 
   const [deleteTarget, setDeleteTarget] = useState(null)
   const { isDeleting, deleteError, deleteClass } = useDeleteClass(
@@ -33,7 +49,13 @@ function ClassesPage() {
   const clearFilters = () => {
     setSearch('')
     setAcademicYearFilter('all')
+    setSemesterFilter('all')
     setStatusFilter('all')
+  }
+
+  const handleAcademicYearChange = (value) => {
+    setSemesterFilter('all')
+    setAcademicYearFilter(value)
   }
 
   const handleAddClass = () => {
@@ -77,8 +99,13 @@ function ClassesPage() {
         search={search}
         onSearchChange={setSearch}
         academicYears={academicYears}
+        academicYearsLoading={academicYearsLoading}
         academicYearFilter={academicYearFilter}
-        onAcademicYearChange={setAcademicYearFilter}
+        onAcademicYearChange={handleAcademicYearChange}
+        semesters={semesters}
+        semestersLoading={semestersLoading}
+        semesterFilter={semesterFilter}
+        onSemesterChange={setSemesterFilter}
         statusFilter={statusFilter}
         onStatusChange={setStatusFilter}
         onClearFilters={clearFilters}
