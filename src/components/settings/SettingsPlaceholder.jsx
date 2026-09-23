@@ -7,7 +7,10 @@ function SettingsPlaceholder({ title, text, actionLabel = 'Configure', icon }) {
         </span>
       ) : null}
       <div className="settings-placeholder__info">
-        <p className="settings-placeholder__title">{title}</p>
+        <div className="settings-placeholder__heading">
+          <p className="settings-placeholder__title">{title}</p>
+          <span className="settings-placeholder__badge">Unavailable</span>
+        </div>
         <p className="settings-placeholder__text">{text}</p>
       </div>
       <button

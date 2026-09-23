@@ -35,9 +35,36 @@ function EmptyState() {
       <p className="widget-empty__text">
         Today&rsquo;s attendance will appear here once records are taken.
       </p>
+      <Link to="/attendance/mark" className="widget-empty__action">
+        Take attendance
+      </Link>
     </div>
   )
 }
+
+const attendanceRows = [
+  {
+    key: 'present',
+    label: 'Present',
+    value: 'presentRate',
+    count: 'presentCount',
+    className: 'attendance-row--present',
+  },
+  {
+    key: 'late',
+    label: 'Late',
+    value: 'lateRate',
+    count: 'lateCount',
+    className: 'attendance-row--late',
+  },
+  {
+    key: 'absent',
+    label: 'Absent',
+    value: 'absentRate',
+    count: 'absentCount',
+    className: 'attendance-row--absent',
+  },
+]
 
 function AttendanceOverviewCard({ data, isLoading, error, onRetry }) {
   return (
@@ -56,51 +83,48 @@ function AttendanceOverviewCard({ data, isLoading, error, onRetry }) {
       {!isLoading && !error && !data ? <EmptyState /> : null}
       {!isLoading && !error && data ? (
         <>
-          <p className="widget-caption">
-            {data.total.toLocaleString()}{' '}
-            {data.total === 1 ? 'record' : 'records'} today
-          </p>
           <div className="attendance-summary">
-            <div className="attendance-summary__bars">
-              {[
-                {
-                  key: 'present',
-                  label: 'Present',
-                  value: data.presentRate,
-                  count: data.presentCount,
-                  className: 'attendance-bar--present',
-                },
-                {
-                  key: 'late',
-                  label: 'Late',
-                  value: data.lateRate,
-                  count: data.lateCount,
-                  className: 'attendance-bar--late',
-                },
-                {
-                  key: 'absent',
-                  label: 'Absent',
-                  value: data.absentRate,
-                  count: data.absentCount,
-                  className: 'attendance-bar--absent',
-                },
-              ].map((bar) => (
-                <div className="attendance-bar" key={bar.key}>
-                  <span className="attendance-bar__label">
-                    {bar.label} ({bar.count})
-                  </span>
-                  <div className="attendance-bar__track">
-                    <div
-                      className={`attendance-bar__fill ${bar.className}`}
-                      style={{ width: `${Math.min(bar.value, 100)}%` }}
-                    />
-                  </div>
-                  <span className="attendance-bar__value">{bar.value}%</span>
-                </div>
-              ))}
+            <div className="attendance-summary__total">
+              <span className="attendance-summary__total-value">
+                {data.total.toLocaleString()}
+              </span>
+              <span className="attendance-summary__total-label">
+                {data.total === 1 ? 'record' : 'records'} today
+              </span>
             </div>
+
+            <div className="attendance-stack" aria-hidden="true">
+              {attendanceRows.map((row) => {
+                const rate = data[row.value]
+                return rate > 0 ? (
+                  <span
+                    key={row.key}
+                    className={`attendance-stack__fill attendance-stack__fill--${row.key}`}
+                    style={{ width: `${Math.min(rate, 100)}%` }}
+                  />
+                ) : null
+              })}
+            </div>
+
+            <ul className="attendance-breakdown">
+              {attendanceRows.map((row) => (
+                <li className={`attendance-row ${row.className}`} key={row.key}>
+                  <span className="attendance-row__dot" aria-hidden="true" />
+                  <span className="attendance-row__label">{row.label}</span>
+                  <span className="attendance-row__count">{data[row.count]}</span>
+                  <span className="attendance-row__track">
+                    <span
+                      className="attendance-row__bar"
+                      style={{ width: `${Math.min(data[row.value], 100)}%` }}
+                    />
+                  </span>
+                  <span className="attendance-row__value">{data[row.value]}%</span>
+                </li>
+              ))}
+            </ul>
+
             {data.excusedCount > 0 ? (
-              <p className="widget-caption">
+              <p className="attendance-summary__note">
                 {data.excusedCount.toLocaleString()}{' '}
                 {data.excusedCount === 1 ? 'excused absence' : 'excused absences'}
               </p>

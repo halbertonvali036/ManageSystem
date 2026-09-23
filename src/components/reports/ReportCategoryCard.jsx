@@ -3,7 +3,7 @@ import Card from '@/components/common/Card'
 
 function ReportCategoryCard({ category, icon, onSelect }) {
   return (
-    <Card className="report-category">
+    <Card className={`report-category report-category--${category.key}`}>
       <span className="report-category__icon" aria-hidden="true">
         {icon}
       </span>

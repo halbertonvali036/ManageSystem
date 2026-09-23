@@ -1,0 +1,449 @@
+/* ============================================================
+   Detail and read-only profile pages (Phase 6C)
+   Final CSS layer — refines the global.css detail blocks with
+   theme tokens so light and dark themes stay consistent.
+   ============================================================ */
+
+/* ---------- Container & page rhythm ---------- */
+.details-page {
+  gap: var(--space-5);
+}
+
+.details-page .details-toolbar {
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-1);
+}
+
+/* ---------- Back navigation (quiet tertiary) ---------- */
+.details-page .details-toolbar > .btn:first-child {
+  min-height: 40px;
+  padding-inline: 12px;
+  border-color: transparent;
+  border-radius: var(--radius-md);
+  gap: 6px;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  background: transparent;
+}
+
+.details-page .details-toolbar > .btn:first-child:hover:not(:disabled) {
+  color: var(--color-accent);
+  background: var(--color-surface-2);
+}
+
+/* ---------- Action hierarchy ---------- */
+.details-page .details-toolbar__actions {
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+.details-page .details-toolbar__actions .btn {
+  min-height: 42px;
+  border-radius: 9px;
+}
+
+/* Edit: promoted to primary so the main action stands out */
+.details-page .details-toolbar__actions .btn--icon-left:has(+ .btn--danger) {
+  color: var(--color-primary-text);
+  background-image: linear-gradient(
+    135deg,
+    var(--color-accent-strong-start),
+    var(--color-accent-strong)
+  );
+  background-color: var(--color-primary);
+  border-color: transparent;
+  box-shadow: var(--shadow-primary);
+}
+
+.details-page .details-toolbar__actions .btn--icon-left:has(+ .btn--danger):hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+  background-image: linear-gradient(
+    135deg,
+    var(--color-accent-strong-hover),
+    var(--color-accent-strong-hover)
+  );
+  border-color: transparent;
+  box-shadow: var(--shadow-cta);
+  transform: translateY(-1px);
+}
+
+.details-page .details-toolbar__actions .btn--icon-left:has(+ .btn--danger):active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Destructive: restrained outline (the modal confirm stays solid) */
+.details-page .details-toolbar__actions .btn--danger,
+.roster-section .card__action .btn--danger,
+.semesters-section .card__action .btn--danger {
+  color: var(--color-danger);
+  background: var(--color-surface);
+  border-color: color-mix(in srgb, var(--color-danger) 32%, transparent);
+  box-shadow: none;
+}
+
+.details-page .details-toolbar__actions .btn--danger:hover:not(:disabled),
+.roster-section .card__action .btn--danger:hover:not(:disabled),
+.semesters-section .card__action .btn--danger:hover:not(:disabled) {
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger);
+  transform: translateY(0);
+}
+
+/* ---------- Page-level cards (header, doc card) ---------- */
+.details-page > .card {
+  border-color: var(--color-border-strong);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.details-page > .card::before {
+  background: radial-gradient(
+    520px 190px at 8% 0%,
+    color-mix(in srgb, var(--color-primary) 7%, transparent),
+    transparent 60%
+  );
+}
+
+.details-page > .card .card__body {
+  padding: clamp(var(--space-5), 2.4vw, var(--space-7));
+}
+
+/* ---------- Profile header ---------- */
+.details-page > .card:is(
+  .student-profile__header,
+  .teacher-profile__header,
+  .course-profile__header,
+  .class-profile__header,
+  .assessment-profile__header,
+  .user-profile__header,
+  .role-profile__header,
+  .academic-year-profile__header
+) .card__body {
+  gap: var(--space-5);
+}
+
+.details-page [class$="-profile__avatar"],
+.app-layout__main:has(.profile-header) .profile-header__avatar {
+  width: 60px;
+  height: 60px;
+  border-color: transparent;
+  border-radius: 16px;
+  color: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary-soft), var(--color-primary-bg));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 18%, transparent),
+    var(--shadow-xs);
+}
+
+.details-page [class$="-profile__identity"],
+.app-layout__main:has(.profile-header) .profile-header__identity {
+  gap: 5px;
+  min-width: 0;
+}
+
+.details-page [class$="-profile__name"],
+.app-layout__main:has(.profile-header) .profile-header__name {
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(1.24rem, 2vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.28;
+  overflow-wrap: anywhere;
+}
+
+.details-page [class$="-profile__meta"],
+.app-layout__main:has(.profile-header) .profile-header__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1);
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.details-page [class$="-profile__meta-value"],
+.app-layout__main:has(.profile-header) .profile-header__meta-value {
+  color: var(--color-text);
+  font-weight: 650;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.details-page [class$="-profile__status"],
+.app-layout__main:has(.profile-header) .profile-header__status {
+  margin-left: auto;
+}
+
+/* ---------- Section (info grid) cards ---------- */
+.details-page > [class$="-details__grid"],
+.app-layout__main:has(.profile-header) .class-details__grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: var(--space-5);
+  margin-top: 0;
+}
+
+.details-page > [class$="-details__grid"] > .card,
+.app-layout__main:has(.profile-header) .class-details__grid > .card {
+  min-width: 0;
+  border-color: var(--color-border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-xs);
+}
+
+.details-page > [class$="-details__grid"] > .card .card__header,
+.app-layout__main:has(.profile-header) .class-details__grid > .card .card__header {
+  min-height: 56px;
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface-2);
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+.details-page > [class$="-details__grid"] > .card .card__title,
+.app-layout__main:has(.profile-header) .class-details__grid > .card .card__title,
+.details-page > [class$="-details__permissions"] .card .card__title {
+  position: relative;
+  padding-left: 14px;
+  font-size: 0.92rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+
+.details-page > [class$="-details__grid"] > .card .card__title::before,
+.app-layout__main:has(.profile-header) .class-details__grid > .card .card__title::before,
+.details-page > [class$="-details__permissions"] .card .card__title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  translate: 0 -50%;
+  width: 4px;
+  height: 15px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(180deg, var(--color-accent-strong-start), var(--color-accent-strong));
+}
+
+.details-page > [class$="-details__grid"] > .card .card__body,
+.app-layout__main:has(.profile-header) .class-details__grid > .card .card__body {
+  padding: var(--space-5);
+}
+
+.details-page > [class$="-details__permissions"] .card {
+  border-color: var(--color-border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-xs);
+}
+
+/* ---------- Info grid rhythm ---------- */
+.details-page .info-grid {
+  margin: 0;
+  gap: var(--space-5) var(--space-6);
+}
+
+.details-page .info-grid .info-item {
+  gap: 4px;
+  margin: 0;
+}
+
+.details-page .info-item dt,
+.details-page .info-item dd {
+  margin: 0;
+}
+
+.details-page .info-item__label {
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  line-height: 1.35;
+}
+
+.details-page .info-item__value {
+  color: var(--color-text);
+  font-size: 0.93rem;
+  font-weight: 600;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.details-page .info-item__value--empty {
+  color: var(--color-text-soft);
+  font-weight: 500;
+}
+
+/* ---------- Prose blocks ---------- */
+.details-page [class$="-profile__description"],
+.announcement-profile__message {
+  max-width: 72ch;
+  line-height: 1.7;
+}
+
+/* ---------- Related sections (roster, semesters, enrollments) ---------- */
+.roster-section,
+.semesters-section {
+  border-color: var(--color-border-strong);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.roster-section .card__header,
+.semesters-section .card__header {
+  min-height: 60px;
+  padding: var(--space-4) var(--space-5);
+  gap: var(--space-3);
+  background: var(--color-surface-2);
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+.roster-section .card__title,
+.semesters-section .card__title {
+  position: relative;
+  font-size: 0.97rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+
+.roster-section .card__action .btn,
+.semesters-section .card__action .btn {
+  min-height: 40px;
+}
+
+/* Capacity chip */
+.roster-capacity {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--space-1) var(--space-3);
+  font-size: 0.75rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  color: var(--color-text-muted);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.roster-capacity::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+}
+
+.roster-toolbar__count {
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  color: var(--color-text-soft);
+}
+
+.roster-section .table-state,
+.semesters-section .table-state {
+  min-height: 190px;
+  padding: var(--space-6) var(--space-5);
+  border-color: var(--color-border-strong);
+  border-radius: 10px;
+}
+
+.roster-section .page-status,
+.semesters-section .page-status {
+  min-height: 112px;
+  padding: var(--space-5);
+  border: 1.5px dashed var(--color-border);
+  border-radius: 10px;
+  background: var(--color-bg);
+}
+
+/* ---------- Dark theme polish (token-driven refinements) ---------- */
+[data-theme='dark'] .details-page > [class$="-details__grid"] > .card,
+[data-theme='dark'] .app-layout__main:has(.profile-header) .class-details__grid > .card,
+[data-theme='dark'] .details-page > [class$="-details__permissions"] .card {
+  box-shadow: var(--shadow-xs);
+}
+
+[data-theme='dark'] .details-page [class$="-profile__avatar"],
+[data-theme='dark'] .app-layout__main:has(.profile-header) .profile-header__avatar {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 28%, transparent);
+}
+
+[data-theme='dark'] .details-page > .card::before {
+  background: radial-gradient(
+    520px 190px at 8% 0%,
+    color-mix(in srgb, var(--color-primary) 12%, transparent),
+    transparent 62%
+  );
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 1023px) {
+  .details-page > [class$="-details__grid"],
+  .app-layout__main:has(.profile-header) .class-details__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .details-page .details-toolbar > .btn:first-child {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .details-page .details-toolbar__actions {
+    width: 100%;
+    gap: var(--space-2);
+  }
+
+  .details-page .details-toolbar__actions .btn {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .details-page > [class$="-details__grid"],
+  .app-layout__main:has(.profile-header) .class-details__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+
+  .details-page > .card .card__body,
+  .details-page > [class$="-details__grid"] > .card .card__body,
+  .app-layout__main:has(.profile-header) .profile-header .card__body,
+  .app-layout__main:has(.profile-header) .class-details__grid > .card .card__body {
+    padding: var(--space-4);
+  }
+
+  .details-page [class$="-profile__status"],
+  .app-layout__main:has(.profile-header) .profile-header__status {
+    margin-left: 0;
+  }
+
+  .roster-section .card__header,
+  .semesters-section .card__header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 520px) {
+  .details-page [class$="-profile__avatar"],
+  .app-layout__main:has(.profile-header) .profile-header__avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .details-page [class$="-profile__name"],
+  .app-layout__main:has(.profile-header) .profile-header__name {
+    font-size: 1.16rem;
+  }
+
+  .details-page .info-grid {
+    gap: var(--space-4);
+  }
+}

@@ -6,8 +6,8 @@ import useMediaQuery from '@/hooks/useMediaQuery'
 import {
   STUDENT_NAV_ITEMS,
   STUDENT_PORTAL_LABEL,
-  STUDENT_PORTAL_TITLE,
 } from '@/utils/studentConstants'
+import { APP_NAME } from '@/utils/constants'
 
 function StudentSidebar({ collapsed, mobileOpen, onToggleCollapsed, onCloseMobile }) {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
@@ -29,9 +29,14 @@ function StudentSidebar({ collapsed, mobileOpen, onToggleCollapsed, onCloseMobil
     <>
       <aside className={sidebarClassName} aria-label="Student">
         <div className="sidebar__top">
-          <span className="sidebar__brand" title={STUDENT_PORTAL_TITLE}>
+          <span className="sidebar__brand" title={APP_NAME}>
             <BrandLogo size={30} className="sidebar__brand-logo student-brand-logo" />
-            <span className="sidebar__brand-name">{STUDENT_PORTAL_LABEL}</span>
+            <span className="sidebar__brand-id">
+              <span className="sidebar__brand-name">{APP_NAME}</span>
+              <span className="sidebar__brand-role">
+                {STUDENT_PORTAL_LABEL} portal
+              </span>
+            </span>
           </span>
           {isDesktop ? (
             <button

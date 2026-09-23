@@ -26,7 +26,10 @@ function AppSidebar({ collapsed, mobileOpen, onToggleCollapsed, onCloseMobile })
         <div className="sidebar__top">
           <span className="sidebar__brand" title={APP_NAME}>
             <BrandLogo size={30} className="sidebar__brand-logo" />
-            <span className="sidebar__brand-name">{APP_NAME}</span>
+            <span className="sidebar__brand-id">
+              <span className="sidebar__brand-name">{APP_NAME}</span>
+              <span className="sidebar__brand-role">Admin portal</span>
+            </span>
           </span>
           {isDesktop ? (
             <button

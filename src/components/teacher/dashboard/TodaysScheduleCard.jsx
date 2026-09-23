@@ -34,11 +34,14 @@ function EmptyState() {
   return (
     <div className="widget-empty">
       <CalendarClock size={24} className="widget-empty__icon" aria-hidden="true" />
-      <p className="widget-empty__title">No classes scheduled today</p>
+      <p className="widget-empty__title">No lessons scheduled today</p>
       <p className="widget-empty__text">
-        Today&rsquo;s schedule will appear here once classes are scheduled for your
+        Today&rsquo;s schedule will appear here once lessons are scheduled for your
         account.
       </p>
+      <Link to="/teacher/schedule" className="widget-empty__action">
+        Open schedule
+      </Link>
     </div>
   )
 }
@@ -59,37 +62,39 @@ function TodaysScheduleCard({ items, isLoading, error, onRetry }) {
       ) : null}
       {!isLoading && !error && items.length === 0 ? <EmptyState /> : null}
       {!isLoading && !error && items.length > 0 ? (
-        <ul className="class-list">
+        <ul className="schedule-list">
           {items.map((item) => {
             const classId = resolveScheduleClassId(item)
             return (
-              <li className="class-item" key={item.id ?? item.scheduleId}>
-                <span className="class-item__time">
+              <li className="schedule-item" key={item.id ?? item.scheduleId}>
+                <span className="schedule-item__time">
                   {formatScheduleTimeRange(item)}
                 </span>
-                <div className="class-item__info">
-                  {classId ? (
-                    <Link
-                      to={`/teacher/classes/${classId}`}
-                      className="class-item__subject-link"
-                    >
-                      <h3 className="class-item__subject">
+                <div className="schedule-item__body">
+                  <div className="schedule-item__title-row">
+                    {classId ? (
+                      <Link
+                        to={`/teacher/classes/${classId}`}
+                        className="schedule-item__class-link"
+                      >
                         {formatScheduleClassName(item)}
-                      </h3>
-                    </Link>
-                  ) : (
-                    <h3 className="class-item__subject">
-                      {formatScheduleClassName(item)}
-                    </h3>
-                  )}
-                  <p className="class-item__meta">
-                    {formatScheduleCourseName(item)}
+                      </Link>
+                    ) : (
+                      <span className="schedule-item__class">
+                        {formatScheduleClassName(item)}
+                      </span>
+                    )}
                     {item.day || item.dayOfWeek ? (
-                      <span> · {item.day ?? item.dayOfWeek}</span>
+                      <span className="schedule-item__day">
+                        {item.day ?? item.dayOfWeek}
+                      </span>
                     ) : null}
+                  </div>
+                  <p className="schedule-item__course">
+                    {formatScheduleCourseName(item)}
                   </p>
                 </div>
-                <span className="class-item__room">
+                <span className="schedule-item__room">
                   <MapPin size={14} aria-hidden="true" />
                   {formatScheduleRoom(item)}
                 </span>

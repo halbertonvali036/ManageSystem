@@ -61,20 +61,30 @@ function TeacherDashboardPage() {
         currentSemester={summary.currentSemester}
       />
 
-      <div className="stats-grid">
-        {stats.map((stat) => (
-          <Link key={stat.label} to={stat.to} className="stat-card-link">
-            <StatCard
-              icon={stat.icon}
-              label={stat.label}
-              value={stat.value}
-              accent={stat.accent}
-            />
-          </Link>
-        ))}
-      </div>
+      <section className="dashboard-summary" aria-labelledby="summary-title">
+        <header className="dashboard-summary__head">
+          <h2 id="summary-title" className="dashboard-summary__title">
+            Teaching overview
+          </h2>
+          <p className="dashboard-summary__hint">
+            Live counts across your classes
+          </p>
+        </header>
+        <div className="stats-grid">
+          {stats.map((stat) => (
+            <Link key={stat.label} to={stat.to} className="stat-card-link">
+              <StatCard
+                icon={stat.icon}
+                label={stat.label}
+                value={stat.value}
+                accent={stat.accent}
+              />
+            </Link>
+          ))}
+        </div>
+      </section>
 
-      <div className="dashboard-grid">
+      <div className="dashboard-grid dashboard-grid--feature">
         <TodaysScheduleCard
           items={summary.todaySchedule}
           isLoading={isLoading}
@@ -89,7 +99,7 @@ function TeacherDashboardPage() {
         />
       </div>
 
-      <div className="dashboard-grid">
+      <div className="dashboard-grid dashboard-grid--wide-right">
         <MyClassesCard
           classes={summary.myClasses}
           isLoading={isLoading}
@@ -104,7 +114,7 @@ function TeacherDashboardPage() {
         />
       </div>
 
-      <div className="dashboard-grid">
+      <div className="dashboard-grid dashboard-grid--feature">
         <GradeActivityCard
           grades={summary.recentGrades}
           count={summary.gradesCount}

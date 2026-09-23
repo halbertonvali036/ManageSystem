@@ -1,0 +1,403 @@
+/* ============================================================
+   Design Token System — Shared foundation for every theme.
+   ------------------------------------------------------------
+   Canonical tokens live here. Light values are defined on
+   `:root`; dark values override the same names under
+   `[data-theme='dark']`. Existing components keep working
+   through alias tokens (--color-primary, --radius-*, --space-*,
+   --shadow-*, --transition-*, --font-sans).
+   ============================================================ */
+
+/* ── Light theme tokens ───────────────────────────────────── */
+:root {
+  color-scheme: light;
+
+  /* Surfaces & containers */
+  --color-bg: #f5f6fa;
+  --color-bg-glow-1: rgba(79, 70, 229, 0.055);
+  --color-bg-glow-2: rgba(124, 58, 237, 0.045);
+  --color-surface: #ffffff;
+  --color-surface-2: #fbfcff;
+  --color-surface-3: #f2f4fb;
+  --color-elevated: #ffffff;
+  --color-field: #ffffff;
+  --color-field-hover: #f8f9ff;
+
+  /* Borders & hairlines */
+  --color-border: #e7eaf3;
+  --color-border-strong: #d3d9e7;
+  --color-hairline: rgba(148, 163, 184, 0.22);
+  --color-header-bg: rgba(255, 255, 255, 0.94);
+  --color-header-border: rgba(148, 163, 184, 0.2);
+
+  /* Text hierarchy */
+  --color-text: #141a2b;
+  --color-text-muted: #5c6579;
+  --color-text-soft: #8a93a8;
+  --color-inverse-text: #ffffff;
+
+  /* Brand accent (canonical) */
+  --color-accent: #4f46e5;
+  --color-accent-hover: #4338ca;
+  --color-accent-active: #3730a3;
+  --color-accent-soft: #eef0ff;
+  --color-accent-bg: rgba(79, 70, 229, 0.1);
+  --color-accent-text: #ffffff;
+  --color-accent-strong: #4f46e5;
+  --color-accent-strong-start: #6366f1;
+  --color-accent-strong-hover: #5b54ec;
+  --color-accent-contrast: #3b3fc0;
+
+  /* Secondary + role accents */
+  --color-accent-2: #0f766e;
+  --color-role-admin: #4f46e5;
+  --color-role-teacher: #0f766e;
+  --color-role-student: #a16207;
+
+  /* Semantic status colors */
+  --color-success: #059669;
+  --color-success-bg: rgba(5, 150, 105, 0.1);
+  --color-warning: #d97706;
+  --color-warning-bg: rgba(217, 119, 6, 0.1);
+  --color-danger: #dc2626;
+  --color-danger-bg: rgba(220, 38, 38, 0.1);
+  --color-info: #2563eb;
+  --color-info-bg: rgba(37, 99, 235, 0.1);
+
+  /* Focus + selection */
+  --color-focus: #4f46e5;
+  --color-focus-ring: rgba(79, 70, 229, 0.16);
+
+  /* Legacy aliases (existing components reference these) */
+  --color-primary: var(--color-accent);
+  --color-primary-hover: var(--color-accent-hover);
+  --color-primary-active: var(--color-accent-active);
+  --color-primary-soft: var(--color-accent-soft);
+  --color-primary-bg: var(--color-accent-bg);
+  --color-primary-text: var(--color-accent-text);
+
+  /* Shell (sidebar / overlays) */
+  --color-sidebar-bg: #0e1320;
+  --color-sidebar-border: rgba(255, 255, 255, 0.07);
+  --color-sidebar-text: #93a0b8;
+  --color-sidebar-text-hover: #ffffff;
+  --color-backdrop: rgba(15, 23, 42, 0.55);
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+
+  --text-hero: clamp(2.55rem, 4.8vw, 4rem);
+  --text-display: clamp(1.8rem, 3.2vw, 2.6rem);
+  --text-title: 1.6rem;
+  --text-section: 1.22rem;
+  --text-card: 1rem;
+  --text-body: 0.95rem;
+  --text-helper: 0.875rem;
+  --text-meta: 0.78rem;
+  --text-label: 0.82rem;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+
+  /* Depth */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05), 0 2px 8px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 6px 18px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 20px 48px rgba(15, 23, 42, 0.14);
+  --shadow-primary: 0 8px 20px rgba(79, 70, 229, 0.3);
+  --shadow-auth-card:
+    0 2px 4px rgba(15, 23, 42, 0.04),
+    0 8px 24px rgba(15, 23, 42, 0.08),
+    0 32px 64px rgba(15, 23, 42, 0.1);
+  --shadow-cta:
+    0 2px 8px rgba(79, 70, 229, 0.2),
+    0 8px 24px rgba(79, 70, 229, 0.36);
+
+  /* Layout */
+  --header-height: 68px;
+  --sidebar-width: 252px;
+  --sidebar-collapsed-width: 76px;
+  --content-max-width: 1160px;
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 48px;
+
+  /* Motion */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+  --transition-smooth: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 0.32s cubic-bezier(0.34, 1.38, 0.64, 1);
+
+  /* Auth composition tokens */
+  --auth-hero-bg: linear-gradient(158deg, #0d1533 0%, #121d42 52%, #1c2757 100%);
+  --auth-card-border: rgba(99, 102, 241, 0.13);
+  --auth-input-height: 46px;
+  --auth-accent: #5057e0;
+  --auth-accent-hover: #4347c8;
+  --auth-accent-active: #3d448f;
+  --auth-page-bg: #f5f6fa;
+}
+
+/* ── Dark theme tokens ────────────────────────────────────── */
+/* Deep layered graphite-navy foundation. Surfaces rise from the
+   base paint; nothing is pure black or neon—calm and legible. */
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* Surfaces & containers */
+  --color-bg: #0b101d;
+  --color-bg-glow-1: rgba(99, 102, 241, 0.13);
+  --color-bg-glow-2: rgba(124, 58, 237, 0.09);
+  --color-surface: #121a2b;
+  --color-surface-2: #162033;
+  --color-surface-3: #1b2539;
+  --color-elevated: #1b2539;
+  --color-field: #0e1524;
+  --color-field-hover: #131b2c;
+
+  /* Borders & hairlines */
+  --color-border: rgba(148, 163, 184, 0.16);
+  --color-border-strong: rgba(148, 163, 184, 0.28);
+  --color-hairline: rgba(148, 163, 184, 0.14);
+  --color-header-bg: rgba(18, 26, 43, 0.9);
+  --color-header-border: rgba(148, 163, 184, 0.16);
+
+  /* Text hierarchy */
+  --color-text: #eef1f8;
+  --color-text-muted: #a7b0c3;
+  --color-text-soft: #7e879c;
+  --color-inverse-text: #ffffff;
+
+  /* Brand accent (brightened for legibility on dark) */
+  --color-accent: #818cf8;
+  --color-accent-hover: #a5b4fc;
+  --color-accent-active: #8b96f9;
+  --color-accent-soft: rgba(129, 140, 248, 0.12);
+  --color-accent-bg: rgba(129, 140, 248, 0.18);
+  --color-accent-text: #ffffff;
+  --color-accent-strong: #4f46e5;
+  --color-accent-strong-hover: #5b54ec;
+  --color-accent-contrast: #a5b4fc;
+
+  /* Secondary + role accents */
+  --color-accent-2: #2dd4bf;
+  --color-role-admin: #818cf8;
+  --color-role-teacher: #2dd4bf;
+  --color-role-student: #fbbf24;
+
+  /* Semantic status colors */
+  --color-success: #34d399;
+  --color-success-bg: rgba(52, 211, 153, 0.14);
+  --color-warning: #fbbf24;
+  --color-warning-bg: rgba(251, 191, 36, 0.14);
+  --color-danger: #f87171;
+  --color-danger-bg: rgba(248, 113, 113, 0.14);
+  --color-info: #93b8ff;
+  --color-info-bg: rgba(147, 184, 255, 0.14);
+
+  /* Focus + selection */
+  --color-focus: #a5b4fc;
+  --color-focus-ring: rgba(129, 140, 248, 0.24);
+
+  /* Legacy aliases */
+  --color-primary: var(--color-accent);
+  --color-primary-hover: var(--color-accent-hover);
+  --color-primary-active: var(--color-accent-active);
+  --color-primary-soft: var(--color-accent-soft);
+  --color-primary-bg: var(--color-accent-bg);
+  --color-primary-text: var(--color-accent-text);
+
+  /* Shell (sidebar / overlays) */
+  --color-sidebar-bg: #0a0f1b;
+  --color-sidebar-border: rgba(255, 255, 255, 0.07);
+  --color-sidebar-text: #98a3b9;
+  --color-sidebar-text-hover: #ffffff;
+  --color-backdrop: rgba(3, 7, 18, 0.72);
+
+  /* Depth (deeper, softer on dark) */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.28);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 8px 22px rgba(0, 0, 0, 0.36);
+  --shadow-lg: 0 24px 56px rgba(0, 0, 0, 0.5);
+  --shadow-primary: 0 8px 22px rgba(79, 70, 229, 0.42);
+  --shadow-auth-card:
+    0 2px 4px rgba(0, 0, 0, 0.32),
+    0 10px 30px rgba(0, 0, 0, 0.44),
+    0 40px 80px rgba(0, 0, 0, 0.52);
+  --shadow-cta:
+    0 2px 8px rgba(79, 70, 229, 0.3),
+    0 10px 26px rgba(79, 70, 229, 0.42);
+
+  /* Auth composition tokens */
+  --auth-hero-bg: linear-gradient(158deg, #060a16 0%, #0a1020 52%, #121b39 100%);
+  --auth-card-border: rgba(148, 163, 184, 0.18);
+  --auth-input-height: 46px;
+  --auth-accent: #5a5fec;
+  --auth-accent-hover: #4a4fd2;
+  --auth-accent-active: #3a3fae;
+  --auth-page-bg: #0b101d;
+}
+
+/* ── Base paint ───────────────────────────────────────────── */
+html {
+  height: 100%;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  background-image:
+    radial-gradient(1100px 560px at 100% -10%, var(--color-bg-glow-1), transparent 60%),
+    radial-gradient(900px 520px at -10% 110%, var(--color-bg-glow-2), transparent 60%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-focus-ring);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+/* ── Theme switch easing ───────────────────────────────────── */
+/* Added by the ThemeProvider for one smooth crossfade; removed
+   after the transition so permanent hover states stay instant. */
+html.theme-anim *,
+html.theme-anim *::before,
+html.theme-anim *::after {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease,
+    fill 0.3s ease,
+    stroke 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.theme-anim *,
+  html.theme-anim *::before,
+  html.theme-anim *::after {
+    transition: none;
+  }
+}
+
+/* ── Theme toggle control ──────────────────────────────────── */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.theme-toggle:hover {
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+}
+
+.theme-toggle:active {
+  transform: scale(0.94);
+}
+
+.theme-toggle__track {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  overflow: hidden;
+}
+
+.theme-toggle__icon {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  transition:
+    opacity var(--transition-base),
+    transform var(--transition-spring);
+}
+
+/* Light theme: show the moon (action switches to dark) */
+html:not([data-theme='dark']) .theme-toggle__icon--sun {
+  opacity: 0;
+  transform: translateY(16px) rotate(130deg) scale(0.5);
+}
+
+/* Dark theme: show the sun (action switches to light) */
+html[data-theme='dark'] .theme-toggle__icon--moon {
+  opacity: 0;
+  transform: translateY(-16px) rotate(-130deg) scale(0.5);
+}
+
+/* Variant used inside the auth hero panel (overlay on the dark
+   gradient, so it stays readable across themes). */
+.theme-toggle--auth {
+  color: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.055);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.theme-toggle--auth:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+/* App-header variant stays compact and quiet next to other icons */
+.app-header__actions > .theme-toggle {
+  width: 38px;
+  height: 38px;
+  background: transparent;
+  border-color: transparent;
+}
+
+.app-header__actions > .theme-toggle:hover {
+  background: var(--color-surface-3);
+  border-color: var(--color-border-strong);
+}

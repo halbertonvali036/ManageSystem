@@ -1,0 +1,517 @@
+/* ============================================================
+   Phase 6A — Shared data-table / list-page design system
+   ------------------------------------------------------------
+   Loaded LAST (after all theme, global + role layers) so every
+   rule here wins the cascade. Pure token-driven (works in both
+   light + dark themes); replaces the hardcoded light-only values
+   that previously shipped in global.css for the "data" layer.
+
+   Scope: shared tables, toolbars, filter rows, row actions,
+   status badges, empty/error/loading states. No business logic,
+   no routes, no data changes — visual layer only.
+   ============================================================ */
+
+/* ── Container: soft card with themed scrollbars ─────────── */
+.table-responsive:has(table) {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  scrollbar-color: var(--color-border-strong) var(--color-surface-2);
+  scrollbar-width: thin;
+}
+
+.table-responsive::-webkit-scrollbar {
+  height: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: var(--radius-full);
+}
+
+/* ── Shared table surface ────────────────────────────────── */
+.table-responsive :is(
+  .students-table,
+  .teachers-table,
+  .courses-table,
+  .classes-table,
+  .attendance-table,
+  .grades-table,
+  .departments-table,
+  .subjects-table,
+  .assessments-table,
+  .users-table,
+  .roles-table,
+  .academic-years-table,
+  .schedules-table,
+  .announcements-table,
+  .report-result__table
+) {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+
+/* Column comfort: keep the scroll-stability floors, extend to
+   the legacy surfaces so no table squishes into its CTAs.   */
+.table-responsive :is(
+  .students-table,
+  .courses-table,
+  .departments-table,
+  .subjects-table,
+  .academic-years-table,
+  .schedules-table,
+  .announcements-table
+) {
+  min-width: 980px;
+}
+
+.table-responsive :is(
+  .teachers-table,
+  .classes-table,
+  .assessments-table,
+  .attendance-table,
+  .grades-table
+) {
+  min-width: 1080px;
+}
+
+.table-responsive :is(.users-table, .report-result__table) {
+  min-width: 900px;
+}
+
+.table-responsive .roles-table {
+  min-width: 860px;
+}
+
+/* ── Header row ──────────────────────────────────────────── */
+.table-responsive :is(
+  .students-table,
+  .teachers-table,
+  .courses-table,
+  .classes-table,
+  .attendance-table,
+  .grades-table,
+  .departments-table,
+  .subjects-table,
+  .assessments-table,
+  .users-table,
+  .roles-table,
+  .academic-years-table,
+  .schedules-table,
+  .announcements-table,
+  .report-result__table
+) th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 13px var(--space-4);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: left;
+  white-space: nowrap;
+  color: var(--color-text-muted);
+  background: var(--color-surface-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ── Body cells ──────────────────────────────────────────── */
+.table-responsive :is(
+  .students-table,
+  .teachers-table,
+  .courses-table,
+  .classes-table,
+  .attendance-table,
+  .grades-table,
+  .departments-table,
+  .subjects-table,
+  .assessments-table,
+  .users-table,
+  .roles-table,
+  .academic-years-table,
+  .schedules-table,
+  .announcements-table,
+  .report-result__table
+) td {
+  padding: 12px var(--space-4);
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-hairline);
+  vertical-align: middle;
+  line-height: 1.45;
+}
+
+.table-responsive :is(
+  .students-table,
+  .teachers-table,
+  .courses-table,
+  .classes-table,
+  .attendance-table,
+  .grades-table,
+  .departments-table,
+  .subjects-table,
+  .assessments-table,
+  .users-table,
+  .roles-table,
+  .academic-years-table,
+  .schedules-table,
+  .announcements-table,
+  .report-result__table
+) tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── Row interaction ─────────────────────────────────────── */
+.table-responsive :is(
+  .students-table,
+  .teachers-table,
+  .courses-table,
+  .classes-table,
+  .grades-table,
+  .departments-table,
+  .subjects-table,
+  .assessments-table,
+  .users-table,
+  .roles-table,
+  .academic-years-table,
+  .schedules-table,
+  .announcements-table
+) tbody tr {
+  cursor: pointer;
+  transition:
+    background-color var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.table-responsive :is(
+  .students-table,
+  .teachers-table,
+  .courses-table,
+  .classes-table,
+  .grades-table,
+  .departments-table,
+  .subjects-table,
+  .assessments-table,
+  .users-table,
+  .roles-table,
+  .academic-years-table,
+  .schedules-table,
+  .announcements-table
+) tbody tr:hover {
+  background: var(--color-primary-soft);
+  box-shadow: inset 3px 0 0 var(--color-primary);
+}
+
+/* Attendance + report tables are not navigation links.      */
+.table-responsive :is(.attendance-table, .report-result__table) tbody tr {
+  cursor: default;
+}
+
+.table-responsive :is(.attendance-table, .report-result__table) tbody tr:hover {
+  background: var(--color-surface-2);
+  box-shadow: none;
+}
+
+/* Numeric + meta cells keep tabular rhythm.                 */
+.table-responsive :is(
+  .students-table,
+  .teachers-table,
+  .courses-table,
+  .classes-table,
+  .attendance-table,
+  .grades-table,
+  .departments-table,
+  .subjects-table,
+  .assessments-table,
+  .users-table,
+  .roles-table,
+  .academic-years-table,
+  .schedules-table,
+  .announcements-table,
+  .report-result__table
+) :is(
+  .students-table__id,
+  .teachers-table__id,
+  .courses-table__id,
+  .classes-table__id,
+  .attendance-table__id,
+  .grades-table__id,
+  .departments-table__code,
+  .subjects-table__code,
+  .assessments-table__date,
+  .users-table__email,
+  .roles-table__users,
+  .courses-table__credits,
+  .classes-table__capacity,
+  .assessments-table__score
+) {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+}
+
+/* ── Row actions: one shared language via suffix match ───── */
+[class$="-table__actions"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+  white-space: nowrap;
+  text-align: right;
+}
+
+[class$="-table__action"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--motion-duration-fast) var(--motion-ease-spring);
+}
+
+[class$="-table__action"]:hover:not(:disabled) {
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  border-color: var(--color-primary-bg);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+[class$="-table__action"]:active:not(:disabled) {
+  transform: translateY(0) scale(0.94);
+  box-shadow: none;
+}
+
+[class$="-table__action"]:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+[class$="-table__action--danger"]:hover:not(:disabled) {
+  color: var(--color-danger);
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger-bg);
+}
+
+[class$="-table__action"]:disabled {
+  color: var(--color-text-soft);
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+/* ── Status / dependency badges inside tables ────────────── */
+.table-responsive :is(
+  .students-table,
+  .teachers-table,
+  .courses-table,
+  .classes-table,
+  .attendance-table,
+  .grades-table,
+  .departments-table,
+  .subjects-table,
+  .assessments-table,
+  .users-table,
+  .roles-table,
+  .academic-years-table,
+  .schedules-table,
+  .announcements-table,
+  .report-result__table
+) .status-badge {
+  min-height: 24px;
+  padding: 5px 10px;
+  font-size: 0.72rem;
+  font-weight: 650;
+  box-shadow: none;
+}
+
+/* ── Toolbars: inputs become token fields (dark-safe) ────── */
+.students-toolbar--data .search-input__field,
+.students-toolbar--data .field-select,
+.students-toolbar--data .field-input {
+  min-height: 42px;
+  color: var(--color-text);
+  background-color: var(--color-field);
+  border-color: var(--color-border);
+  border-radius: 10px;
+}
+
+.students-toolbar--data .field-select,
+.students-toolbar--data .field-input {
+  min-width: 154px;
+  padding-block: 9px;
+}
+
+.students-toolbar--data .search-input__field {
+  width: clamp(230px, 24vw, 320px);
+  padding-block: 9px;
+}
+
+.students-toolbar--data .search-input__field:hover,
+.students-toolbar--data .field-select:hover,
+.students-toolbar--data .field-input:hover {
+  border-color: var(--color-border-strong);
+  background-color: var(--color-field-hover);
+}
+
+.students-toolbar--data .search-input__field:focus,
+.students-toolbar--data .field-select:focus,
+.students-toolbar--data .field-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-bg);
+}
+
+.students-toolbar--data .students-toolbar__filters .btn,
+.students-toolbar--data .students-toolbar__actions .btn {
+  min-height: 42px;
+  border-radius: 10px;
+}
+
+.students-toolbar--data .students-toolbar__filters .btn:hover:not(:disabled) {
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  border-color: var(--color-primary-bg);
+}
+
+/* ── Empty / error / loading state containers ────────────── */
+.table-state {
+  min-height: 240px;
+  padding: var(--space-6) var(--space-5);
+  border: 1.5px dashed var(--color-border-strong);
+  border-radius: 16px;
+  background: var(--color-surface);
+}
+
+.table-state__icon {
+  color: var(--color-text-soft);
+}
+
+.table-state__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 650;
+  color: var(--color-text);
+}
+
+.table-state__text {
+  margin: 0;
+  max-width: 46ch;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.table-state--error {
+  border-color: var(--color-danger-bg);
+}
+
+.table-state--error .table-state__title {
+  color: var(--color-danger);
+}
+
+.table-state .btn {
+  margin-top: var(--space-1);
+}
+
+.page-status {
+  min-height: 116px;
+  flex-direction: row;
+  font-size: 0.9rem;
+}
+
+/* List pages: lift the empty-state container out of the old
+   hardcoded-light styling into a token-driven card.          */
+.app-layout__main:has(.students-toolbar--data) .table-state {
+  min-height: 210px;
+  padding: var(--space-6) var(--space-5);
+  border-color: var(--color-border-strong);
+  border-radius: 16px;
+  background: var(--color-surface);
+}
+
+/* ── Responsive: inputs stack on small viewports ─────────── */
+@media (max-width: 1023px) {
+  .students-toolbar--data {
+    align-items: stretch;
+  }
+
+  .students-toolbar--data .students-toolbar__filters {
+    flex: 1 1 100%;
+  }
+
+  .students-toolbar--data .search-input__field {
+    width: clamp(220px, 32vw, 300px);
+  }
+}
+
+@media (max-width: 767px) {
+  .students-toolbar--data .search-input,
+  .students-toolbar--data .search-input__field,
+  .students-toolbar--data .field-select,
+  .students-toolbar--data .field-input,
+  .students-toolbar--data .students-toolbar__add,
+  .students-toolbar--data .students-toolbar__actions {
+    width: 100%;
+  }
+
+  .students-toolbar--data .search-input__field {
+    max-width: none;
+  }
+
+  .students-toolbar--data .students-toolbar__actions {
+    display: flex;
+  }
+
+  .students-toolbar--data .students-toolbar__actions .btn {
+    flex: 1 1 auto;
+  }
+
+  .table-responsive:has(table) {
+    border-radius: 14px;
+  }
+}
+
+/* ── Motion respect ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .table-responsive :is(
+    .students-table,
+    .teachers-table,
+    .courses-table,
+    .classes-table,
+    .grades-table,
+    .departments-table,
+    .subjects-table,
+    .assessments-table,
+    .users-table,
+    .roles-table,
+    .academic-years-table,
+    .schedules-table,
+    .announcements-table
+  ) tbody tr,
+  [class$="-table__action"],
+  .students-toolbar--data .search-input__field,
+  .students-toolbar--data .field-select,
+  .students-toolbar--data .field-input {
+    transition: none;
+  }
+
+  [class$="-table__action"]:hover:not(:disabled) {
+    transform: none;
+  }
+}

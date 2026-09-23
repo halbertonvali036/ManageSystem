@@ -6,8 +6,8 @@ import useMediaQuery from '@/hooks/useMediaQuery'
 import {
   TEACHER_NAV_ITEMS,
   TEACHER_PORTAL_LABEL,
-  TEACHER_PORTAL_TITLE,
 } from '@/utils/teacherConstants'
+import { APP_NAME } from '@/utils/constants'
 
 function TeacherSidebar({ collapsed, mobileOpen, onToggleCollapsed, onCloseMobile }) {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
@@ -29,9 +29,14 @@ function TeacherSidebar({ collapsed, mobileOpen, onToggleCollapsed, onCloseMobil
     <>
       <aside className={sidebarClassName} aria-label="Teacher">
         <div className="sidebar__top">
-          <span className="sidebar__brand" title={TEACHER_PORTAL_TITLE}>
+          <span className="sidebar__brand" title={APP_NAME}>
             <BrandLogo size={30} className="sidebar__brand-logo teacher-brand-logo" />
-            <span className="sidebar__brand-name">{TEACHER_PORTAL_LABEL}</span>
+            <span className="sidebar__brand-id">
+              <span className="sidebar__brand-name">{APP_NAME}</span>
+              <span className="sidebar__brand-role">
+                {TEACHER_PORTAL_LABEL} portal
+              </span>
+            </span>
           </span>
           {isDesktop ? (
             <button

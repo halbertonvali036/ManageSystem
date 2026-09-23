@@ -52,11 +52,13 @@ const EditTeacherPage = lazy(() => import('@/pages/EditTeacherPage'))
 const EditUserPage = lazy(() => import('@/pages/EditUserPage'))
 const GradeDetailsPage = lazy(() => import('@/pages/GradeDetailsPage'))
 const GradesPage = lazy(() => import('@/pages/GradesPage'))
+const LandingPage = lazy(() => import('@/pages/LandingPage'))
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
 const MarkAttendancePage = lazy(() => import('@/pages/MarkAttendancePage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 const NotificationsPage = lazy(() => import('@/pages/NotificationsPage'))
 const ReportsPage = lazy(() => import('@/pages/ReportsPage'))
+const RegisterPage = lazy(() => import('@/pages/RegisterPage'))
 const RoleDetailsPage = lazy(() => import('@/pages/RoleDetailsPage'))
 const RolesPage = lazy(() => import('@/pages/RolesPage'))
 const ResetPasswordPage = lazy(() => import('@/pages/ResetPasswordPage'))
@@ -120,8 +122,12 @@ function AppRoutes() {
     <Suspense fallback={<RouteFallback />}>
       <Routes>
         <Route element={<PublicRoute />}>
+          <Route index element={<LandingPage />} />
           <Route path="login" element={<AuthLayout />}>
             <Route index element={<LoginPage />} />
+          </Route>
+          <Route path="register" element={<AuthLayout />}>
+            <Route index element={<RegisterPage />} />
           </Route>
           <Route path="forgot-password" element={<AuthLayout />}>
             <Route index element={<ForgotPasswordPage />} />
@@ -138,7 +144,6 @@ function AppRoutes() {
           </Route>
 
           <Route element={<MainLayout />}>
-            <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="students" element={<StudentsPage />} />
             <Route path="students/new" element={<AddStudentPage />} />
@@ -232,7 +237,7 @@ function AppRoutes() {
               element={
                 <TeacherPlaceholderPage
                   title="Profile"
-                  description="Manage your profile and account details."
+                  description="Profile details will be available when the backend API is connected."
                 />
               }
             />

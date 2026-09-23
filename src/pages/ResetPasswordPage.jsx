@@ -8,7 +8,6 @@ import {
   EyeOff,
   KeyRound,
 } from 'lucide-react'
-import BrandLogo from '@/components/common/BrandLogo'
 import authService from '@/services/authService'
 import { BackendNotConnectedError } from '@/services/httpClient'
 
@@ -40,6 +39,8 @@ function PasswordField({
           onChange={onChange}
           onBlur={onBlur}
           disabled={disabled}
+          aria-invalid={Boolean(error)}
+          aria-describedby={error ? `${id}-error` : undefined}
         />
         <button
           type="button"
@@ -56,7 +57,7 @@ function PasswordField({
           )}
         </button>
       </div>
-      {error ? <p className="form__error">{error}</p> : null}
+      {error ? <p className="form__error" id={`${id}-error`}>{error}</p> : null}
     </div>
   )
 }
@@ -80,7 +81,7 @@ function ResetPasswordPage() {
     return (
       <div className="auth-card anim-scale-in">
         <div className="auth-card__head">
-          <BrandLogo size={44} />
+          <p className="auth-card__eyebrow anim-fade-up anim-delay-1">Account recovery</p>
           <h2 className="auth-card__title anim-fade-up anim-delay-1">
             Reset password
           </h2>
@@ -172,7 +173,7 @@ function ResetPasswordPage() {
     return (
       <div className="auth-card anim-scale-in">
         <div className="auth-card__head">
-          <BrandLogo size={44} />
+          <p className="auth-card__eyebrow anim-fade-up anim-delay-1">Account recovery</p>
           <h2 className="auth-card__title anim-fade-up anim-delay-1">
             Password reset
           </h2>
@@ -204,7 +205,7 @@ function ResetPasswordPage() {
   return (
     <div className="auth-card anim-scale-in">
       <div className="auth-card__head">
-        <BrandLogo size={44} />
+        <p className="auth-card__eyebrow anim-fade-up anim-delay-1">Account recovery</p>
         <h2 className="auth-card__title anim-fade-up anim-delay-1">
           Set a new password
         </h2>

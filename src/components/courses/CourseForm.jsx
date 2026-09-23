@@ -151,6 +151,7 @@ function CourseForm({
             onBlur={handleBlur('courseCode')}
             placeholder="e.g. CS-101"
             disabled={isSubmitting}
+            aria-invalid={fieldError('courseCode') ? 'true' : 'false'}
           />
           {renderedError('courseCode')}
         </div>
@@ -165,6 +166,7 @@ function CourseForm({
             value={values.status}
             onChange={setField('status')}
             disabled={isSubmitting}
+            aria-invalid={fieldError('status') ? 'true' : 'false'}
           >
             <option value="">Select status</option>
             {Object.entries(COURSE_STATUS_LABELS).map(([value, label]) => (
@@ -190,13 +192,14 @@ function CourseForm({
             onBlur={handleBlur('name')}
             placeholder="e.g. Introduction to Computer Science"
             disabled={isSubmitting}
+            aria-invalid={fieldError('name') ? 'true' : 'false'}
           />
           {renderedError('name')}
         </div>
 
         <div className="form__field course-form__field--full">
           <label className="form__label" htmlFor="course-description">
-            Description
+            Description <span className="form__optional">Optional</span>
           </label>
           <textarea
             id="course-description"
@@ -230,13 +233,14 @@ function CourseForm({
             onBlur={handleBlur('credits')}
             placeholder="e.g. 3"
             disabled={isSubmitting}
+            aria-invalid={fieldError('credits') ? 'true' : 'false'}
           />
           {renderedError('credits')}
         </div>
 
         <div className="form__field">
           <label className="form__label" htmlFor="course-department">
-            Department
+            Department <span className="form__optional">Optional</span>
           </label>
           <select
             id="course-department"
@@ -245,6 +249,7 @@ function CourseForm({
             onChange={setField('department')}
             onBlur={handleBlur('department')}
             disabled={isSubmitting || departmentsLoading || !departmentsAvailable}
+            aria-invalid={fieldError('department') ? 'true' : 'false'}
           >
             <option value="">
               {departmentsLoading
@@ -273,7 +278,7 @@ function CourseForm({
 
         <div className="form__field course-form__field--full">
           <label className="form__label" htmlFor="course-teacher">
-            Assigned Teacher
+            Assigned Teacher <span className="form__optional">Optional</span>
           </label>
           <select
             id="course-teacher"
@@ -282,6 +287,7 @@ function CourseForm({
             onChange={setField('teacher')}
             onBlur={handleBlur('teacher')}
             disabled={isSubmitting || teachersLoading || !teachersAvailable}
+            aria-invalid={fieldError('teacher') ? 'true' : 'false'}
           >
             <option value="">
               {teachersLoading

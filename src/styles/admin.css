@@ -103,10 +103,340 @@
   color: var(--color-text-muted);
 }
 
+/* ── Admin dashboard composition and card system ───────────── */
+.admin-dashboard {
+  gap: clamp(var(--space-5), 2.4vw, var(--space-7));
+}
+
+.admin-dashboard .dashboard__intro {
+  gap: var(--space-2);
+  padding-bottom: var(--space-1);
+}
+
+.admin-dashboard .dashboard__greeting {
+  font-size: clamp(1.4rem, 2vw, 1.8rem);
+  font-weight: 750;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+
+.admin-dashboard .dashboard__subtitle {
+  max-width: 68ch;
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+.admin-dashboard .dashboard-chips {
+  margin-top: var(--space-2);
+  gap: var(--space-2);
+}
+
+.admin-dashboard .dashboard-chip {
+  min-height: 32px;
+  padding: 6px 11px;
+  border-radius: var(--radius-full);
+}
+
+.admin-dashboard .stats-grid {
+  gap: var(--space-4);
+}
+
+.admin-dashboard .stat-card-link {
+  border-radius: var(--radius-lg);
+}
+
+.admin-dashboard .stat-card-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+.admin-dashboard .stat-card {
+  gap: var(--space-4);
+  min-height: 112px;
+  padding: var(--space-5);
+  border-color: #e7eaf1;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.035);
+}
+
+.admin-dashboard .stat-card-link:hover .stat-card {
+  transform: translateY(-2px);
+  border-color: #cfd5e2;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.075);
+}
+
+.admin-dashboard .stat-card__icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+.admin-dashboard .stat-card__icon--primary {
+  color: #4c53b8;
+  background: #eef0ff;
+}
+
+.admin-dashboard .stat-card__icon--success {
+  color: #168263;
+  background: #e8f6f1;
+}
+
+.admin-dashboard .stat-card__icon--warning {
+  color: #a96d12;
+  background: #fff4df;
+}
+
+.admin-dashboard .stat-card__icon--danger {
+  color: #b84e56;
+  background: #fcedee;
+}
+
+.admin-dashboard .stat-card__value {
+  font-size: clamp(1.65rem, 2.2vw, 2.1rem);
+  font-weight: 750;
+  letter-spacing: -0.04em;
+}
+
+.admin-dashboard .stat-card__label {
+  margin-top: 5px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.admin-dashboard .dashboard-grid {
+  align-items: stretch;
+  gap: var(--space-5);
+}
+
+.admin-dashboard .card {
+  min-width: 0;
+  border-color: #e7eaf1;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.035);
+}
+
+.admin-dashboard .card:hover {
+  transform: translateY(-1px);
+  border-color: #d5dae5;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.065);
+}
+
+.admin-dashboard .card__header {
+  min-height: 60px;
+  padding: var(--space-4) var(--space-5);
+  background: #fcfcfe;
+}
+
+.admin-dashboard .card__title {
+  font-size: 0.96rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.admin-dashboard .card__body {
+  padding: var(--space-5);
+}
+
+.admin-dashboard .card__action a {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-sm);
+}
+
+.admin-dashboard .card__action a:focus-visible,
+.admin-dashboard .reports-quick__link:focus-visible,
+.admin-dashboard .class-item__subject-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.admin-dashboard .class-list {
+  gap: var(--space-2);
+}
+
+.admin-dashboard .class-item {
+  min-width: 0;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+.admin-dashboard .class-item__subject {
+  font-weight: 650;
+}
+
+.admin-dashboard .widget-caption {
+  margin-bottom: var(--space-3);
+  font-size: 0.8rem;
+}
+
+.admin-dashboard .widget-empty {
+  gap: var(--space-1);
+  padding: var(--space-5) var(--space-4);
+  border-color: #e1e5ee;
+  border-radius: 10px;
+  background: #fafbfc;
+}
+
+.admin-dashboard .widget-empty--compact {
+  padding-block: var(--space-4);
+}
+
+.admin-dashboard .widget-empty__icon {
+  width: 44px;
+  height: 44px;
+  margin-bottom: var(--space-2);
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+.admin-dashboard .widget-empty__title {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.admin-dashboard .widget-empty__text {
+  font-size: 0.82rem;
+}
+
+.admin-dashboard .attendance-summary__bars {
+  gap: var(--space-3);
+}
+
+.admin-dashboard .attendance-bar__track {
+  height: 8px;
+  background: #eef0f4;
+}
+
+.admin-dashboard .attendance-actions,
+.admin-dashboard .widget-actions {
+  gap: var(--space-2);
+}
+
+.admin-dashboard .reports-quick__link {
+  min-height: 58px;
+  transition: color var(--transition-fast), background-color var(--transition-fast), padding var(--transition-fast);
+}
+
+.admin-dashboard .reports-quick__link:hover {
+  padding-inline: var(--space-2);
+  background: #f8f9fc;
+}
+
+.admin-dashboard .reports-quick__description {
+  line-height: 1.45;
+}
+
+.admin-dashboard .recent-announcements__item {
+  padding-block: var(--space-3);
+}
+
+.admin-dashboard .recent-announcements__preview {
+  line-height: 1.5;
+}
+
+@media (max-width: 1199px) {
+  .admin-dashboard .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-dashboard .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 /* ── Responsive ───────────────────────────────────────────── */
 @media (min-width: 768px) and (max-width: 1023px) {
   .admin-dashboard .dashboard-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-5);
   }
+}
+
+@media (max-width: 767px) {
+  .admin-dashboard .stats-grid,
+  .admin-dashboard .dashboard-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .admin-dashboard .stat-card {
+    min-height: 96px;
+    padding: var(--space-4);
+  }
+
+  .admin-dashboard .card__header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: var(--space-4);
+  }
+
+  .admin-dashboard .card__body {
+    padding: var(--space-4);
+  }
+
+  .admin-dashboard .class-item {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .admin-dashboard .class-item__info {
+    flex: 1 1 calc(100% - 100px);
+  }
+
+  .admin-dashboard .class-item__room,
+  .admin-dashboard .class-item__count,
+  .admin-dashboard .class-item .status-badge {
+    margin-left: auto;
+  }
+
+  .admin-dashboard .attendance-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-dashboard .attendance-actions .btn {
+    width: 100%;
+  }
+}
+
+/* Shared dashboard surfaces: role accents remain in their existing icons. */
+.admin-dashboard .card,
+.teacher-dashboard .card,
+.student-dashboard .card {
+  border-color: var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+.admin-dashboard .card:hover,
+.teacher-dashboard .card:hover,
+.student-dashboard .card:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.admin-dashboard .card__header,
+.teacher-dashboard .card__header,
+.student-dashboard .card__header {
+  background: var(--color-surface);
+}
+
+.admin-dashboard .card__title,
+.teacher-dashboard .card__title,
+.student-dashboard .card__title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.admin-dashboard .stat-card,
+.teacher-dashboard .stat-card,
+.student-dashboard .stat-card {
+  border-color: var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
 }

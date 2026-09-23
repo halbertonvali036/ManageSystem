@@ -80,6 +80,14 @@ const resetPassword = async (token, newPassword) => {
   })
 }
 
+// Registration stays unavailable until the backend contract and role policy
+// are defined. Keeping this entry point here avoids reporting a false success.
+const register = async (_payload) => {
+  throw new BackendNotConnectedError(
+    'Account creation is unavailable until registration is configured.',
+  )
+}
+
 const login = async (credentials, { remember = false } = {}) => {
   await delay(MOCK_LOGIN_DELAY_MS)
 
@@ -116,6 +124,7 @@ const authService = {
   logout,
   forgotPassword,
   resetPassword,
+  register,
   getStoredSession: readStoredSession,
   clearStoredSession,
 }

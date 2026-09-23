@@ -50,7 +50,7 @@ function ClassesToolbar({
   const semestersAvailable = semesterOptions.length > 0
 
   return (
-    <div className="students-toolbar">
+    <div className="students-toolbar students-toolbar--data">
       <div className="students-toolbar__filters">
         <div className="search-input">
           <Search className="search-input__icon" size={18} aria-hidden="true" />

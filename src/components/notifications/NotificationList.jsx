@@ -4,7 +4,7 @@ import NotificationItem from '@/components/notifications/NotificationItem'
 
 function NotificationLoading({ compact = false }) {
   return (
-    <div className={`page-status notification-status${compact ? ' notification-status--compact' : ''}`}>
+    <div className={`page-status notification-status${compact ? ' notification-status--compact' : ''}`} role="status">
       <span className="spinner" aria-hidden="true" />
       Loading notifications&hellip;
     </div>

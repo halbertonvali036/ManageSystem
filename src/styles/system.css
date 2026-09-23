@@ -1,0 +1,285 @@
+/* ============================================================
+   Phase 7C — Settings, notifications and system states
+   Final render layer: refines the shared settings, notification,
+   empty/error and status surfaces without touching any logic.
+   Token-only; assumes global notifications/settings/status bases.
+   ============================================================ */
+
+/* ── Settings page ────────────────────────────────────────── */
+.settings-page {
+  gap: var(--space-4) var(--space-3);
+}
+
+.settings-page .page-description {
+  color: var(--color-text-soft);
+}
+
+.settings-section {
+  overflow: hidden;
+  border-color: var(--color-border);
+}
+
+.settings-section__header {
+  align-items: flex-start;
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.settings-section__icon {
+  border-color: color-mix(in srgb, var(--color-primary) 26%, var(--color-border));
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-section__description {
+  color: var(--color-text-soft);
+}
+
+.settings-grid {
+  gap: var(--space-4) var(--space-3);
+}
+
+/* ── Settings placeholders (backend unavailable) ─────────── */
+.settings-placeholder-stack {
+  gap: var(--space-3);
+}
+
+.settings-placeholder {
+  border-color: var(--color-border);
+  background: var(--color-surface-2);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.settings-placeholder:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-xs);
+}
+
+.settings-placeholder__icon {
+  background: var(--color-surface-3);
+  border-color: var(--color-border);
+  border-style: dashed;
+  color: var(--color-text-soft);
+}
+
+.settings-placeholder__heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.settings-placeholder__heading .settings-placeholder__title {
+  margin-bottom: 0;
+}
+
+.settings-placeholder__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 9px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+  background: var(--color-surface-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+.settings-placeholder__text {
+  color: var(--color-text-soft);
+}
+
+.settings-placeholder .btn:disabled {
+  border-style: dashed;
+  border-color: var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-soft);
+  opacity: 1;
+}
+
+.settings-placeholder .btn:disabled:hover {
+  background: var(--color-surface);
+}
+
+/* ── Settings actions ────────────────────────────────────── */
+.settings-actions .btn:not(.btn--primary):hover:not(:disabled) {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+  background: var(--color-danger-bg);
+}
+
+/* ── Notifications page ──────────────────────────────────── */
+.notifications-page .page-description {
+  color: var(--color-text-soft);
+}
+
+.notifications-page .notification-list {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.notifications-page .notification-item + .notification-item {
+  border-top: 1px solid var(--color-hairline);
+}
+
+/* ── Notification items ──────────────────────────────────── */
+.notification-item {
+  border-color: var(--color-hairline);
+}
+
+.notification-item--unread {
+  background: color-mix(in srgb, var(--color-primary-bg) 55%, transparent);
+}
+
+.notification-item__button {
+  transition: background var(--transition-fast);
+}
+
+.notification-item__button:hover:not(:disabled) {
+  background: var(--color-surface-2);
+}
+
+.notification-item__icon {
+  border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  box-shadow: var(--shadow-xs);
+}
+
+.notification-item__message {
+  color: var(--color-text-soft);
+}
+
+.notification-item__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.notification-item__date {
+  font-size: 0.74rem;
+}
+
+.notification-empty .widget-empty__icon {
+  border-color: var(--color-primary-bg);
+}
+
+/* ── Notification dropdown ───────────────────────────────── */
+.notification-dropdown {
+  border-color: var(--color-border);
+}
+
+.notification-dropdown__header {
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface-2);
+}
+
+.notification-dropdown__title {
+  font-size: 0.92rem;
+}
+
+.notification-dropdown__view-all {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.notification-dropdown__view-all:hover {
+  background: var(--color-primary-bg);
+  color: var(--color-primary-hover);
+  text-decoration: none;
+}
+
+/* ── Status / error pages ────────────────────────────────── */
+.status-page {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.status-page__icon {
+  box-shadow: var(--shadow-xs);
+}
+
+.status-page__text {
+  color: var(--color-text-soft);
+}
+
+.error-fallback__details {
+  margin-top: var(--space-2);
+}
+
+.error-fallback__details summary {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 6px 12px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--color-text-soft);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+.error-fallback__details summary:hover {
+  color: var(--color-text);
+  border-color: var(--color-border-strong);
+}
+
+.error-fallback__details pre {
+  text-align: left;
+}
+
+/* ── Shared empty / loading states ───────────────────────── */
+.table-state__icon {
+  color: var(--color-text-soft);
+  background: var(--color-surface-2);
+  border-color: var(--color-border);
+}
+
+.table-state__text {
+  color: var(--color-text-soft);
+}
+
+.page-status {
+  color: var(--color-text-soft);
+  font-weight: 600;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  .settings-grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  }
+
+  .settings-section__header {
+    gap: var(--space-4);
+  }
+
+  .status-page {
+    border-radius: var(--radius-lg);
+  }
+}
+
+@media (max-width: 520px) {
+  .settings-placeholder__heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .status-page__code {
+    font-size: clamp(3.5rem, 16vw, 5rem);
+  }
+
+  .notification-item__button {
+    padding: var(--space-3) var(--space-3);
+  }
+}

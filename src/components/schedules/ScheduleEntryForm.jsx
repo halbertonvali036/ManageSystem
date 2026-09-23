@@ -137,6 +137,8 @@ function ScheduleEntryForm({
   const renderedError = (field) =>
     fieldError(field) ? <p className="form__error">{fieldError(field)}</p> : null
 
+  const ariaInvalid = (field) => (fieldError(field) ? 'true' : 'false')
+
   const yearSelectDisabled =
     isSubmitting || academicYearsLoading || !yearsAvailable
   const semesterSelectDisabled =
@@ -154,297 +156,323 @@ function ScheduleEntryForm({
         </div>
       ) : null}
 
-      <div className="schedule-entry-form__grid">
-        <div className="form__field">
-          <label className="form__label" htmlFor="schedule-academicYearId">
-            Academic Year <span className="form__required">*</span>
-          </label>
-          <select
-            id="schedule-academicYearId"
-            className="form__input form__select"
-            value={values.academicYearId}
-            onChange={setField('academicYearId')}
-            onBlur={handleBlur('academicYearId')}
-            disabled={yearSelectDisabled}
-          >
-            {academicYearsLoading ? (
-              <option value="">Loading academic years&hellip;</option>
-            ) : yearsAvailable ? (
-              <>
-                <option value="">Select academic year</option>
-                {yearOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </>
-            ) : (
-              <option value="">No academic years available yet</option>
-            )}
-          </select>
-          {!academicYearsLoading && !yearsAvailable ? (
-            <p className="form__hint">
-              Academic year options will appear here once academic year records
-              exist.
-            </p>
-          ) : (
-            renderedError('academicYearId')
-          )}
-        </div>
+      <fieldset className="form__section">
+        <legend className="form__section-title">Academic period</legend>
 
-        <div className="form__field">
-          <label className="form__label" htmlFor="schedule-semesterId">
-            Semester <span className="form__required">*</span>
-          </label>
-          <select
-            id="schedule-semesterId"
-            className="form__input form__select"
-            value={values.semesterId}
-            onChange={setField('semesterId')}
-            onBlur={handleBlur('semesterId')}
-            disabled={semesterSelectDisabled}
-          >
-            {values.academicYearId ? (
-              semestersLoading ? (
-                <option value="">Loading semesters&hellip;</option>
-              ) : semestersAvailable ? (
+        <div className="schedule-entry-form__grid">
+          <div className="form__field">
+            <label className="form__label" htmlFor="schedule-academicYearId">
+              Academic Year <span className="form__required">*</span>
+            </label>
+            <select
+              id="schedule-academicYearId"
+              className="form__input form__select"
+              value={values.academicYearId}
+              onChange={setField('academicYearId')}
+              onBlur={handleBlur('academicYearId')}
+              disabled={yearSelectDisabled}
+              aria-invalid={ariaInvalid('academicYearId')}
+            >
+              {academicYearsLoading ? (
+                <option value="">Loading academic years&hellip;</option>
+              ) : yearsAvailable ? (
                 <>
-                  <option value="">Select semester</option>
-                  {semesterOptions.map((option) => (
+                  <option value="">Select academic year</option>
+                  {yearOptions.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
                   ))}
                 </>
               ) : (
-                <option value="">No semesters for this academic year</option>
-              )
+                <option value="">No academic years available yet</option>
+              )}
+            </select>
+            {!academicYearsLoading && !yearsAvailable ? (
+              <p className="form__hint">
+                Academic year options will appear here once academic year records
+                exist.
+              </p>
             ) : (
-              <option value=""></option>
+              renderedError('academicYearId')
             )}
-          </select>
-          {values.academicYearId &&
-          !semestersLoading &&
-          yearsAvailable &&
-          !semestersAvailable ? (
-            <p className="form__hint">
-              No semester records exist for this academic year yet. Add
-              semesters from the academic year details page first.
-            </p>
-          ) : (
-            renderedError('semesterId')
-          )}
-        </div>
+          </div>
 
-        <div className="form__field">
-          <label className="form__label" htmlFor="schedule-classId">
-            Class <span className="form__required">*</span>
-          </label>
-          <select
-            id="schedule-classId"
-            className="form__input form__select"
-            value={values.classId}
-            onChange={setField('classId')}
-            onBlur={handleBlur('classId')}
-            disabled={classSelectDisabled}
-          >
-            {classesLoading ? (
-              <option value="">Loading classes&hellip;</option>
-            ) : classesAvailable ? (
-              <>
-                <option value="">Select class</option>
-                {classOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </>
+          <div className="form__field">
+            <label className="form__label" htmlFor="schedule-semesterId">
+              Semester <span className="form__required">*</span>
+            </label>
+            <select
+              id="schedule-semesterId"
+              className="form__input form__select"
+              value={values.semesterId}
+              onChange={setField('semesterId')}
+              onBlur={handleBlur('semesterId')}
+              disabled={semesterSelectDisabled}
+              aria-invalid={ariaInvalid('semesterId')}
+            >
+              {values.academicYearId ? (
+                semestersLoading ? (
+                  <option value="">Loading semesters&hellip;</option>
+                ) : semestersAvailable ? (
+                  <>
+                    <option value="">Select semester</option>
+                    {semesterOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </>
+                ) : (
+                  <option value="">No semesters for this academic year</option>
+                )
+              ) : (
+                <option value=""></option>
+              )}
+            </select>
+            {values.academicYearId &&
+            !semestersLoading &&
+            yearsAvailable &&
+            !semestersAvailable ? (
+              <p className="form__hint">
+                No semester records exist for this academic year yet. Add
+                semesters from the academic year details page first.
+              </p>
             ) : (
-              <option value="">No classes available yet</option>
+              renderedError('semesterId')
             )}
-          </select>
-          {!classesLoading && !classesAvailable ? (
-            <p className="form__hint">
-              Class options will appear here once class records exist.
-            </p>
-          ) : (
-            renderedError('classId')
-          )}
+          </div>
         </div>
+      </fieldset>
 
-        <div className="form__field">
-          <label className="form__label" htmlFor="schedule-courseId">
-            Course <span className="form__required">*</span>
-          </label>
-          <select
-            id="schedule-courseId"
-            className="form__input form__select"
-            value={values.courseId}
-            onChange={setField('courseId')}
-            onBlur={handleBlur('courseId')}
-            disabled={courseSelectDisabled}
-          >
-            {coursesLoading ? (
-              <option value="">Loading courses&hellip;</option>
-            ) : coursesAvailable ? (
-              <>
-                <option value="">Select course</option>
-                {courseOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </>
+      <fieldset className="form__section">
+        <legend className="form__section-title">Assignment</legend>
+
+        <div className="schedule-entry-form__grid">
+          <div className="form__field">
+            <label className="form__label" htmlFor="schedule-classId">
+              Class <span className="form__required">*</span>
+            </label>
+            <select
+              id="schedule-classId"
+              className="form__input form__select"
+              value={values.classId}
+              onChange={setField('classId')}
+              onBlur={handleBlur('classId')}
+              disabled={classSelectDisabled}
+              aria-invalid={ariaInvalid('classId')}
+            >
+              {classesLoading ? (
+                <option value="">Loading classes&hellip;</option>
+              ) : classesAvailable ? (
+                <>
+                  <option value="">Select class</option>
+                  {classOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </>
+              ) : (
+                <option value="">No classes available yet</option>
+              )}
+            </select>
+            {!classesLoading && !classesAvailable ? (
+              <p className="form__hint">
+                Class options will appear here once class records exist.
+              </p>
             ) : (
-              <option value="">No courses available yet</option>
+              renderedError('classId')
             )}
-          </select>
-          {!coursesLoading && !coursesAvailable ? (
-            <p className="form__hint">
-              Course options will appear here once course records exist.
-            </p>
-          ) : (
-            renderedError('courseId')
-          )}
-        </div>
+          </div>
 
-        <div className="form__field">
-          <label className="form__label" htmlFor="schedule-teacherId">
-            Teacher <span className="form__required">*</span>
-          </label>
-          <select
-            id="schedule-teacherId"
-            className="form__input form__select"
-            value={values.teacherId}
-            onChange={setField('teacherId')}
-            onBlur={handleBlur('teacherId')}
-            disabled={teacherSelectDisabled}
-          >
-            {teachersLoading ? (
-              <option value="">Loading teachers&hellip;</option>
-            ) : teachersAvailable ? (
-              <>
-                <option value="">Select teacher</option>
-                {teacherOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </>
+          <div className="form__field">
+            <label className="form__label" htmlFor="schedule-courseId">
+              Course <span className="form__required">*</span>
+            </label>
+            <select
+              id="schedule-courseId"
+              className="form__input form__select"
+              value={values.courseId}
+              onChange={setField('courseId')}
+              onBlur={handleBlur('courseId')}
+              disabled={courseSelectDisabled}
+              aria-invalid={ariaInvalid('courseId')}
+            >
+              {coursesLoading ? (
+                <option value="">Loading courses&hellip;</option>
+              ) : coursesAvailable ? (
+                <>
+                  <option value="">Select course</option>
+                  {courseOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </>
+              ) : (
+                <option value="">No courses available yet</option>
+              )}
+            </select>
+            {!coursesLoading && !coursesAvailable ? (
+              <p className="form__hint">
+                Course options will appear here once course records exist.
+              </p>
             ) : (
-              <option value="">No teachers available yet</option>
+              renderedError('courseId')
             )}
-          </select>
-          {!teachersLoading && !teachersAvailable ? (
-            <p className="form__hint">
-              Teacher options will appear here once teacher records exist.
-            </p>
-          ) : (
-            renderedError('teacherId')
-          )}
+          </div>
+
+          <div className="form__field">
+            <label className="form__label" htmlFor="schedule-teacherId">
+              Teacher <span className="form__required">*</span>
+            </label>
+            <select
+              id="schedule-teacherId"
+              className="form__input form__select"
+              value={values.teacherId}
+              onChange={setField('teacherId')}
+              onBlur={handleBlur('teacherId')}
+              disabled={teacherSelectDisabled}
+              aria-invalid={ariaInvalid('teacherId')}
+            >
+              {teachersLoading ? (
+                <option value="">Loading teachers&hellip;</option>
+              ) : teachersAvailable ? (
+                <>
+                  <option value="">Select teacher</option>
+                  {teacherOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </>
+              ) : (
+                <option value="">No teachers available yet</option>
+              )}
+            </select>
+            {!teachersLoading && !teachersAvailable ? (
+              <p className="form__hint">
+                Teacher options will appear here once teacher records exist.
+              </p>
+            ) : (
+              renderedError('teacherId')
+            )}
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset className="form__section">
+        <legend className="form__section-title">Schedule</legend>
+
+        <div className="schedule-entry-form__grid">
+          <div className="form__field">
+            <label className="form__label" htmlFor="schedule-dayOfWeek">
+              Day of Week <span className="form__required">*</span>
+            </label>
+            <select
+              id="schedule-dayOfWeek"
+              className="form__input form__select"
+              value={values.dayOfWeek}
+              onChange={setField('dayOfWeek')}
+              onBlur={handleBlur('dayOfWeek')}
+              disabled={isSubmitting}
+              aria-invalid={ariaInvalid('dayOfWeek')}
+            >
+              <option value="">Select day</option>
+              {SCHEDULE_DAY_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            {renderedError('dayOfWeek')}
+          </div>
+
+          <div className="form__field">
+            <label className="form__label" htmlFor="schedule-startTime">
+              Start Time <span className="form__required">*</span>
+            </label>
+            <input
+              id="schedule-startTime"
+              className={inputClass('startTime')}
+              type="time"
+              autoComplete="off"
+              value={values.startTime}
+              onChange={setField('startTime')}
+              onBlur={handleBlur('startTime')}
+              disabled={isSubmitting}
+              aria-invalid={ariaInvalid('startTime')}
+            />
+            {renderedError('startTime')}
+          </div>
+
+          <div className="form__field">
+            <label className="form__label" htmlFor="schedule-endTime">
+              End Time <span className="form__required">*</span>
+            </label>
+            <input
+              id="schedule-endTime"
+              className={inputClass('endTime')}
+              type="time"
+              autoComplete="off"
+              value={values.endTime}
+              onChange={setField('endTime')}
+              onBlur={handleBlur('endTime')}
+              disabled={isSubmitting}
+              aria-invalid={ariaInvalid('endTime')}
+            />
+            {renderedError('endTime')}
+          </div>
+
+          <div className="form__field">
+            <label className="form__label" htmlFor="schedule-room">
+              Room <span className="form__optional">Optional</span>
+            </label>
+            <input
+              id="schedule-room"
+              className={inputClass('room')}
+              type="text"
+              autoComplete="off"
+              value={values.room}
+              onChange={setField('room')}
+              onBlur={handleBlur('room')}
+              placeholder="e.g. B-204"
+              disabled={isSubmitting}
+              aria-invalid={ariaInvalid('room')}
+            />
+            {renderedError('room')}
+          </div>
+
+          <div className="form__field">
+            <label className="form__label" htmlFor="schedule-status">
+              Status <span className="form__required">*</span>
+            </label>
+            <select
+              id="schedule-status"
+              className="form__input form__select"
+              value={values.status}
+              onChange={setField('status')}
+              disabled={isSubmitting}
+              aria-invalid={ariaInvalid('status')}
+            >
+              <option value="">Select status</option>
+              {Object.entries(SCHEDULE_STATUS_LABELS).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+            {renderedError('status')}
+          </div>
         </div>
 
-        <div className="form__field">
-          <label className="form__label" htmlFor="schedule-dayOfWeek">
-            Day of Week <span className="form__required">*</span>
-          </label>
-          <select
-            id="schedule-dayOfWeek"
-            className="form__input form__select"
-            value={values.dayOfWeek}
-            onChange={setField('dayOfWeek')}
-            onBlur={handleBlur('dayOfWeek')}
-            disabled={isSubmitting}
-          >
-            <option value="">Select day</option>
-            {SCHEDULE_DAY_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          {renderedError('dayOfWeek')}
-        </div>
-
-        <div className="form__field">
-          <label className="form__label" htmlFor="schedule-startTime">
-            Start Time <span className="form__required">*</span>
-          </label>
-          <input
-            id="schedule-startTime"
-            className={inputClass('startTime')}
-            type="time"
-            autoComplete="off"
-            value={values.startTime}
-            onChange={setField('startTime')}
-            onBlur={handleBlur('startTime')}
-            disabled={isSubmitting}
-          />
-          {renderedError('startTime')}
-        </div>
-
-        <div className="form__field">
-          <label className="form__label" htmlFor="schedule-endTime">
-            End Time <span className="form__required">*</span>
-          </label>
-          <input
-            id="schedule-endTime"
-            className={inputClass('endTime')}
-            type="time"
-            autoComplete="off"
-            value={values.endTime}
-            onChange={setField('endTime')}
-            onBlur={handleBlur('endTime')}
-            disabled={isSubmitting}
-          />
-          {renderedError('endTime')}
-        </div>
-
-        <div className="form__field">
-          <label className="form__label" htmlFor="schedule-room">
-            Room
-          </label>
-          <input
-            id="schedule-room"
-            className={inputClass('room')}
-            type="text"
-            autoComplete="off"
-            value={values.room}
-            onChange={setField('room')}
-            onBlur={handleBlur('room')}
-            placeholder="e.g. B-204"
-            disabled={isSubmitting}
-          />
-          {renderedError('room')}
-        </div>
-
-        <div className="form__field">
-          <label className="form__label" htmlFor="schedule-status">
-            Status <span className="form__required">*</span>
-          </label>
-          <select
-            id="schedule-status"
-            className="form__input form__select"
-            value={values.status}
-            onChange={setField('status')}
-            disabled={isSubmitting}
-          >
-            <option value="">Select status</option>
-            {Object.entries(SCHEDULE_STATUS_LABELS).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-          {renderedError('status')}
-        </div>
-      </div>
-
-      <p className="form__hint schedule-entry-form__conflict-hint">
-        Scheduling conflicts such as a teacher, class or room being booked at
-        the same time are checked by the backend and will be shown above if
-        detected.
-      </p>
+        <p className="form__hint schedule-entry-form__conflict-hint">
+          Scheduling conflicts such as a teacher, class or room being booked at
+          the same time are checked by the backend and will be shown above if
+          detected.
+        </p>
+      </fieldset>
 
       <div className="schedule-entry-form__actions">
         <button

@@ -69,21 +69,25 @@ function AssessmentsOverviewCard({ assessments, isLoading, error, onRetry }) {
             return (
               <li className="assessments-overview__item" key={assessment.id}>
                 <div className="assessments-overview__body">
+                  <span className="assessments-overview__type">
+                    {formatAssessmentType(assessment)}
+                  </span>
                   <h3 className="assessments-overview__title">
                     {formatAssessmentTitle(assessment)}
                   </h3>
                   <p className="assessments-overview__meta">
-                    {formatAssessmentType(assessment)} ·{' '}
-                    {formatAssessmentClassName(assessment)} ·{' '}
-                    {formatAssessmentDate(assessment)}
+                    {formatAssessmentClassName(assessment)}
                   </p>
                 </div>
                 <div className="assessments-overview__side">
+                  <span className="assessments-overview__date">
+                    {formatAssessmentDate(assessment)}
+                  </span>
                   <AssessmentStatusBadge status={assessment.status} />
                   {gradeLink ? (
                     <Link
                       to={gradeLink}
-                      className="form__link assessments-overview__grade"
+                      className="assessments-overview__grade"
                     >
                       Enter Grades
                     </Link>
@@ -93,16 +97,6 @@ function AssessmentsOverviewCard({ assessments, isLoading, error, onRetry }) {
             )
           })}
         </ul>
-      ) : null}
-      {!isLoading && !error && assessments.length > 0 ? (
-        <div className="widget-actions">
-          <Link
-            to="/teacher/assessments"
-            className="btn btn--primary btn--block"
-          >
-            View All Assessments
-          </Link>
-        </div>
       ) : null}
     </Card>
   )

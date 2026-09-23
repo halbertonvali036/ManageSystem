@@ -18,7 +18,7 @@ function IdleState() {
 
 function LoadingState() {
   return (
-    <div className="page-status">
+    <div className="page-status" role="status">
       <span className="spinner" aria-hidden="true" />
       Generating report&hellip;
     </div>

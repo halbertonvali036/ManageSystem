@@ -220,6 +220,7 @@ function AssessmentForm({
             onBlur={handleBlur('title')}
             placeholder="e.g. Midterm Examination - Algorithms"
             disabled={isSubmitting}
+            aria-invalid={fieldError('title') ? 'true' : 'false'}
           />
           {renderedError('title')}
         </div>
@@ -234,6 +235,7 @@ function AssessmentForm({
             value={values.type}
             onChange={setField('type')}
             disabled={isSubmitting}
+            aria-invalid={fieldError('type') ? 'true' : 'false'}
           >
             {TYPE_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
@@ -246,7 +248,7 @@ function AssessmentForm({
 
         <div className="form__field">
           <label className="form__label" htmlFor="assessment-maximumScore">
-            Maximum Score
+            Maximum Score <span className="form__optional">Optional</span>
           </label>
           <input
             id="assessment-maximumScore"
@@ -262,6 +264,7 @@ function AssessmentForm({
             onBlur={handleBlur('maximumScore')}
             placeholder="e.g. 100"
             disabled={isSubmitting}
+            aria-invalid={fieldError('maximumScore') ? 'true' : 'false'}
           />
           {renderedError('maximumScore')}
         </div>
@@ -279,6 +282,7 @@ function AssessmentForm({
             onChange={setField('date')}
             onBlur={handleBlur('date')}
             disabled={isSubmitting}
+            aria-invalid={fieldError('date') ? 'true' : 'false'}
           />
           {renderedError('date')}
         </div>
@@ -294,6 +298,7 @@ function AssessmentForm({
             onChange={setField('courseId')}
             onBlur={handleBlur('courseId')}
             disabled={courseSelectDisabled}
+            aria-invalid={fieldError('courseId') ? 'true' : 'false'}
           >
             {coursesLoading ? (
               <option value="">Loading courses&hellip;</option>
@@ -321,7 +326,7 @@ function AssessmentForm({
 
         <div className="form__field">
           <label className="form__label" htmlFor="assessment-classId">
-            Class
+            Class <span className="form__optional">Optional</span>
           </label>
           <select
             id="assessment-classId"
@@ -329,6 +334,7 @@ function AssessmentForm({
             value={values.classId}
             onChange={setField('classId')}
             disabled={classSelectDisabled}
+            aria-invalid={fieldError('classId') ? 'true' : 'false'}
           >
             {values.courseId ? (
               classesLoading ? (
@@ -369,6 +375,7 @@ function AssessmentForm({
             value={values.status}
             onChange={setField('status')}
             disabled={isSubmitting}
+            aria-invalid={fieldError('status') ? 'true' : 'false'}
           >
             {STATUS_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
@@ -381,7 +388,7 @@ function AssessmentForm({
 
         <div className="form__field assessment-form__field--full">
           <label className="form__label" htmlFor="assessment-description">
-            Description
+            Description <span className="form__optional">Optional</span>
           </label>
           <textarea
             id="assessment-description"

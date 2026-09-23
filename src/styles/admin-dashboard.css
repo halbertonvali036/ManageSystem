@@ -1,0 +1,1048 @@
+/* ============================================================
+   Admin Dashboard — premium workspace
+   Loaded LAST (after admin.css) so every rule here wins the
+   cascade. Token-driven; works in light + dark. Nothing here
+   changes layout shells, tables, forms or other roles.
+   ============================================================ */
+
+.admin-dashboard .dashboard__context {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.admin-dashboard .dashboard-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 6px 12px;
+  font-size: 0.76rem;
+  font-weight: 650;
+  color: var(--color-role-admin);
+  background: color-mix(in srgb, var(--color-role-admin) 11%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-role-admin) 26%, transparent);
+  border-radius: var(--radius-full);
+}
+
+.admin-dashboard .dashboard-period {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 32px;
+  padding: 5px 12px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+.admin-dashboard .dashboard-period__icon {
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
+.admin-dashboard .dashboard-period__link {
+  color: var(--color-primary);
+  font-weight: 650;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.admin-dashboard .dashboard-period__link:hover {
+  text-decoration: underline;
+}
+
+.admin-dashboard .dashboard-period__link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.admin-dashboard .dashboard-period__sep {
+  color: var(--color-text-soft);
+}
+
+.admin-dashboard .dashboard-period__value {
+  color: var(--color-text);
+  font-weight: 650;
+}
+
+/* ── Primary summary ──────────────────────────────────────── */
+.admin-dashboard .dashboard-summary {
+  min-width: 0;
+}
+
+.admin-dashboard .dashboard-summary__head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.admin-dashboard .dashboard-summary__title {
+  margin: 0;
+  font-size: 0.76rem;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.admin-dashboard .dashboard-summary__hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--color-text-soft);
+}
+
+.admin-dashboard .stats-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.admin-dashboard .stat-card {
+  position: relative;
+  overflow: hidden;
+  gap: var(--space-4);
+  min-height: 112px;
+  padding: var(--space-5);
+  border-color: var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+.admin-dashboard .stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--sc-accent, var(--color-primary));
+  opacity: 0;
+  transform: scaleX(0.6);
+  transition: opacity var(--transition-fast), transform var(--transition-smooth);
+}
+
+.admin-dashboard .stat-card-link:hover .stat-card::before {
+  opacity: 1;
+  transform: none;
+}
+
+.admin-dashboard .stat-card-link:hover .stat-card {
+  transform: translateY(-2px);
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.admin-dashboard .stat-card:has(.stat-card__icon--primary) {
+  --sc-accent: var(--color-primary);
+}
+
+.admin-dashboard .stat-card:has(.stat-card__icon--success) {
+  --sc-accent: var(--color-success);
+}
+
+.admin-dashboard .stat-card:has(.stat-card__icon--warning) {
+  --sc-accent: var(--color-warning);
+}
+
+.admin-dashboard .stat-card:has(.stat-card__icon--danger) {
+  --sc-accent: var(--color-danger);
+}
+
+.admin-dashboard .stat-card__icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  box-shadow: none;
+  transition: transform var(--transition-smooth);
+}
+
+.admin-dashboard .stat-card-link:hover .stat-card__icon {
+  transform: translateY(-1px) scale(1.04);
+}
+
+.admin-dashboard .stat-card__icon--primary {
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 22%, transparent);
+}
+
+.admin-dashboard .stat-card__icon--success {
+  color: var(--color-success);
+  background: color-mix(in srgb, var(--color-success) 13%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-success) 24%, transparent);
+}
+
+.admin-dashboard .stat-card__icon--warning {
+  color: var(--color-warning);
+  background: color-mix(in srgb, var(--color-warning) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-warning) 24%, transparent);
+}
+
+.admin-dashboard .stat-card__icon--danger {
+  color: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-danger) 24%, transparent);
+}
+
+.admin-dashboard .stat-card__value {
+  font-size: clamp(1.65rem, 2.2vw, 2.1rem);
+  font-weight: 780;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-dashboard .stat-card__label {
+  margin-top: 5px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* ── Secondary metrics strip ──────────────────────────────── */
+.metrics-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.metrics-strip__tile {
+  --metric-accent: var(--color-primary);
+  min-width: 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-surface-2) 82%, transparent);
+  transition: border-color var(--transition-fast), background var(--transition-fast),
+    transform var(--transition-smooth), box-shadow var(--transition-smooth);
+}
+
+.metrics-strip__tile--info {
+  --metric-accent: var(--color-info);
+}
+
+.metrics-strip__tile--primary {
+  --metric-accent: var(--color-primary);
+}
+
+.metrics-strip__tile--success {
+  --metric-accent: var(--color-success);
+}
+
+.metrics-strip__tile--warning {
+  --metric-accent: var(--color-warning);
+}
+
+.metrics-strip__tile:hover {
+  transform: translateY(-1px);
+  border-color: var(--color-border-strong);
+  background: color-mix(in srgb, var(--color-surface-3) 72%, transparent);
+  box-shadow: var(--shadow-sm);
+}
+
+.metrics-strip__link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  color: inherit;
+  text-decoration: none;
+  border-radius: inherit;
+}
+
+.metrics-strip__link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.metrics-strip__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  color: var(--metric-accent);
+  background: color-mix(in srgb, var(--metric-accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--metric-accent) 24%, transparent);
+  border-radius: 10px;
+  transition: transform var(--transition-smooth);
+}
+
+.metrics-strip__tile:hover .metrics-strip__icon {
+  transform: scale(1.04);
+}
+
+.metrics-strip__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.metrics-strip__value {
+  font-size: 1.08rem;
+  font-weight: 760;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+
+.metrics-strip__label {
+  font-size: 0.74rem;
+  font-weight: 560;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Card system ──────────────────────────────────────────── */
+.admin-dashboard .card {
+  min-width: 0;
+  border-color: var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+.admin-dashboard .card:hover {
+  transform: translateY(-1px);
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.admin-dashboard .card__header {
+  min-height: 60px;
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface);
+}
+
+.admin-dashboard .card__title {
+  font-size: 0.98rem;
+  font-weight: 720;
+  letter-spacing: -0.015em;
+}
+
+.admin-dashboard .card__body {
+  padding: var(--space-5);
+  min-width: 0;
+}
+
+.admin-dashboard .card__action .form__link {
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color var(--transition-fast), gap var(--transition-fast);
+}
+
+.admin-dashboard .card__action .form__link::after {
+  content: '→';
+  font-size: 0.85em;
+  line-height: 1;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.admin-dashboard .card__action .form__link:hover,
+.admin-dashboard .card__action .form__link:focus-visible {
+  color: var(--color-primary);
+  gap: 6px;
+}
+
+.admin-dashboard .card__action .form__link:hover::after,
+.admin-dashboard .card__action .form__link:focus-visible::after {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Schedule widget ──────────────────────────────────────── */
+.admin-dashboard .schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin-dashboard .schedule-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-3);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--color-surface-2) 62%, transparent);
+  border: 1px solid var(--color-border);
+  transition: border-color var(--transition-fast), background var(--transition-fast),
+    box-shadow var(--transition-smooth);
+}
+
+.admin-dashboard .schedule-item:hover {
+  border-color: var(--color-border-strong);
+  background: color-mix(in srgb, var(--color-surface-3) 62%, transparent);
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-dashboard .schedule-item__time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 78px;
+  padding: var(--space-1) var(--space-2);
+  font-size: 0.76rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 24%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.admin-dashboard .schedule-item__body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.admin-dashboard .schedule-item__title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.admin-dashboard .schedule-item__class,
+.admin-dashboard .schedule-item__class-link {
+  font-size: 0.9rem;
+  font-weight: 650;
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+.admin-dashboard .schedule-item__class-link {
+  text-decoration: none;
+}
+
+.admin-dashboard .schedule-item__class-link:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.admin-dashboard .schedule-item__class-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.admin-dashboard .schedule-item__day {
+  flex-shrink: 0;
+  padding: 2px 9px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+.admin-dashboard .schedule-item__course {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 540;
+  color: var(--color-text-muted);
+}
+
+.admin-dashboard .schedule-item__teacher {
+  margin: 0;
+  font-size: 0.76rem;
+  color: var(--color-text-soft);
+}
+
+.admin-dashboard .schedule-item__room {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  margin-left: auto;
+  padding: 4px 10px;
+  font-size: 0.76rem;
+  font-weight: 620;
+  color: var(--color-text-muted);
+  background: var(--color-field);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+/* ── Attendance widget ────────────────────────────────────── */
+.admin-dashboard .attendance-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.admin-dashboard .attendance-summary__total {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.admin-dashboard .attendance-summary__total-value {
+  font-size: clamp(1.8rem, 2.2vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+
+.admin-dashboard .attendance-summary__total-label {
+  font-size: 0.8rem;
+  font-weight: 520;
+  color: var(--color-text-muted);
+}
+
+.admin-dashboard .attendance-stack {
+  display: flex;
+  height: 8px;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--color-bg);
+}
+
+.admin-dashboard .attendance-stack__fill--present {
+  background: var(--color-success);
+}
+
+.admin-dashboard .attendance-stack__fill--late {
+  background: var(--color-warning);
+}
+
+.admin-dashboard .attendance-stack__fill--absent {
+  background: var(--color-danger);
+}
+
+.admin-dashboard .attendance-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin-dashboard .attendance-row {
+  --row-accent: var(--color-success);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.admin-dashboard .attendance-row--late {
+  --row-accent: var(--color-warning);
+}
+
+.admin-dashboard .attendance-row--absent {
+  --row-accent: var(--color-danger);
+}
+
+.admin-dashboard .attendance-row__dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--row-accent);
+}
+
+.admin-dashboard .attendance-row__label {
+  flex-shrink: 0;
+  min-width: 68px;
+  font-size: 0.8rem;
+  font-weight: 620;
+  color: var(--color-text-muted);
+}
+
+.admin-dashboard .attendance-row__count {
+  flex-shrink: 0;
+  min-width: 30px;
+  font-size: 0.86rem;
+  font-weight: 740;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+
+.admin-dashboard .attendance-row__track {
+  flex: 1 1 auto;
+  min-width: 48px;
+  height: 7px;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--color-bg);
+}
+
+.admin-dashboard .attendance-row__bar {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--row-accent);
+}
+
+.admin-dashboard .attendance-row__value {
+  flex-shrink: 0;
+  min-width: 40px;
+  text-align: right;
+  font-size: 0.76rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+}
+
+.admin-dashboard .attendance-summary__note {
+  margin: 0;
+  padding-top: var(--space-1);
+  font-size: 0.76rem;
+  color: var(--color-text-soft);
+}
+
+.admin-dashboard .attendance-actions,
+.admin-dashboard .widget-actions {
+  gap: var(--space-2);
+}
+
+/* ── Assessments widget ───────────────────────────────────── */
+.admin-dashboard .assessment-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin-dashboard .assessment-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-3);
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.admin-dashboard .assessment-item:hover {
+  border-color: var(--color-border);
+  background: color-mix(in srgb, var(--color-surface-3) 58%, transparent);
+}
+
+.admin-dashboard .assessment-item__body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.admin-dashboard .assessment-item__type {
+  align-self: flex-start;
+  padding: 2px 9px;
+  font-size: 0.66rem;
+  font-weight: 720;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-info);
+  background: var(--color-info-bg);
+  border: 1px solid color-mix(in srgb, var(--color-info) 26%, transparent);
+  border-radius: var(--radius-full);
+}
+
+.admin-dashboard .assessment-item__title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 660;
+  line-height: 1.3;
+  color: var(--color-text);
+}
+
+.admin-dashboard .assessment-item__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-size: 0.76rem;
+  color: var(--color-text-muted);
+}
+
+.admin-dashboard .assessment-item__class-link {
+  font-weight: 650;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.admin-dashboard .assessment-item__class-link:hover {
+  text-decoration: underline;
+}
+
+.admin-dashboard .assessment-item__class-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.admin-dashboard .assessment-item__side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+.admin-dashboard .assessment-item__date {
+  font-size: 0.74rem;
+  font-weight: 620;
+  color: var(--color-text-soft);
+  white-space: nowrap;
+}
+
+/* ── Enrollments widget ───────────────────────────────────── */
+.admin-dashboard .widget-caption {
+  margin-bottom: var(--space-3);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.admin-dashboard .class-list {
+  gap: var(--space-2);
+}
+
+.admin-dashboard .class-item {
+  min-width: 0;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: 12px;
+  border-color: var(--color-border);
+  background: color-mix(in srgb, var(--color-surface-2) 62%, transparent);
+  box-shadow: none;
+  transition: border-color var(--transition-fast), background var(--transition-fast),
+    box-shadow var(--transition-smooth);
+}
+
+.admin-dashboard .class-item:hover {
+  border-color: var(--color-border-strong);
+  background: color-mix(in srgb, var(--color-surface-3) 62%, transparent);
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-dashboard .class-item__time {
+  background: var(--color-field);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.admin-dashboard .class-item__subject {
+  font-weight: 650;
+}
+
+.admin-dashboard .class-item__meta {
+  font-size: 0.76rem;
+  color: var(--color-text-muted);
+}
+
+.admin-dashboard .class-item__count {
+  flex-shrink: 0;
+  font-size: 1rem;
+  font-weight: 760;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+
+.admin-dashboard .class-item__count-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+/* ── Reports quick access widget ──────────────────────────── */
+.admin-dashboard .reports-quick__link {
+  min-height: 56px;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-2);
+  border-radius: 12px;
+  transition: background var(--transition-fast), padding var(--transition-fast);
+}
+
+.admin-dashboard .reports-quick__link:hover,
+.admin-dashboard .reports-quick__link:focus-visible {
+  background: color-mix(in srgb, var(--color-surface-3) 72%, transparent);
+}
+
+.admin-dashboard .reports-quick__icon-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 22%, transparent);
+  border-radius: 10px;
+  transition: transform var(--transition-smooth);
+}
+
+.admin-dashboard .reports-quick__link:hover .reports-quick__icon-tile {
+  transform: scale(1.04);
+}
+
+.admin-dashboard .reports-quick__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.admin-dashboard .reports-quick__title {
+  font-size: 0.88rem;
+  font-weight: 650;
+}
+
+.admin-dashboard .reports-quick__description {
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.admin-dashboard .reports-quick__chevron {
+  flex-shrink: 0;
+  color: var(--color-text-soft);
+  transition: transform var(--transition-fast), color var(--transition-fast);
+}
+
+.admin-dashboard .reports-quick__link:hover .reports-quick__chevron,
+.admin-dashboard .reports-quick__link:focus-visible .reports-quick__chevron {
+  color: var(--color-primary);
+  transform: translateX(2px);
+}
+
+/* ── Announcements widget (shared component, CSS-only) ────── */
+.admin-dashboard .recent-announcements__list {
+  gap: 0;
+}
+
+.admin-dashboard .recent-announcements__item {
+  padding: var(--space-3) 2px;
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+.admin-dashboard .recent-announcements__item:first-child {
+  padding-top: 0;
+}
+
+.admin-dashboard .recent-announcements__item:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.admin-dashboard .recent-announcements__title {
+  font-size: 0.9rem;
+  font-weight: 660;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+
+.admin-dashboard .recent-announcements__meta {
+  margin-top: 5px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.admin-dashboard .recent-announcements__preview {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--color-text-soft);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Empty / loading / error states ───────────────────────── */
+.admin-dashboard .widget-empty {
+  gap: var(--space-1);
+  padding: var(--space-5) var(--space-4);
+  text-align: center;
+  background: color-mix(in srgb, var(--color-surface-2) 70%, transparent);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+}
+
+.admin-dashboard .widget-empty--compact {
+  padding-block: var(--space-4);
+}
+
+.admin-dashboard .widget-empty__icon {
+  width: 44px;
+  height: 44px;
+  margin-bottom: var(--space-2);
+  border-radius: 12px;
+  color: var(--color-text-muted);
+  background: var(--color-surface-3);
+  border: 1px solid var(--color-border);
+  box-shadow: none;
+}
+
+.admin-dashboard .widget-empty__title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.admin-dashboard .widget-empty__text {
+  max-width: 320px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.admin-dashboard .widget-empty__action {
+  margin-top: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 0.78rem;
+  font-weight: 620;
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 24%, transparent);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.admin-dashboard .widget-empty__action:hover {
+  color: var(--color-primary-text);
+}
+
+.admin-dashboard .widget-empty__action:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.admin-dashboard .page-status {
+  min-height: 0;
+  padding: var(--space-6) var(--space-4);
+  gap: var(--space-3);
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.admin-dashboard .table-state--error {
+  padding-block: var(--space-5);
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 1199px) {
+  .admin-dashboard .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-dashboard .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1023px) {
+  .metrics-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .admin-dashboard .card__body {
+    padding: var(--space-4);
+  }
+}
+
+@media (max-width: 767px) {
+  .admin-dashboard .stats-grid,
+  .admin-dashboard .dashboard-grid,
+  .metrics-strip {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .admin-dashboard .stat-card {
+    min-height: 96px;
+    padding: var(--space-4);
+  }
+
+  .admin-dashboard .card__header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: var(--space-4);
+  }
+
+  .admin-dashboard .card__body {
+    padding: var(--space-4);
+  }
+
+  .admin-dashboard .attendance-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-dashboard .attendance-actions .btn {
+    width: 100%;
+  }
+
+  .admin-dashboard .attendance-row__label {
+    min-width: 60px;
+  }
+}
+
+@media (max-width: 520px) {
+  .admin-dashboard .schedule-item {
+    flex-wrap: wrap;
+  }
+
+  .admin-dashboard .schedule-item__room {
+    margin-left: 0;
+  }
+
+  .admin-dashboard .schedule-item__day {
+    margin-left: auto;
+  }
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .admin-dashboard :is(.stat-card, .stat-card::before, .card, .metrics-strip__tile),
+  .admin-dashboard .card__action .form__link::after,
+  .admin-dashboard .reports-quick__chevron,
+  .admin-dashboard .schedule-item__room {
+    transition: none;
+  }
+}

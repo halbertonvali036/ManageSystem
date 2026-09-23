@@ -1,7 +1,7 @@
 import Card from '@/components/common/Card'
 
-function SettingsSection({ title, description, icon, children, className }) {
-  return (
+function SettingsSection({ id, title, description, icon, children, className }) {
+  const content = (
     <Card className={`settings-section${className ? ` ${className}` : ''}`}>
       <header className="settings-section__header">
         {icon ? (
@@ -18,6 +18,13 @@ function SettingsSection({ title, description, icon, children, className }) {
       </header>
       {children}
     </Card>
+  )
+
+  return (
+    <>
+      {id ? <span id={id} className="settings-section-anchor" aria-hidden="true" /> : null}
+      {content}
+    </>
   )
 }
 

@@ -1,0 +1,601 @@
+/* ============================================================
+   Schedule / Timetable (Phase 7A)
+   Final CSS layer — unifies admin, teacher and student schedule
+   views on theme tokens with distinct layered surfaces.
+   ============================================================ */
+
+/* ---------- Shared page shell ---------- */
+.schedule-page {
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+/* ---------- Admin toolbar ---------- */
+.schedule-page .schedules-toolbar {
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.schedule-page .schedules-toolbar .students-toolbar__filters {
+  gap: var(--space-2);
+}
+
+.schedule-page .schedules-toolbar .field-select,
+.schedule-page .schedules-toolbar .search-input__field {
+  min-height: 42px;
+  border-radius: var(--radius-md);
+}
+
+.schedule-page .schedules-toolbar .field-select:hover,
+.schedule-page .schedules-toolbar .search-input__field:hover {
+  border-color: var(--color-border-strong);
+}
+
+.schedule-page .schedules-toolbar .field-select:focus,
+.schedule-page .schedules-toolbar .search-input__field:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-bg);
+}
+
+.schedule-page .schedules-toolbar .students-toolbar__filters .btn {
+  color: var(--color-text-muted);
+  background: var(--color-surface-2);
+  border-color: var(--color-border);
+}
+
+.schedule-page .schedules-toolbar .students-toolbar__filters .btn:hover:not(:disabled) {
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  border-color: var(--color-primary-bg);
+}
+
+/* ---------- Navigation (admin + teacher + student) ---------- */
+.schedule-page .schedule-nav,
+.schedule-page .student-schedule-nav {
+  gap: var(--space-3);
+  margin-bottom: 0;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.schedule-page .schedule-nav__group,
+.schedule-page .student-schedule-nav__group {
+  gap: var(--space-2);
+}
+
+/* Segmented mode control */
+.schedule-page .schedule-mode-toggle,
+.schedule-page .student-schedule-mode {
+  gap: 2px;
+  padding: 4px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.schedule-page .schedule-mode-toggle__btn,
+.schedule-page .student-schedule-mode__btn {
+  min-height: 36px;
+  padding-inline: 13px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-soft);
+  border-radius: var(--radius-sm);
+}
+
+.schedule-page .schedule-mode-toggle__btn:hover:not(:disabled),
+.schedule-page .student-schedule-mode__btn:hover:not(:disabled) {
+  color: var(--color-text);
+}
+
+.schedule-page .schedule-mode-toggle__btn--active,
+.schedule-page .student-schedule-mode__btn--active {
+  color: var(--color-primary);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Arrows + week range */
+.schedule-page .schedule-nav__arrow,
+.schedule-page .student-schedule-nav__arrow {
+  display: inline-grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.schedule-page .schedule-nav__arrow:hover:not(:disabled),
+.schedule-page .student-schedule-nav__arrow:hover:not(:disabled) {
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  border-color: var(--color-primary-bg);
+}
+
+.schedule-page .schedule-nav__label,
+.schedule-page .student-schedule-nav__label {
+  min-width: 150px;
+  padding: 5px 12px;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-variant-numeric: tabular-nums;
+}
+
+.schedule-page .schedule-nav__picker-label,
+.schedule-page .student-schedule-nav__picker-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-soft);
+}
+
+.schedule-page .schedule-nav__picker,
+.schedule-page .student-schedule-nav__picker {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Weekly grid ---------- */
+.schedule-page .schedule-week,
+.schedule-page .student-schedule-week {
+  grid-template-columns: repeat(7, minmax(160px, 1fr));
+  gap: var(--space-3);
+  align-items: stretch;
+  width: 100%;
+  max-width: 100%;
+  padding-bottom: var(--space-1);
+  overscroll-behavior-inline: contain;
+  scrollbar-color: var(--color-border) transparent;
+  scrollbar-width: thin;
+}
+
+.schedule-page .schedule-week__day,
+.schedule-page .student-schedule-week__day {
+  min-width: 0;
+  gap: var(--space-2);
+  min-height: 140px;
+  padding: var(--space-3);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.schedule-page .schedule-week__day--today,
+.schedule-page .student-schedule-week__day--today {
+  border-color: color-mix(in srgb, var(--color-primary) 45%, var(--color-border));
+  background: color-mix(in srgb, var(--color-primary-soft) 42%, var(--color-bg));
+}
+
+/* Day headers */
+.schedule-page .schedule-week__day-head,
+.schedule-page .student-schedule-week__day-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+.schedule-page .schedule-week__day-name,
+.schedule-page .student-schedule-week__day-name {
+  font-size: 0.73rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.schedule-page .schedule-week__day-date,
+.schedule-page .student-schedule-week__day-date {
+  font-size: 0.74rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+}
+
+.schedule-page .schedule-week__day--today .schedule-week__day-name,
+.schedule-page .student-schedule-week__day--today .student-schedule-week__day-name {
+  color: var(--color-primary);
+}
+
+/* Day body */
+.schedule-page .schedule-week__day-body,
+.schedule-page .student-schedule-week__day-body {
+  gap: var(--space-2);
+}
+
+/* Empty day column */
+.schedule-page .schedule-week__empty,
+.schedule-page .student-schedule-week__empty {
+  margin: 0;
+  padding: var(--space-4) var(--space-2);
+  text-align: center;
+  font-size: 0.76rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--color-text-soft);
+  background: var(--color-surface);
+  border: 1.5px dashed var(--color-border);
+  border-radius: 10px;
+}
+
+/* ---------- Lesson cards ---------- */
+.schedule-page .schedule-item,
+.schedule-page .student-schedule-item {
+  position: relative;
+  min-width: 0;
+  gap: 6px;
+  padding: 11px 12px 12px;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-strong);
+  border-radius: calc(var(--radius-md) - 2px);
+  box-shadow: var(--shadow-xs);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+.schedule-page .schedule-item::before,
+.schedule-page .student-schedule-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(180deg, var(--color-accent-strong-start), var(--color-accent-strong));
+}
+
+.schedule-page .schedule-item:has(.status-badge--inactive)::before,
+.schedule-page .schedule-item:has(.status-badge--closed)::before,
+.schedule-page .schedule-item:has(.status-badge--archived)::before,
+.schedule-page .student-schedule-item:has(.status-badge--inactive)::before,
+.schedule-page .student-schedule-item:has(.status-badge--closed)::before,
+.schedule-page .student-schedule-item:has(.status-badge--archived)::before {
+  background: var(--color-text-soft);
+}
+
+.schedule-page .schedule-item:hover,
+.schedule-page .student-schedule-item:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 40%, var(--color-border));
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+/* Time strip */
+.schedule-page .schedule-item__time,
+.schedule-page .student-schedule-item__time {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding-bottom: 6px;
+  margin-bottom: 2px;
+  border-bottom: 1px dashed var(--color-hairline);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--color-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.schedule-page .schedule-item__time svg,
+.schedule-page .student-schedule-item__time svg {
+  flex: 0 0 auto;
+}
+
+.schedule-page .schedule-item__time .status-badge,
+.schedule-page .student-schedule-item__time .status-badge {
+  margin-left: auto;
+}
+
+/* Title hierarchy */
+.schedule-page .schedule-item__class,
+.schedule-page .schedule-item__course,
+.schedule-page .student-schedule-item__class,
+.schedule-page .student-schedule-item__course {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.schedule-page .schedule-item__class {
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--color-text);
+}
+
+.schedule-page .schedule-item__course {
+  font-size: 0.84rem;
+  font-weight: 650;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+}
+
+/* Meta rows */
+.schedule-page .schedule-item__teacher,
+.schedule-page .schedule-item__room,
+.schedule-page .schedule-item__date,
+.schedule-page .student-schedule-item__teacher,
+.schedule-page .student-schedule-item__room,
+.schedule-page .student-schedule-item__date {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--color-text-soft);
+  overflow-wrap: anywhere;
+}
+
+.schedule-page .schedule-item__date,
+.schedule-page .student-schedule-item__date {
+  font-weight: 650;
+  color: var(--color-text-muted);
+}
+
+/* Actions */
+.schedule-page .schedule-item__actions,
+.schedule-page .student-schedule-item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--color-hairline);
+}
+
+.schedule-page .schedule-item__actions .btn,
+.schedule-page .student-schedule-item__actions .btn {
+  min-height: 34px;
+  white-space: nowrap;
+}
+
+/* Teacher: class emphasised, course secondary */
+.schedule-page .schedule-item--teacher .schedule-item__time {
+  order: 1;
+}
+
+.schedule-page .schedule-item--teacher .schedule-item__class {
+  order: 2;
+  font-size: 0.93rem;
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.schedule-page .schedule-item--teacher .schedule-item__course {
+  order: 3;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.schedule-page .schedule-item--teacher .schedule-item__room {
+  order: 4;
+}
+
+.schedule-page .schedule-item--teacher .schedule-item__date {
+  order: 5;
+}
+
+.schedule-page .schedule-item--teacher .schedule-item__actions {
+  order: 6;
+}
+
+/* Student: course emphasised, class secondary, teacher + room meta */
+.schedule-page .student-schedule-item__time {
+  order: 1;
+}
+
+.schedule-page .student-schedule-item__course {
+  order: 2;
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--color-text);
+}
+
+.schedule-page .student-schedule-item__class {
+  order: 3;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.schedule-page .student-schedule-item__teacher {
+  order: 4;
+  color: var(--color-text-muted);
+}
+
+.schedule-page .student-schedule-item__room {
+  order: 5;
+}
+
+.schedule-page .student-schedule-item__date {
+  order: 6;
+}
+
+.schedule-page .student-schedule-item__actions {
+  order: 7;
+}
+
+/* Day view */
+.schedule-page .schedule-day,
+.schedule-page .student-schedule-day {
+  gap: var(--space-3);
+}
+
+.schedule-page .schedule-day__heading,
+.schedule-page .student-schedule-day__heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 var(--space-1);
+  font-size: 1.12rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+
+.schedule-page .schedule-day__heading::before,
+.schedule-page .student-schedule-day__heading::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(180deg, var(--color-accent-strong-start), var(--color-accent-strong));
+}
+
+.schedule-page .schedule-day__list,
+.schedule-page .student-schedule-day__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: min(760px, 100%);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.schedule-page .schedule-day__list li,
+.schedule-page .student-schedule-day__list li {
+  min-width: 0;
+  margin: 0;
+}
+
+.schedule-page .schedule-day .schedule-item,
+.schedule-page .student-schedule-day .student-schedule-item {
+  padding: var(--space-4) var(--space-5);
+  gap: 8px;
+}
+
+.schedule-page .schedule-day .schedule-item__class,
+.schedule-page .schedule-day .schedule-item--teacher .schedule-item__class {
+  font-size: 1rem;
+}
+
+.schedule-page .schedule-day .student-schedule-item__course {
+  font-size: 1rem;
+}
+
+.schedule-page .schedule-day__empty,
+.schedule-page .student-schedule-day__empty {
+  margin: 0;
+  padding: var(--space-5);
+  text-align: center;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--color-text-soft);
+  background: var(--color-surface);
+  border: 1.5px dashed var(--color-border);
+  border-radius: 12px;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 1023px) {
+  .schedule-page .schedules-toolbar {
+    padding: var(--space-3);
+  }
+
+  .schedule-page .schedule-nav,
+  .schedule-page .student-schedule-nav {
+    padding: var(--space-3);
+  }
+}
+
+@media (max-width: 767px) {
+  .schedule-page .schedule-nav,
+  .schedule-page .student-schedule-nav {
+    align-items: stretch;
+  }
+
+  .schedule-page .schedule-nav__group,
+  .schedule-page .student-schedule-nav__group {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .schedule-page .schedule-nav__label,
+  .schedule-page .student-schedule-nav__label {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+  }
+
+  .schedule-page .schedule-week__day,
+  .schedule-page .student-schedule-week__day {
+    min-height: 112px;
+  }
+
+  .schedule-page .schedule-item__actions .btn,
+  .schedule-page .student-schedule-item__actions .btn {
+    min-height: 40px;
+  }
+
+  .schedule-page .schedule-day .schedule-item,
+  .schedule-page .student-schedule-day .student-schedule-item {
+    padding: var(--space-3);
+  }
+}
+
+@media (max-width: 520px) {
+  .schedule-page .schedule-week__day,
+  .schedule-page .student-schedule-week__day {
+    padding: var(--space-2);
+  }
+
+  .schedule-page .schedule-item,
+  .schedule-page .student-schedule-item {
+    gap: 5px;
+    padding: 10px 11px;
+  }
+
+  .schedule-page .schedule-day__heading,
+  .schedule-page .student-schedule-day__heading {
+    font-size: 1.02rem;
+  }
+}
+
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .schedule-page .schedule-mode-toggle__btn,
+  .schedule-page .student-schedule-mode__btn,
+  .schedule-page .schedule-nav__arrow,
+  .schedule-page .student-schedule-nav__arrow,
+  .schedule-page .schedule-week__day,
+  .schedule-page .student-schedule-week__day,
+  .schedule-page .schedule-item,
+  .schedule-page .student-schedule-item {
+    transition: none;
+  }
+
+  .schedule-page .schedule-item:hover,
+  .schedule-page .student-schedule-item:hover {
+    transform: none;
+  }
+}

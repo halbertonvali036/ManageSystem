@@ -1,0 +1,815 @@
+/* ============================================================
+   Portal Shell
+   Premium refinement of the shared app rail, header and canvas
+   for the Admin / Teacher / Student portals.
+
+   Loaded LAST in main.jsx (after theme/global/motion/teacher/
+   student/admin/auth), so every rule here intentionally refines
+   the base system instead of rebuilding it. Token-driven; the
+   existing theme system and all layout/routing/business logic
+   are untouched.
+
+   Role identity is expressed through `--sb-accent` on the
+   sidebar and `--ctx-accent` on the header context pill:
+   Admin = accent, Teacher = teal, Student = amber.
+   ============================================================ */
+
+/* ── App canvas ───────────────────────────────────────────── */
+.app-shell {
+  min-height: 100vh;
+}
+
+html[data-theme='dark'] .app-shell {
+  background:
+    radial-gradient(
+      900px 480px at 82% -6%,
+      color-mix(in srgb, var(--color-accent) 8%, transparent),
+      transparent 62%
+    ),
+    radial-gradient(
+      760px 420px at -8% 108%,
+      color-mix(in srgb, var(--color-primary) 6%, transparent),
+      transparent 60%
+    );
+}
+
+.app-layout {
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+}
+
+/* Glowing canvas behind the content column */
+.app-layout__main {
+  position: relative;
+  background:
+    radial-gradient(
+      820px 420px at 85% -10%,
+      color-mix(in srgb, var(--color-accent) 4.5%, transparent),
+      transparent 62%
+    ),
+    radial-gradient(
+      700px 380px at -4% 110%,
+      color-mix(in srgb, var(--color-primary) 4%, transparent),
+      transparent 58%
+    );
+}
+
+html[data-theme='dark'] .app-layout__main {
+  background:
+    radial-gradient(
+      820px 420px at 85% -10%,
+      color-mix(in srgb, var(--color-accent) 9%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      700px 380px at -4% 110%,
+      color-mix(in srgb, var(--color-primary) 7%, transparent),
+      transparent 56%
+    );
+}
+
+.app-container {
+  padding:
+    clamp(var(--space-5), 2.6vw, var(--space-7))
+    clamp(var(--space-4), 2.6vw, var(--space-6))
+    var(--space-8);
+}
+
+/* ============================================================
+   Header
+   ============================================================ */
+.app-header {
+  height: var(--header-height);
+  padding: 0 clamp(var(--space-4), 2.2vw, var(--space-6));
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  backdrop-filter: blur(18px) saturate(1.35);
+  border-bottom: 1px solid var(--color-header-border);
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--color-border) 35%, transparent),
+    0 8px 26px -20px rgba(15, 23, 42, 0.35);
+}
+
+html[data-theme='dark'] .app-header {
+  box-shadow:
+    0 1px 0 color-mix(in srgb, var(--color-border) 30%, transparent),
+    0 10px 30px -20px rgba(2, 6, 23, 0.7);
+}
+
+/* Left zone: mobile menu + role context pill (all portals) */
+.app-header__start {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-right: auto;
+}
+
+.app-header__actions {
+  gap: var(--space-2);
+}
+
+.app-header__menu {
+  width: 40px;
+  height: 40px;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-md);
+}
+
+.app-header__menu:hover {
+  color: var(--color-text);
+  background: var(--color-bg);
+  border-color: var(--color-border);
+}
+
+/* ── Role context pills ───────────────────────────────────── */
+.admin-context {
+  --ctx-accent: var(--color-accent);
+}
+
+.teacher-context {
+  --ctx-accent: var(--color-role-teacher);
+}
+
+.student-context {
+  --ctx-accent: var(--color-role-student);
+}
+
+.app-header .admin-context,
+.app-header .teacher-context,
+.app-header .student-context {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  min-height: 28px;
+  padding: 0 12px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ctx-accent) 82%, var(--color-text));
+  background: color-mix(in srgb, var(--ctx-accent) 11%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ctx-accent) 28%, transparent);
+  border-radius: 999px;
+}
+
+.app-header .admin-context::before,
+.app-header .teacher-context::before,
+.app-header .student-context::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--ctx-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ctx-accent) 18%, transparent);
+}
+
+/* ── Icon buttons share one quiet treatment ───────────────── */
+.app-header .theme-toggle {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.app-header .theme-toggle:hover {
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+}
+
+.app-header .command-trigger {
+  gap: var(--space-2);
+  height: 40px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-bg) 55%, transparent);
+  border-color: var(--color-border);
+}
+
+.app-header .command-trigger:hover {
+  color: var(--color-text);
+  background: var(--color-bg);
+  border-color: var(--color-border-strong);
+  box-shadow: 0 8px 20px -14px rgba(15, 23, 42, 0.45);
+}
+
+.app-header .command-trigger__label {
+  font-size: 0.84rem;
+  font-weight: 500;
+}
+
+.app-header .command-trigger__kbd {
+  min-height: 20px;
+  padding: 1px 6px;
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--color-bg) 70%, transparent);
+}
+
+.app-header .notification-bell__button {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+}
+
+.app-header .notification-bell__button:hover {
+  color: var(--color-text);
+  background: var(--color-bg);
+  border-color: var(--color-border);
+}
+
+.app-header .notification-bell__badge {
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 17px;
+  text-align: center;
+  color: #ffffff;
+  background: var(--color-accent);
+  border: 2px solid var(--color-surface);
+  border-radius: 999px;
+}
+
+/* ============================================================
+   User menu — identity + actions
+   ============================================================ */
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+  padding-left: var(--space-3);
+  border-left: 1px solid var(--color-border);
+}
+
+.user-menu__identity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 3px 5px 3px 3px;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background-color var(--transition-fast);
+}
+
+.user-menu__identity:hover {
+  background: var(--color-bg);
+}
+
+.user-menu__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  border-radius: 999px;
+  box-shadow:
+    0 0 0 2px var(--color-surface),
+    0 0 0 3.5px var(--color-border);
+  user-select: none;
+}
+
+.user-menu[data-role='admin'] .user-menu__avatar {
+  background: linear-gradient(145deg, #5961c9, #454ba8);
+}
+
+.user-menu[data-role='teacher'] .user-menu__avatar {
+  background: linear-gradient(145deg, #14b8a6, #0d9488);
+}
+
+.user-menu[data-role='student'] .user-menu__avatar {
+  background: linear-gradient(145deg, #f59e0b, #d97706);
+}
+
+.user-menu__info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.user-menu__name {
+  max-width: 160px;
+  overflow: hidden;
+  font-size: 0.85rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.user-menu__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.user-menu__role {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-text-muted);
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.user-menu__email {
+  max-width: 150px;
+  overflow: hidden;
+  font-size: 0.72rem;
+  color: var(--color-text-soft);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.user-menu__divider {
+  flex-shrink: 0;
+  width: 1px;
+  height: 24px;
+  background: var(--color-border);
+}
+
+.user-menu__actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.user-menu__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.user-menu__action:hover {
+  color: var(--color-text);
+  background: var(--color-bg);
+  border-color: var(--color-border);
+}
+
+.user-menu__action--profile:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  border-color: var(--color-primary-bg);
+}
+
+.user-menu__action--logout:hover {
+  color: var(--color-danger);
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger-bg);
+}
+
+.user-menu__action-label {
+  white-space: nowrap;
+}
+
+.user-menu__action:focus-visible,
+.user-menu__identity:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   Sidebar — always-dark premium rail with role accent glow
+   ============================================================ */
+.app-sidebar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color: var(--color-sidebar-text);
+  background:
+    radial-gradient(560px 340px at -18% -12%, var(--sb-glow), transparent 62%),
+    linear-gradient(180deg, #0d1422 0%, #0a0e18 100%);
+  border-right: 1px solid var(--color-sidebar-border);
+  --sb-accent: var(--color-accent);
+  --sb-glow: color-mix(in srgb, var(--color-accent) 16%, transparent);
+  transition:
+    width var(--transition-base),
+    transform var(--transition-base);
+}
+
+.teacher-sidebar {
+  --sb-accent: var(--color-role-teacher);
+  --sb-glow: color-mix(in srgb, var(--color-role-teacher) 18%, transparent);
+}
+
+.student-sidebar {
+  --sb-accent: var(--color-role-student);
+  --sb-glow: color-mix(in srgb, var(--color-role-student) 18%, transparent);
+}
+
+html[data-theme='dark'] .app-sidebar {
+  background:
+    radial-gradient(560px 340px at -18% -12%, var(--sb-glow), transparent 64%),
+    radial-gradient(720px 420px at 110% 118%, var(--sb-glow), transparent 62%),
+    linear-gradient(180deg, #0b101c 0%, #070b13 100%);
+}
+
+/* ── Brand identity ───────────────────────────────────────── */
+.sidebar__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+  height: var(--header-height);
+  padding: 0 var(--space-3) 0 var(--space-4);
+  border-bottom: 1px solid var(--color-sidebar-border);
+}
+
+.sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.sidebar__brand-logo {
+  flex-shrink: 0;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--sb-accent) 28%, transparent),
+    0 8px 20px -8px var(--sb-glow);
+}
+
+.sidebar__brand-id {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.sidebar__brand-name {
+  overflow: hidden;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  color: var(--color-sidebar-text-hover);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sidebar__brand-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--sb-accent) 78%, var(--color-sidebar-text));
+  white-space: nowrap;
+}
+
+.sidebar__brand-role::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--sb-accent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--sb-accent) 70%, transparent);
+}
+
+.sidebar__collapse {
+  width: 38px;
+  height: 38px;
+  color: var(--color-sidebar-text);
+  border-radius: var(--radius-md);
+}
+
+.sidebar__collapse:hover {
+  color: var(--color-sidebar-text-hover);
+  background: color-mix(in srgb, var(--sb-accent) 16%, transparent);
+  border-color: color-mix(in srgb, var(--sb-accent) 30%, transparent);
+}
+
+/* ── Navigation ───────────────────────────────────────────── */
+.sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-4) var(--space-3);
+}
+
+.sidebar__section-label {
+  margin-top: var(--space-4);
+  padding: 0 var(--space-2) var(--space-2);
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-sidebar-text) 78%, transparent);
+}
+
+.sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 42px;
+  padding: 0.5rem var(--space-3);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-sidebar-text);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.sidebar__link:hover {
+  color: var(--color-sidebar-text-hover);
+  background: rgba(255, 255, 255, 0.055);
+  transform: translateX(2px);
+}
+
+/* Active: subtle tinted pill + accent edge + hairline ring */
+.app-sidebar .sidebar__link--active,
+.app-sidebar .sidebar__link--active:hover {
+  color: #ffffff;
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--sb-accent) 24%, transparent),
+      color-mix(in srgb, var(--sb-accent) 9%, transparent)
+    ),
+    rgba(255, 255, 255, 0.045);
+  box-shadow:
+    inset 2px 0 0 var(--sb-accent),
+    inset 0 0 0 1px color-mix(in srgb, var(--sb-accent) 24%, transparent);
+}
+
+.app-sidebar .sidebar__link--active:hover {
+  transform: none;
+}
+
+.app-sidebar .sidebar__link:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--sb-accent) 65%, #dbe3ff);
+  outline-offset: 2px;
+}
+
+.sidebar__icon {
+  flex-shrink: 0;
+}
+
+.sidebar__label {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ── Collapsed (desktop only) ─────────────────────────────── */
+@media (min-width: 1024px) {
+  .app-sidebar--collapsed {
+    width: var(--sidebar-collapsed-width);
+  }
+
+  .app-sidebar--collapsed .sidebar__top {
+    justify-content: center;
+    padding-inline: 0;
+  }
+
+  .app-sidebar--collapsed .sidebar__brand {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .app-sidebar--collapsed .sidebar__brand-name,
+  .app-sidebar--collapsed .sidebar__brand-role,
+  .app-sidebar--collapsed .sidebar__label,
+  .app-sidebar--collapsed .sidebar__section-label {
+    display: none;
+  }
+
+  .app-sidebar--collapsed .sidebar__nav {
+    align-items: center;
+    padding-inline: 0;
+    padding-bottom: calc(var(--space-4) + 52px);
+  }
+
+  .app-sidebar--collapsed .sidebar__link {
+    justify-content: center;
+    width: 46px;
+    min-height: 46px;
+    padding: 0;
+    margin-inline: auto;
+  }
+
+  .app-sidebar--collapsed .sidebar__link--active {
+    background: color-mix(in srgb, var(--sb-accent) 18%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sb-accent) 26%, transparent);
+  }
+
+  .app-sidebar--collapsed .sidebar__link:hover {
+    transform: none;
+  }
+
+  .app-sidebar--collapsed .sidebar__collapse {
+    position: absolute;
+    right: 50%;
+    bottom: var(--space-4);
+    transform: translateX(50%);
+    color: var(--color-sidebar-text-hover);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+  }
+
+  .app-sidebar--collapsed .sidebar__collapse:hover {
+    color: var(--color-sidebar-text-hover);
+    background: color-mix(in srgb, var(--sb-accent) 18%, transparent);
+    border-color: color-mix(in srgb, var(--sb-accent) 32%, transparent);
+  }
+}
+
+/* ============================================================
+   Page header / footer
+   ============================================================ */
+.page-header__title {
+  letter-spacing: -0.02em;
+}
+
+.app-footer {
+  flex-shrink: 0;
+  padding: var(--space-4) clamp(var(--space-4), 3vw, var(--space-6)) var(--space-5);
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 55%, transparent);
+}
+
+.app-footer .container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.app-footer p {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.01em;
+  color: var(--color-text-soft);
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 1023px) {
+  .app-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .app-header__menu {
+    display: inline-flex;
+  }
+
+  .app-header__start {
+    gap: var(--space-2);
+  }
+
+  .app-sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(296px, calc(100vw - 36px));
+    height: 100dvh;
+    transform: translateX(-103%);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    box-shadow: none;
+  }
+
+  .app-sidebar--open {
+    transform: translateX(0);
+    box-shadow: 0 24px 64px -12px rgba(2, 6, 23, 0.55);
+  }
+
+  .app-sidebar--collapsed {
+    width: min(296px, calc(100vw - 36px));
+  }
+
+  .app-sidebar--collapsed .sidebar__nav {
+    padding: var(--space-4) var(--space-3);
+  }
+
+  .app-sidebar--collapsed .sidebar__collapse {
+    position: static;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 45;
+    background: color-mix(in srgb, var(--color-backdrop) 72%, transparent);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    animation: fade-in var(--motion-duration-fast) var(--motion-ease-out);
+  }
+
+  .app-header .command-trigger {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .app-header .command-trigger__label,
+  .app-header .command-trigger__kbd {
+    display: none;
+  }
+
+  .user-menu__email {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .app-header {
+    padding: 0 var(--space-3);
+  }
+
+  .app-header__actions {
+    gap: 4px;
+  }
+
+  .app-header .admin-context,
+  .app-header .teacher-context,
+  .app-header .student-context {
+    display: none;
+  }
+
+  .user-menu {
+    gap: 4px;
+    padding-left: var(--space-2);
+  }
+
+  .user-menu__identity {
+    padding: 2px;
+  }
+
+  .user-menu__name {
+    display: none;
+  }
+
+  .user-menu__actions {
+    gap: 2px;
+  }
+
+  .user-menu__action {
+    padding: 0;
+  }
+
+  .user-menu__action-label {
+    display: none;
+  }
+}
+
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .app-sidebar,
+  .app-sidebar *,
+  .app-sidebar *::before,
+  .app-sidebar *::after,
+  .app-header *,
+  .sidebar-backdrop,
+  .user-menu * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

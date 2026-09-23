@@ -135,6 +135,8 @@ function TeacherForm({
   const renderedError = (field) =>
     fieldError(field) ? <p className="form__error">{fieldError(field)}</p> : null
 
+  const ariaInvalid = (field) => (fieldError(field) ? 'true' : 'false')
+
   return (
     <form className="teacher-form" onSubmit={handleSubmit} noValidate>
       {submitError ? (
@@ -143,241 +145,263 @@ function TeacherForm({
         </div>
       ) : null}
 
-      <div className="teacher-form__grid">
-        <div className="form__field">
-          <label className="form__label" htmlFor="teacher-teacherId">
-            Teacher ID <span className="form__required">*</span>
-          </label>
-          <input
-            id="teacher-teacherId"
-            className={inputClass('teacherId')}
-            type="text"
-            value={values.teacherId}
-            onChange={setField('teacherId')}
-            onBlur={handleBlur('teacherId')}
-            placeholder="e.g. TCH-0001"
-            disabled={isSubmitting}
-          />
-          {renderedError('teacherId')}
-        </div>
+      <fieldset className="form__section">
+        <legend className="form__section-title">Basic information</legend>
 
-        <div className="form__field">
-          <label className="form__label" htmlFor="teacher-status">
-            Status <span className="form__required">*</span>
-          </label>
-          <select
-            id="teacher-status"
-            className="form__input form__select"
-            value={values.status}
-            onChange={setField('status')}
-            disabled={isSubmitting}
-          >
-            <option value="">Select status</option>
-            {Object.entries(TEACHER_STATUS_LABELS).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
+        <div className="teacher-form__grid">
+          <div className="form__field">
+            <label className="form__label" htmlFor="teacher-teacherId">
+              Teacher ID <span className="form__required">*</span>
+            </label>
+            <input
+              id="teacher-teacherId"
+              className={inputClass('teacherId')}
+              type="text"
+              value={values.teacherId}
+              onChange={setField('teacherId')}
+              onBlur={handleBlur('teacherId')}
+              placeholder="e.g. TCH-0001"
+              disabled={isSubmitting}
+              aria-invalid={ariaInvalid('teacherId')}
+            />
+            {renderedError('teacherId')}
+          </div>
+
+          <div className="form__field">
+            <label className="form__label" htmlFor="teacher-status">
+              Status <span className="form__required">*</span>
+            </label>
+            <select
+              id="teacher-status"
+              className="form__input form__select"
+              value={values.status}
+              onChange={setField('status')}
+              disabled={isSubmitting}
+              aria-invalid={ariaInvalid('status')}
+            >
+              <option value="">Select status</option>
+              {Object.entries(TEACHER_STATUS_LABELS).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+            {renderedError('status')}
+          </div>
+
+          <div className="form__field">
+            <label className="form__label" htmlFor="teacher-firstName">
+              First Name <span className="form__required">*</span>
+            </label>
+            <input
+              id="teacher-firstName"
+              className={inputClass('firstName')}
+              type="text"
+              value={values.firstName}
+              onChange={setField('firstName')}
+              onBlur={handleBlur('firstName')}
+              placeholder="e.g. Alice"
+              disabled={isSubmitting}
+              aria-invalid={ariaInvalid('firstName')}
+            />
+            {renderedError('firstName')}
+          </div>
+
+          <div className="form__field">
+            <label className="form__label" htmlFor="teacher-lastName">
+              Last Name <span className="form__required">*</span>
+            </label>
+            <input
+              id="teacher-lastName"
+              className={inputClass('lastName')}
+              type="text"
+              value={values.lastName}
+              onChange={setField('lastName')}
+              onBlur={handleBlur('lastName')}
+              placeholder="e.g. Johnson"
+              disabled={isSubmitting}
+              aria-invalid={ariaInvalid('lastName')}
+            />
+            {renderedError('lastName')}
+          </div>
+
+          <div className="form__field teacher-form__field--full">
+            <label className="form__label" htmlFor="teacher-email">
+              Email <span className="form__required">*</span>
+            </label>
+            <input
+              id="teacher-email"
+              className={inputClass('email')}
+              type="email"
+              autoComplete="off"
+              value={values.email}
+              onChange={setField('email')}
+              onBlur={handleBlur('email')}
+              placeholder="e.g. alice@example.com"
+              disabled={isSubmitting}
+              aria-invalid={ariaInvalid('email')}
+            />
+            {renderedError('email')}
+          </div>
+
+          <div className="form__field">
+            <label className="form__label" htmlFor="teacher-phone">
+              Phone
+            </label>
+            <input
+              id="teacher-phone"
+              className={inputClass('phone')}
+              type="tel"
+              autoComplete="off"
+              value={values.phone}
+              onChange={setField('phone')}
+              onBlur={handleBlur('phone')}
+              placeholder="e.g. +1 555 010 1234"
+              disabled={isSubmitting}
+              aria-invalid={ariaInvalid('phone')}
+            />
+            {renderedError('phone')}
+          </div>
+
+          <div className="form__field">
+            <label className="form__label" htmlFor="teacher-dob">
+              Date of Birth
+            </label>
+            <input
+              id="teacher-dob"
+              className={inputClass('dateOfBirth')}
+              type="date"
+              value={values.dateOfBirth}
+              onChange={setField('dateOfBirth')}
+              onBlur={handleBlur('dateOfBirth')}
+              disabled={isSubmitting}
+              aria-invalid={ariaInvalid('dateOfBirth')}
+            />
+            {renderedError('dateOfBirth')}
+          </div>
+
+          <div className="form__field">
+            <label className="form__label" htmlFor="teacher-gender">
+              Gender
+            </label>
+            <select
+              id="teacher-gender"
+              className="form__input form__select"
+              value={values.gender}
+              onChange={setField('gender')}
+              disabled={isSubmitting}
+              aria-invalid={ariaInvalid('gender')}
+            >
+              <option value="">Select gender</option>
+              {GENDER_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            {renderedError('gender')}
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset className="form__section">
+        <legend className="form__section-title">Assignment</legend>
+
+        <div className="teacher-form__grid">
+          <div className="form__field">
+            <label className="form__label" htmlFor="teacher-department">
+              Department <span className="form__optional">Optional</span>
+            </label>
+            <select
+              id="teacher-department"
+              className="form__input form__select"
+              value={values.department}
+              onChange={setField('department')}
+              onBlur={handleBlur('department')}
+              disabled={isSubmitting || departmentsLoading || !departmentsAvailable}
+              aria-invalid={ariaInvalid('department')}
+            >
+              <option value="">
+                {departmentsLoading
+                  ? 'Loading departments\u2026'
+                  : departmentsAvailable
+                    ? 'Select department'
+                    : 'No departments available yet'}
               </option>
-            ))}
-          </select>
-          {renderedError('status')}
-        </div>
+              {departmentsAvailable
+                ? departmentOptions.map((department) => (
+                    <option key={department} value={department}>
+                      {department}
+                    </option>
+                  ))
+                : null}
+            </select>
+            {departmentsLoading || departmentsAvailable ? (
+              renderedError('department')
+            ) : (
+              <p className="form__hint">
+                Department options will appear here once department data is
+                available.
+              </p>
+            )}
+          </div>
 
-        <div className="form__field">
-          <label className="form__label" htmlFor="teacher-firstName">
-            First Name <span className="form__required">*</span>
-          </label>
-          <input
-            id="teacher-firstName"
-            className={inputClass('firstName')}
-            type="text"
-            value={values.firstName}
-            onChange={setField('firstName')}
-            onBlur={handleBlur('firstName')}
-            placeholder="e.g. Alice"
-            disabled={isSubmitting}
-          />
-          {renderedError('firstName')}
-        </div>
-
-        <div className="form__field">
-          <label className="form__label" htmlFor="teacher-lastName">
-            Last Name <span className="form__required">*</span>
-          </label>
-          <input
-            id="teacher-lastName"
-            className={inputClass('lastName')}
-            type="text"
-            value={values.lastName}
-            onChange={setField('lastName')}
-            onBlur={handleBlur('lastName')}
-            placeholder="e.g. Johnson"
-            disabled={isSubmitting}
-          />
-          {renderedError('lastName')}
-        </div>
-
-        <div className="form__field teacher-form__field--full">
-          <label className="form__label" htmlFor="teacher-email">
-            Email <span className="form__required">*</span>
-          </label>
-          <input
-            id="teacher-email"
-            className={inputClass('email')}
-            type="email"
-            autoComplete="off"
-            value={values.email}
-            onChange={setField('email')}
-            onBlur={handleBlur('email')}
-            placeholder="e.g. alice@example.com"
-            disabled={isSubmitting}
-          />
-          {renderedError('email')}
-        </div>
-
-        <div className="form__field">
-          <label className="form__label" htmlFor="teacher-phone">
-            Phone
-          </label>
-          <input
-            id="teacher-phone"
-            className={inputClass('phone')}
-            type="tel"
-            autoComplete="off"
-            value={values.phone}
-            onChange={setField('phone')}
-            onBlur={handleBlur('phone')}
-            placeholder="e.g. +1 555 010 1234"
-            disabled={isSubmitting}
-          />
-          {renderedError('phone')}
-        </div>
-
-        <div className="form__field">
-          <label className="form__label" htmlFor="teacher-dob">
-            Date of Birth
-          </label>
-          <input
-            id="teacher-dob"
-            className={inputClass('dateOfBirth')}
-            type="date"
-            value={values.dateOfBirth}
-            onChange={setField('dateOfBirth')}
-            onBlur={handleBlur('dateOfBirth')}
-            disabled={isSubmitting}
-          />
-          {renderedError('dateOfBirth')}
-        </div>
-
-        <div className="form__field">
-          <label className="form__label" htmlFor="teacher-gender">
-            Gender
-          </label>
-          <select
-            id="teacher-gender"
-            className="form__input form__select"
-            value={values.gender}
-            onChange={setField('gender')}
-            disabled={isSubmitting}
-          >
-            <option value="">Select gender</option>
-            {GENDER_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
+          <div className="form__field">
+            <label className="form__label" htmlFor="teacher-subject">
+              Subject / Specialization{' '}
+              <span className="form__optional">Optional</span>
+            </label>
+            <select
+              id="teacher-subject"
+              className="form__input form__select"
+              value={values.subject}
+              onChange={setField('subject')}
+              onBlur={handleBlur('subject')}
+              disabled={isSubmitting || subjectsLoading || !subjectsAvailable}
+              aria-invalid={ariaInvalid('subject')}
+            >
+              <option value="">
+                {subjectsLoading
+                  ? 'Loading subjects\u2026'
+                  : subjectsAvailable
+                    ? 'Select subject'
+                    : 'No subjects available yet'}
               </option>
-            ))}
-          </select>
-          {renderedError('gender')}
-        </div>
+              {subjectsAvailable
+                ? subjectOptions.map((subject) => (
+                    <option key={subject} value={subject}>
+                      {subject}
+                    </option>
+                  ))
+                : null}
+            </select>
+            {subjectsLoading || subjectsAvailable ? (
+              renderedError('subject')
+            ) : (
+              <p className="form__hint">
+                Subject options will appear here once subject data is available.
+              </p>
+            )}
+          </div>
 
-        <div className="form__field">
-          <label className="form__label" htmlFor="teacher-department">
-            Department
-          </label>
-          <select
-            id="teacher-department"
-            className="form__input form__select"
-            value={values.department}
-            onChange={setField('department')}
-            onBlur={handleBlur('department')}
-            disabled={isSubmitting || departmentsLoading || !departmentsAvailable}
-          >
-            <option value="">
-              {departmentsLoading
-                ? 'Loading departments\u2026'
-                : departmentsAvailable
-                  ? 'Select department'
-                  : 'No departments available yet'}
-            </option>
-            {departmentsAvailable
-              ? departmentOptions.map((department) => (
-                  <option key={department} value={department}>
-                    {department}
-                  </option>
-                ))
-              : null}
-          </select>
-          {departmentsLoading || departmentsAvailable ? (
-            renderedError('department')
-          ) : (
-            <p className="form__hint">
-              Department options will appear here once department data is
-              available.
-            </p>
-          )}
+          <div className="form__field">
+            <label className="form__label" htmlFor="teacher-hireDate">
+              Hire Date
+            </label>
+            <input
+              id="teacher-hireDate"
+              className={inputClass('hireDate')}
+              type="date"
+              value={values.hireDate}
+              onChange={setField('hireDate')}
+              onBlur={handleBlur('hireDate')}
+              disabled={isSubmitting}
+              aria-invalid={ariaInvalid('hireDate')}
+            />
+            {renderedError('hireDate')}
+          </div>
         </div>
-
-        <div className="form__field">
-          <label className="form__label" htmlFor="teacher-subject">
-            Subject / Specialization
-          </label>
-          <select
-            id="teacher-subject"
-            className="form__input form__select"
-            value={values.subject}
-            onChange={setField('subject')}
-            onBlur={handleBlur('subject')}
-            disabled={isSubmitting || subjectsLoading || !subjectsAvailable}
-          >
-            <option value="">
-              {subjectsLoading
-                ? 'Loading subjects\u2026'
-                : subjectsAvailable
-                  ? 'Select subject'
-                  : 'No subjects available yet'}
-            </option>
-            {subjectsAvailable
-              ? subjectOptions.map((subject) => (
-                  <option key={subject} value={subject}>
-                    {subject}
-                  </option>
-                ))
-              : null}
-          </select>
-          {subjectsLoading || subjectsAvailable ? (
-            renderedError('subject')
-          ) : (
-            <p className="form__hint">
-              Subject options will appear here once subject data is available.
-            </p>
-          )}
-        </div>
-
-        <div className="form__field">
-          <label className="form__label" htmlFor="teacher-hireDate">
-            Hire Date
-          </label>
-          <input
-            id="teacher-hireDate"
-            className={inputClass('hireDate')}
-            type="date"
-            value={values.hireDate}
-            onChange={setField('hireDate')}
-            onBlur={handleBlur('hireDate')}
-            disabled={isSubmitting}
-          />
-          {renderedError('hireDate')}
-        </div>
-      </div>
+      </fieldset>
 
       <div className="teacher-form__actions">
         <button

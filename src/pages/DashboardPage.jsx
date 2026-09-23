@@ -1,5 +1,12 @@
 import { Link } from 'react-router-dom'
-import { BookOpen, GraduationCap, School, Users } from 'lucide-react'
+import {
+  BookOpen,
+  CalendarCheck,
+  ClipboardList,
+  GraduationCap,
+  School,
+  Users,
+} from 'lucide-react'
 import AdminDashboardIntro from '@/components/admin/dashboard/AdminDashboardIntro'
 import AssessmentsOverviewCard from '@/components/admin/dashboard/AssessmentsOverviewCard'
 import AttendanceOverviewCard from '@/components/admin/dashboard/AttendanceOverviewCard'
@@ -48,6 +55,54 @@ function DashboardPage() {
     },
   ]
 
+  const totalEnrolled = !summary.backendAvailable
+    ? null
+    : summary.enrolledClasses.length === 0
+      ? 0
+      : summary.enrolledClasses.every((entry) => entry.count != null)
+        ? summary.enrolledClasses.reduce(
+            (total, entry) => total + (entry.count ?? 0),
+            0,
+          )
+        : null
+
+  const metrics = [
+    {
+      key: 'assessments',
+      label: 'Active assessments',
+      value: displayCount(summary.activeAssessmentsCount),
+      icon: ClipboardList,
+      accent: 'info',
+      to: '/assessments',
+    },
+    {
+      key: 'enrollments',
+      label: 'Enrolled students',
+      value: displayCount(totalEnrolled),
+      icon: Users,
+      accent: 'primary',
+      to: '/classes',
+    },
+    {
+      key: 'attendance',
+      label: 'Attendance records today',
+      value: displayCount(summary.todayAttendance?.total ?? null),
+      icon: CalendarCheck,
+      accent: 'success',
+      to: '/attendance',
+    },
+    {
+      key: 'schedule',
+      label: 'Classes scheduled today',
+      value: displayCount(
+        summary.backendAvailable ? summary.todaySchedule.length : null,
+      ),
+      icon: School,
+      accent: 'warning',
+      to: '/schedules',
+    },
+  ]
+
   return (
     <div className="dashboard admin-dashboard">
       <AdminDashboardIntro
@@ -56,18 +111,50 @@ function DashboardPage() {
         currentSemester={summary.currentSemester}
       />
 
-      <div className="stats-grid">
-        {stats.map((stat) => (
-          <Link key={stat.label} to={stat.to} className="stat-card-link">
-            <StatCard
-              icon={stat.icon}
-              label={stat.label}
-              value={stat.value}
-              accent={stat.accent}
-            />
-          </Link>
-        ))}
-      </div>
+      <section className="dashboard-summary" aria-labelledby="summary-title">
+        <header className="dashboard-summary__head">
+          <h2 id="summary-title" className="dashboard-summary__title">
+            Institution overview
+          </h2>
+          <p className="dashboard-summary__hint">
+            Live counts across your institution
+          </p>
+        </header>
+        <div className="stats-grid">
+          {stats.map((stat) => (
+            <Link key={stat.label} to={stat.to} className="stat-card-link">
+              <StatCard
+                icon={stat.icon}
+                label={stat.label}
+                value={stat.value}
+                accent={stat.accent}
+              />
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <ul className="metrics-strip" aria-label="Key metrics">
+        {metrics.map((metric) => {
+          const Icon = metric.icon
+          return (
+            <li
+              className={`metrics-strip__tile metrics-strip__tile--${metric.accent}`}
+              key={metric.key}
+            >
+              <Link to={metric.to} className="metrics-strip__link">
+                <span className="metrics-strip__icon" aria-hidden="true">
+                  <Icon size={17} />
+                </span>
+                <span className="metrics-strip__body">
+                  <span className="metrics-strip__value">{metric.value}</span>
+                  <span className="metrics-strip__label">{metric.label}</span>
+                </span>
+              </Link>
+            </li>
+          )
+        })}
+      </ul>
 
       <div className="dashboard-grid">
         <TodaysScheduleCard

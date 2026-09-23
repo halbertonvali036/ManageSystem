@@ -131,6 +131,7 @@ function StudentForm({
             onBlur={handleBlur('studentId')}
             placeholder="e.g. STU-0001"
             disabled={isSubmitting}
+            aria-invalid={fieldError('studentId') ? 'true' : 'false'}
           />
           {fieldError('studentId') ? (
             <p className="form__error">{fieldError('studentId')}</p>
@@ -139,7 +140,7 @@ function StudentForm({
 
         <div className="form__field">
           <label className="form__label" htmlFor="student-class">
-            Class
+            Class <span className="form__optional">Optional</span>
           </label>
           <select
             id="student-class"
@@ -179,6 +180,7 @@ function StudentForm({
             onBlur={handleBlur('firstName')}
             placeholder="e.g. Alice"
             disabled={isSubmitting}
+            aria-invalid={fieldError('firstName') ? 'true' : 'false'}
           />
           {fieldError('firstName') ? (
             <p className="form__error">{fieldError('firstName')}</p>
@@ -198,6 +200,7 @@ function StudentForm({
             onBlur={handleBlur('lastName')}
             placeholder="e.g. Johnson"
             disabled={isSubmitting}
+            aria-invalid={fieldError('lastName') ? 'true' : 'false'}
           />
           {fieldError('lastName') ? (
             <p className="form__error">{fieldError('lastName')}</p>
@@ -218,6 +221,7 @@ function StudentForm({
             onBlur={handleBlur('email')}
             placeholder="e.g. alice@example.com"
             disabled={isSubmitting}
+            aria-invalid={fieldError('email') ? 'true' : 'false'}
           />
           {fieldError('email') ? (
             <p className="form__error">{fieldError('email')}</p>
@@ -238,6 +242,7 @@ function StudentForm({
             onBlur={handleBlur('phone')}
             placeholder="e.g. +1 555 010 1234"
             disabled={isSubmitting}
+            aria-invalid={fieldError('phone') ? 'true' : 'false'}
           />
           {fieldError('phone') ? (
             <p className="form__error">{fieldError('phone')}</p>
@@ -256,6 +261,7 @@ function StudentForm({
             onChange={setField('dateOfBirth')}
             onBlur={handleBlur('dateOfBirth')}
             disabled={isSubmitting}
+            aria-invalid={fieldError('dateOfBirth') ? 'true' : 'false'}
           />
           {fieldError('dateOfBirth') ? (
             <p className="form__error">{fieldError('dateOfBirth')}</p>
@@ -272,6 +278,7 @@ function StudentForm({
             value={values.gender}
             onChange={setField('gender')}
             disabled={isSubmitting}
+            aria-invalid={fieldError('gender') ? 'true' : 'false'}
           >
             <option value="">Select gender</option>
             {GENDER_OPTIONS.map((option) => (
@@ -295,6 +302,7 @@ function StudentForm({
             value={values.status}
             onChange={setField('status')}
             disabled={isSubmitting}
+            aria-invalid={fieldError('status') ? 'true' : 'false'}
           >
             <option value="">Select status</option>
             {Object.entries(STUDENT_STATUS_LABELS).map(([value, label]) => (

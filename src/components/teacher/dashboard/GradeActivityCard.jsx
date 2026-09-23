@@ -4,7 +4,9 @@ import Card from '@/components/common/Card'
 import GradeStatusBadge from '@/components/grades/GradeStatusBadge'
 import {
   formatGradeAssessmentType,
+  formatGradeClassName,
   formatGradeDate,
+  formatGradePercentage,
   formatGradeScore,
   formatGradeStudentName,
 } from '@/models/grade'
@@ -71,22 +73,36 @@ function GradeActivityCard({
       {!isLoading && !error && grades.length === 0 ? <EmptyState /> : null}
       {!isLoading && !error && grades.length > 0 ? (
         <ul className="activity-list">
-          {grades.map((grade) => (
-            <li className="activity-item" key={grade.id}>
-              <span className="activity-item__marker" aria-hidden="true" />
-              <div className="activity-item__body">
-                <span className="activity-item__text">
-                  {formatGradeStudentName(grade)} &mdash;{' '}
-                  {formatGradeAssessmentType(grade)}
+          {grades.map((grade) => {
+            const percentage = formatGradePercentage(grade)
+            const className = formatGradeClassName(grade)
+            return (
+              <li className="activity-item" key={grade.id}>
+                <span className="activity-item__marker" aria-hidden="true" />
+                <div className="activity-item__body">
+                  <span className="activity-item__text">
+                    {formatGradeStudentName(grade)} &mdash;{' '}
+                    {formatGradeAssessmentType(grade)}
+                  </span>
+                  <span className="activity-item__context">
+                    {className !== '—' ? <span>{className}</span> : null}
+                    <span> · {formatGradeDate(grade.date)}</span>
+                  </span>
+                </div>
+                <span className="activity-item__score">
+                  <span className="activity-item__score-value">
+                    {formatGradeScore(grade)}
+                  </span>
+                  {percentage !== '—' ? (
+                    <span className="activity-item__score-percent">
+                      {percentage}
+                    </span>
+                  ) : null}
                 </span>
-                <span className="activity-item__time">
-                  {formatGradeScore(grade)} &middot;{' '}
-                  {formatGradeDate(grade.date)}
-                </span>
-              </div>
-              <GradeStatusBadge record={grade} />
-            </li>
-          ))}
+                <GradeStatusBadge record={grade} />
+              </li>
+            )
+          })}
         </ul>
       ) : null}
     </Card>

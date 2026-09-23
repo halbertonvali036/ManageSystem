@@ -1,0 +1,357 @@
+/* ============================================================
+   Phase 7B: Reports page and report workspace refinements.
+   Final CSS layer — token driven, no hardcoded colors.
+   ------------------------------------------------------------
+   Builds on the Phase 4B report foundation and reuses the shared
+   premium table / state / form languages. Only visual.
+   ============================================================ */
+
+/* ── Page composition ────────────────────────────────────── */
+.reports-page {
+  gap: clamp(var(--space-4), 1.8vw, var(--space-5));
+}
+
+.reports-page > .page-description {
+  max-width: 72ch;
+  color: var(--color-text-soft);
+}
+
+.reports-grid {
+  gap: clamp(var(--space-4), 1.6vw, var(--space-5));
+}
+
+/* ── Report category cards ───────────────────────────────── */
+.report-category {
+  --rc: var(--color-primary);
+  position: relative;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border-color: var(--color-border);
+}
+
+/* Category tones — each report family gets its own quiet accent. */
+.report-category--attendance {
+  --rc: var(--color-info);
+}
+
+.report-category--grades {
+  --rc: var(--color-success);
+}
+
+.report-category--courses {
+  --rc: var(--color-warning);
+}
+
+.report-category--classes {
+  --rc: var(--color-role-teacher);
+}
+
+/* Top accent hairline: appears on hover / keyboard focus.    */
+.report-category::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--rc), color-mix(in srgb, var(--rc) 20%, transparent));
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  pointer-events: none;
+}
+
+.report-category:hover::before,
+.report-category:focus-within::before,
+.report-category:focus-visible::before {
+  opacity: 1;
+}
+
+.report-category:hover {
+  border-color: color-mix(in srgb, var(--rc) 34%, var(--color-border-strong));
+}
+
+.report-category:focus-within {
+  border-color: color-mix(in srgb, var(--rc) 44%, var(--color-border));
+}
+
+.report-category__icon {
+  color: var(--rc);
+  background: color-mix(in srgb, var(--rc) 10%, transparent);
+  border-color: color-mix(in srgb, var(--rc) 22%, var(--color-border));
+}
+
+.report-category:hover .report-category__icon {
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--rc) 18%, transparent);
+}
+
+.report-category__title {
+  font-size: 1.02rem;
+  letter-spacing: -0.01em;
+}
+
+.report-category__description {
+  color: var(--color-text-soft);
+}
+
+.report-category__action {
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.report-category__action .btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--color-primary) 34%, transparent);
+}
+
+.report-category__action .btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.report-category__action .btn:focus-visible {
+  outline-color: var(--rc);
+}
+
+.report-category__arrow {
+  color: var(--rc);
+}
+
+/* ── Report workspace ────────────────────────────────────── */
+.report-workspace > .details-toolbar {
+  margin-bottom: 0;
+}
+
+.report-workspace > .page-description {
+  color: var(--color-text-soft);
+}
+
+.report-workspace > .card {
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-xs);
+}
+
+.report-workspace > .card > .card__header {
+  padding: var(--space-4) var(--space-5);
+}
+
+.report-workspace > .card > .card__body {
+  padding: var(--space-5);
+}
+
+/* ── Filter bar ──────────────────────────────────────────── */
+.report-filters__grid {
+  gap: var(--space-4) var(--space-3);
+}
+
+.report-filters .form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.report-filters .form__label {
+  line-height: 1.4;
+}
+
+/* Focus language matches the premium toolbars (ring, no double outline). */
+.report-filters .form__input {
+  background-color: var(--color-field);
+}
+
+.report-filters .form__input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-bg);
+  background-color: var(--color-field-hover);
+}
+
+.report-filters__actions {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  row-gap: var(--space-3);
+}
+
+/* Reset reads as a quiet ghost beside the primary Generate. */
+.report-filters__actions .btn--icon-left:not(.btn--primary):hover:not(:disabled) {
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  border-color: var(--color-primary-bg);
+}
+
+/* ── Summary metrics ─────────────────────────────────────── */
+.report-result__summary {
+  gap: var(--space-2);
+}
+
+.report-result__stat {
+  min-height: 78px;
+  justify-content: center;
+  background: var(--color-surface-2);
+  border-color: var(--color-border);
+}
+
+.report-result__stat::before {
+  background: linear-gradient(180deg, var(--color-primary), var(--color-accent-strong));
+}
+
+.report-result__stat-value {
+  font-size: 1.32rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.report-result__stat-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+}
+
+.report-result__count {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 5px 11px;
+  font-size: 0.78rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+/* ── Result table ────────────────────────────────────────── */
+.report-result__table th {
+  padding-block: 11px;
+  background: var(--color-surface-2);
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+}
+
+.report-result__table th:first-child {
+  border-left: none;
+}
+
+.report-result__table th:last-child {
+  border-right: none;
+}
+
+.report-result__table td {
+  padding-block: 11px;
+}
+
+.report-result .table-responsive {
+  border: 1px solid var(--color-border);
+}
+
+/* ── Export actions: unavailable reads as "locked" ───────── */
+.report-result__actions .btn:disabled {
+  color: var(--color-text-soft);
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  border-style: dashed;
+  box-shadow: none;
+  opacity: 0.85;
+  cursor: not-allowed;
+}
+
+.report-result__actions .btn:disabled svg {
+  color: var(--color-text-soft);
+}
+
+/* ── Empty / loading / backend-unavailable states ────────── */
+.reports-page .table-state {
+  min-height: 200px;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-6) var(--space-5);
+}
+
+.reports-page .reports-grid + .table-state,
+.reports-page .report-workspace .table-state {
+  justify-content: center;
+}
+
+.reports-page .table-state .table-state__icon {
+  width: 44px;
+  height: 44px;
+  box-sizing: content-box;
+  padding: 10px;
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  border: 1px solid var(--color-primary-bg);
+  border-radius: 14px;
+}
+
+.reports-page .table-state__title {
+  margin-top: var(--space-3);
+}
+
+.reports-page .table-state__text {
+  color: var(--color-text-soft);
+}
+
+.reports-page .table-state .btn {
+  margin-top: var(--space-2);
+}
+
+.reports-page .page-status {
+  font-weight: 600;
+  color: var(--color-text-soft);
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  .report-result__summary {
+    flex-basis: 100%;
+  }
+
+  .report-filters__grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .report-category {
+    padding: var(--space-4);
+  }
+
+  .report-filters__actions .btn,
+  .report-result__actions .btn {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .reports-page > .page-description {
+    font-size: 0.88rem;
+  }
+
+  .report-result__stat {
+    flex-basis: 100%;
+  }
+
+  .report-result__actions {
+    width: 100%;
+  }
+
+  .report-result__actions .btn {
+    flex: 1 1 100%;
+  }
+}
+
+/* ── Motion respect ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .report-category,
+  .report-category::before,
+  .report-category__icon,
+  .report-category__action .btn {
+    transition: none !important;
+  }
+
+  .report-category:hover,
+  .report-category:hover .report-category__icon,
+  .report-category:hover .report-category__action .btn {
+    transform: none !important;
+  }
+}

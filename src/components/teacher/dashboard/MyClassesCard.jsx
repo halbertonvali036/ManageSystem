@@ -93,6 +93,9 @@ function MyClassesCard({ classes, isLoading, error, onRetry }) {
                   </Link>
                   <p className="class-item__meta">
                     {formatClassCourseName(classRecord)}
+                    {classRecord.room ? (
+                      <span> · {classRecord.room}</span>
+                    ) : null}
                     {studentCount != null ? (
                       <span>
                         {' '}

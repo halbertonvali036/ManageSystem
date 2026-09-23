@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ClipboardCheck, MapPin } from 'lucide-react'
+import { CalendarCheck, ClipboardCheck, MapPin } from 'lucide-react'
 import Card from '@/components/common/Card'
 import {
   formatScheduleClassName,
@@ -33,12 +33,13 @@ function ErrorState({ message, onRetry }) {
 function AttendanceQuickActionsCard({ todayClasses, isLoading, error, onRetry }) {
   return (
     <Card title="Attendance">
-      <div className="attendance-actions">
-        <Link to="/teacher/attendance" className="btn btn--primary">
-          View Attendance
-        </Link>
-        <Link to="/teacher/attendance/mark" className="btn">
+      <div className="attendance-actions-card">
+        <Link to="/teacher/attendance/mark" className="attendance-cta attendance-cta--primary">
+          <CalendarCheck size={17} aria-hidden="true" />
           Mark Attendance
+        </Link>
+        <Link to="/teacher/attendance" className="attendance-cta-link">
+          View Attendance
         </Link>
       </div>
 
@@ -63,34 +64,34 @@ function AttendanceQuickActionsCard({ todayClasses, isLoading, error, onRetry })
       {!isLoading && !error && todayClasses.length > 0 ? (
         <>
           <p className="widget-caption">Classes scheduled today</p>
-          <ul className="class-list">
+          <ul className="schedule-list">
             {todayClasses.map((item) => {
               const classId = resolveScheduleClassId(item)
               return (
-                <li className="class-item" key={item.id ?? item.scheduleId}>
-                  <span className="class-item__time">
+                <li className="schedule-item" key={item.id ?? item.scheduleId}>
+                  <span className="schedule-item__time">
                     {formatScheduleTimeRange(item)}
                   </span>
-                  <div className="class-item__info">
-                    {classId ? (
-                      <Link
-                        to={`/teacher/classes/${classId}`}
-                        className="class-item__subject-link"
-                      >
-                        <h3 className="class-item__subject">
+                  <div className="schedule-item__body">
+                    <div className="schedule-item__title-row">
+                      {classId ? (
+                        <Link
+                          to={`/teacher/classes/${classId}`}
+                          className="schedule-item__class-link"
+                        >
                           {formatScheduleClassName(item)}
-                        </h3>
-                      </Link>
-                    ) : (
-                      <h3 className="class-item__subject">
-                        {formatScheduleClassName(item)}
-                      </h3>
-                    )}
-                    <p className="class-item__meta">
+                        </Link>
+                      ) : (
+                        <span className="schedule-item__class">
+                          {formatScheduleClassName(item)}
+                        </span>
+                      )}
+                    </div>
+                    <p className="schedule-item__course">
                       {formatScheduleCourseName(item)}
                     </p>
                   </div>
-                  <span className="class-item__room">
+                  <span className="schedule-item__room">
                     <MapPin size={14} aria-hidden="true" />
                     {formatScheduleRoom(item)}
                   </span>

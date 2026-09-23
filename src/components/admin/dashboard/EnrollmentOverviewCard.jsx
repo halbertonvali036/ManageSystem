@@ -93,13 +93,6 @@ function EnrollmentOverviewCard({ classes, isLoading, error, onRetry }) {
           </ul>
         </>
       ) : null}
-      {!isLoading && !error && classes.length > 0 ? (
-        <div className="widget-actions">
-          <Link to="/classes" className="btn btn--primary btn--block">
-            Manage Classes
-          </Link>
-        </div>
-      ) : null}
     </Card>
   )
 }

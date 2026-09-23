@@ -13,7 +13,10 @@ function ScheduleItemCard({ item, showDate = false }) {
   const classId = resolveScheduleClassId(item)
 
   return (
-    <article className="schedule-item" aria-label={formatScheduleClassName(item)}>
+    <article
+      className="schedule-item schedule-item--teacher"
+      aria-label={formatScheduleClassName(item)}
+    >
       <div className="schedule-item__time">
         <Clock size={14} aria-hidden="true" />
         <span>{formatScheduleTimeRange(item)}</span>

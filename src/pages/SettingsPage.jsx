@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import {
   Building2,
   GraduationCap,
@@ -17,6 +19,7 @@ import SettingsSection from '@/components/settings/SettingsSection'
 import useSettings from '@/hooks/useSettings'
 
 function SettingsPage() {
+  const { hash } = useLocation()
   const {
     values,
     isLoading,
@@ -31,6 +34,13 @@ function SettingsPage() {
     save,
     reset,
   } = useSettings()
+
+  useEffect(() => {
+    if (!hash || isLoading) {
+      return
+    }
+    document.getElementById(hash.slice(1))?.scrollIntoView({ block: 'start' })
+  }, [hash, isLoading])
 
   if (isLoading) {
     return (
@@ -90,6 +100,7 @@ function SettingsPage() {
       </SettingsSection>
 
       <SettingsSection
+        id="admin-profile"
         title="Account / Admin Profile"
         description="Profile information for the signed-in administrator."
         icon={<UserCircle size={20} aria-hidden="true" />}

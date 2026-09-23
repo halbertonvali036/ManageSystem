@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AlertCircle, ArrowLeft, Mail, Send } from 'lucide-react'
-import BrandLogo from '@/components/common/BrandLogo'
 import authService from '@/services/authService'
 import { BackendNotConnectedError } from '@/services/httpClient'
 import { isValidEmail } from '@/utils/validation'
@@ -65,7 +64,7 @@ function ForgotPasswordPage() {
     return (
       <div className="auth-card anim-scale-in">
         <div className="auth-card__head">
-          <BrandLogo size={44} />
+          <p className="auth-card__eyebrow anim-fade-up anim-delay-1">Account recovery</p>
           <h2 className="auth-card__title anim-fade-up anim-delay-1">
             Check your inbox
           </h2>
@@ -97,7 +96,7 @@ function ForgotPasswordPage() {
   return (
     <div className="auth-card anim-scale-in">
       <div className="auth-card__head">
-        <BrandLogo size={44} />
+        <p className="auth-card__eyebrow anim-fade-up anim-delay-1">Account recovery</p>
         <h2 className="auth-card__title anim-fade-up anim-delay-1">
           Forgot password?
         </h2>
@@ -134,11 +133,13 @@ function ForgotPasswordPage() {
             onBlur={handleBlur}
             disabled={isLoading}
             autoFocus
+            aria-invalid={Boolean(errors.email)}
+            aria-describedby={errors.email ? 'forgot-email-error' : 'forgot-email-hint'}
           />
-          <p className="form__hint">
+          <p className="form__hint" id="forgot-email-hint">
             We will send recovery instructions to this address.
           </p>
-          {errors.email ? <p className="form__error">{errors.email}</p> : null}
+          {errors.email ? <p className="form__error" id="forgot-email-error">{errors.email}</p> : null}
         </div>
 
         <button

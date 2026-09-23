@@ -1,13 +1,27 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { AlertCircle, Eye, EyeOff, LogIn } from 'lucide-react'
-import BrandLogo from '@/components/common/BrandLogo'
+import {
+  AlertCircle,
+  BookOpen,
+  Building2,
+  Eye,
+  EyeOff,
+  GraduationCap,
+  KeyRound,
+  LogIn,
+} from 'lucide-react'
 import useAuth from '@/hooks/useAuth'
 import { DEMO_ACCOUNTS } from '@/services/authService'
 import { getRoleDashboardPath, ROLE_NAMES } from '@/utils/roles'
 import { isValidEmail } from '@/utils/validation'
 
 const DEMO_ROLES = DEMO_ACCOUNTS.map((account) => account.role)
+
+const ROLE_ICONS = {
+  admin: Building2,
+  teacher: BookOpen,
+  student: GraduationCap,
+}
 
 const getAccountByRole = (role) =>
   DEMO_ACCOUNTS.find((account) => account.role === role)
@@ -87,12 +101,12 @@ function LoginPage() {
   return (
     <div className="auth-card anim-scale-in">
       <div className="auth-card__head">
-        <BrandLogo size={44} />
+        <p className="auth-card__eyebrow anim-fade-up anim-delay-1">Secure sign in</p>
         <h2 className="auth-card__title anim-fade-up anim-delay-1">
           Welcome back
         </h2>
         <p className="auth-card__subtitle anim-fade-up anim-delay-2">
-          Sign in to your account to continue.
+          Sign in to access your administration, teaching or student workspace.
         </p>
       </div>
 
@@ -117,20 +131,25 @@ function LoginPage() {
             role="group"
             aria-labelledby="demo-role-label"
           >
-            {DEMO_ROLES.map((demoRole) => (
-              <button
-                key={demoRole}
-                type="button"
-                className={`role-selector__option${
-                  role === demoRole ? ' role-selector__option--active' : ''
-                }`}
-                onClick={() => handleRoleChange(demoRole)}
-                aria-pressed={role === demoRole}
-                disabled={isLoading}
-              >
-                {ROLE_NAMES[demoRole]}
-              </button>
-            ))}
+            {DEMO_ROLES.map((demoRole) => {
+              const Icon = ROLE_ICONS[demoRole]
+              return (
+                <button
+                  key={demoRole}
+                  type="button"
+                  className={`role-selector__option${
+                    role === demoRole ? ' role-selector__option--active' : ''
+                  }`}
+                  data-tone={demoRole}
+                  onClick={() => handleRoleChange(demoRole)}
+                  aria-pressed={role === demoRole}
+                  disabled={isLoading}
+                >
+                  <Icon size={18} aria-hidden="true" />
+                  <span>{ROLE_NAMES[demoRole]}</span>
+                </button>
+              )
+            })}
           </div>
         </div>
 
@@ -150,8 +169,10 @@ function LoginPage() {
             onBlur={handleBlur}
             disabled={isLoading}
             autoFocus
+            aria-invalid={Boolean(errors.email)}
+            aria-describedby={errors.email ? 'login-email-error' : undefined}
           />
-          {errors.email ? <p className="form__error">{errors.email}</p> : null}
+          {errors.email ? <p className="form__error" id="login-email-error">{errors.email}</p> : null}
         </div>
 
         <div className="form__field">
@@ -170,6 +191,8 @@ function LoginPage() {
               onChange={(event) => setPassword(event.target.value)}
               onBlur={handleBlur}
               disabled={isLoading}
+              aria-invalid={Boolean(errors.password)}
+              aria-describedby={errors.password ? 'login-password-error' : undefined}
             />
             <button
               type="button"
@@ -179,11 +202,11 @@ function LoginPage() {
               aria-pressed={showPassword}
               disabled={isLoading}
             >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              {showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
             </button>
           </div>
           {errors.password ? (
-            <p className="form__error">{errors.password}</p>
+            <p className="form__error" id="login-password-error">{errors.password}</p>
           ) : null}
         </div>
 
@@ -220,14 +243,24 @@ function LoginPage() {
           )}
         </button>
 
-        <ul className="form__demo form__demo-list">
-          {DEMO_ACCOUNTS.map((account) => (
-            <li key={account.role}>
-              <strong>{ROLE_NAMES[account.role]}:</strong> {account.email} /{' '}
-              {account.password}
-            </li>
-          ))}
-        </ul>
+        <p className="auth-register-prompt">
+          New to the platform? <Link to="/register" className="form__link">Create account</Link>
+        </p>
+
+        <details className="form__demo-note">
+          <summary className="form__demo-title">
+            <KeyRound size={14} aria-hidden="true" />
+            Demo access
+          </summary>
+          <ul className="form__demo form__demo-list">
+            {DEMO_ACCOUNTS.map((account) => (
+              <li key={account.role}>
+                <strong>{ROLE_NAMES[account.role]}:</strong> {account.email} /{' '}
+                {account.password}
+              </li>
+            ))}
+          </ul>
+        </details>
       </form>
     </div>
   )

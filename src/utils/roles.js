@@ -16,8 +16,17 @@ export const ROLE_DASHBOARD_PATHS = Object.freeze({
   [ROLES.STUDENT]: '/student/dashboard',
 })
 
+export const ROLE_PROFILE_PATHS = Object.freeze({
+  [ROLES.ADMIN]: '/settings#admin-profile',
+  [ROLES.TEACHER]: '/teacher/profile',
+  [ROLES.STUDENT]: '/student/profile',
+})
+
 export const getRoleDashboardPath = (role) =>
   ROLE_DASHBOARD_PATHS[role] ?? ROLE_DASHBOARD_PATHS[ROLES.ADMIN]
+
+export const getRoleProfilePath = (role) =>
+  ROLE_PROFILE_PATHS[role] ?? ROLE_PROFILE_PATHS[ROLES.ADMIN]
 
 export const isKnownRole = (role) =>
   role === ROLES.ADMIN || role === ROLES.TEACHER || role === ROLES.STUDENT
