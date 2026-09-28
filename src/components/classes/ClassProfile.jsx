@@ -5,7 +5,6 @@ import ClassStatusBadge from '@/components/classes/ClassStatusBadge'
 import {
   formatClassCourseName,
   formatClassName,
-  formatClassTeacherName,
 } from '@/models/class'
 import { parseSchedule } from '@/utils/classForm'
 
@@ -81,9 +80,6 @@ function ClassProfile({ classRecord, onBack, onEdit, onDelete }) {
           <dl className="info-grid">
             <InfoItem label="Course">
               {formatClassCourseName(classRecord)}
-            </InfoItem>
-            <InfoItem label="Teacher">
-              {formatClassTeacherName(classRecord)}
             </InfoItem>
           </dl>
         </Card>

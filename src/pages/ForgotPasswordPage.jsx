@@ -86,7 +86,7 @@ function ForgotPasswordPage() {
           <p className="auth-state__text">{NEUTRAL_SUCCESS}</p>
           <Link to="/login" className="btn btn--primary auth-cta">
             <ArrowLeft size={16} className="auth-cta__icon" aria-hidden="true" />
-            Back to Login
+            Back to sign in
           </Link>
         </div>
       </div>
@@ -163,7 +163,7 @@ function ForgotPasswordPage() {
         <div className="auth-back">
           <Link to="/login" className="form__link">
             <ArrowLeft size={15} aria-hidden="true" />
-            Back to Login
+            Back to sign in
           </Link>
         </div>
       </form>

@@ -1,17 +1,16 @@
 /* ============================================================
    Portal Shell
    Premium refinement of the shared app rail, header and canvas
-   for the Admin / Teacher / Student portals.
+   for the website-builder workspace and internal administration.
 
-   Loaded LAST in main.jsx (after theme/global/motion/teacher/
-   student/admin/auth), so every rule here intentionally refines
+   Loaded after theme/global/motion/admin/auth; every rule refines
    the base system instead of rebuilding it. Token-driven; the
    existing theme system and all layout/routing/business logic
    are untouched.
 
    Role identity is expressed through `--sb-accent` on the
    sidebar and `--ctx-accent` on the header context pill:
-   Admin = accent, Teacher = teal, Student = amber.
+   Internal admin and platform users share the product palette.
    ============================================================ */
 
 /* ── App canvas ───────────────────────────────────────────── */
@@ -119,22 +118,59 @@ html[data-theme='dark'] .app-header {
   border-color: var(--color-border);
 }
 
+/*
+ * The workspace keeps one action always within reach. It leads the action row
+ * and is separated from the utility controls by a divider, so it does not read
+ * as another toggle.
+ */
+.app-header__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  margin-right: var(--space-1);
+  padding-right: var(--space-3);
+  border-right: 1px solid var(--color-hairline);
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+@media (max-width: 640px) {
+  .app-header__cta {
+    padding-right: var(--space-2);
+  }
+
+  /* Below this width the label no longer fits beside the other controls, so
+     the icon carries the action and keeps an accessible name. */
+  .app-header__cta-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
 /* ── Role context pills ───────────────────────────────────── */
 .admin-context {
   --ctx-accent: var(--color-accent);
 }
 
-.teacher-context {
-  --ctx-accent: var(--color-role-teacher);
+/* Account-level routes (Plan & Billing, Account & Security) have no role pill. */
+.billing-context {
+  --ctx-accent: var(--color-accent-2);
 }
 
-.student-context {
-  --ctx-accent: var(--color-role-student);
+.security-context {
+  --ctx-accent: var(--color-accent-2);
 }
 
 .app-header .admin-context,
-.app-header .teacher-context,
-.app-header .student-context {
+.app-header .billing-context,
+.app-header .security-context {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -153,8 +189,8 @@ html[data-theme='dark'] .app-header {
 }
 
 .app-header .admin-context::before,
-.app-header .teacher-context::before,
-.app-header .student-context::before {
+.app-header .billing-context::before,
+.app-header .security-context::before {
   content: '';
   width: 6px;
   height: 6px;
@@ -268,7 +304,8 @@ html[data-theme='dark'] .app-header {
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.02em;
-  color: #ffffff;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
   border-radius: 999px;
   box-shadow:
     0 0 0 2px var(--color-surface),
@@ -277,15 +314,8 @@ html[data-theme='dark'] .app-header {
 }
 
 .user-menu[data-role='admin'] .user-menu__avatar {
-  background: linear-gradient(145deg, #5961c9, #454ba8);
-}
-
-.user-menu[data-role='teacher'] .user-menu__avatar {
-  background: linear-gradient(145deg, #14b8a6, #0d9488);
-}
-
-.user-menu[data-role='student'] .user-menu__avatar {
-  background: linear-gradient(145deg, #f59e0b, #d97706);
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
 }
 
 .user-menu__info {
@@ -380,6 +410,13 @@ html[data-theme='dark'] .app-header {
   border-color: var(--color-primary-bg);
 }
 
+.user-menu__action--billing:hover,
+.user-menu__action--security:hover {
+  color: var(--color-accent-2);
+  background: color-mix(in srgb, var(--color-accent-2) 11%, transparent);
+  border-color: color-mix(in srgb, var(--color-accent-2) 28%, transparent);
+}
+
 .user-menu__action--logout:hover {
   color: var(--color-danger);
   background: var(--color-danger-bg);
@@ -411,7 +448,7 @@ html[data-theme='dark'] .app-header {
   color: var(--color-sidebar-text);
   background:
     radial-gradient(560px 340px at -18% -12%, var(--sb-glow), transparent 62%),
-    linear-gradient(180deg, #0d1422 0%, #0a0e18 100%);
+    var(--color-sidebar-bg);
   border-right: 1px solid var(--color-sidebar-border);
   --sb-accent: var(--color-accent);
   --sb-glow: color-mix(in srgb, var(--color-accent) 16%, transparent);
@@ -420,21 +457,11 @@ html[data-theme='dark'] .app-header {
     transform var(--transition-base);
 }
 
-.teacher-sidebar {
-  --sb-accent: var(--color-role-teacher);
-  --sb-glow: color-mix(in srgb, var(--color-role-teacher) 18%, transparent);
-}
-
-.student-sidebar {
-  --sb-accent: var(--color-role-student);
-  --sb-glow: color-mix(in srgb, var(--color-role-student) 18%, transparent);
-}
-
 html[data-theme='dark'] .app-sidebar {
   background:
     radial-gradient(560px 340px at -18% -12%, var(--sb-glow), transparent 64%),
     radial-gradient(720px 420px at 110% 118%, var(--sb-glow), transparent 62%),
-    linear-gradient(180deg, #0b101c 0%, #070b13 100%);
+    var(--color-sidebar-bg);
 }
 
 /* ── Brand identity ───────────────────────────────────────── */
@@ -457,6 +484,8 @@ html[data-theme='dark'] .app-sidebar {
 
 .sidebar__brand-logo {
   flex-shrink: 0;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--sb-accent) 28%, transparent),
     0 8px 20px -8px var(--sb-glow);
@@ -491,7 +520,9 @@ html[data-theme='dark'] .app-sidebar {
   line-height: 1;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--sb-accent) 78%, var(--color-sidebar-text));
-  white-space: nowrap;
+  white-space: normal;
+  line-height: 1.4;
+  letter-spacing: .04em;
 }
 
 .sidebar__brand-role::before {
@@ -767,8 +798,8 @@ html[data-theme='dark'] .app-sidebar {
   }
 
   .app-header .admin-context,
-  .app-header .teacher-context,
-  .app-header .student-context {
+  .app-header .billing-context,
+  .app-header .security-context {
     display: none;
   }
 
@@ -801,6 +832,22 @@ html[data-theme='dark'] .app-sidebar {
 /* ============================================================
    Reduced motion
    ============================================================ */
+/* Compact utility labels before the fixed sidebar leaves too little room. */
+@media (max-width: 1279px) {
+  .app-header .user-menu__action-label,
+  .app-header .user-menu__info,
+  .app-header .command-trigger__label,
+  .app-header .command-trigger__kbd { display: none; }
+  .app-header .command-trigger { width: 40px; min-width: 40px; padding: 0; justify-content: center; }
+  .app-header .user-menu__action { width: 36px; padding: 0; justify-content: center; }
+}
+@media (max-width: 520px) {
+  .app-header { height: auto; min-height: var(--header-height); padding-block: 10px; align-items: flex-start; }
+  .app-header__start { flex-shrink: 0; }
+  .app-header__actions { min-width: 0; flex: 1; flex-wrap: wrap; justify-content: flex-end; row-gap: 8px; }
+  .app-header .user-menu { flex-basis: 100%; justify-content: flex-end; border-left: 0; padding-left: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .app-sidebar,
   .app-sidebar *,

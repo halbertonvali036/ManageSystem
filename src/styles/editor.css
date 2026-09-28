@@ -1,0 +1,1781 @@
+﻿/* ============================================================
+   Site editor — /sites/:siteId/editor
+   A full-bleed three-area builder: pages/blocks panel, canvas,
+   settings panel. Every colour resolves through theme.css, so
+   the neon dark theme and the light theme both work. Blue and
+   purple are deliberately absent from this surface.
+   ============================================================ */
+
+.editor-shell {
+  min-height: 100dvh;
+  background: var(--color-surface);
+}
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+/* Preview mode drops the editor chrome and gives the page the full shell. */
+.editor[data-preview='true'] {
+  height: auto;
+  min-height: 100dvh;
+  overflow: visible;
+}
+
+/* ── Top bar ──────────────────────────────────────────────────── */
+
+.editor-topbar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 56px;
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--color-sidebar-border);
+  background: var(--color-sidebar-bg);
+}
+
+.editor-topbar__left,
+.editor-topbar__actions,
+.editor-topbar__devices {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.editor-topbar__devices {
+  gap: var(--space-1);
+  padding: 3px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-surface-2);
+}
+
+.editor-topbar__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.editor-topbar__name {
+  font-size: var(--text-body);
+  font-weight: 700;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 34ch;
+}
+
+.editor-topbar__save {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+.editor-topbar__save--clean {
+  color: var(--color-success);
+}
+
+.editor-topbar__save--unsaved {
+  color: var(--color-warning);
+}
+
+.editor-topbar__save--unavailable,
+.editor-topbar__save--error {
+  color: var(--color-danger);
+}
+
+.editor-topbar__device-label {
+  display: none;
+  font-size: var(--text-meta);
+  font-weight: 600;
+}
+
+/* Restrained: a tint plus one hairline, never a large glow. */
+.editor-topbar__icon-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 32px;
+  padding: 0 var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  color: var(--color-text-muted);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.editor-topbar__icon-button:hover {
+  color: var(--color-text);
+  background: var(--color-surface-2);
+}
+
+.editor-topbar__icon-button.is-active {
+  color: var(--color-accent);
+  border-color: var(--color-accent-border);
+  background: var(--color-accent-soft);
+}
+
+.editor-topbar__icon-button:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* ── Body: three areas ────────────────────────────────────────── */
+
+.editor__body {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr) 300px;
+  flex: 1;
+  min-height: 0;
+}
+
+.editor__main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: var(--color-surface-2);
+}
+
+.editor__note {
+  flex-shrink: 0;
+  margin: 0;
+  padding: var(--space-2) var(--space-4);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+  background: var(--color-sidebar-bg);
+}
+
+.editor__mobile-tools {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-sidebar-bg);
+}
+
+/* Dismiss layer behind the narrow-viewport drawers; inert above 768px. */
+.editor-scrim {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 35;
+  border: 0;
+  padding: 0;
+  background: rgba(4, 12, 7, 0.62);
+  cursor: pointer;
+}
+
+.editor-scrim:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+
+/* ── Side panels ──────────────────────────────────────────────── */
+
+.editor-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--color-sidebar-bg);
+  scrollbar-width: thin;
+}
+
+.editor-panel--left {
+  border-right: 1px solid var(--color-sidebar-border);
+}
+
+.editor-panel--right {
+  border-left: 1px solid var(--color-sidebar-border);
+}
+
+.editor-panel__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+.editor-panel__section--grow {
+  flex: 1;
+  min-height: 0;
+}
+
+.editor-panel__title,
+.editor-panel__subtitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-meta);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+}
+
+.editor-panel__title svg {
+  color: var(--color-accent);
+}
+
+.editor-panel__subtitle {
+  letter-spacing: 0.04em;
+}
+
+.editor-panel__hint,
+.editor-panel__empty,
+.editor-settings__type {
+  margin: 0;
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+.editor-panel__close {
+  display: none;
+  margin: var(--space-3) var(--space-4);
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  background: var(--color-surface-2);
+  cursor: pointer;
+}
+
+/* Visually hidden but reachable by assistive tech and by focus. */
+.editor-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Page list ────────────────────────────────────────────────── */
+
+.editor-page-list,
+.editor-block-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.editor-page-list__item,
+.editor-block-list__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+}
+
+.editor-page-list__item.is-active,
+.editor-block-list__item.is-selected {
+  border-color: var(--color-accent-border);
+  background: var(--color-accent-soft);
+}
+
+.editor-page-list__select,
+.editor-block-list__select {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  text-align: left;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.editor-page-list__select:focus-visible,
+.editor-block-list__select:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.editor-page-list__name,
+.editor-block-list__type {
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.editor-page-list__count,
+.editor-block-list__preview {
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.editor-page-list__rename {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.editor-add-page {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* ── Section outline ──────────────────────────────────────────── */
+
+/*
+ * The outline mirrors the document: a section is a container and its blocks are
+ * indented underneath it. Indentation is the only cue needed, so the list stays
+ * legible on a narrow panel without a disclosure widget.
+ */
+.editor-section-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.editor-section-list__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+}
+
+.editor-section-list__item.is-selected {
+  border-color: var(--color-accent-border);
+  background: var(--color-accent-soft);
+}
+
+/* A hidden section is marked in the outline, not dropped from it. */
+.editor-section-list__item[data-hidden='true'] {
+  opacity: 0.65;
+}
+
+.editor-section-list__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.editor-section-list__select {
+  display: flex;
+  flex: 1;
+  gap: var(--space-1);
+  align-items: center;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  text-align: left;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.editor-section-list__select:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.editor-section-list__name {
+  min-width: 0;
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.editor-section-list__count {
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+.editor-section-list__item .editor-block-list {
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--color-border);
+}
+
+.editor-section-list__empty {
+  padding-left: var(--space-3);
+}
+
+.editor-section-library-open {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ── Section library dialog ────────────────────────────────────── */
+
+.editor-dialog-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.editor-dialog__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgb(0 0 0 / 55%);
+  cursor: pointer;
+}
+
+.editor-dialog {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: min(560px, 100%);
+  max-height: min(80vh, 640px);
+  padding: var(--space-5);
+  border: 1px solid var(--color-sidebar-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+  overflow: auto;
+}
+
+.editor-dialog__head {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.editor-dialog__title {
+  margin: 0;
+  font-size: var(--text-h4);
+  color: var(--color-text);
+}
+
+.editor-dialog__hint,
+.editor-dialog__note {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+/* ── Dialog fields, confirmations ──────────────────────────────── */
+
+.editor-dialog--form {
+  width: min(480px, 100%);
+}
+
+.editor-dialog__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: var(--space-2) 0;
+}
+
+.editor-dialog__detail {
+  margin: 0;
+  padding: var(--space-3);
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+}
+
+.editor-dialog__actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+  margin-top: var(--space-2);
+}
+
+/* ── Field helpers ─────────────────────────────────────────────── */
+
+.editor-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.editor-field--inline {
+  gap: 2px;
+}
+
+.editor-field__label {
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+.editor-field__hint {
+  margin: 0;
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+.editor-field__hint.is-error {
+  color: var(--color-danger, #ff6b6b);
+}
+
+.editor-field__hint.is-warning {
+  color: var(--color-warning, #ffb454);
+}
+
+.editor-input--mono {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: var(--text-meta);
+}
+
+/* ── Page panel ────────────────────────────────────────────────── */
+
+.editor-page-list__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-1);
+  border-top: 1px solid var(--color-border);
+}
+
+.editor-pages-add {
+  margin-top: var(--space-2);
+  align-self: flex-start;
+}
+
+/*
+ * The home page badge is a fact about the document rather than a control, so it
+ * sits under the name and never looks like something to press.
+ */
+.editor-badge {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  align-self: flex-start;
+  padding: 2px var(--space-2);
+  font-size: var(--text-meta);
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent-border);
+  border-radius: 999px;
+  background: var(--color-accent-soft);
+}
+
+.editor-badge--home {
+  margin: 0;
+}
+
+/* ── Navigation panel ──────────────────────────────────────────── */
+
+.editor-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.editor-nav-list__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+}
+
+/* Hidden and unlinked are marked, not dropped: the row is the user's work. */
+.editor-nav-list__item[data-hidden='true'] {
+  opacity: 0.65;
+}
+
+.editor-nav-list__item[data-unlinked='true'] {
+  border-color: var(--color-warning, #ffb454);
+}
+
+.editor-nav-list__head {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.editor-nav-list__head .editor-field {
+  flex: 1 1 auto;
+}
+
+.editor-nav-list__type {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.editor-nav-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+.editor-panel__note {
+  display: flex;
+  gap: 4px;
+  align-items: flex-start;
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+/* A two-state choice, so it is pressed rather than selected. */
+.editor-chip {
+  padding: 2px var(--space-2);
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.editor-chip[aria-pressed='true'] {
+  color: var(--color-accent);
+  border-color: var(--color-accent-border);
+  background: var(--color-accent-soft);
+}
+
+.editor-chip:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* ── Site header preview ───────────────────────────────────────── */
+
+.editor-site-header {
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-2);
+}
+
+.editor-site-header__bar {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3);
+}
+
+.editor-site-header__name {
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.editor-site-header__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.editor-site-header__link {
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.editor-site-header__link[aria-current='page'] {
+  color: var(--color-accent);
+}
+
+/*
+ * The drawer is a real block in the flow rather than an overlay, because this is a
+ * document preview: a floating panel over the page would not be what a phone
+ * shows once the menu is open.
+ */
+.editor-site-header__drawer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: 0 var(--space-3) var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.editor-site-header__empty,
+.editor-site-header__note {
+  margin: 0;
+  padding: 0 var(--space-3) var(--space-3);
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+.editor-section-library {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.editor-section-library__item {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  width: 100%;
+  height: 100%;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  text-align: left;
+  color: inherit;
+  background: var(--color-surface-2);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.editor-section-library__item:hover {
+  border-color: var(--color-accent-border);
+  background: var(--color-accent-soft);
+}
+
+.editor-section-library__item:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.editor-section-library__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.editor-section-library__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.editor-section-library__name {
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.editor-section-library__text {
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+.editor-section-library__meta {
+  font-size: var(--text-meta);
+  color: var(--color-accent);
+}
+
+/* ── Site theme list ───────────────────────────────────────────── */
+
+.editor-theme-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-1);
+}
+
+.editor-theme-list__item {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  text-align: left;
+  color: var(--color-text);
+  background: var(--color-surface-2);
+  cursor: pointer;
+}
+
+.editor-theme-list__item:hover {
+  border-color: var(--color-accent-border);
+}
+
+.editor-theme-list__item:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.editor-theme-list__item[data-checked='true'] {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.editor-theme-list__swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border: 2px solid;
+  border-radius: var(--radius-sm);
+}
+
+.editor-theme-list__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.editor-theme-list__name {
+  font-size: var(--text-meta);
+  font-weight: 600;
+}
+
+.editor-settings__kind {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+/* ── Block palette ────────────────────────────────────────────── */
+
+.editor-block-palette {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-1);
+}
+
+.editor-block-palette__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 36px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text);
+  background: var(--color-surface-2);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.editor-block-palette__item svg {
+  color: var(--color-accent);
+}
+
+.editor-block-palette__item:hover {
+  border-color: var(--color-accent-border);
+  background: var(--color-accent-soft);
+}
+
+.editor-block-palette__item:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* ── Small controls ───────────────────────────────────────────── */
+
+.editor-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.editor-row-actions--end {
+  justify-content: flex-end;
+}
+
+.editor-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: 28px;
+  min-width: 28px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+  background: var(--color-surface-3);
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.editor-icon-button:hover:not(:disabled) {
+  color: var(--color-text);
+  border-color: var(--color-border-strong);
+}
+
+.editor-icon-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.editor-icon-button:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.editor-icon-button--accent {
+  color: var(--color-accent);
+  border-color: var(--color-accent-border);
+  background: var(--color-accent-soft);
+}
+
+.editor-icon-button--danger:hover:not(:disabled) {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+  background: var(--color-danger-bg);
+}
+
+.editor-input,
+.editor-select,
+.editor-textarea {
+  width: 100%;
+  min-height: 34px;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: var(--text-body);
+  color: var(--color-text);
+  background: var(--color-surface);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.editor-textarea {
+  min-height: 72px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.editor-input--compact {
+  min-height: 28px;
+  font-size: var(--text-meta);
+}
+
+.editor-input::placeholder,
+.editor-textarea::placeholder {
+  color: var(--color-text-soft);
+}
+
+.editor-input:focus,
+.editor-select:focus,
+.editor-textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+.editor-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.editor-field__label {
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text-soft);
+}
+
+.editor-field__hint {
+  margin: 0;
+  font-size: var(--text-meta);
+  color: var(--color-text-soft);
+}
+
+.editor-color {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.editor-color__input {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  padding: 2px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  cursor: pointer;
+}
+
+.editor-color__input:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.editor-number {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.editor-range {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.editor-range:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.editor-number__value {
+  min-width: 42px;
+  padding: 2px var(--space-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-meta);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--color-text);
+  background: var(--color-surface-3);
+}
+
+/* ── Canvas ───────────────────────────────────────────────────── */
+
+.editor-canvas-area {
+  flex: 1;
+  min-height: 0;
+  padding: var(--space-4);
+  overflow: auto;
+}
+
+.editor-canvas-scroll {
+  display: flex;
+  justify-content: center;
+  min-height: 100%;
+}
+
+.editor-canvas-scroll[data-preview='true'] {
+  min-height: 0;
+}
+
+.editor-canvas {
+  width: min(var(--editor-canvas-width, 1440px), 100%);
+  min-height: 100%;
+}
+
+/* The device preview changes the frame only. */
+.editor-canvas[data-device='tablet'],
+.editor-canvas[data-device='mobile'] {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/*
+ * The page is the only place the site's own theme is applied.
+ *
+ * It reads the `--site-*` custom properties the model sets inline, so a user's
+ * theme paints the page and nothing else: the editor panels around it keep the
+ * product's own tokens. Sections provide their own spacing, so the page itself
+ * adds no gap.
+ */
+.editor-canvas__page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  margin: 0 auto;
+  padding: var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--site-font-body, inherit);
+  color: var(--site-text, var(--color-text));
+  background: var(--site-background, var(--color-surface));
+}
+
+.editor-canvas__page :is(h1, h2, h3, h4) {
+  font-family: var(--site-font-heading, inherit);
+}
+
+.editor-canvas__page a {
+  color: var(--site-accent, inherit);
+}
+
+.editor-canvas[data-device='tablet'] .editor-canvas__page,
+.editor-canvas[data-device='mobile'] .editor-canvas__page {
+  border: 0;
+  border-radius: 0;
+}
+
+.editor-canvas-scroll[data-preview='true'] .editor-canvas__page {
+  border: 0;
+  border-radius: 0;
+}
+
+.editor-canvas__empty {
+  margin: 0;
+  padding: var(--space-7) var(--space-4);
+  font-size: var(--text-body);
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+/*
+ * Selection: a single neon outline with a small offset, plus a thin label.
+ * No large glow — the outline has to read as a boundary, not a light source.
+ */
+.editor-canvas__block {
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.editor-canvas__block:hover {
+  border-color: var(--color-border-strong);
+  background: color-mix(in srgb, var(--color-accent) 3%, transparent);
+}
+
+.editor-canvas__block:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.editor-canvas__block.is-selected {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 5%, transparent);
+}
+
+.editor-canvas-scroll[data-preview='true'] .editor-canvas__block {
+  cursor: default;
+  border-color: transparent;
+  background: none;
+}
+
+.editor-canvas-scroll[data-preview='true'] .editor-canvas__block:hover {
+  border-color: transparent;
+  background: none;
+}
+
+.editor-canvas__badge {
+  position: absolute;
+  top: -9px;
+  left: 0;
+  z-index: 1;
+  padding: 1px var(--space-1);
+  border-radius: var(--radius-sm);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-accent-text);
+  background: var(--color-accent);
+}
+
+/* ── Rendered blocks ──────────────────────────────────────────── */
+
+.editor-block__button {
+  display: inline-block;
+  max-width: 100%;
+  text-decoration: none;
+  border: 1px solid var(--color-accent);
+  cursor: pointer;
+}
+
+.editor-block__image,
+.editor-block__image-placeholder {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+}
+
+.editor-block__image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--color-border-strong);
+  background: var(--color-surface-2);
+}
+
+.editor-block__image-placeholder-label {
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+.editor-block__spacer {
+  width: 100%;
+}
+
+/* ── Sections on the canvas ───────────────────────────────────── */
+
+/*
+ * A section is a band plus an inner container.
+ *
+ * The band carries the section's background and padding so it spans the full
+ * page width, while the inner element keeps the content inside `maxWidth`. That
+ * split is what makes a full-bleed section with a readable measure possible.
+ */
+.editor-canvas__section {
+  position: relative;
+}
+
+.editor-canvas__section-band {
+  position: relative;
+  cursor: pointer;
+}
+
+.editor-canvas__section-inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  /*
+   * Positioned so it paints above the background-image overlay. An absolutely
+   * positioned overlay with no z-index sits above every static sibling, which
+   * would put the tint on top of the text instead of behind it.
+   */
+  position: relative;
+}
+
+.editor-canvas__section:focus-within {
+  outline: none;
+}
+
+.editor-canvas__section.is-selected .editor-canvas__section-band {
+  outline: 1px dashed var(--color-accent);
+  outline-offset: 2px;
+}
+
+/*
+ * Selection is an outline, not a light source. A dashed band outline plus a
+ * solid block outline is enough to tell the two levels apart without the whole
+ * canvas glowing.
+ */
+.editor-canvas__section-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  padding: 1px var(--space-1);
+  border-radius: var(--radius-sm);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-accent-text);
+  background: var(--color-accent);
+  pointer-events: none;
+}
+
+/*
+ * A hidden section stays visible but dimmed while editing. Hiding something the
+ * user chose is fine; making it impossible to find again is not.
+ */
+.editor-canvas__section.is-hidden {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+  opacity: 0.7;
+}
+
+.editor-canvas__hidden-badge {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+/*
+ * A block or section hidden on the device being previewed.
+ *
+ * The dimming is what tells the user the thing is present in the document and
+ * absent only on this device. It is deliberately the same treatment as a
+ * wholly hidden section so the two read as one idea, and the badge says which
+ * device is responsible.
+ */
+.editor-canvas__block.is-device-hidden,
+.editor-canvas__section.is-device-hidden {
+  opacity: 0.55;
+}
+
+.editor-canvas__block.is-device-hidden {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+}
+
+.editor-canvas__device-hidden-badge {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+/*
+ * The tint over a section's background image.
+ *
+ * Absolutely positioned and behind the content, so the text is never painted over
+ * and the overlay cannot add height to the band.
+ */
+.editor-canvas__section-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/*
+ * The insertion marker.
+ *
+ * The gap is always in the layout so nothing shifts when it appears; only the
+ * line is revealed. The button is real, so the position can be chosen from the
+ * keyboard as well as the pointer.
+ */
+.editor-canvas__insert-slot {
+  display: flex;
+  align-items: center;
+  height: 14px;
+}
+
+.editor-canvas__insert {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-accent);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+/* Revealed on hover, on focus, and for whichever section is being worked on. */
+.editor-canvas__section:hover .editor-canvas__insert,
+.editor-canvas__insert:focus-visible,
+.editor-canvas__section[data-focused='true'] .editor-canvas__insert {
+  opacity: 1;
+}
+
+.editor-canvas__insert:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+.editor-canvas__insert-line {
+  flex: 1;
+  height: 1px;
+  background: var(--color-accent);
+}
+
+.editor-canvas__insert-plus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  margin-left: var(--space-1);
+  border-radius: 50%;
+  font-size: 11px;
+  line-height: 1;
+  color: var(--color-accent-text);
+  background: var(--color-accent);
+}
+
+/* ── Responsive ───────────────────────────────────────────────── */
+
+/*
+ * Laptop widths: keep all three areas but tighten the panels so the canvas
+ * still has room to show a desktop frame.
+ */
+@media (max-width: 1280px) {
+  .editor__body {
+    grid-template-columns: 248px minmax(0, 1fr) 268px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .editor-topbar__device-label {
+    display: inline;
+  }
+
+  .editor__body {
+    grid-template-columns: 224px minmax(0, 1fr) 244px;
+  }
+
+  .editor-canvas-area {
+    padding: var(--space-3);
+  }
+
+  .editor-canvas__page {
+    padding: var(--space-5);
+  }
+}
+
+/*
+ * Tablet and below: the panels become drawers. They are off-canvas by default
+ * so the canvas is never squeezed, and the toolbar row is what opens them.
+ */
+@media (max-width: 768px) {
+  .editor-topbar {
+    flex-wrap: wrap;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .editor-topbar__devices {
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .editor__mobile-tools {
+    display: flex;
+  }
+
+  .editor__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .editor-scrim {
+    display: block;
+  }
+
+  .editor-panel {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: 40;
+    width: min(300px, 86vw);
+    border: 1px solid var(--color-sidebar-border);
+    transform: translateX(-100%);
+    transition: transform var(--transition-base);
+  }
+
+  .editor-panel--left {
+    left: 0;
+  }
+
+  .editor-panel--right {
+    right: 0;
+    transform: translateX(100%);
+  }
+
+  .editor-panel.is-open {
+    transform: translateX(0);
+  }
+
+  .editor-panel__close {
+    display: block;
+  }
+
+  .editor-canvas__page {
+    padding: var(--space-4);
+  }
+
+  /* One column: two narrow cards side by side would be unreadable here. */
+  .editor-section-library {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* No horizontal page overflow at any width. */
+@media (max-width: 480px) {
+  .editor-topbar__actions .btn span {
+    display: none;
+  }
+
+  .editor-block-palette {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .editor-theme-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .editor-dialog {
+    padding: var(--space-4);
+  }
+
+  /*
+   * The canvas page loses its own padding at the narrowest width, because a
+   * section's own padding is already applied inside the frame and stacking both
+   * would leave too little room for content.
+   */
+  .editor-canvas__page {
+    padding: var(--space-2);
+  }
+}
+
+/* ── Responsive and media ────────────────────────────────────────── */
+
+/*
+ * A linked image.
+ *
+ * An inline anchor around a block-level image would leave a few stray pixels of
+ * line box under the picture, so the link itself is made block. The focus ring
+ * stays on the link, not the image, so keyboard users see where they are.
+ */
+.editor-block__image-link {
+  display: block;
+}
+
+/*
+ * What the device in view is doing to this selection.
+ *
+ * A border rather than a colour wash, so the note reads as editor chrome about
+ * the canvas and not as part of the selected thing itself.
+ */
+.editor-device-override {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+}
+
+.editor-device-override[data-has-overrides='true'] {
+  border-color: var(--color-accent);
+}
+
+.editor-device-note {
+  margin: 0;
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+.editor-device-note[data-tone='base'] {
+  padding: var(--space-2);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+/* A checkbox with its label beside it, for the per-device visibility switch. */
+.editor-checkbox-row {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  font-size: var(--text-body);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.editor-checkbox-row input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-accent);
+}
+
+/*
+ * The chosen image, shown next to its controls.
+ *
+ * The thumbnail is a fixed square so a very wide and a very tall image both
+ * occupy the same row, and it is decorative: the file name and the alt field
+ * carry the information.
+ */
+.editor-image-source {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.editor-image-source__thumb {
+  display: block;
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+}
+
+.editor-image-source__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.editor-image-source__copy {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  align-items: center;
+  min-width: 0;
+}
+
+.editor-image-source__name {
+  overflow: hidden;
+  font-size: var(--text-meta);
+  color: var(--color-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editor-image-source .btn {
+  grid-column: 1 / -1;
+}
+
+/*
+ * The "not uploaded" marker.
+ *
+ * Deliberately the one warm colour in an otherwise green editor: a local preview
+ * is a temporary thing the user must not mistake for a saved asset, and that
+ * deserves a different colour rather than a smaller version of the same green.
+ */
+.editor-media-badge {
+  padding: 2px var(--space-1);
+  border: 1px solid var(--color-warning);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-meta);
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.editor-media__empty {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: center;
+  padding: var(--space-5) var(--space-3);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+
+.editor-media__empty-icon {
+  color: var(--color-text-muted);
+}
+
+.editor-media__empty-title {
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.editor-media__empty-text {
+  max-width: 34ch;
+  margin: 0;
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+.editor-media__sources {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.editor-media__source {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+}
+
+.editor-media__source-label {
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.editor-media__source-hint,
+.editor-media__url-error {
+  margin: 0;
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+.editor-media__url-error {
+  color: var(--color-danger);
+}
+
+.editor-media__url-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: flex-end;
+  width: 100%;
+}
+
+.editor-media__url-input {
+  display: flex;
+  flex: 1 1 16rem;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+

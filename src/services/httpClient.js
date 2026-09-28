@@ -93,6 +93,10 @@ const parseResponseBody = async (response) => {
 const request = async (path, options = {}) => {
   const url = `${config.api.baseUrl}${path}`
   const headers = { ...DEFAULT_HEADERS, ...options.headers }
+  if (typeof FormData !== 'undefined' && options.body instanceof FormData) {
+    // The browser must set the multipart boundary itself.
+    delete headers['Content-Type']
+  }
 
   let response
   try {
@@ -129,6 +133,12 @@ const httpClient = {
   patch: (path, body, options = {}) =>
     request(path, { ...options, method: 'PATCH', body: JSON.stringify(body) }),
   delete: (path, options = {}) => request(path, { ...options, method: 'DELETE' }),
+  /**
+   * Multipart upload. The JSON content type is dropped for these requests so the
+   * browser can add the multipart boundary itself.
+   */
+  upload: (path, formData, options = {}) =>
+    request(path, { ...options, method: 'POST', body: formData }),
 }
 
 export default httpClient

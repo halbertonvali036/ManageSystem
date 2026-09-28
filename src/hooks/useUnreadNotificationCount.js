@@ -1,60 +1,29 @@
-import { useCallback, useEffect, useState } from 'react'
-import notificationsService from '@/services/notificationsService'
+import { useEffect } from 'react'
+import notificationStore, { useNotificationStore } from '@/stores/notificationStore'
 
+/**
+ * Unread total for the header badge.
+ *
+ * The count is derived from the records the store has actually loaded, so the
+ * badge can never show a fabricated or hardcoded number. While the backend is
+ * absent the list is empty and the count stays `0`, which hides the badge.
+ */
 function useUnreadNotificationCount() {
-  const [unreadCount, setUnreadCount] = useState(0)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const store = useNotificationStore()
 
   useEffect(() => {
-    let isActive = true
-
-    notificationsService
-      .getUnreadCount()
-      .then((count) => {
-        if (!isActive) {
-          return
-        }
-        setError(null)
-        setUnreadCount(Number.isFinite(count) ? count : 0)
-      })
-      .catch((requestError) => {
-        if (!isActive) {
-          return
-        }
-        setError(requestError)
-        setUnreadCount(0)
-      })
-      .finally(() => {
-        if (!isActive) {
-          return
-        }
-        setIsLoading(false)
-      })
-
-    return () => {
-      isActive = false
+    if (!store.isLoaded) {
+      notificationStore.load()
     }
-  }, [])
+  }, [store.isLoaded])
 
-  const refetch = useCallback(() => {
-    setIsLoading(true)
-    setError(null)
-    notificationsService
-      .getUnreadCount()
-      .then((count) => {
-        setUnreadCount(Number.isFinite(count) ? count : 0)
-      })
-      .catch((requestError) => {
-        setError(requestError)
-        setUnreadCount(0)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
-  }, [])
-
-  return { unreadCount, isLoading, error, refetch }
+  return {
+    unreadCount: store.unreadCount,
+    isLoading: store.isLoading,
+    isAvailable: store.isAvailable,
+    error: store.error,
+    refetch: notificationStore.reload,
+  }
 }
 
 export default useUnreadNotificationCount

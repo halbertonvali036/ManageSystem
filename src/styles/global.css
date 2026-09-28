@@ -2979,6 +2979,14 @@
   width: 100%;
 }
 
+/* Compact variant for dense side panels such as the editor. */
+.btn--sm {
+  min-height: 30px;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-meta);
+  gap: var(--space-1);
+}
+
 .btn--icon {
   display: inline-flex;
   align-items: center;
@@ -3959,10 +3967,10 @@ textarea.form__input {
   transform: translateX(0);
 }
 
-/* ── Demo role selector on the login card ──────────────────── */
+/* ── Role selector on the registration card ────────────────── */
 .role-selector {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--space-1);
   padding: var(--space-1);
   background: var(--color-bg);
@@ -4026,7 +4034,7 @@ textarea.form__input {
    ============================================================ */
 .auth-layout {
   grid-template-columns: minmax(0, 1.08fr) minmax(420px, 0.92fr);
-  background: #f4f6fb;
+  background: var(--auth-page-bg);
 }
 
 .auth-hero::before,
@@ -4120,7 +4128,7 @@ textarea.form__input {
 .role-selector {
   gap: 3px;
   padding: 4px;
-  border-color: #e1e5ef;
+  border-color: var(--color-border);
   border-radius: 10px;
 }
 
@@ -4137,15 +4145,15 @@ textarea.form__input {
   margin-top: var(--space-1);
   padding: var(--space-3);
   color: var(--color-text-muted);
-  background: #f8f9fc;
-  border: 1px solid #e9ecf3;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
   border-radius: 9px;
 }
 
 .form__demo-title {
   display: block;
   margin-bottom: var(--space-1);
-  color: #697386;
+  color: var(--color-text-muted);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -4163,7 +4171,7 @@ textarea.form__input {
 }
 
 .form__demo-list strong {
-  color: #586174;
+  color: var(--color-text-muted);
   font-weight: 600;
 }
 
@@ -6309,7 +6317,7 @@ textarea.form__input {
 .schedule-mode-toggle__btn--active,
 .student-schedule-mode__btn--active {
   color: var(--color-primary);
-  background: var(--color-card-bg, #fff);
+  background: var(--color-card-bg, var(--color-surface));
   box-shadow: var(--shadow-sm);
 }
 
@@ -6361,7 +6369,7 @@ textarea.form__input {
 .schedule-week__day--today,
 .student-schedule-week__day--today {
   border-color: color-mix(in srgb, var(--color-primary) 42%, var(--color-border));
-  background: color-mix(in srgb, var(--color-primary-soft) 38%, var(--color-card-bg, #fff));
+  background: color-mix(in srgb, var(--color-primary-soft) 38%, var(--color-card-bg, var(--color-surface)));
 }
 
 .schedule-week__day-name,
@@ -6381,7 +6389,7 @@ textarea.form__input {
   min-width: 0;
   gap: 7px;
   padding: 12px;
-  background: var(--color-card-bg, #fff);
+  background: var(--color-card-bg, var(--color-surface));
   border-color: color-mix(in srgb, var(--color-border) 78%, transparent);
   border-radius: var(--radius-md);
   box-shadow: none;
@@ -6617,16 +6625,16 @@ textarea.form__input {
 }
 
 .details-page .details-toolbar__actions .btn--danger {
-  color: #a7444a;
-  background: #fff;
-  border-color: #efd7d8;
+  color: var(--color-danger);
+  background: var(--color-surface);
+  border-color: color-mix(in srgb, var(--color-danger) 26%, transparent);
   box-shadow: none;
 }
 
 .details-page .details-toolbar__actions .btn--danger:hover:not(:disabled) {
-  color: #96383f;
-  background: #fff4f4;
-  border-color: #e7bfc2;
+  color: var(--color-danger);
+  background: var(--color-danger-bg);
+  border-color: color-mix(in srgb, var(--color-danger) 38%, transparent);
 }
 
 .details-page .details-toolbar .btn:focus-visible,
@@ -6636,9 +6644,9 @@ textarea.form__input {
 }
 
 .details-page > .card {
-  border-color: #e3e7ee;
+  border-color: var(--color-border);
   border-radius: 14px;
-  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.045);
+  box-shadow: var(--shadow-sm);
 }
 
 .details-page > .card::before {
@@ -6672,7 +6680,7 @@ textarea.form__input {
 .academic-year-profile__avatar {
   width: 60px;
   height: 60px;
-  border-color: #e1e5f2;
+  border-color: var(--color-border);
   border-radius: 14px;
   box-shadow: none;
 }
@@ -6718,7 +6726,7 @@ textarea.form__input {
 .user-profile__meta,
 .role-profile__meta,
 .academic-year-profile__meta {
-  color: #626d7e;
+  color: var(--color-text-muted);
   line-height: 1.5;
 }
 
@@ -6753,16 +6761,16 @@ textarea.form__input {
 .details-page > [class$="-details__grid"] > .card,
 .app-layout__main:has(.profile-header) .class-details__grid > .card {
   min-width: 0;
-  border-color: #e6e9ef;
+  border-color: var(--color-border);
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.035);
+  box-shadow: var(--shadow-xs);
 }
 
 .details-page > [class$="-details__grid"] > .card .card__header,
 .app-layout__main:has(.profile-header) .class-details__grid > .card .card__header {
   min-height: 54px;
   padding: var(--space-4) var(--space-5);
-  background: #fbfcfd;
+  background: var(--color-surface-2);
 }
 
 .details-page > [class$="-details__grid"] > .card .card__title,
@@ -6782,7 +6790,7 @@ textarea.form__input {
 }
 
 .info-item__label {
-  color: #687386;
+  color: var(--color-text-muted);
   font-size: 0.73rem;
   letter-spacing: 0.055em;
 }
@@ -6795,20 +6803,20 @@ textarea.form__input {
 }
 
 .info-item__value--empty {
-  color: #7b8493;
+  color: var(--color-text-soft);
   font-weight: 500;
 }
 
 .app-layout__main:has(.profile-header) .profile-header {
-  border-color: #e6e9ef;
+  border-color: var(--color-border);
   border-radius: 14px;
-  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.045);
+  box-shadow: var(--shadow-sm);
 }
 
 .app-layout__main:has(.profile-header) .profile-header__avatar {
   width: 60px;
   height: 60px;
-  border-color: #e1e5f2;
+  border-color: var(--color-border);
   border-radius: 14px;
   box-shadow: none;
 }
@@ -6826,7 +6834,7 @@ textarea.form__input {
 }
 
 .app-layout__main:has(.profile-header) .class-details__grid > .card {
-  border-color: #e6e9ef;
+  border-color: var(--color-border);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.035);
 }
@@ -6834,7 +6842,7 @@ textarea.form__input {
 .app-layout__main:has(.profile-header) .class-details__grid > .card .card__header {
   min-height: 54px;
   padding: var(--space-4) var(--space-5);
-  background: #fbfcfd;
+  background: var(--color-surface-2);
 }
 
 .app-layout__main:has(.profile-header) .class-details__grid > .card .card__body {
@@ -6843,16 +6851,16 @@ textarea.form__input {
 
 .roster-section,
 .semesters-section {
-  border-color: #e3e7ee;
+  border-color: var(--color-border);
   border-radius: 14px;
-  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.045);
+  box-shadow: var(--shadow-sm);
 }
 
 .roster-section .card__header,
 .semesters-section .card__header {
   min-height: 60px;
   padding: var(--space-4) var(--space-5);
-  background: #fbfcfd;
+  background: var(--color-surface-2);
 }
 
 .roster-section .card__title,
@@ -6864,7 +6872,7 @@ textarea.form__input {
 .semesters-section .table-state {
   min-height: 190px;
   padding: var(--space-6) var(--space-5);
-  border-color: #e2e6ed;
+  border-color: var(--color-border);
   border-radius: 10px;
 }
 
@@ -6881,17 +6889,17 @@ textarea.form__input {
 
 .roster-section .card__action .btn--danger,
 .semesters-section .card__action .btn--danger {
-  color: #a7444a;
-  background: #fff;
-  border-color: #efd7d8;
+  color: var(--color-danger);
+  background: var(--color-surface);
+  border-color: color-mix(in srgb, var(--color-danger) 26%, transparent);
   box-shadow: none;
 }
 
 .roster-section .card__action .btn--danger:hover:not(:disabled),
 .semesters-section .card__action .btn--danger:hover:not(:disabled) {
-  color: #96383f;
-  background: #fff4f4;
-  border-color: #e7bfc2;
+  color: var(--color-danger);
+  background: var(--color-danger-bg);
+  border-color: color-mix(in srgb, var(--color-danger) 38%, transparent);
 }
 
 @media (max-width: 1023px) {
@@ -6998,7 +7006,7 @@ textarea.form__input {
   min-height: 44px;
   padding: 10px 12px;
   font-size: 0.9rem;
-  border-color: #dce2eb;
+  border-color: var(--color-border);
   border-radius: 8px;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
 }
@@ -7141,7 +7149,7 @@ textarea.form__input {
   gap: var(--space-3);
   margin-top: var(--space-1);
   padding-top: var(--space-5);
-  border-top-color: #e7eaf0;
+  border-top-color: var(--color-border);
 }
 
 .student-form__actions .btn,
@@ -7285,9 +7293,9 @@ textarea.form__input {
 .students-toolbar--data .field-select,
 .students-toolbar--data .field-input {
   min-height: 42px;
-  border-color: #dfe4ec;
+  border-color: var(--color-border);
   border-radius: 9px;
-  background-color: #fff;
+  background-color: var(--color-surface);
 }
 
 .students-toolbar--data .search-input__field {
@@ -7336,10 +7344,10 @@ textarea.form__input {
   .users-table,
   .roles-table
 )) {
-  border-color: #e2e6ed;
+  border-color: var(--color-border);
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.045);
-  scrollbar-color: #cbd2dd #f4f6f9;
+  box-shadow: var(--shadow-sm);
+  scrollbar-color: var(--color-border-strong) var(--color-surface-3);
   scrollbar-width: thin;
 }
 
@@ -7405,7 +7413,7 @@ textarea.form__input {
   .roles-table
 ) td {
   padding: 12px var(--space-4);
-  border-bottom-color: #edf0f4;
+  border-bottom-color: var(--color-border);
   line-height: 1.4;
 }
 
@@ -7420,7 +7428,7 @@ textarea.form__input {
   .users-table,
   .roles-table
 ) tbody tr:hover {
-  background: #f5f7fb;
+  background: var(--color-surface-2);
   box-shadow: inset 3px 0 0 var(--color-primary);
 }
 
@@ -7487,7 +7495,7 @@ textarea.form__input {
 .app-layout__main:has(.students-toolbar--data) .table-state {
   min-height: 210px;
   padding: var(--space-6) var(--space-5);
-  border-color: #e1e5ed;
+  border-color: var(--color-border);
   border-radius: 10px;
 }
 
@@ -8047,7 +8055,113 @@ textarea.form__input {
   gap: var(--space-3);
 }
 
-.auth-register__note {
+/* ── Registration steps (onboarding progress) ───────────────── */
+.auth-register__steps {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-5);
+  padding: 0;
+  list-style: none;
+}
+
+.auth-register__step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.auth-register__step-marker {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-3);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-soft);
+  font-size: 0.7rem;
+  font-weight: 750;
+  line-height: 1;
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.auth-register__step--active .auth-register__step-marker {
+  color: var(--color-inverse-text);
+  background: linear-gradient(135deg, var(--color-accent-strong-start), var(--color-accent-strong));
+  border-color: transparent;
+  box-shadow: var(--shadow-sm);
+}
+
+.auth-register__step--done .auth-register__step-marker {
+  color: var(--color-success);
+  background: var(--color-success-bg);
+  border-color: color-mix(in srgb, var(--color-success) 35%, var(--color-border));
+}
+
+.auth-register__step-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-soft);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: color var(--transition-fast);
+}
+
+.auth-register__step--active .auth-register__step-label {
+  color: var(--color-text);
+}
+
+.auth-register__step-line {
+  flex: 1 1 auto;
+  min-width: 18px;
+  height: 1px;
+  margin-inline: 2px;
+  background: var(--color-border);
+}
+
+.auth-register__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* ── Role choice (visually secondary, removable) ────────────── */
+.auth-register__role {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-top: var(--space-1);
+  border-top: 1px dashed var(--color-border);
+}
+
+.auth-register__role .role-selector {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.auth-register__role .role-selector__option {
+  min-height: 46px;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 9px;
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+
+.auth-register__role .role-selector__option span {
+  font-size: 0.8rem;
+}
+
+.auth-register__role-note {
   margin: 0;
   color: var(--color-text-muted);
   font-size: 0.76rem;
@@ -8065,6 +8179,23 @@ textarea.form__input {
   margin-left: 3px;
 }
 
+/* ── Actions row ────────────────────────────────────────────── */
+.auth-register__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.auth-register__actions .btn--block {
+  flex: 1 1 auto;
+}
+
+.auth-register__back {
+  flex-shrink: 0;
+  min-height: var(--auth-input-height);
+  padding-inline: var(--space-5);
+}
+
 .auth-register-card .form__input-wrapper .form__input {
   padding-right: 46px;
 }
@@ -8080,10 +8211,32 @@ textarea.form__input {
   overflow-wrap: anywhere;
 }
 
+.auth-state__icon--info {
+  color: var(--color-info);
+  background: var(--color-info-bg);
+}
+
+.auth-register__resend {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+}
+
 @media (max-width: 600px) {
   .auth-register__name-grid {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-3);
+  }
+
+  .auth-register__actions {
+    flex-direction: column-reverse;
+  }
+
+  .auth-register__actions .btn--block,
+  .auth-register__back {
+    width: 100%;
   }
 }
 

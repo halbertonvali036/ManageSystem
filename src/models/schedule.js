@@ -179,23 +179,6 @@ export const formatScheduleDayLabel = (value) => {
   return DAY_LONG_LABELS[key] || '—'
 }
 
-export const formatScheduleTeacherName = (item) => {
-  if (!item) {
-    return '—'
-  }
-  if (typeof item.teacherName === 'string' && item.teacherName.trim()) {
-    return item.teacherName
-  }
-  const teacher = item.teacher
-  if (!teacher) {
-    return '—'
-  }
-  if (typeof teacher === 'string') {
-    return teacher
-  }
-  return teacher.fullName || teacher.name || teacher.teacherId || '—'
-}
-
 export const formatScheduleAcademicYearName = (item) => {
   if (!item) {
     return '—'
@@ -230,15 +213,6 @@ export const resolveScheduleCourseId = (item) => {
   )
 }
 
-export const resolveScheduleTeacherId = (item) => {
-  const raw = item?.teacher
-  return (
-    item?.teacherId ??
-    (typeof raw === 'string' ? raw : raw?.id ?? raw?.teacherId) ??
-    null
-  )
-}
-
 export const resolveScheduleAcademicYearId = (item) =>
   item?.academicYearId ?? item?.academicYear?.id ?? null
 
@@ -252,7 +226,6 @@ export const resolveScheduleSemesterId = (item) =>
  * @property {string} [semesterId]
  * @property {string} [classId]
  * @property {string} [courseId]
- * @property {string} [teacherId]
  * @property {string} dayOfWeek - Matches SCHEDULE_DAY_OPTIONS values (Mon-Sun).
  * @property {string} startTime - HH:MM.
  * @property {string} endTime - HH:MM.

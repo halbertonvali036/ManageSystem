@@ -1,52 +1,23 @@
-export const ROLES = Object.freeze({
-  ADMIN: 'admin',
-  TEACHER: 'teacher',
-  STUDENT: 'student',
-})
+import { PROFILE_PATH, LEGACY_ACADEMIC_NAV_ITEMS } from '@/utils/constants'
 
-export const ROLE_NAMES = Object.freeze({
-  [ROLES.ADMIN]: 'Admin',
-  [ROLES.TEACHER]: 'Teacher',
-  [ROLES.STUDENT]: 'Student',
-})
+/** Public accounts are platform users. Administration is provisioned internally. */
+export const ROLES = Object.freeze({ USER: 'user', ADMIN: 'admin' })
+export const ROLE_NAMES = Object.freeze({ [ROLES.USER]: 'User', [ROLES.ADMIN]: 'Admin' })
+export const PUBLIC_ROLES = Object.freeze([ROLES.USER])
+export const USER_HOME_PATH = '/sites'
+export const ADMIN_HOME_PATH = '/admin'
+export const ROLE_DASHBOARD_PATHS = Object.freeze({ user: USER_HOME_PATH, admin: ADMIN_HOME_PATH })
+export const ROLE_PROFILE_PATHS = Object.freeze({ user: PROFILE_PATH, admin: '/settings#admin-profile' })
+export const isKnownRole = (role) => role === ROLES.USER || role === ROLES.ADMIN
+export const getRoleDashboardPath = (role) => ROLE_DASHBOARD_PATHS[role] ?? USER_HOME_PATH
+export const getRoleProfilePath = (role) => ROLE_PROFILE_PATHS[role] ?? PROFILE_PATH
+const matchesPrefix = (pathname, prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+const SHARED_PATHS = ['/sites', '/templates', '/dashboard', '/notifications', '/billing', '/security', '/account', '/403']
+export const isAdminPath = (pathname) => matchesPrefix(pathname, '/admin') ||
+  LEGACY_ACADEMIC_NAV_ITEMS.some(({ path }) => matchesPrefix(pathname, path))
 
-export const ROLE_DASHBOARD_PATHS = Object.freeze({
-  [ROLES.ADMIN]: '/dashboard',
-  [ROLES.TEACHER]: '/teacher/dashboard',
-  [ROLES.STUDENT]: '/student/dashboard',
-})
-
-export const ROLE_PROFILE_PATHS = Object.freeze({
-  [ROLES.ADMIN]: '/settings#admin-profile',
-  [ROLES.TEACHER]: '/teacher/profile',
-  [ROLES.STUDENT]: '/student/profile',
-})
-
-export const getRoleDashboardPath = (role) =>
-  ROLE_DASHBOARD_PATHS[role] ?? ROLE_DASHBOARD_PATHS[ROLES.ADMIN]
-
-export const getRoleProfilePath = (role) =>
-  ROLE_PROFILE_PATHS[role] ?? ROLE_PROFILE_PATHS[ROLES.ADMIN]
-
-export const isKnownRole = (role) =>
-  role === ROLES.ADMIN || role === ROLES.TEACHER || role === ROLES.STUDENT
-
-export const roleMatchesPortal = (role, pathname) => {
-  if (!isKnownRole(role)) {
-    return false
-  }
-  if (pathname === '/login') {
-    return true
-  }
-  // Shared notifications page is available to every authenticated role.
-  if (pathname === '/notifications') {
-    return true
-  }
-  if (pathname === '/student' || pathname.startsWith('/student/')) {
-    return role === ROLES.STUDENT
-  }
-  if (pathname === '/teacher' || pathname.startsWith('/teacher/')) {
-    return role === ROLES.TEACHER
-  }
-  return role === ROLES.ADMIN
-}
+/** Route guards are UI isolation; the backend must enforce authorization too. */
+export const roleMatchesPortal = (role, pathname) => isKnownRole(role) && (
+  SHARED_PATHS.some((prefix) => matchesPrefix(pathname, prefix)) ||
+  (role === ROLES.ADMIN && isAdminPath(pathname))
+)

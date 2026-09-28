@@ -1,11 +1,11 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import useAuth from '@/hooks/useAuth'
-import { getRoleDashboardPath } from '@/utils/roles'
+import { getRoleDashboardPath, isKnownRole } from '@/utils/roles'
 
 function PublicRoute() {
   const { isAuthenticated, user } = useAuth()
 
-  if (isAuthenticated) {
+  if (isAuthenticated && isKnownRole(user?.role)) {
     return <Navigate to={getRoleDashboardPath(user?.role)} replace />
   }
 

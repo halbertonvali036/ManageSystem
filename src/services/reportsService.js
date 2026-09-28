@@ -17,7 +17,6 @@ const buildReportQuery = (filters = {}) => {
     ['studentId', filters.studentId],
     ['classId', filters.classId],
     ['courseId', filters.courseId],
-    ['teacherId', filters.teacherId],
     ['status', filters.status],
     ['academicYear', filters.academicYear],
     ['semester', filters.semester],

@@ -1,16 +1,16 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import useAuth from '@/hooks/useAuth'
-import { getRoleDashboardPath, roleMatchesPortal } from '@/utils/roles'
+import { getRoleDashboardPath, isAdminPath, isKnownRole, roleMatchesPortal } from '@/utils/roles'
 
-function ProtectedRoute() {
+function ProtectedRoute({ adminOnly = false }) {
   const { isAuthenticated, user } = useAuth()
   const location = useLocation()
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />
+  if (!isAuthenticated || !isKnownRole(user?.role)) {
+    return <Navigate to={isAdminPath(location.pathname) ? '/admin/login' : '/login'} replace state={{ from: location.pathname }} />
   }
 
-  if (!roleMatchesPortal(user?.role, location.pathname)) {
+  if ((adminOnly && user?.role !== 'admin') || !roleMatchesPortal(user?.role, location.pathname)) {
     return <Navigate to={getRoleDashboardPath(user?.role)} replace />
   }
 

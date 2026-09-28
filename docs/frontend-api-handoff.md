@@ -1,16 +1,28 @@
-# Frontend → Backend API Handoff
+# Website Builder — Frontend → Backend API Handoff
 
 Reference for the backend developer connecting the existing frontend.
 The frontend is ready and does NOT require the backend to adopt any exact
 framework shape — these are the contracts it already understands.
 
+The public product is a website builder. Project/editor persistence, publishing,
+forms, billing and security integration notes are also maintained in the phase
+documents alongside this file. Academic resources below are retained for internal
+Admin only; references to Teacher/Student portals describe legacy contracts, not
+active public routes.
+
 ## Final status (2026-09)
 
 -   Frontend service layer is complete and ready to consume a real API.
--   Auth is currently mock/demo-only (`authService` + demo role selector);
-    the backend is expected to provide real token-based auth (login/logout/me).
--   Teacher Profile is intentionally pending — it renders a placeholder until
-    a real profile endpoint is available.
+-   Auth is currently mock/demo-only (`authService` demo accounts); the backend
+    is expected to provide real token-based auth (login/logout/me). The public
+    sign-in form takes email + password only and routes on the role the session
+    returns — there is no public role picker and no public demo credentials.
+-   Admin access has a separate, unlisted entry point at `/admin/login`. It is
+    not linked from the landing page, the public sign-in or registration.
+-   The account profile uses the shared implementation
+    (`src/components/profile/ProfileView.jsx`). It renders session and backend
+    data only, and shows an explicit "backend not connected" state until a
+    profile endpoint is available.
 -   Demo login must be removed when real backend auth is integrated.
 -   Error handling for 401/403/404/409/422/500 is already prepared in
     `src/services/httpClient.js` and `src/utils/apiErrors.js`.
@@ -36,7 +48,7 @@ framework shape — these are the contracts it already understands.
 
 ### Auth
 - Service: `authService`
-- Operations: login, logout, me, change password, sign up (student self-service).
+- Operations: login, logout, me, change password, sign up (platform user; no role selection).
 - Expects: token-based identity; `me` returns `{ id, name, email, role }`.
 
 ### Students

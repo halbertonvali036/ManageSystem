@@ -40,10 +40,6 @@ function SchedulesToolbar({
   classesLoading = false,
   classId,
   onClassChange,
-  teachers = [],
-  teachersLoading = false,
-  teacherId,
-  onTeacherChange,
   courses = [],
   coursesLoading = false,
   courseId,
@@ -60,7 +56,6 @@ function SchedulesToolbar({
     academicYearId !== 'all' ||
     semesterId !== 'all' ||
     classId !== 'all' ||
-    teacherId !== 'all' ||
     courseId !== 'all' ||
     dayOfWeek !== 'all' ||
     statusFilter !== 'all'
@@ -72,7 +67,6 @@ function SchedulesToolbar({
   }))
   const semestersAvailable = semesterOptions.length > 0
   const classesAvailable = classes.length > 0
-  const teachersAvailable = teachers.length > 0
   const coursesAvailable = courses.length > 0
 
   const renderEntitySelect = ({
@@ -120,7 +114,7 @@ function SchedulesToolbar({
           <input
             type="search"
             className="search-input__field"
-            placeholder="Search class, course, teacher or room&hellip;"
+            placeholder="Search class, course or room&hellip;"
             value={search}
             onChange={(event) => onSearchChange(event.target.value)}
             aria-label="Search schedule entries"
@@ -206,27 +200,6 @@ function SchedulesToolbar({
           allLabel: 'All classes',
           loadingLabel: 'Loading classes\u2026',
           emptyLabel: 'No classes available',
-        })}
-
-        {renderEntitySelect({
-          id: 'teacher',
-          value: teacherId,
-          onChange: onTeacherChange,
-          options: teachers.map((teacher) => ({
-            value: String(toOptionValue(teacher)),
-            label:
-              teacher?.fullName ||
-              teacher?.name ||
-              teacher?.teacherId ||
-              teacher?.id ||
-              '—',
-          })),
-          loading: teachersLoading,
-          available: teachersAvailable,
-          label: 'Filter by teacher',
-          allLabel: 'All teachers',
-          loadingLabel: 'Loading teachers\u2026',
-          emptyLabel: 'No teachers available',
         })}
 
         {renderEntitySelect({

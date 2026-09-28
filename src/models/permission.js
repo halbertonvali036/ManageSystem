@@ -1,6 +1,5 @@
 export const PERMISSION_CATEGORIES = Object.freeze([
   { id: 'students', label: 'Students' },
-  { id: 'teachers', label: 'Teachers' },
   { id: 'courses', label: 'Courses' },
   { id: 'classes', label: 'Classes' },
   { id: 'attendance', label: 'Attendance' },

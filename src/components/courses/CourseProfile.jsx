@@ -2,7 +2,6 @@ import { ArrowLeft, BookOpen, Pencil, Trash2 } from 'lucide-react'
 import Card from '@/components/common/Card'
 import InfoItem from '@/components/common/InfoItem'
 import CourseStatusBadge from '@/components/courses/CourseStatusBadge'
-import { formatCourseTeacherName } from '@/models/course'
 
 const formatDateTime = (value) => {
   if (!value) {
@@ -72,9 +71,6 @@ function CourseProfile({ course, onBack, onEdit, onDelete }) {
         <Card title="Academic Information">
           <dl className="info-grid">
             <InfoItem label="Department">{course.department || '—'}</InfoItem>
-            <InfoItem label="Assigned Teacher">
-              {formatCourseTeacherName(course)}
-            </InfoItem>
           </dl>
         </Card>
 

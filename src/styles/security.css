@@ -1,0 +1,740 @@
+/* ============================================================
+   Account & Security — account-level security surfaces
+   ------------------------------------------------------------
+   Presentation layer only: account summary, password change,
+   email verification, sessions/devices, two-factor foundation,
+   QR sign-in readiness and security activity.
+   Token-driven (no new palette), light + dark safe, and responsive
+   from 1440px down to 375px. Loaded last so these rules refine the
+   shared portal/form system instead of rebuilding it.
+   ============================================================ */
+
+/* ── Page frame ──────────────────────────────────────────── */
+.account-security-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.account-security-page .page-description {
+  max-width: 68ch;
+  color: var(--color-text-muted);
+}
+
+.account-security-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: start;
+}
+
+/* ── Section shell ───────────────────────────────────────── */
+.account-security-section {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  animation: fade-up var(--motion-duration-slow) var(--motion-ease-decelerate) backwards;
+  scroll-margin-top: calc(var(--header-height) + var(--space-4));
+}
+
+.account-security-section__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-surface-2) 85%, transparent),
+    transparent
+  );
+}
+
+.account-security-section__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  color: var(--color-accent-2);
+  background: color-mix(in srgb, var(--color-accent-2) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-accent-2) 26%, transparent);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+}
+
+.account-security-section__heading {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.account-security-section__eyebrow {
+  margin: 0 0 3px;
+  font-size: 0.66rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--color-accent-2);
+}
+
+.account-security-section__title {
+  margin: 0;
+  font-size: 1.18rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+.account-security-section__description {
+  max-width: 68ch;
+  margin: 4px 0 0;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+.account-security-section__action {
+  flex: 0 0 auto;
+}
+
+.account-security-section__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+}
+
+/* ── Notices ─────────────────────────────────────────────── */
+.account-security-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.account-security-notice--pending {
+  background: color-mix(in srgb, var(--color-warning) 8%, var(--color-surface-2));
+  border-color: color-mix(in srgb, var(--color-warning) 26%, var(--color-border));
+}
+
+.account-security-notice--info {
+  background: color-mix(in srgb, var(--color-accent-2) 7%, var(--color-surface-2));
+  border-color: color-mix(in srgb, var(--color-accent-2) 24%, var(--color-border));
+}
+
+.account-security-notice__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-text-soft);
+}
+
+.account-security-notice--pending .account-security-notice__icon {
+  color: var(--color-warning);
+}
+
+.account-security-notice--info .account-security-notice__icon {
+  color: var(--color-accent-2);
+}
+
+.account-security-notice__text {
+  margin: 0;
+}
+
+.account-security-notice__title {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* ── Shared inline states ────────────────────────────────── */
+.security-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 132px;
+  padding: var(--space-5);
+  text-align: center;
+  background: var(--color-surface-2);
+  border: 1.5px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+}
+
+.security-empty__title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 650;
+  color: var(--color-text);
+}
+
+.security-empty__text {
+  max-width: 52ch;
+  margin: 0;
+  font-size: 0.83rem;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+.security-unavailable {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  font-size: 0.78rem;
+  font-weight: 650;
+  color: var(--color-text-soft);
+  background: var(--color-surface-2);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-full);
+}
+
+/* ── Account summary ─────────────────────────────────────── */
+.account-summary__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: var(--space-5);
+  align-items: center;
+}
+
+.account-summary__identity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-4);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.account-summary__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  color: var(--color-accent-2);
+  background: color-mix(in srgb, var(--color-accent-2) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-accent-2) 26%, transparent);
+  border-radius: var(--radius-full);
+}
+
+.account-summary__identity-text {
+  min-width: 0;
+}
+
+.account-summary__name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  overflow-wrap: break-word;
+}
+
+.account-summary__email {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 3px 0 0;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  overflow-wrap: break-word;
+}
+
+.account-summary__fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 165px), 1fr));
+  gap: var(--space-4) var(--space-5);
+  margin: 0;
+}
+
+.account-summary__field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.account-summary__label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+}
+
+.account-summary__value {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin: 0;
+  font-size: 0.93rem;
+  font-weight: 650;
+  line-height: 1.4;
+  color: var(--color-text);
+  overflow-wrap: break-word;
+}
+
+.account-summary__hint {
+  font-size: 0.74rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--color-text-soft);
+}
+
+.account-summary__foot-note {
+  margin: 0;
+  font-size: 0.76rem;
+  line-height: 1.5;
+  color: var(--color-text-soft);
+}
+
+/* ── Password change ─────────────────────────────────────── */
+.password-form {
+  gap: var(--space-4);
+}
+
+.password-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding-top: var(--space-1);
+}
+
+/* ── Email verification ──────────────────────────────────── */
+.verification-section__row,
+.twofactor-section__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.verification-section__address,
+.twofactor-section__state {
+  min-width: 0;
+}
+
+.verification-section__label,
+.twofactor-section__label {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+}
+
+.verification-section__value,
+.twofactor-section__value {
+  margin: 5px 0 0;
+  font-size: 0.95rem;
+  font-weight: 650;
+  line-height: 1.45;
+  color: var(--color-text);
+  overflow-wrap: break-word;
+}
+
+.verification-section__note,
+.twofactor-section__note {
+  margin: 4px 0 0;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--color-text-soft);
+}
+
+.verification-section__resend,
+.twofactor-section__actions {
+  flex: 0 0 auto;
+}
+
+.twofactor-section__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.verification-section__resend:disabled,
+.twofactor-section__actions .btn:disabled,
+.sessions-section__signout:disabled,
+.session-item__action:disabled {
+  opacity: 1;
+  color: var(--color-text-soft);
+  background: var(--color-surface);
+  border-style: dashed;
+  border-color: var(--color-border-strong);
+  box-shadow: none;
+}
+
+/* ── Two-factor setup ────────────────────────────────────── */
+.twofactor-section__setup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.twofactor-section__setup-label {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+}
+
+.twofactor-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.twofactor-step {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-sm);
+}
+
+.twofactor-step__index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  font-weight: 750;
+  color: var(--color-text-soft);
+  background: var(--color-surface-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+.twofactor-step__title {
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.twofactor-step__text {
+  margin: 3px 0 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.twofactor-section__verify {
+  max-width: 340px;
+}
+
+/* ── Sessions / devices ──────────────────────────────────── */
+.sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.session-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.session-item--current {
+  background: color-mix(in srgb, var(--color-accent-2) 6%, var(--color-surface-2));
+  border-color: color-mix(in srgb, var(--color-accent-2) 34%, var(--color-border));
+}
+
+.session-item__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  color: var(--color-accent-2);
+  background: color-mix(in srgb, var(--color-accent-2) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-accent-2) 26%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.session-item__identity {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.session-item__label {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 650;
+  color: var(--color-text);
+  overflow-wrap: break-word;
+}
+
+.session-item__badge {
+  padding: 2px 9px;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--color-accent-2);
+  background: color-mix(in srgb, var(--color-accent-2) 13%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-accent-2) 28%, transparent);
+  border-radius: var(--radius-full);
+}
+
+.session-item__meta {
+  margin: 3px 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--color-text-soft);
+  overflow-wrap: break-word;
+}
+
+.session-item__actions {
+  flex: 0 0 auto;
+}
+
+.session-item__action {
+  padding: 6px var(--space-3);
+  font-size: 0.82rem;
+}
+
+/* ── QR sign-in readiness ────────────────────────────────── */
+.qr-login-section__points {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.qr-login-point {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.qr-login-point__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  color: var(--color-accent-2);
+  background: color-mix(in srgb, var(--color-accent-2) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-accent-2) 26%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.qr-login-point__title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.qr-login-point__text {
+  margin: 3px 0 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+/* ── Security activity ───────────────────────────────────── */
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.activity-item__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  background: var(--color-surface-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.activity-item__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.activity-item__label {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 650;
+  color: var(--color-text);
+}
+
+.activity-item__meta,
+.activity-item__detail {
+  margin: 2px 0 0;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--color-text-soft);
+  overflow-wrap: break-word;
+}
+
+.activity-item__time {
+  flex: 0 0 auto;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--color-text-soft);
+  white-space: nowrap;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 1199px) {
+  .account-security-columns,
+  .account-summary__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 1023px) {
+  .twofactor-steps {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .account-security-section__header,
+  .account-security-section__body {
+    padding: var(--space-4);
+  }
+
+  .account-security-section__header {
+    flex-wrap: wrap;
+  }
+
+  .account-security-section__action {
+    width: 100%;
+  }
+
+  .account-security-section__action .btn {
+    width: 100%;
+  }
+
+  .verification-section__resend,
+  .twofactor-section__actions .btn,
+  .password-form__actions .btn {
+    width: 100%;
+  }
+
+  .twofactor-section__verify {
+    max-width: none;
+  }
+
+  .session-item,
+  .activity-item {
+    flex-wrap: wrap;
+  }
+
+  .session-item__actions {
+    width: 100%;
+  }
+
+  .session-item__action {
+    width: 100%;
+  }
+
+  .activity-item__time {
+    width: 100%;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 520px) {
+  .account-security-page {
+    gap: var(--space-4);
+  }
+
+  .account-summary__fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .twofactor-steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .twofactor-step {
+    padding: var(--space-3) var(--space-2);
+  }
+}
+
+/* ── Reduced motion ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .account-security-section {
+    animation: none;
+  }
+}

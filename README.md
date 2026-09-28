@@ -1,25 +1,67 @@
-# Student Management System (Frontend)
+# SiteBuilder (Frontend)
 
-Responsive React frontend for managing a school's students, teachers, courses,
-classes, attendance, grades, assessments and announcements.
+Responsive React frontend for a website-builder product: create a website
+project, customize pages in the visual editor, preview a local draft, and review
+publishing readiness.
 
-## Portals
+`SiteBuilder` is a temporary, neutral working name. Every visible surface reads
+the product name from `APP_NAME` in `src/utils/constants.js`, so it can be
+replaced in one place once a real brand is decided.
 
-- **Admin** — full control: students, teachers, departments, subjects,
-  courses, classes, academic years, schedules, announcements, attendance,
-  grades, assessments, reports, users, roles and settings.
-- **Teacher** — teaching workspace: my classes, my students, attendance,
-  grades (single + bulk), assessments, schedule, announcements and profile.
-- **Student** — read-only academic view: my courses, classes, schedule,
-  attendance records, grades, assessments, announcements and profile.
+## Current phase
 
-## Main frontend modules
+The frontend includes the public product surface, authenticated workspace,
+template wizard, visual page editor, navigation, local media, forms, site themes,
+settings, preview, and publishing readiness UI. Local drafts are session-scoped;
+empty states remain honest when project data is unavailable.
 
-- Resource pages with list / details / create / edit / delete flows
-- Portal-specific dashboards (admin, teacher, student)
-- Attendance marking (admin + teacher) and bulk grade entry
-- Shared form validation, error taxonomy and backend-unavailable states
-- Command palette, notifications, reports workspace and settings
+Deliberately **not** implemented yet, because each needs a backend contract
+first:
+
+- server persistence for projects, editor drafts and media
+- live publishing, domains and hosting
+- form delivery and submission storage
+- payments and plan purchase
+- QR pairing and Google sign-in completion
+- the mobile app
+
+Where a feature is missing the UI says so instead of faking it. Nothing in the
+app invents a website project, price, discount or successful request.
+
+## Product areas
+
+- **Public** — landing page, pricing, sign-in, registration, language and
+  theme controls.
+- **Workspace** — dashboard, My Websites, Create Website (`/sites/new`),
+  Templates.
+- **Account** — Profile, Security, Plan & Billing, Notifications. Google and
+  QR sign-in are frontend-ready entry points that stay disabled until the
+  backend is connected.
+
+## Roles
+
+- A normal public account is a platform **user**. Sign-up and sign-in never ask
+  for a role: authentication decides it.
+- **Admin** is a separate internal role. It is reachable only through the
+  unlinked `/admin/login` development entry and is never self-registered.
+- Academic administration remains internal to Admin. Retired Teacher/Student
+  portal routes redirect to the website workspace; they are not public product
+  areas. Shared components used by Admin remain supported.
+
+## Localization
+
+- Azerbaijani (`az`) is the default; English (`en`) is secondary.
+- One `LocaleProvider` owns the active language. Components read words through
+  `useTranslation()` rather than hardcoding labels.
+- `index.html` sets `lang` before first paint so assistive technology sees the
+  right locale from the first frame.
+
+## Theming
+
+Dark is the default expression. Light is a deliberate alternative, not a
+fallback. A saved preference always wins over the default. Colors resolve
+through the tokens in `src/styles/theme.css`; the neon dark palette is built on
+`#39ff14` over deep green-black surfaces with restrained glow.
 
 ## Tech stack
 
@@ -33,17 +75,18 @@ classes, attendance, grades, assessments and announcements.
 
 ```
 src/
-  components/   Shared + feature components (admin, teacher, student)
+  components/   Shared + feature components (sites, landing, layout, auth)
   config/       App config (API base URL from env)
-  context/      React contexts (auth)
-  hooks/        Data hooks (useStudents, useMyGrades, ...)
-  layouts/      Portal layouts (Main, Teacher, Student, Auth)
-  models/       Shared domain constants and formatters
-  pages/        Route-level pages (admin, teacher, student)
+  context/      React contexts (auth, locale, theme)
+  hooks/        Data hooks (useWebsites, useAuth, ...)
+  i18n/         Locale provider, dictionaries (az, en)
+  layouts/      Workspace, editor, auth, billing and security layouts
+  models/       Domain constants, validation and formatters
+  pages/        Route-level pages
   routes/       Route definitions and guards
   services/     HTTP client + per-resource API services
-  styles/       Global and portal stylesheets
-  utils/        Validation, form helpers, constants
+  styles/       Global, theme and portal stylesheets
+  utils/        Validation, role guards, constants
 docs/
   frontend-api-handoff.md   API contract notes for the backend developer
 ```
@@ -62,8 +105,9 @@ Copy `.env.example` to `.env` and set the API base URL:
 VITE_API_BASE_URL=https://api.example.com
 ```
 
-Set to empty (default) while the backend is unavailable; the app renders
-backend-unavailable states instead of failing.
+Leave it empty (the default) while the backend is unavailable. Reads then
+return empty lists and writes refuse with an explicit "not connected" state
+rather than reporting false success.
 
 ## Scripts
 
@@ -75,12 +119,13 @@ npm run build  # production build to dist/
 
 ## Backend status
 
-The backend is a separate deliverable and will be provided by the backend
-developer. All data flows through `src/services` using `VITE_API_BASE_URL`;
-there is no bundled backend and no fake data in the app.
+The backend is a separate deliverable. All data flows through `src/services`
+using `VITE_API_BASE_URL`; there is no bundled backend and no fake data.
 
-## Demo authentication
+## Development authentication
 
-Until real backend authentication is integrated, the app ships with a
-temporary demo login (role selector on the sign-in page). This is
-development-only and must be removed once real JWT/session auth is available.
+Authentication is not connected to a backend yet, so `authService` holds local
+development accounts. They are never displayed on a public screen: the public
+sign-in shows no credentials and public registration creates no role. The
+`/admin/login` entry is unlinked from the public site. These accounts must be
+removed once real authentication is available.

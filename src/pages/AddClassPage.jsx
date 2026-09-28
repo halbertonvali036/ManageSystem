@@ -4,13 +4,11 @@ import ClassForm from '@/components/classes/ClassForm'
 import useAcademicYears from '@/hooks/useAcademicYears'
 import useCreateClass from '@/hooks/useCreateClass'
 import useCourses from '@/hooks/useCourses'
-import useTeachers from '@/hooks/useTeachers'
 
 function AddClassPage() {
   const navigate = useNavigate()
   const { isSubmitting, submitError, fieldErrors, submit } = useCreateClass()
   const { courses, isLoading: coursesLoading } = useCourses()
-  const { teachers, isLoading: teachersLoading } = useTeachers()
   const { academicYears, isLoading: academicYearsLoading } = useAcademicYears()
 
   const handleCancel = () => {
@@ -37,10 +35,8 @@ function AddClassPage() {
           submitError={submitError}
           serverFieldErrors={fieldErrors}
           courses={courses}
-          teachers={teachers}
           academicYears={academicYears}
           coursesLoading={coursesLoading}
-          teachersLoading={teachersLoading}
           academicYearsLoading={academicYearsLoading}
         />
       </Card>

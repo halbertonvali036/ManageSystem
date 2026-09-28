@@ -2,7 +2,6 @@ const EMPTY_FORM_VALUES = {
   classCode: '',
   name: '',
   course: '',
-  teacher: '',
   academicYear: '',
   semester: '',
   room: '',
@@ -24,17 +23,6 @@ const resolveCourseValue = (classRecord) => {
     return course
   }
   return course?.courseCode ?? course?.id ?? ''
-}
-
-const resolveTeacherValue = (classRecord) => {
-  if (classRecord.teacherId) {
-    return classRecord.teacherId
-  }
-  const teacher = classRecord.teacher
-  if (typeof teacher === 'string') {
-    return teacher
-  }
-  return teacher?.id ?? teacher?.teacherId ?? ''
 }
 
 export const parseSchedule = (schedule = '') => {
@@ -65,7 +53,6 @@ export const toClassFormValues = (classRecord = EMPTY_FORM_VALUES) => {
     classCode: classRecord.classCode ?? '',
     name: classRecord.name ?? classRecord.className ?? '',
     course: resolveCourseValue(classRecord),
-    teacher: resolveTeacherValue(classRecord),
     academicYear: classRecord.academicYear ?? '',
     semester: classRecord.semester ?? '',
     room: classRecord.room ?? '',
@@ -81,7 +68,6 @@ export const extractClassPayload = (values) => ({
   classCode: values.classCode.trim(),
   name: values.name.trim(),
   course: values.course,
-  teacher: values.teacher,
   academicYear: values.academicYear.trim(),
   semester: values.semester.trim(),
   room: values.room.trim(),

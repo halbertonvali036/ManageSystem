@@ -15,7 +15,6 @@ import {
 const AUDIENCE_HINTS = {
   [ANNOUNCEMENT_AUDIENCE.ALL]: 'all users',
   [ANNOUNCEMENT_AUDIENCE.STUDENTS]: 'all students',
-  [ANNOUNCEMENT_AUDIENCE.TEACHERS]: 'all teachers',
 }
 
 const toYearOptions = (academicYears) =>

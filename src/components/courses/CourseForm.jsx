@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { COURSE_STATUS_LABELS } from '@/models/course'
 import { formatDepartmentName } from '@/models/department'
-import { formatTeacherName } from '@/models/teacher'
 import { toCourseFormValues } from '@/utils/courseForm'
 
 const COURSE_CODE_PATTERN = /^[A-Za-z0-9][A-Za-z0-9\s-]*$/
@@ -9,17 +8,6 @@ const COURSE_CODE_PATTERN = /^[A-Za-z0-9][A-Za-z0-9\s-]*$/
 const EMPTY_VALUES = toCourseFormValues()
 
 const MAX_CREDITS = 30
-
-const toTeacherOptions = (teachers) =>
-  teachers.map((teacher) => {
-    const value =
-      teacher?.teacherId ?? teacher?.id ?? (typeof teacher === 'string' ? teacher : '')
-    const label =
-      typeof teacher === 'string'
-        ? teacher
-        : teacher.fullName || formatTeacherName(teacher) || value
-    return { value: String(value).trim(), label }
-  })
 
 function CourseForm({
   initialValues = EMPTY_VALUES,
@@ -29,16 +17,12 @@ function CourseForm({
   isSubmitting,
   submitError,
   serverFieldErrors,
-  teachers = [],
-  teachersLoading = false,
   departments = [],
   departmentsLoading = false,
 }) {
   const [values, setValues] = useState(() => toCourseFormValues(initialValues))
   const [clientErrors, setClientErrors] = useState({})
 
-  const teacherOptions = toTeacherOptions(teachers)
-  const teachersAvailable = teacherOptions.length > 0
   const departmentOptions = departments.map((department) =>
     typeof department === 'string' ? department : formatDepartmentName(department),
   )
@@ -81,14 +65,6 @@ function CourseForm({
       !departmentOptions.includes(toValidate.department)
     ) {
       errors.department = 'Select a valid department.'
-    }
-
-    if (
-      toValidate.teacher &&
-      teachersAvailable &&
-      !teacherOptions.some((option) => option.value === toValidate.teacher)
-    ) {
-      errors.teacher = 'Select a valid teacher.'
     }
 
     if (!toValidate.status) {
@@ -272,43 +248,6 @@ function CourseForm({
             <p className="form__hint">
               Department options will appear here once department data is
               available.
-            </p>
-          )}
-        </div>
-
-        <div className="form__field course-form__field--full">
-          <label className="form__label" htmlFor="course-teacher">
-            Assigned Teacher <span className="form__optional">Optional</span>
-          </label>
-          <select
-            id="course-teacher"
-            className="form__input form__select"
-            value={values.teacher}
-            onChange={setField('teacher')}
-            onBlur={handleBlur('teacher')}
-            disabled={isSubmitting || teachersLoading || !teachersAvailable}
-            aria-invalid={fieldError('teacher') ? 'true' : 'false'}
-          >
-            <option value="">
-              {teachersLoading
-                ? 'Loading teachers\u2026'
-                : teachersAvailable
-                  ? 'Select teacher'
-                  : 'No teachers available yet'}
-            </option>
-            {teachersAvailable
-              ? teacherOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))
-              : null}
-          </select>
-          {teachersLoading || teachersAvailable ? (
-            renderedError('teacher')
-          ) : (
-            <p className="form__hint">
-              Teacher options will appear here once teacher records exist.
             </p>
           )}
         </div>

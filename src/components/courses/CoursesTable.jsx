@@ -1,13 +1,11 @@
 import { BookOpen, Eye, Pencil, Trash2 } from 'lucide-react'
 import Card from '@/components/common/Card'
 import CourseStatusBadge from '@/components/courses/CourseStatusBadge'
-import { formatCourseTeacherName } from '@/models/course'
 
 const COLUMNS = [
   { key: 'courseCode', label: 'Course Code' },
   { key: 'name', label: 'Course Name' },
   { key: 'department', label: 'Department' },
-  { key: 'teacher', label: 'Teacher' },
   { key: 'credits', label: 'Credits' },
   { key: 'status', label: 'Status' },
   { key: 'actions', label: 'Actions' },
@@ -97,7 +95,6 @@ function CoursesTable({
               <td className="courses-table__id">{course.courseCode}</td>
               <td className="courses-table__name">{course.name}</td>
               <td>{course.department || '—'}</td>
-              <td>{formatCourseTeacherName(course)}</td>
               <td className="courses-table__credits">
                 {course.credits != null ? course.credits : '—'}
               </td>

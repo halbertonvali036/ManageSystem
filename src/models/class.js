@@ -35,30 +35,12 @@ export const formatClassCourseName = (classRecord) => {
   )
 }
 
-export const formatClassTeacherName = (classRecord) => {
-  if (!classRecord) {
-    return '—'
-  }
-  if (typeof classRecord.teacherName === 'string' && classRecord.teacherName.trim()) {
-    return classRecord.teacherName
-  }
-  const teacher = classRecord.teacher
-  if (!teacher) {
-    return '—'
-  }
-  if (typeof teacher === 'string') {
-    return teacher
-  }
-  return teacher.fullName || teacher.name || teacher.teacherId || '—'
-}
-
 /**
  * @typedef {Object} ClassRecord
  * @property {string} id - Internal database identifier.
  * @property {string} classCode - Public class code shown in the UI.
  * @property {string} name - Class name.
  * @property {string | Object} [course] - Course name or object.
- * @property {string | Object} [teacher] - Teacher name or object.
  * @property {string} [academicYear]
  * @property {string} [semester]
  * @property {string} [schedule]

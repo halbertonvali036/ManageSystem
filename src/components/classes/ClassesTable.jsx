@@ -4,14 +4,12 @@ import ClassStatusBadge from '@/components/classes/ClassStatusBadge'
 import {
   formatClassCourseName,
   formatClassName,
-  formatClassTeacherName,
 } from '@/models/class'
 
 const COLUMNS = [
   { key: 'classCode', label: 'Class Code' },
   { key: 'name', label: 'Class Name' },
   { key: 'course', label: 'Course' },
-  { key: 'teacher', label: 'Teacher' },
   { key: 'academicYear', label: 'Academic Year' },
   { key: 'room', label: 'Room' },
   { key: 'capacity', label: 'Capacity' },
@@ -103,7 +101,6 @@ function ClassesTable({
               <td className="classes-table__id">{classRecord.classCode}</td>
               <td className="classes-table__name">{formatClassName(classRecord)}</td>
               <td>{formatClassCourseName(classRecord)}</td>
-              <td>{formatClassTeacherName(classRecord)}</td>
               <td>{classRecord.academicYear || '—'}</td>
               <td>{classRecord.room || '—'}</td>
               <td className="classes-table__capacity">

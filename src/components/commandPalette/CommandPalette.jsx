@@ -12,28 +12,21 @@ import {
   findCommandByPath,
   filterCommands,
   getCommandsForRole,
+  isAccountCommand,
 } from '@/components/commandPalette/commands'
 import {
-  getRecentCommands,
-  recordRecentCommand,
+  getRecentPaths,
+  recordRecentPath,
 } from '@/components/commandPalette/recentCommands'
 import useAuth from '@/hooks/useAuth'
+import useTranslation from '@/hooks/useTranslation'
 
 const LISTBOX_ID = 'command-palette-listbox'
 const FIRST_INDEX = 0
 
-const toDisplayCommand = (commands, item) => {
-  const matched = findCommandByPath(commands, item.path)
-  return {
-    path: item.path,
-    label: item.label,
-    section: matched?.section ?? null,
-    icon: matched?.icon ?? null,
-  }
-}
-
 function CommandPalette() {
   const { isAuthenticated, user } = useAuth()
+  const { t } = useTranslation()
   const navigate = useNavigate()
 
   const [isOpen, setIsOpen] = useState(false)
@@ -47,6 +40,36 @@ function CommandPalette() {
   const commands = useMemo(
     () => getCommandsForRole(user?.role),
     [user?.role],
+  )
+
+  /**
+   * Labels come from the active language. Legacy academic items still carry a
+   * plain `label`, so both shapes resolve through the same function.
+   */
+  const getLabel = useCallback(
+    (command) =>
+      command.labelKey ? t(command.labelKey) : (command.label ?? command.path),
+    [t],
+  )
+
+  const getSectionLabel = useCallback(
+    (command) => {
+      if (!command?.section) {
+        return null
+      }
+      return command.sectionKey ? t(command.sectionKey) : command.section
+    },
+    [t],
+  )
+
+  const toDisplayCommand = useCallback(
+    (matched, path) => ({
+      path,
+      label: getLabel(matched),
+      section: getSectionLabel(matched),
+      icon: matched?.icon ?? null,
+    }),
+    [getLabel, getSectionLabel],
   )
 
   const open = useCallback(() => {
@@ -122,19 +145,16 @@ function CommandPalette() {
     return () => window.removeEventListener('keydown', handleWindowKeyDown)
   }, [isOpen, close])
 
-  const recentCommands = useMemo(
-    () => (isOpen ? getRecentCommands() : []),
-    [isOpen],
-  )
+  const recentPaths = useMemo(() => (isOpen ? getRecentPaths() : []), [isOpen])
 
   const visibleGroups = useMemo(() => {
     const queryValue = query.trim()
-    const roleRecent = recentCommands.filter((item) =>
-      findCommandByPath(commands, item.path),
-    )
-    const recentPaths = new Set(roleRecent.map((item) => item.path))
-    const remainingCommands = recentPaths.size
-      ? commands.filter((command) => !recentPaths.has(command.path))
+    const roleRecent = recentPaths
+      .map((path) => findCommandByPath(commands, path))
+      .filter(Boolean)
+    const recentPathSet = new Set(roleRecent.map((item) => item.path))
+    const remainingCommands = recentPathSet.size
+      ? commands.filter((command) => !recentPathSet.has(command.path))
       : commands
 
     let cursor = FIRST_INDEX
@@ -148,16 +168,16 @@ function CommandPalette() {
       }))
 
     if (queryValue) {
-      const recentMatches = filterCommands(roleRecent, queryValue)
-      const navMatches = filterCommands(remainingCommands, queryValue)
+      const recentMatches = filterCommands(roleRecent, queryValue, getLabel)
+      const navMatches = filterCommands(remainingCommands, queryValue, getLabel)
       return withIndexes([
         ...(recentMatches.length
           ? [
               {
                 id: 'recent',
-                label: 'Recent',
+                label: t('commandPalette.recent'),
                 items: recentMatches.map((item) =>
-                  toDisplayCommand(commands, item),
+                  toDisplayCommand(item, item.path),
                 ),
               },
             ]
@@ -166,9 +186,9 @@ function CommandPalette() {
           ? [
               {
                 id: 'results',
-                label: 'Results',
+                label: t('commandPalette.results'),
                 items: navMatches.map((item) =>
-                  toDisplayCommand(commands, item),
+                  toDisplayCommand(item, item.path),
                 ),
               },
             ]
@@ -181,22 +201,33 @@ function CommandPalette() {
         ? [
             {
               id: 'recent',
-              label: 'Recent',
+              label: t('commandPalette.recent'),
               items: roleRecent.map((item) =>
-                toDisplayCommand(commands, item),
+                toDisplayCommand(item, item.path),
               ),
             },
           ]
         : []),
       {
         id: 'nav',
-        label: 'Navigation',
-        items: remainingCommands.map((item) =>
-          toDisplayCommand(commands, item),
-        ),
+        label: t('commandPalette.navigation'),
+        items: remainingCommands
+          .filter((item) => !isAccountCommand(item.path))
+          .map((item) => toDisplayCommand(item, item.path)),
       },
+      ...(remainingCommands.some((item) => isAccountCommand(item.path))
+        ? [
+            {
+              id: 'account',
+              label: t('commandPalette.account'),
+              items: remainingCommands
+                .filter((item) => isAccountCommand(item.path))
+                .map((item) => toDisplayCommand(item, item.path)),
+            },
+          ]
+        : []),
     ])
-  }, [query, commands, recentCommands])
+  }, [query, commands, recentPaths, getLabel, toDisplayCommand, t])
 
   const flatItems = useMemo(
     () => visibleGroups.flatMap((group) => group.items),
@@ -221,7 +252,7 @@ function CommandPalette() {
       if (!item) {
         return
       }
-      recordRecentCommand(item.path, item.label)
+      recordRecentPath(item.path)
       navigate(item.path)
       close()
     },
@@ -273,7 +304,7 @@ function CommandPalette() {
         className="command-palette__panel"
         role="dialog"
         aria-modal="true"
-        aria-label="Quick search"
+        aria-label={t('commandPalette.dialog')}
       >
         <div className="command-palette__search">
           <Search
@@ -294,8 +325,8 @@ function CommandPalette() {
                 ? `command-option-${displayIndex}`
                 : undefined
             }
-            aria-label="Search pages"
-            placeholder="Search pages…"
+            aria-label={t('commandPalette.searchLabel')}
+            placeholder={t('commandPalette.placeholder')}
             autoComplete="off"
             spellCheck="false"
             value={query}
@@ -314,10 +345,13 @@ function CommandPalette() {
               className="command-palette__list"
               id={LISTBOX_ID}
               role="listbox"
-              aria-label="Available pages"
+              aria-label={t('commandPalette.availablePages')}
             >
               {visibleGroups.map((group) => (
-                <div className="command-group" key={group.id}>
+                <div
+                  className="command-group"
+                  key={group.id}
+                >
                   <div
                     className="command-group__label"
                     role="presentation"
@@ -368,11 +402,10 @@ function CommandPalette() {
                 aria-hidden="true"
               />
               <span className="command-palette__empty-title">
-                No matching pages found.
+                {t('commandPalette.emptyTitle')}
               </span>
               <span className="command-palette__empty-text">
-                Try a different term such as &ldquo;grades&rdquo; or
-                &ldquo;classes&rdquo;.
+                {t('commandPalette.emptyText')}
               </span>
             </div>
           )}
@@ -386,17 +419,17 @@ function CommandPalette() {
             <kbd className="command-palette__kbd">
               <ArrowDown size={12} aria-hidden="true" />
             </kbd>
-            <span>Navigate</span>
+            <span>{t('commandPalette.navigate')}</span>
           </span>
           <span className="command-palette__hint">
             <kbd className="command-palette__kbd">
               <CornerDownLeft size={12} aria-hidden="true" />
             </kbd>
-            <span>Open</span>
+            <span>{t('commandPalette.open')}</span>
           </span>
           <span className="command-palette__hint">
             <kbd className="command-palette__kbd">Esc</kbd>
-            <span>Close</span>
+            <span>{t('commandPalette.close')}</span>
           </span>
         </div>
       </div>

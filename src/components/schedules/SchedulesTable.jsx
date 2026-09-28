@@ -6,7 +6,6 @@ import {
   formatScheduleCourseName,
   formatScheduleDayLabel,
   formatScheduleRoom,
-  formatScheduleTeacherName,
   formatScheduleTimeRange,
 } from '@/models/schedule'
 
@@ -15,7 +14,6 @@ const COLUMNS = [
   { key: 'time', label: 'Time' },
   { key: 'class', label: 'Class' },
   { key: 'course', label: 'Course' },
-  { key: 'teacher', label: 'Teacher' },
   { key: 'room', label: 'Room' },
   { key: 'status', label: 'Status' },
   { key: 'actions', label: 'Actions' },
@@ -111,7 +109,6 @@ function SchedulesTable({
                 {formatScheduleClassName(entry)}
               </td>
               <td>{formatScheduleCourseName(entry)}</td>
-              <td>{formatScheduleTeacherName(entry)}</td>
               <td>Room {formatScheduleRoom(entry)}</td>
               <td>
                 <ScheduleEntryStatusBadge status={entry.status} />

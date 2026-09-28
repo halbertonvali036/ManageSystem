@@ -14,7 +14,6 @@ import {
   formatScheduleDayLabel,
   formatScheduleRoom,
   formatScheduleSemesterName,
-  formatScheduleTeacherName,
   formatScheduleTimeRange,
 } from '@/models/schedule'
 import { BackendNotConnectedError } from '@/services/httpClient'
@@ -151,9 +150,6 @@ function ScheduleDetailContent({ scheduleId }) {
           <InfoItem label="Course">
             {formatScheduleCourseName(scheduleEntry)}
           </InfoItem>
-          <InfoItem label="Teacher">
-            {formatScheduleTeacherName(scheduleEntry)}
-          </InfoItem>
           <InfoItem label="Day">
             {formatScheduleDayLabel(scheduleEntry.dayOfWeek)}
           </InfoItem>
@@ -172,7 +168,7 @@ function ScheduleDetailContent({ scheduleId }) {
       <ConfirmDialog
         open={showDeleteDialog}
         title="Delete schedule entry"
-        message="This action is permanent and cannot be undone. Only this timetable entry is removed; no class, teacher, course or other records are affected."
+        message="This action is permanent and cannot be undone. Only this timetable entry is removed; no class, course or other records are affected."
         confirmLabel="Delete Entry"
         isConfirming={isDeleting}
         error={deleteError}

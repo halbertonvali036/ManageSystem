@@ -1,4 +1,4 @@
-import { GraduationCap } from 'lucide-react'
+import { PanelsTopLeft } from 'lucide-react'
 
 function BrandLogo({ size = 32, className = '' }) {
   return (
@@ -7,7 +7,7 @@ function BrandLogo({ size = 32, className = '' }) {
       style={{ width: size, height: size }}
       aria-hidden="true"
     >
-      <GraduationCap size={Math.round(size * 0.56)} strokeWidth={2.2} />
+      <PanelsTopLeft size={Math.round(size * 0.56)} strokeWidth={2.2} />
     </span>
   )
 }

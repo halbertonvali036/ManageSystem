@@ -6,67 +6,84 @@
    `[data-theme='dark']`. Existing components keep working
    through alias tokens (--color-primary, --radius-*, --space-*,
    --shadow-*, --transition-*, --font-sans).
+
+   VISUAL DIRECTION: neon green on very dark green-black.
+   The accent is a saturated #39FF14. It is applied as a
+   highlight — focus rings, active edges, primary actions and
+   status accents — not as a fill on every surface. Surfaces
+   stay layered near-black greens with premium hairline borders
+   so text contrast is never sacrificed to the accent.
+
+   Dark mode is the strongest expression of the system. Light
+   mode is a deliberate professional equivalent: the same hue
+   family, darkened enough to keep 4.5:1 text contrast.
    ============================================================ */
 
-/* ── Light theme tokens ───────────────────────────────────── */
+/* ─── Light theme tokens ──────────────────────────────────────── */
+/* A clean, cool-neutral canvas with a controlled green accent. The
+   accent is a deep green rather than raw neon, because neon on a
+   white surface fails contrast for text and small text. */
 :root {
   color-scheme: light;
 
   /* Surfaces & containers */
-  --color-bg: #f5f6fa;
-  --color-bg-glow-1: rgba(79, 70, 229, 0.055);
-  --color-bg-glow-2: rgba(124, 58, 237, 0.045);
+  --color-bg: #f4f7f4;
+  --color-bg-glow-1: rgba(34, 197, 94, 0.05);
+  --color-bg-glow-2: rgba(16, 185, 129, 0.04);
   --color-surface: #ffffff;
-  --color-surface-2: #fbfcff;
-  --color-surface-3: #f2f4fb;
+  --color-surface-2: #fbfdfb;
+  --color-surface-3: #eef4ef;
   --color-elevated: #ffffff;
   --color-field: #ffffff;
-  --color-field-hover: #f8f9ff;
+  --color-field-hover: #f5faf6;
 
   /* Borders & hairlines */
-  --color-border: #e7eaf3;
-  --color-border-strong: #d3d9e7;
-  --color-hairline: rgba(148, 163, 184, 0.22);
+  --color-border: #e2e9e4;
+  --color-border-strong: #c9d5cc;
+  --color-hairline: rgba(31, 61, 45, 0.14);
   --color-header-bg: rgba(255, 255, 255, 0.94);
-  --color-header-border: rgba(148, 163, 184, 0.2);
+  --color-header-border: rgba(31, 61, 45, 0.12);
+  --color-accent-border: rgba(21, 128, 61, 0.34);
 
   /* Text hierarchy */
-  --color-text: #141a2b;
-  --color-text-muted: #5c6579;
-  --color-text-soft: #8a93a8;
+  --color-text: #0f1a13;
+  --color-text-muted: #4a5a50;
+  --color-text-soft: #6f8076;
   --color-inverse-text: #ffffff;
 
-  /* Brand accent (canonical) */
-  --color-accent: #4f46e5;
-  --color-accent-hover: #4338ca;
-  --color-accent-active: #3730a3;
-  --color-accent-soft: #eef0ff;
-  --color-accent-bg: rgba(79, 70, 229, 0.1);
+  /* Brand accent (canonical) — deep green for light surfaces */
+  --color-accent: #15803d;
+  --color-accent-hover: #126b34;
+  --color-accent-active: #0f5a2b;
+  --color-accent-soft: #e6f4ea;
+  --color-accent-bg: rgba(21, 128, 61, 0.1);
   --color-accent-text: #ffffff;
-  --color-accent-strong: #4f46e5;
-  --color-accent-strong-start: #6366f1;
-  --color-accent-strong-hover: #5b54ec;
-  --color-accent-contrast: #3b3fc0;
+  --color-accent-strong: #15803d;
+  --color-accent-strong-start: #22a34d;
+  --color-accent-strong-hover: #1c8f43;
+  --color-accent-contrast: #0f5a2b;
+  /* The raw neon, kept for small highlights and glows only. */
+  --color-neon: #2ee06a;
+  --color-neon-soft: rgba(46, 224, 106, 0.16);
 
   /* Secondary + role accents */
   --color-accent-2: #0f766e;
-  --color-role-admin: #4f46e5;
-  --color-role-teacher: #0f766e;
+  --color-role-admin: #15803d;
   --color-role-student: #a16207;
 
   /* Semantic status colors */
-  --color-success: #059669;
-  --color-success-bg: rgba(5, 150, 105, 0.1);
-  --color-warning: #d97706;
-  --color-warning-bg: rgba(217, 119, 6, 0.1);
+  --color-success: #15803d;
+  --color-success-bg: rgba(21, 128, 61, 0.1);
+  --color-warning: #b45309;
+  --color-warning-bg: rgba(180, 83, 9, 0.1);
   --color-danger: #dc2626;
   --color-danger-bg: rgba(220, 38, 38, 0.1);
-  --color-info: #2563eb;
-  --color-info-bg: rgba(37, 99, 235, 0.1);
+  --color-info: #0369a1;
+  --color-info-bg: rgba(3, 105, 161, 0.1);
 
   /* Focus + selection */
-  --color-focus: #4f46e5;
-  --color-focus-ring: rgba(79, 70, 229, 0.16);
+  --color-focus: #15803d;
+  --color-focus-ring: rgba(21, 128, 61, 0.2);
 
   /* Legacy aliases (existing components reference these) */
   --color-primary: var(--color-accent);
@@ -77,11 +94,14 @@
   --color-primary-text: var(--color-accent-text);
 
   /* Shell (sidebar / overlays) */
-  --color-sidebar-bg: #0e1320;
-  --color-sidebar-border: rgba(255, 255, 255, 0.07);
-  --color-sidebar-text: #93a0b8;
+  --color-sidebar-bg: #0c1a11;
+  --color-sidebar-border: rgba(57, 255, 20, 0.12);
+  --color-sidebar-text: #8fa89a;
   --color-sidebar-text-hover: #ffffff;
-  --color-backdrop: rgba(15, 23, 42, 0.55);
+  --color-backdrop: rgba(9, 20, 13, 0.6);
+
+  /* Glass surface used by the public header over the dark hero */
+  --color-surface-glass: rgba(12, 26, 17, 0.42);
 
   /* Typography */
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto,
@@ -104,19 +124,22 @@
   --radius-xl: 28px;
   --radius-full: 9999px;
 
-  /* Depth */
-  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05), 0 2px 8px rgba(15, 23, 42, 0.04);
-  --shadow-md: 0 6px 18px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 20px 48px rgba(15, 23, 42, 0.14);
-  --shadow-primary: 0 8px 20px rgba(79, 70, 229, 0.3);
+  /* Depth — restrained in light mode; the accent reads through
+     borders and text, not through heavy glow. */
+  --shadow-xs: 0 1px 2px rgba(15, 26, 19, 0.05);
+  --shadow-sm: 0 1px 2px rgba(15, 26, 19, 0.05), 0 2px 8px rgba(15, 26, 19, 0.04);
+  --shadow-md: 0 6px 18px rgba(15, 26, 19, 0.08);
+  --shadow-lg: 0 20px 48px rgba(15, 26, 19, 0.14);
+  --shadow-primary: 0 8px 20px rgba(21, 128, 61, 0.24);
   --shadow-auth-card:
-    0 2px 4px rgba(15, 23, 42, 0.04),
-    0 8px 24px rgba(15, 23, 42, 0.08),
-    0 32px 64px rgba(15, 23, 42, 0.1);
+    0 2px 4px rgba(15, 26, 19, 0.04),
+    0 8px 24px rgba(15, 26, 19, 0.08),
+    0 32px 64px rgba(15, 26, 19, 0.1);
   --shadow-cta:
-    0 2px 8px rgba(79, 70, 229, 0.2),
-    0 8px 24px rgba(79, 70, 229, 0.36);
+    0 2px 8px rgba(21, 128, 61, 0.18),
+    0 8px 24px rgba(21, 128, 61, 0.28);
+  --shadow-neon-sm: 0 0 0 1px rgba(46, 224, 106, 0.22);
+  --shadow-neon: 0 0 18px rgba(57, 255, 20, 0.24);
 
   /* Layout */
   --header-height: 68px;
@@ -141,75 +164,79 @@
   --transition-spring: 0.32s cubic-bezier(0.34, 1.38, 0.64, 1);
 
   /* Auth composition tokens */
-  --auth-hero-bg: linear-gradient(158deg, #0d1533 0%, #121d42 52%, #1c2757 100%);
-  --auth-card-border: rgba(99, 102, 241, 0.13);
+  --auth-hero-bg: linear-gradient(158deg, #071309 0%, #0b1d10 52%, #123019 100%);
+  --auth-card-border: rgba(57, 255, 20, 0.16);
   --auth-input-height: 46px;
-  --auth-accent: #5057e0;
-  --auth-accent-hover: #4347c8;
-  --auth-accent-active: #3d448f;
-  --auth-page-bg: #f5f6fa;
+  --auth-accent: #2ee06a;
+  --auth-accent-hover: #4aeb7c;
+  --auth-accent-active: #21c85a;
+  --auth-page-bg: #f4f7f4;
 }
 
-/* ── Dark theme tokens ────────────────────────────────────── */
-/* Deep layered graphite-navy foundation. Surfaces rise from the
-   base paint; nothing is pure black or neon—calm and legible. */
+/* ─── Dark theme tokens ──────────────────────────────────────── */
+/* The primary expression of the system. Layered green-black
+   surfaces, a single bright accent used as a highlight, and
+   hairline borders that carry the premium feel. Nothing is pure
+   black, and the neon never becomes a surface fill. */
 [data-theme='dark'] {
   color-scheme: dark;
 
   /* Surfaces & containers */
-  --color-bg: #0b101d;
-  --color-bg-glow-1: rgba(99, 102, 241, 0.13);
-  --color-bg-glow-2: rgba(124, 58, 237, 0.09);
-  --color-surface: #121a2b;
-  --color-surface-2: #162033;
-  --color-surface-3: #1b2539;
-  --color-elevated: #1b2539;
-  --color-field: #0e1524;
-  --color-field-hover: #131b2c;
+  --color-bg: #050b07;
+  --color-bg-glow-1: rgba(57, 255, 20, 0.07);
+  --color-bg-glow-2: rgba(16, 185, 129, 0.05);
+  --color-surface: #0a140d;
+  --color-surface-2: #0e1a11;
+  --color-surface-3: #122016;
+  --color-elevated: #122016;
+  --color-field: #08110b;
+  --color-field-hover: #0c170f;
 
   /* Borders & hairlines */
-  --color-border: rgba(148, 163, 184, 0.16);
-  --color-border-strong: rgba(148, 163, 184, 0.28);
-  --color-hairline: rgba(148, 163, 184, 0.14);
-  --color-header-bg: rgba(18, 26, 43, 0.9);
-  --color-header-border: rgba(148, 163, 184, 0.16);
+  --color-border: rgba(120, 220, 140, 0.13);
+  --color-border-strong: rgba(120, 220, 140, 0.24);
+  --color-hairline: rgba(120, 220, 140, 0.1);
+  --color-header-bg: rgba(8, 17, 11, 0.88);
+  --color-header-border: rgba(120, 220, 140, 0.12);
+  --color-accent-border: rgba(57, 255, 20, 0.4);
 
   /* Text hierarchy */
-  --color-text: #eef1f8;
-  --color-text-muted: #a7b0c3;
-  --color-text-soft: #7e879c;
-  --color-inverse-text: #ffffff;
+  --color-text: #e8f5ea;
+  --color-text-muted: #9cb3a3;
+  --color-text-soft: #6f8876;
+  --color-inverse-text: #04140a;
 
-  /* Brand accent (brightened for legibility on dark) */
-  --color-accent: #818cf8;
-  --color-accent-hover: #a5b4fc;
-  --color-accent-active: #8b96f9;
-  --color-accent-soft: rgba(129, 140, 248, 0.12);
-  --color-accent-bg: rgba(129, 140, 248, 0.18);
-  --color-accent-text: #ffffff;
-  --color-accent-strong: #4f46e5;
-  --color-accent-strong-hover: #5b54ec;
-  --color-accent-contrast: #a5b4fc;
+  /* Brand accent (neon, tuned for dark contrast) */
+  --color-accent: #39ff14;
+  --color-accent-hover: #55ff35;
+  --color-accent-active: #2ee06a;
+  --color-accent-soft: rgba(57, 255, 20, 0.12);
+  --color-accent-bg: rgba(57, 255, 20, 0.16);
+  --color-accent-text: #04140a;
+  --color-accent-strong: #39ff14;
+  --color-accent-strong-hover: #55ff35;
+  --color-accent-contrast: #39ff14;
+  --color-neon: #39ff14;
+  --color-neon-soft: rgba(57, 255, 20, 0.2);
 
   /* Secondary + role accents */
-  --color-accent-2: #2dd4bf;
-  --color-role-admin: #818cf8;
-  --color-role-teacher: #2dd4bf;
+  --color-accent-2: #2dd4a7;
+  --color-role-admin: #39ff14;
   --color-role-student: #fbbf24;
 
   /* Semantic status colors */
-  --color-success: #34d399;
-  --color-success-bg: rgba(52, 211, 153, 0.14);
+  --color-success: #39ff14;
+  --color-success-bg: rgba(57, 255, 20, 0.14);
   --color-warning: #fbbf24;
   --color-warning-bg: rgba(251, 191, 36, 0.14);
-  --color-danger: #f87171;
-  --color-danger-bg: rgba(248, 113, 113, 0.14);
-  --color-info: #93b8ff;
-  --color-info-bg: rgba(147, 184, 255, 0.14);
+  --color-danger: #ff6b6b;
+  --color-danger-bg: rgba(255, 107, 107, 0.14);
+  --color-info: #7dd3fc;
+  --color-info-bg: rgba(125, 211, 252, 0.14);
 
   /* Focus + selection */
-  --color-focus: #a5b4fc;
-  --color-focus-ring: rgba(129, 140, 248, 0.24);
+  --color-focus: #39ff14;
+  --color-focus-ring: rgba(57, 255, 20, 0.28);
 
   /* Legacy aliases */
   --color-primary: var(--color-accent);
@@ -220,37 +247,39 @@
   --color-primary-text: var(--color-accent-text);
 
   /* Shell (sidebar / overlays) */
-  --color-sidebar-bg: #0a0f1b;
-  --color-sidebar-border: rgba(255, 255, 255, 0.07);
-  --color-sidebar-text: #98a3b9;
-  --color-sidebar-text-hover: #ffffff;
-  --color-backdrop: rgba(3, 7, 18, 0.72);
+  --color-sidebar-bg: #060e08;
+  --color-sidebar-border: rgba(57, 255, 20, 0.12);
+  --color-sidebar-text: #7f9c8a;
+  --color-sidebar-text-hover: #eaffee;
+  --color-backdrop: rgba(2, 8, 4, 0.76);
 
-  /* Depth (deeper, softer on dark) */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.28);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.24);
-  --shadow-md: 0 8px 22px rgba(0, 0, 0, 0.36);
-  --shadow-lg: 0 24px 56px rgba(0, 0, 0, 0.5);
-  --shadow-primary: 0 8px 22px rgba(79, 70, 229, 0.42);
+  /* Depth — the only place glow is allowed */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.42), 0 2px 8px rgba(0, 0, 0, 0.32);
+  --shadow-md: 0 8px 22px rgba(0, 0, 0, 0.46);
+  --shadow-lg: 0 24px 56px rgba(0, 0, 0, 0.6);
+  --shadow-primary: 0 8px 22px rgba(57, 255, 20, 0.22);
   --shadow-auth-card:
-    0 2px 4px rgba(0, 0, 0, 0.32),
-    0 10px 30px rgba(0, 0, 0, 0.44),
-    0 40px 80px rgba(0, 0, 0, 0.52);
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    0 10px 30px rgba(0, 0, 0, 0.5),
+    0 40px 80px rgba(0, 0, 0, 0.58);
   --shadow-cta:
-    0 2px 8px rgba(79, 70, 229, 0.3),
-    0 10px 26px rgba(79, 70, 229, 0.42);
+    0 2px 10px rgba(57, 255, 20, 0.2),
+    0 10px 30px rgba(57, 255, 20, 0.26);
+  --shadow-neon-sm: 0 0 0 1px rgba(57, 255, 20, 0.2);
+  --shadow-neon: 0 0 22px rgba(57, 255, 20, 0.28);
 
   /* Auth composition tokens */
-  --auth-hero-bg: linear-gradient(158deg, #060a16 0%, #0a1020 52%, #121b39 100%);
-  --auth-card-border: rgba(148, 163, 184, 0.18);
+  --auth-hero-bg: linear-gradient(158deg, #050d06 0%, #08160c 52%, #0d2413 100%);
+  --auth-card-border: rgba(57, 255, 20, 0.18);
   --auth-input-height: 46px;
-  --auth-accent: #5a5fec;
-  --auth-accent-hover: #4a4fd2;
-  --auth-accent-active: #3a3fae;
-  --auth-page-bg: #0b101d;
+  --auth-accent: #39ff14;
+  --auth-accent-hover: #55ff35;
+  --auth-accent-active: #2ee06a;
+  --auth-page-bg: #050b07;
 }
 
-/* ── Base paint ───────────────────────────────────────────── */
+/* ─── Base paint ───────────────────────────────────────────── */
 html {
   height: 100%;
 }
@@ -292,7 +321,7 @@ textarea {
   font: inherit;
 }
 
-/* ── Theme switch easing ───────────────────────────────────── */
+/* ─── Theme switch easing ───────────────────────────────────── */
 /* Added by the ThemeProvider for one smooth crossfade; removed
    after the transition so permanent hover states stay instant. */
 html.theme-anim *,
@@ -315,7 +344,7 @@ html.theme-anim *::after {
   }
 }
 
-/* ── Theme toggle control ──────────────────────────────────── */
+/* ─── Theme toggle control ──────────────────────────────────── */
 .theme-toggle {
   display: inline-flex;
   align-items: center;
@@ -384,9 +413,9 @@ html[data-theme='dark'] .theme-toggle__icon--moon {
 }
 
 .theme-toggle--auth:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.13);
-  border-color: rgba(255, 255, 255, 0.28);
+  color: var(--color-neon);
+  background: rgba(57, 255, 20, 0.12);
+  border-color: rgba(57, 255, 20, 0.4);
 }
 
 /* App-header variant stays compact and quiet next to other icons */

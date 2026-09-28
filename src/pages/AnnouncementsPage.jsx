@@ -113,7 +113,7 @@ function AnnouncementsPage() {
   return (
     <div className="announcements-page">
       <p className="page-description">
-        Create and manage announcements for students and teachers. Choose a
+        Create and manage announcements for students. Choose a
         targeted audience, set publish and expiry dates, and track the status
         of every notice.
       </p>

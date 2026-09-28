@@ -1,5 +1,10 @@
-import { ROLES } from '@/utils/roles'
+import { roleMatchesPortal } from '@/utils/roles'
+import { BILLING_PATH, SECURITY_PATH } from '@/utils/constants'
 
+/**
+ * Severity reported by the backend. Purely presentational: it drives the icon
+ * and colour, never behaviour.
+ */
 export const NOTIFICATION_TYPE = Object.freeze({
   INFO: 'info',
   SUCCESS: 'success',
@@ -16,6 +21,95 @@ export const NOTIFICATION_TYPE_LABELS = Object.freeze({
 
 export const NOTIFICATION_TYPES = Object.freeze(Object.values(NOTIFICATION_TYPE))
 
+/**
+ * Product categories. These describe *what* a notification is about and map to
+ * the modules that already exist in this portal, so a category always has a
+ * real destination to open. Nothing here creates a record or a route.
+ */
+export const NOTIFICATION_CATEGORY = Object.freeze({
+  ANNOUNCEMENT: 'announcement',
+  SCHEDULE: 'schedule',
+  ATTENDANCE: 'attendance',
+  ASSESSMENT: 'assessment',
+  GRADE: 'grade',
+  ACCOUNT: 'account',
+  BILLING: 'billing',
+})
+
+export const NOTIFICATION_CATEGORIES = Object.freeze(Object.values(NOTIFICATION_CATEGORY))
+
+const CATEGORY_ALIASES = Object.freeze({
+  announcement: NOTIFICATION_CATEGORY.ANNOUNCEMENT,
+  announcements: NOTIFICATION_CATEGORY.ANNOUNCEMENT,
+  notice: NOTIFICATION_CATEGORY.ANNOUNCEMENT,
+  news: NOTIFICATION_CATEGORY.ANNOUNCEMENT,
+  schedule: NOTIFICATION_CATEGORY.SCHEDULE,
+  schedules: NOTIFICATION_CATEGORY.SCHEDULE,
+  timetable: NOTIFICATION_CATEGORY.SCHEDULE,
+  class_schedule: NOTIFICATION_CATEGORY.SCHEDULE,
+  attendance: NOTIFICATION_CATEGORY.ATTENDANCE,
+  attendance_alert: NOTIFICATION_CATEGORY.ATTENDANCE,
+  assessment: NOTIFICATION_CATEGORY.ASSESSMENT,
+  assessments: NOTIFICATION_CATEGORY.ASSESSMENT,
+  exam: NOTIFICATION_CATEGORY.ASSESSMENT,
+  grade: NOTIFICATION_CATEGORY.GRADE,
+  grades: NOTIFICATION_CATEGORY.GRADE,
+  result: NOTIFICATION_CATEGORY.GRADE,
+  results: NOTIFICATION_CATEGORY.GRADE,
+  account: NOTIFICATION_CATEGORY.ACCOUNT,
+  security: NOTIFICATION_CATEGORY.ACCOUNT,
+  account_security: NOTIFICATION_CATEGORY.ACCOUNT,
+  profile: NOTIFICATION_CATEGORY.ACCOUNT,
+  billing: NOTIFICATION_CATEGORY.BILLING,
+  invoice: NOTIFICATION_CATEGORY.BILLING,
+  payment: NOTIFICATION_CATEGORY.BILLING,
+  subscription: NOTIFICATION_CATEGORY.BILLING,
+})
+
+const CATEGORY_META = Object.freeze({
+  [NOTIFICATION_CATEGORY.ANNOUNCEMENT]: { label: 'Announcement', icon: 'megaphone' },
+  [NOTIFICATION_CATEGORY.SCHEDULE]: { label: 'Schedule', icon: 'calendar' },
+  [NOTIFICATION_CATEGORY.ATTENDANCE]: { label: 'Attendance', icon: 'clipboard' },
+  [NOTIFICATION_CATEGORY.ASSESSMENT]: { label: 'Assessment', icon: 'list' },
+  [NOTIFICATION_CATEGORY.GRADE]: { label: 'Grade', icon: 'award' },
+  [NOTIFICATION_CATEGORY.ACCOUNT]: { label: 'Account & Security', icon: 'shield' },
+  [NOTIFICATION_CATEGORY.BILLING]: { label: 'Billing', icon: 'card' },
+})
+
+/**
+ * Category → existing route, expressed relative to the signed-in role's portal
+ * so it is resolved by `resolveNotificationTarget`. Account-level pages are
+ * absolute and listed in `ACCOUNT_LEVEL_PATHS`.
+ */
+const CATEGORY_TARGET = Object.freeze({
+  [NOTIFICATION_CATEGORY.ANNOUNCEMENT]: '/announcements',
+  [NOTIFICATION_CATEGORY.SCHEDULE]: '/schedules',
+  [NOTIFICATION_CATEGORY.ATTENDANCE]: '/attendance',
+  [NOTIFICATION_CATEGORY.ASSESSMENT]: '/assessments',
+  [NOTIFICATION_CATEGORY.GRADE]: '/grades',
+  [NOTIFICATION_CATEGORY.ACCOUNT]: SECURITY_PATH,
+  [NOTIFICATION_CATEGORY.BILLING]: BILLING_PATH,
+})
+
+/**
+ * Routes that are identical for every role. They must never be prefixed with a
+ * role portal, otherwise `/security` would become a non-existent
+ * `/student/security`.
+ */
+
+
+export const NOTIFICATION_CATEGORY_LABELS = Object.freeze(
+  Object.fromEntries(
+    NOTIFICATION_CATEGORIES.map((category) => [category, CATEGORY_META[category].label]),
+  ),
+)
+
+export const NOTIFICATION_CATEGORY_ICONS = Object.freeze(
+  Object.fromEntries(
+    NOTIFICATION_CATEGORIES.map((category) => [category, CATEGORY_META[category].icon]),
+  ),
+)
+
 export const NOTIFICATION_READ_STATE = Object.freeze({
   READ: 'read',
   UNREAD: 'unread',
@@ -23,13 +117,9 @@ export const NOTIFICATION_READ_STATE = Object.freeze({
 
 /**
  * Role portal prefixes used to scope notification target routes.
- * Admin routes live at the root, teacher/student routes are portal-scoped.
+ * Admin routes live at the root, the student route is portal-scoped.
  */
-const ROLE_PORTAL_PREFIX = Object.freeze({
-  [ROLES.ADMIN]: '',
-  [ROLES.TEACHER]: '/teacher',
-  [ROLES.STUDENT]: '/student',
-})
+
 
 const resolveReadState = (notification) => {
   if (!notification) {
@@ -57,6 +147,15 @@ const resolveReadState = (notification) => {
 export const isNotificationUnread = (notification) =>
   resolveReadState(notification) === NOTIFICATION_READ_STATE.UNREAD
 
+/** Stable identifier used for React keys and for `markNotificationRead`. */
+export const getNotificationId = (notification) => {
+  const value = notification?.id ?? notification?._id ?? notification?.notificationId
+  if (value === null || value === undefined || String(value).trim() === '') {
+    return null
+  }
+  return String(value)
+}
+
 export const getNotificationType = (notification) => {
   const type = notification?.type
   if (NOTIFICATION_TYPES.includes(type)) {
@@ -68,21 +167,64 @@ export const getNotificationType = (notification) => {
 export const getNotificationTypeLabel = (notification) =>
   NOTIFICATION_TYPE_LABELS[getNotificationType(notification)]
 
+/**
+ * Normalises a backend category. Unknown or absent values resolve to `null`
+ * rather than guessing, so a record is never relabelled with a category the
+ * backend did not send.
+ */
+export const getNotificationCategory = (notification) => {
+  const raw = notification?.category ?? notification?.kind ?? notification?.topic
+  if (typeof raw !== 'string') {
+    return null
+  }
+  const normalized = raw.trim().toLowerCase().replace(/[\s-]+/g, '_')
+  if (NOTIFICATION_CATEGORIES.includes(normalized)) {
+    return normalized
+  }
+  return CATEGORY_ALIASES[normalized] ?? null
+}
+
+export const getNotificationCategoryLabel = (notification) => {
+  const category = getNotificationCategory(notification)
+  return category ? CATEGORY_META[category].label : null
+}
+
+export const getNotificationCategoryIcon = (notification) => {
+  const category = getNotificationCategory(notification)
+  return category ? CATEGORY_META[category].icon : null
+}
+
+/** Normalises a category filter, or `null` when it is "all". */
+export const toNotificationCategoryFilter = (value) => {
+  if (value === 'all' || value === undefined || value === null) {
+    return null
+  }
+  return getNotificationCategory({ category: value })
+}
+
 export const formatNotificationTitle = (notification) => notification?.title ?? ''
 
 export const formatNotificationMessage = (notification) => notification?.message ?? ''
 
-export const formatNotificationCreatedAt = (notification) => {
+/** Parsed creation time, or `null` when the backend did not send a usable one. */
+export const getNotificationDate = (notification) => {
   const value =
     notification?.createdAt ??
     notification?.created_at ??
-    notification?.date
+    notification?.date ??
+    notification?.sentAt ??
+    notification?.sent_at
   if (!value) {
-    return ''
+    return null
   }
   const date = new Date(value)
-  if (Number.isNaN(date.getTime())) {
-    return String(value)
+  return Number.isNaN(date.getTime()) ? null : date
+}
+
+export const formatNotificationCreatedAt = (notification) => {
+  const date = getNotificationDate(notification)
+  if (!date) {
+    return ''
   }
   return date.toLocaleString(undefined, {
     month: 'short',
@@ -93,11 +235,62 @@ export const formatNotificationCreatedAt = (notification) => {
 }
 
 /**
+ * Machine-readable value for `<time dateTime>`. Readable labels stay
+ * localised, the attribute stays ISO so assistive tech and the DOM agree.
+ */
+export const getNotificationDateTime = (notification) =>
+  getNotificationDate(notification)?.toISOString() ?? null
+
+const MINUTE = 60
+const HOUR = 60 * MINUTE
+const DAY = 24 * HOUR
+
+/**
+ * Short relative label, e.g. `just now`, `12m ago`, `3h ago`, `Mar 4`.
+ * Purely derived from the backend timestamp; never a substitute for it.
+ */
+export const formatNotificationRelativeTime = (notification, now = Date.now()) => {
+  const date = getNotificationDate(notification)
+  if (!date) {
+    return ''
+  }
+  const seconds = Math.round((now - date.getTime()) / 1000)
+  if (seconds < 0) {
+    return 'just now'
+  }
+  if (seconds < MINUTE) {
+    return 'just now'
+  }
+  if (seconds < HOUR) {
+    return `${Math.floor(seconds / MINUTE)}m ago`
+  }
+  if (seconds < DAY) {
+    return `${Math.floor(seconds / HOUR)}h ago`
+  }
+  if (seconds < 7 * DAY) {
+    return `${Math.floor(seconds / DAY)}d ago`
+  }
+  return formatNotificationCreatedAt(notification)
+}
+
+/** Accept only local routes that this account may navigate to. */
+const scopePath = (path, role) => {
+  if (typeof path !== 'string' || !path || path.startsWith('//') || /[\\:\s]/.test(path)) return null
+  const direct = path.startsWith('/') ? path : `/${path}`
+  const pathname = direct.split(/[?#]/)[0]
+  return roleMatchesPortal(role, pathname) ? direct : null
+}
+
+/**
  * Resolve a notification target against the signed-in role.
+ *
+ * A backend `target` always wins. Without one, the item's own category points
+ * at the matching page that already exists in this portal — the record itself
+ * is never created, altered or routed anywhere new.
  *
  * Supported target shapes:
  * - `{ path: '/grades' }`                    → direct route (auto-scoped to role portal)
- * - `{ path: '/teacher/grades', role }`      → explicit route reserved for a role
+ * - `{ path: '/student/grades', role }`      → explicit route reserved for a role
  * - `{ route: 'grades/:id', id: '5', role }` → relative route + params, resolved under the role portal
  *
  * Returns `null` when the target is absent or not meant for the given role,
@@ -106,25 +299,21 @@ export const formatNotificationCreatedAt = (notification) => {
 export const resolveNotificationTarget = (notification, role) => {
   const target = notification?.target
   if (!target) {
-    return null
+    const category = getNotificationCategory(notification)
+    const fallback = category ? CATEGORY_TARGET[category] : null
+    return fallback ? scopePath(fallback, role) : null
   }
   if (target.role && target.role !== role) {
     return null
   }
   if (typeof target.path === 'string' && target.path) {
-    const direct = target.path.startsWith('/') ? target.path : `/${target.path}`
-    return ROLE_PORTAL_PREFIX[role]
-      ? `${ROLE_PORTAL_PREFIX[role]}${direct}`
-      : direct
+    return scopePath(target.path, role)
   }
   if (typeof target.route === 'string' && target.route) {
     const withParams = target.id
-      ? target.route.replace(':id', String(target.id))
+      ? target.route.replace(':id', encodeURIComponent(String(target.id)))
       : target.route
-    const scoped = withParams.replace(/^\/+/, '')
-    return ROLE_PORTAL_PREFIX[role]
-      ? `${ROLE_PORTAL_PREFIX[role]}/${scoped}`
-      : `/${scoped}`
+    return scopePath(withParams, role)
   }
   return null
 }
@@ -134,7 +323,8 @@ export const resolveNotificationTarget = (notification, role) => {
  * @property {string} id - Internal database identifier.
  * @property {string} [title]
  * @property {string} [message]
- * @property {keyof typeof NOTIFICATION_TYPE | string} [type]
+ * @property {keyof typeof NOTIFICATION_TYPE | string} [type] - Severity, presentational only.
+ * @property {keyof typeof NOTIFICATION_CATEGORY | string} [category] - What the item is about.
  * @property {string} [createdAt] - ISO date string.
  * @property {boolean} [isRead] - Read/unread state.
  * @property {boolean} [read] - Alternate read/unread field.

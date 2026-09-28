@@ -1,0 +1,481 @@
+/* ============================================================
+   Workspace overview — authenticated account/workspace panels
+   Shared by the Student dashboard. Loaded last so these
+   rules win the cascade. Token-driven; light + dark safe. Role
+   accent resolves through --dashboard-accent.
+   ============================================================ */
+
+.student-dashboard {
+  --dashboard-accent: var(--color-role-student);
+}
+
+/* ── Workspace hero (welcome panel) ───────────────────────── */
+.workspace-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(var(--space-5), 3vw, var(--space-7));
+  padding: clamp(var(--space-5), 3vw, var(--space-7));
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  background:
+    radial-gradient(
+      ellipse 68% 140% at 100% -10%,
+      color-mix(in srgb, var(--dashboard-accent) 16%, transparent),
+      transparent 62%
+    ),
+    linear-gradient(135deg, var(--color-surface), var(--color-surface-2));
+  animation: fade-up var(--motion-duration-slow) var(--motion-ease-decelerate) backwards;
+}
+
+.workspace-hero__copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.workspace-hero__eyebrow {
+  margin: 0;
+  color: var(--dashboard-accent);
+  font-size: 0.7rem;
+  font-weight: 750;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.workspace-hero__greeting {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.6vw, 2.05rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--color-text);
+}
+
+.workspace-hero__subtitle {
+  max-width: 48ch;
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+.workspace-hero__context {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.workspace-hero__identity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  flex-shrink: 0;
+  width: 248px;
+  padding: var(--space-5);
+  background: color-mix(in srgb, var(--color-surface) 82%, transparent);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+}
+
+.workspace-hero__avatar {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-full);
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--dashboard-accent);
+  background: color-mix(in srgb, var(--dashboard-accent) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--dashboard-accent) 32%, transparent);
+}
+
+.workspace-hero__identity-name {
+  color: var(--color-text);
+  font-size: 0.94rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.workspace-hero__identity-email {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.workspace-hero__profile-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--space-2);
+  color: var(--dashboard-accent);
+  font-size: 0.8rem;
+  font-weight: 650;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: gap var(--transition-fast), color var(--transition-fast);
+}
+
+.workspace-hero__profile-link:hover {
+  gap: 8px;
+  text-decoration: underline;
+}
+
+.workspace-hero__profile-link:focus-visible {
+  outline: 2px solid var(--dashboard-accent);
+  outline-offset: 3px;
+}
+
+/* ── Workspace overview row (next steps + account) ────────── */
+.workspace-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+  gap: var(--space-5);
+  align-items: stretch;
+}
+
+.workspace-next,
+.workspace-account {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+}
+
+.workspace-next__head,
+.workspace-account__head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  min-height: 60px;
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.workspace-next__title,
+.workspace-account__title {
+  margin: 0;
+  font-size: 0.76rem;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.workspace-next__hint,
+.workspace-account__hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--color-text-soft);
+}
+
+/* ── Next steps tiles ─────────────────────────────────────── */
+.workspace-next__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+  padding: var(--space-5);
+}
+
+.workspace-next__tile {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-surface-2) 62%, transparent);
+  text-decoration: none;
+  transition: border-color var(--transition-fast), background var(--transition-fast),
+    box-shadow var(--transition-smooth), transform var(--transition-smooth);
+}
+
+.workspace-next__tile:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--dashboard-accent) 45%, var(--color-border));
+  background: color-mix(in srgb, var(--color-surface) 30%, transparent);
+  box-shadow: var(--shadow-sm);
+}
+
+.workspace-next__tile:focus-visible {
+  outline: 2px solid var(--dashboard-accent);
+  outline-offset: 2px;
+}
+
+.workspace-next__tile-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  color: var(--dashboard-accent);
+  background: color-mix(in srgb, var(--dashboard-accent) 13%, transparent);
+  border: 1px solid color-mix(in srgb, var(--dashboard-accent) 28%, transparent);
+  transition: transform var(--transition-smooth);
+}
+
+.workspace-next__tile:hover .workspace-next__tile-icon {
+  transform: translateY(-1px) scale(1.05);
+}
+
+.workspace-next__tile-label {
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.workspace-next__tile-helper {
+  color: var(--color-text-muted);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.workspace-next__tile-arrow {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  color: var(--color-text-soft);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity var(--transition-fast), transform var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.workspace-next__tile:hover .workspace-next__tile-arrow,
+.workspace-next__tile:focus-visible .workspace-next__tile-arrow {
+  opacity: 1;
+  transform: none;
+  color: var(--dashboard-accent);
+}
+
+/* ── Account status panel ─────────────────────────────────── */
+.workspace-account__statuses {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding: var(--space-5);
+  list-style: none;
+}
+
+.workspace-account__status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.workspace-account__status-label {
+  color: var(--color-text-soft);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.workspace-account__status-value {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 3px 11px;
+  border-radius: var(--radius-full);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.workspace-account__status-value--muted {
+  color: var(--color-text-muted);
+  background: var(--color-surface-3);
+  border: 1px solid var(--color-border);
+}
+
+.workspace-account__status-value--ok {
+  color: var(--color-success);
+  background: var(--color-success-bg);
+  border: 1px solid color-mix(in srgb, var(--color-success) 30%, var(--color-border));
+}
+
+.workspace-account__status-value--node {
+  min-height: 0;
+  padding: 0;
+  background: none;
+  border: none;
+}
+
+.workspace-account__status-helper {
+  color: var(--color-text-soft);
+  font-size: 0.74rem;
+  line-height: 1.45;
+}
+
+.workspace-account__links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: var(--space-3) var(--space-5) var(--space-5);
+  border-top: 1px solid var(--color-hairline);
+  list-style: none;
+}
+
+.workspace-account__link {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 38px;
+  padding: 7px 10px;
+  border-radius: 10px;
+  color: var(--color-text);
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.workspace-account__link > svg {
+  flex-shrink: 0;
+  color: var(--color-text-soft);
+  transition: color var(--transition-fast);
+}
+
+.workspace-account__link:hover {
+  background: color-mix(in srgb, var(--color-surface-3) 55%, transparent);
+  color: var(--dashboard-accent);
+}
+
+.workspace-account__link:hover > svg {
+  color: var(--dashboard-accent);
+}
+
+.workspace-account__link:focus-visible {
+  outline: 2px solid var(--dashboard-accent);
+  outline-offset: -2px;
+}
+
+.workspace-account__link-arrow {
+  margin-left: auto;
+  opacity: 0;
+  transform: translateX(-3px);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.workspace-account__link:hover .workspace-account__link-arrow {
+  opacity: 1;
+  transform: none;
+}
+
+.workspace-account__link--disabled {
+  cursor: default;
+  color: var(--color-text-muted);
+}
+
+.workspace-account__link--disabled:hover {
+  background: none;
+  color: var(--color-text-muted);
+}
+
+.workspace-account__link--disabled:hover > svg {
+  color: var(--color-text-soft);
+}
+
+.workspace-account__soon {
+  margin-left: auto;
+  padding: 2px 9px;
+  border-radius: var(--radius-full);
+  color: var(--color-text-soft);
+  background: var(--color-surface-3);
+  border: 1px solid var(--color-border);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 1199px) {
+  .workspace-overview {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .workspace-hero__identity {
+    width: 240px;
+  }
+}
+
+@media (max-width: 767px) {
+  .workspace-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .workspace-hero__identity {
+    width: 100%;
+  }
+
+  .workspace-next__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .workspace-next__head,
+  .workspace-account__head {
+    padding: var(--space-4);
+  }
+
+  .workspace-next__grid {
+    padding: var(--space-4);
+  }
+}
+
+@media (max-width: 520px) {
+  .workspace-next__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .workspace-account__statuses {
+    padding: var(--space-4);
+  }
+
+  .workspace-account__links {
+    padding: var(--space-3) var(--space-4) var(--space-4);
+  }
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .workspace-hero,
+  .workspace-next__tile,
+  .workspace-next__tile-icon,
+  .workspace-next__tile-arrow,
+  .workspace-account__link,
+  .workspace-account__link-arrow {
+    transition: none;
+    animation: none;
+  }
+
+  .workspace-hero__profile-link:hover {
+    gap: 6px;
+  }
+}

@@ -1,0 +1,33 @@
+/* Builder controls use builder tokens; rendered forms below use site tokens only. */
+.form-settings, .form-settings__fields, .form-field-editor, .form-settings__future { display: grid; gap: 12px; min-width: 0; }
+.form-settings > label, .form-field-editor > label, .form-settings__future > label { display: grid; gap: 6px; min-width: 0; font-size: .8rem; color: var(--color-text); }
+.form-field-editor { margin: 0; padding: 12px; border: 1px solid var(--color-border); border-radius: 10px; }
+.form-field-editor legend { max-width: 100%; padding: 0 4px; overflow-wrap: anywhere; font-size: .8rem; font-weight: 600; }
+.form-field-editor .form-settings__check { display: flex; align-items: center; gap: 8px; }
+.form-settings__check input { accent-color: var(--color-accent); }
+.form-field-editor__actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.form-field-editor__actions .btn { white-space: normal; }
+.form-settings__future { border: 0; padding: 0; margin: 0; }
+.editor-form-note { font-size: .75rem; color: var(--color-text-muted); line-height: 1.5; margin: 0; }
+.form-settings :is(input, select, textarea) { width: 100%; min-width: 0; box-sizing: border-box; }
+.form-settings input[type='checkbox'] { width: 16px; height: 16px; }
+.form-settings :is(input, select, textarea, button):focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+
+.site-form-block { min-width: 0; }
+.site-form { display: grid; gap: 18px; min-width: 0; margin: 0; font: inherit; color: inherit; }
+.site-form__field { display: grid; gap: 7px; min-width: 0; text-align: left; }
+.site-form__field label { font: inherit; font-weight: 600; color: inherit; overflow-wrap: anywhere; }
+.site-form :is(input, textarea, select) { width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; padding: 12px; font: inherit; color: var(--site-text); background: var(--site-background); border: 1px solid var(--site-muted); border-radius: var(--site-radius); }
+.site-form :is(input, textarea)::placeholder { color: var(--site-muted); opacity: 1; }
+.site-form textarea { resize: vertical; min-height: 100px; }
+.site-form__field--checkbox { grid-template-columns: auto minmax(0, 1fr); align-items: start; }
+.site-form input[type='checkbox'] { width: 20px; height: 20px; padding: 0; margin-top: 3px; accent-color: var(--site-accent); }
+.site-form__error { grid-column: 1 / -1; font-size: .875em; font-weight: 600; margin: 0; color: var(--site-text); border-left: 3px solid currentColor; padding-left: 8px; }
+.site-form [aria-invalid='true'] { border-width: 2px; }
+.site-form__submit { max-width: 100%; min-height: 44px; padding: 12px 22px; white-space: normal; overflow-wrap: anywhere; font: inherit; font-weight: 600; background: var(--site-text); color: var(--site-background); border: 2px solid var(--site-text); border-radius: var(--site-radius); cursor: pointer; }
+.site-form__submit[data-style='outline'] { color: var(--site-text); background: transparent; }
+.site-form__submit:disabled { opacity: .6; cursor: not-allowed; }
+.site-form :is(input, textarea, select, button):focus-visible { outline: 3px solid var(--site-accent); outline-offset: 3px; }
+.site-form__note, .site-form__notice { color: var(--site-muted); font-size: .8em; line-height: 1.6; margin: 0; overflow-wrap: anywhere; text-align: left; }
+.site-form__notice:empty { display: none; }
+.site-form__notice { color: var(--site-text); }

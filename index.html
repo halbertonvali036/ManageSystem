@@ -1,13 +1,13 @@
 <!doctype html>
-<html lang="en">
+<html lang="az">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0e1320" />
+    <meta name="theme-color" content="#050b07" />
     <meta
       name="description"
-      content="Manage your students, teachers, classes and reports in one modern workspace."
+      content="Create, customize, preview and publish your websites in one workspace."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,24 +15,35 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <title>Student Management System</title>
+    <title>SiteBuilder — Website Builder</title>
     <script>
       // Apply the saved theme before first paint to avoid a flash of the
-      // wrong theme. Kept inline so the preference is honoured even before
-      // the React bundle loads.
+      // wrong theme. Dark is the default expression of the neon system; the
+      // visitor's stored choice still wins. Kept inline so the preference is
+      // honoured even before the React bundle loads.
       (function () {
         try {
           var stored = localStorage.getItem('sms.theme')
           var theme =
             stored === 'light' || stored === 'dark'
               ? stored
-              : window.matchMedia &&
-                  window.matchMedia('(prefers-color-scheme: dark)').matches
-                ? 'dark'
-                : 'light'
+              : 'dark'
           document.documentElement.setAttribute('data-theme', theme)
         } catch (error) {
-          document.documentElement.setAttribute('data-theme', 'light')
+          document.documentElement.setAttribute('data-theme', 'dark')
+        }
+      })()
+    </script>
+    <script>
+      // Set the document language before first paint so assistive technology
+      // and the browser use the right locale from the very first frame.
+      (function () {
+        try {
+          var stored = localStorage.getItem('sms.locale')
+          var locale = stored === 'en' || stored === 'az' ? stored : 'az'
+          document.documentElement.setAttribute('lang', locale)
+        } catch (error) {
+          document.documentElement.setAttribute('lang', 'az')
         }
       })()
     </script>

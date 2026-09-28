@@ -4,7 +4,6 @@ import Card from '@/components/common/Card'
 import CourseForm from '@/components/courses/CourseForm'
 import useCourse from '@/hooks/useCourse'
 import useDepartments from '@/hooks/useDepartments'
-import useTeachers from '@/hooks/useTeachers'
 import useUpdateCourse from '@/hooks/useUpdateCourse'
 import { BackendNotConnectedError } from '@/services/httpClient'
 
@@ -12,7 +11,6 @@ function EditCourseContent({ courseId }) {
   const navigate = useNavigate()
   const { course, isLoading, error, refetch } = useCourse(courseId)
   const { departments, isLoading: departmentsLoading } = useDepartments()
-  const { teachers, isLoading: teachersLoading } = useTeachers()
   const { isSubmitting, submitError, fieldErrors, submit } =
     useUpdateCourse(courseId)
 
@@ -82,8 +80,6 @@ function EditCourseContent({ courseId }) {
           serverFieldErrors={fieldErrors}
           departments={departments}
           departmentsLoading={departmentsLoading}
-          teachers={teachers}
-          teachersLoading={teachersLoading}
         />
       </Card>
     </div>

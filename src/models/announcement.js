@@ -12,16 +12,12 @@ export const ANNOUNCEMENT_STATUS_LABELS = Object.freeze({
 
 export const ANNOUNCEMENT_AUDIENCE = Object.freeze({
   ALL: 'all',
-  STUDENTS: 'students',
-  TEACHERS: 'teachers',
   CLASS: 'class',
   COURSE: 'course',
 })
 
 const AUDIENCE_LABELS = {
   [ANNOUNCEMENT_AUDIENCE.ALL]: 'All',
-  [ANNOUNCEMENT_AUDIENCE.STUDENTS]: 'Students',
-  [ANNOUNCEMENT_AUDIENCE.TEACHERS]: 'Teachers',
   [ANNOUNCEMENT_AUDIENCE.CLASS]: 'Specific Class',
   [ANNOUNCEMENT_AUDIENCE.COURSE]: 'Specific Course',
 }

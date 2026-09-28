@@ -1,5 +1,3 @@
-import { formatTeacherName } from '@/models/teacher'
-
 export const DEPARTMENT_STATUS = Object.freeze({
   ACTIVE: 'active',
   INACTIVE: 'inactive',
@@ -14,10 +12,7 @@ const resolveHeadName = (head) => {
   if (typeof head === 'string') {
     return head
   }
-  if (!head) {
-    return ''
-  }
-  return formatTeacherName(head)
+  return head?.fullName ?? head?.name ?? ''
 }
 
 export const formatDepartmentName = (department) => {
@@ -54,6 +49,6 @@ export const formatDepartmentHead = (department) => {
  * @property {string} [name]
  * @property {string} [departmentName]
  * @property {string} [description]
- * @property {string | Object} [headOfDepartment] - Teacher name or object.
+ * @property {string | Object} [headOfDepartment] - Department head name or object.
  * @property {keyof typeof DEPARTMENT_STATUS | string} [status]
  */

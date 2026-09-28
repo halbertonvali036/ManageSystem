@@ -1,7 +1,5 @@
 import { useState } from 'react'
-import useTeachers from '@/hooks/useTeachers'
 import { DEPARTMENT_STATUS_LABELS } from '@/models/department'
-import { formatTeacherName } from '@/models/teacher'
 import {
   toDepartmentFormValues,
   toDepartmentPayload,
@@ -26,7 +24,6 @@ function DepartmentForm({
   submitError,
   serverFieldErrors,
 }) {
-  const { teachers, isLoading: teachersLoading } = useTeachers()
   const [values, setValues] = useState(() => toDepartmentFormValues(initialValues))
   const [clientErrors, setClientErrors] = useState({})
 
@@ -72,11 +69,6 @@ function DepartmentForm({
 
   const inputClass = (field) =>
     `form__input${fieldError(field) ? ' form__input--error' : ''}`
-
-  const relationHint = (loading, available, kind) =>
-    !loading && !available ? (
-      <p className="form__hint">No {kind} available yet.</p>
-    ) : null
 
   return (
     <form className="department-form" onSubmit={handleSubmit} noValidate>
@@ -125,36 +117,6 @@ function DepartmentForm({
           {fieldError('name') ? (
             <p className="form__error">{fieldError('name')}</p>
           ) : null}
-        </div>
-
-        <div className="form__field">
-          <label className="form__label" htmlFor="department-headOfDepartment">
-            Head of Department
-          </label>
-          <select
-            id="department-headOfDepartment"
-            className="form__input form__select"
-            value={values.headOfDepartment}
-            onChange={setField('headOfDepartment')}
-            disabled={isSubmitting || teachersLoading || teachers.length === 0}
-          >
-            <option value="">
-              {teachersLoading
-                ? 'Loading teachers\u2026'
-                : teachers.length === 0
-                  ? 'No teachers available'
-                  : 'Unassigned'}
-            </option>
-            {teachers.map((teacher) => (
-              <option key={teacher.id ?? teacher.teacherId} value={teacher.id ?? teacher.teacherId}>
-                {formatTeacherName(teacher)}
-              </option>
-            ))}
-          </select>
-          {fieldError('headOfDepartment') ? (
-            <p className="form__error">{fieldError('headOfDepartment')}</p>
-          ) : null}
-          {relationHint(teachersLoading, teachers.length > 0, 'teachers')}
         </div>
 
         <div className="form__field">

@@ -1,10 +1,12 @@
 import { Moon, Sun } from 'lucide-react'
 import useTheme from '@/hooks/useTheme'
+import useTranslation from '@/hooks/useTranslation'
 
 function ThemeToggle({ className = '' }) {
   const { theme, toggleTheme } = useTheme()
+  const { t } = useTranslation()
   const isDark = theme === 'dark'
-  const label = isDark ? 'Switch to light theme' : 'Switch to dark theme'
+  const label = isDark ? t('theme.toggleToLight') : t('theme.toggleToDark')
 
   return (
     <button

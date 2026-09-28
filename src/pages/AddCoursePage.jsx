@@ -3,13 +3,11 @@ import Card from '@/components/common/Card'
 import CourseForm from '@/components/courses/CourseForm'
 import useCreateCourse from '@/hooks/useCreateCourse'
 import useDepartments from '@/hooks/useDepartments'
-import useTeachers from '@/hooks/useTeachers'
 
 function AddCoursePage() {
   const navigate = useNavigate()
   const { isSubmitting, submitError, fieldErrors, submit } = useCreateCourse()
   const { departments, isLoading: departmentsLoading } = useDepartments()
-  const { teachers, isLoading: teachersLoading } = useTeachers()
 
   const handleCancel = () => {
     navigate('/courses')
@@ -36,8 +34,6 @@ function AddCoursePage() {
           serverFieldErrors={fieldErrors}
           departments={departments}
           departmentsLoading={departmentsLoading}
-          teachers={teachers}
-          teachersLoading={teachersLoading}
         />
       </Card>
     </div>

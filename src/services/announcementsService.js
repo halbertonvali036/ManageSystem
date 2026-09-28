@@ -2,7 +2,6 @@ import config from '@/config'
 import httpClient, { BackendNotConnectedError } from '@/services/httpClient'
 
 const ANNOUNCEMENTS_PATH = '/announcements'
-const TEACHER_ANNOUNCEMENTS_PATH = '/teacher/announcements'
 const STUDENT_ANNOUNCEMENTS_PATH = '/student/announcements'
 
 const ensureBackendConnection = () => {
@@ -72,16 +71,6 @@ const deleteAnnouncement = async (id) => {
   return response
 }
 
-const getTeacherAnnouncements = async (params = {}) => {
-  if (!config.api.baseUrl) {
-    return []
-  }
-  const response = await httpClient.get(
-    `${TEACHER_ANNOUNCEMENTS_PATH}${buildQuery(params)}`,
-  )
-  return toList(response)
-}
-
 const getStudentAnnouncements = async (params = {}) => {
   if (!config.api.baseUrl) {
     return []
@@ -98,6 +87,5 @@ export default {
   createAnnouncement,
   updateAnnouncement,
   deleteAnnouncement,
-  getTeacherAnnouncements,
   getStudentAnnouncements,
 }

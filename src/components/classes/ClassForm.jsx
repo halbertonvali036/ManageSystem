@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import useSemesters from '@/hooks/useSemesters'
 import { CLASS_STATUS_LABELS } from '@/models/class'
-import { formatTeacherName } from '@/models/teacher'
 import { extractClassPayload, toClassFormValues } from '@/utils/classForm'
 
 const CLASS_CODE_PATTERN = /^[A-Za-z0-9][A-Za-z0-9\s-]*$/
@@ -29,17 +28,6 @@ const toCourseOptions = (courses) =>
     return { value: String(value).trim(), label }
   })
 
-const toTeacherOptions = (teachers) =>
-  teachers.map((teacher) => {
-    const value =
-      teacher?.teacherId ?? teacher?.id ?? (typeof teacher === 'string' ? teacher : '')
-    const label =
-      typeof teacher === 'string'
-        ? teacher
-        : teacher.fullName || formatTeacherName(teacher) || value
-    return { value: String(value).trim(), label }
-  })
-
 const toAcademicYearValue = (academicYear) =>
   academicYear?.name ??
   academicYear?.academicYear ??
@@ -61,19 +49,15 @@ function ClassForm({
   submitError,
   serverFieldErrors,
   courses = [],
-  teachers = [],
   academicYears = [],
   coursesLoading = false,
-  teachersLoading = false,
   academicYearsLoading = false,
 }) {
   const [values, setValues] = useState(() => toClassFormValues(initialValues))
   const [clientErrors, setClientErrors] = useState({})
 
   const courseOptions = toCourseOptions(courses)
-  const teacherOptions = toTeacherOptions(teachers)
   const coursesAvailable = courseOptions.length > 0
-  const teachersAvailable = teacherOptions.length > 0
 
   const academicYearOptions = academicYears.map((academicYear) => ({
     value: String(toAcademicYearValue(academicYear)).trim(),
@@ -148,16 +132,6 @@ function ClassForm({
       semestersAvailable
     ) {
       errors.semester = 'Semester is required.'
-    }
-
-    if (
-      toValidate.teacher &&
-      teachersAvailable &&
-      !teacherOptions.some((option) => option.value === toValidate.teacher)
-    ) {
-      errors.teacher = 'Select a valid teacher.'
-    } else if (!toValidate.teacher && teachersAvailable) {
-      errors.teacher = 'Teacher is required.'
     }
 
     const capacity = toValidate.capacity.trim()
@@ -236,7 +210,6 @@ function ClassForm({
   const ariaInvalid = (field) => (fieldError(field) ? 'true' : 'false')
 
   const courseSelectDisabled = isSubmitting || coursesLoading || !coursesAvailable
-  const teacherSelectDisabled = isSubmitting || teachersLoading || !teachersAvailable
   const academicYearSelectDisabled =
     isSubmitting || academicYearsLoading || !yearsAvailable
   const semesterSelectDisabled =
@@ -354,43 +327,6 @@ function ClassForm({
               </p>
             ) : (
               renderedError('course')
-            )}
-          </div>
-
-          <div className="form__field">
-            <label className="form__label" htmlFor="class-teacher">
-              Teacher <span className="form__required">*</span>
-            </label>
-            <select
-              id="class-teacher"
-              className="form__input form__select"
-              value={values.teacher}
-              onChange={setField('teacher')}
-              onBlur={handleBlur('teacher')}
-              disabled={teacherSelectDisabled}
-              aria-invalid={ariaInvalid('teacher')}
-            >
-              {teachersLoading ? (
-                <option value="">Loading teachers&hellip;</option>
-              ) : teachersAvailable ? (
-                <>
-                  <option value="">Select teacher</option>
-                  {teacherOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </>
-              ) : (
-                <option value="">No teachers available yet</option>
-              )}
-            </select>
-            {!teachersLoading && !teachersAvailable ? (
-              <p className="form__hint">
-                Teacher options will appear here once teacher records exist.
-              </p>
-            ) : (
-              renderedError('teacher')
             )}
           </div>
 

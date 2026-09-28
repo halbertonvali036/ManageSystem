@@ -39,17 +39,6 @@ const toCourseOptions = (courses) =>
     return { value: String(value), label }
   })
 
-const toTeacherOptions = (teachers) =>
-  teachers.map((teacher) => {
-    const value =
-      teacher?.id ?? teacher?.teacherId ?? (typeof teacher === 'string' ? teacher : '')
-    const label =
-      typeof teacher === 'string'
-        ? teacher
-        : teacher.fullName || teacher.name || teacher.teacherId || value
-    return { value: String(value), label }
-  })
-
 function ScheduleEntryForm({
   initialValues = EMPTY_SCHEDULE_ENTRY_FORM_VALUES,
   submitLabel = 'Create Schedule Entry',
@@ -64,8 +53,6 @@ function ScheduleEntryForm({
   classesLoading = false,
   courses = [],
   coursesLoading = false,
-  teachers = [],
-  teachersLoading = false,
 }) {
   const [values, setValues] = useState(() =>
     toScheduleEntryFormValues(initialValues),
@@ -89,14 +76,11 @@ function ScheduleEntryForm({
   const classesAvailable = classOptions.length > 0
   const courseOptions = toCourseOptions(courses)
   const coursesAvailable = courseOptions.length > 0
-  const teacherOptions = toTeacherOptions(teachers)
-  const teachersAvailable = teacherOptions.length > 0
 
   const validate = (toValidate = values) =>
     validateScheduleEntry(toValidate, {
       classOptions,
       courseOptions,
-      teacherOptions,
       yearOptions,
       semesterOptions,
     })
@@ -145,8 +129,6 @@ function ScheduleEntryForm({
     isSubmitting || semestersLoading || !values.academicYearId
   const classSelectDisabled = isSubmitting || classesLoading || !classesAvailable
   const courseSelectDisabled = isSubmitting || coursesLoading || !coursesAvailable
-  const teacherSelectDisabled =
-    isSubmitting || teachersLoading || !teachersAvailable
 
   return (
     <form className="schedule-entry-form" onSubmit={handleSubmit} noValidate>
@@ -322,43 +304,6 @@ function ScheduleEntryForm({
               renderedError('courseId')
             )}
           </div>
-
-          <div className="form__field">
-            <label className="form__label" htmlFor="schedule-teacherId">
-              Teacher <span className="form__required">*</span>
-            </label>
-            <select
-              id="schedule-teacherId"
-              className="form__input form__select"
-              value={values.teacherId}
-              onChange={setField('teacherId')}
-              onBlur={handleBlur('teacherId')}
-              disabled={teacherSelectDisabled}
-              aria-invalid={ariaInvalid('teacherId')}
-            >
-              {teachersLoading ? (
-                <option value="">Loading teachers&hellip;</option>
-              ) : teachersAvailable ? (
-                <>
-                  <option value="">Select teacher</option>
-                  {teacherOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </>
-              ) : (
-                <option value="">No teachers available yet</option>
-              )}
-            </select>
-            {!teachersLoading && !teachersAvailable ? (
-              <p className="form__hint">
-                Teacher options will appear here once teacher records exist.
-              </p>
-            ) : (
-              renderedError('teacherId')
-            )}
-          </div>
         </div>
       </fieldset>
 
@@ -468,7 +413,7 @@ function ScheduleEntryForm({
         </div>
 
         <p className="form__hint schedule-entry-form__conflict-hint">
-          Scheduling conflicts such as a teacher, class or room being booked at
+          Scheduling conflicts such as a class or room being booked at
           the same time are checked by the backend and will be shown above if
           detected.
         </p>

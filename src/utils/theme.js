@@ -2,18 +2,19 @@ export const THEME_STORAGE_KEY = 'sms.theme'
 
 export const THEME_META_SELECTOR = 'meta[name="theme-color"]'
 
-export const THEME_META_LIGHT = '#f5f6fa'
-export const THEME_META_DARK = '#0b101d'
+export const THEME_META_LIGHT = '#f4f7f4'
+export const THEME_META_DARK = '#050b07'
+
+/**
+ * Dark is the design system's default. The OS preference is not consulted:
+ * the neon direction reads best on the dark canvas, and light mode is the
+ * deliberate alternative rather than a fallback. An explicit saved choice
+ * always wins.
+ */
+export const DEFAULT_THEME = 'dark'
 
 export function getSystemTheme() {
-  if (
-    typeof window !== 'undefined' &&
-    window.matchMedia &&
-    window.matchMedia('(prefers-color-scheme: dark)').matches
-  ) {
-    return 'dark'
-  }
-  return 'light'
+  return DEFAULT_THEME
 }
 
 export function readStoredTheme() {
@@ -26,7 +27,7 @@ export function readStoredTheme() {
 }
 
 export function resolveInitialTheme() {
-  return readStoredTheme() ?? getSystemTheme()
+  return readStoredTheme() ?? DEFAULT_THEME
 }
 
 export function applyThemeAttribute(theme) {

@@ -3,7 +3,6 @@ import { FileBarChart2, RotateCcw } from 'lucide-react'
 import useClasses from '@/hooks/useClasses'
 import useCourses from '@/hooks/useCourses'
 import useStudents from '@/hooks/useStudents'
-import useTeachers from '@/hooks/useTeachers'
 import { formatClassName } from '@/models/class'
 import {
   ACADEMIC_YEARS,
@@ -14,7 +13,6 @@ import {
   SEMESTER_OPTIONS,
 } from '@/models/report'
 import { formatStudentName } from '@/models/student'
-import { formatTeacherName } from '@/models/teacher'
 
 const formatCourseOption = (course) =>
   course.name ||
@@ -108,7 +106,6 @@ function ReportFilters({ categoryKey, filters, onChange, onReset, onGenerate, is
   const { students, isLoading: studentsLoading } = useStudents()
   const { classes, isLoading: classesLoading } = useClasses()
   const { courses, isLoading: coursesLoading } = useCourses()
-  const { teachers, isLoading: teachersLoading } = useTeachers()
 
   const appliedFilters = REPORT_CATEGORY_FILTERS[categoryKey] ?? []
   const includes = (filter) => appliedFilters.includes(filter)
@@ -169,16 +166,6 @@ function ReportFilters({ categoryKey, filters, onChange, onReset, onGenerate, is
             onChange={(value) => onChange(REPORT_FILTER_TYPES.COURSE_ID, value)}
             options={buildOptions(courses, formatCourseOption)}
             loading={coursesLoading}
-          />
-        ) : null}
-
-        {includes(REPORT_FILTER_TYPES.TEACHER_ID) ? (
-          <EntitySelect
-            label={REPORT_FILTER_LABELS[REPORT_FILTER_TYPES.TEACHER_ID]}
-            value={filters.teacherId}
-            onChange={(value) => onChange(REPORT_FILTER_TYPES.TEACHER_ID, value)}
-            options={buildOptions(teachers, formatTeacherName)}
-            loading={teachersLoading}
           />
         ) : null}
 

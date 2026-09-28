@@ -6,7 +6,6 @@ import useAcademicYears from '@/hooks/useAcademicYears'
 import useClasses from '@/hooks/useClasses'
 import useCourses from '@/hooks/useCourses'
 import useSchedule from '@/hooks/useSchedule'
-import useTeachers from '@/hooks/useTeachers'
 import useUpdateSchedule from '@/hooks/useUpdateSchedule'
 import { BackendNotConnectedError } from '@/services/httpClient'
 
@@ -18,7 +17,6 @@ function EditScheduleEntryContent({ scheduleId }) {
   const { academicYears, isLoading: academicYearsLoading } = useAcademicYears()
   const { classes, isLoading: classesLoading } = useClasses()
   const { courses, isLoading: coursesLoading } = useCourses()
-  const { teachers, isLoading: teachersLoading } = useTeachers()
 
   const handleCancel = () => {
     navigate(`/schedules/${scheduleId}`)
@@ -95,8 +93,6 @@ function EditScheduleEntryContent({ scheduleId }) {
           classesLoading={classesLoading}
           courses={courses}
           coursesLoading={coursesLoading}
-          teachers={teachers}
-          teachersLoading={teachersLoading}
         />
       </Card>
     </div>

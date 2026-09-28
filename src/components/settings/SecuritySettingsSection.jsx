@@ -1,39 +1,33 @@
-import {
-  Fingerprint,
-  KeyRound,
-  Lock,
-  ShieldCheck,
-} from 'lucide-react'
+import { ArrowRight, ShieldCheck } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import SettingsPlaceholder from '@/components/settings/SettingsPlaceholder'
+import { SECURITY_PATH } from '@/utils/constants'
 
+/**
+ * Entry point to the Account & Security page.
+ *
+ * The real password, verification, session and two-factor surfaces live on
+ * `/security`; this section only points there so the settings screen never
+ * duplicates them.
+ */
 function SecuritySettingsSection() {
   return (
-    <div className="settings-placeholder-stack">
-      <SettingsPlaceholder
-        title="Change password"
-        text="Password changes are not available until the backend API is connected."
-        actionLabel="Change Password"
-        icon={<KeyRound size={16} aria-hidden="true" />}
-      />
-      <SettingsPlaceholder
-        title="Session / security settings"
-        text="Session timeouts and security policies will be configurable when the backend API is connected."
-        actionLabel="Manage Sessions"
-        icon={<ShieldCheck size={16} aria-hidden="true" />}
-      />
-      <SettingsPlaceholder
-        title="Multi-factor authentication (MFA)"
-        text="MFA enrollment will be available when the backend API is connected."
-        actionLabel="Enable MFA"
-        icon={<Lock size={16} aria-hidden="true" />}
-      />
-      <SettingsPlaceholder
-        title="Login / session management"
-        text="Active logins and device management will be available when the backend API is connected."
-        actionLabel="Review Logins"
-        icon={<Fingerprint size={16} aria-hidden="true" />}
-      />
-    </div>
+    <SettingsPlaceholder
+      title="Account &amp; Security"
+      status="Account page"
+      text="Password changes, email verification, active sessions, two-factor setup and security activity for your own account are managed on the Account &amp; Security page."
+      icon={<ShieldCheck size={16} aria-hidden="true" />}
+      action={
+        <Link
+          to={SECURITY_PATH}
+          className="btn btn--primary"
+          aria-label="Open Account &amp; Security"
+        >
+          Open
+          <ArrowRight size={16} aria-hidden="true" />
+        </Link>
+      }
+    />
   )
 }
 

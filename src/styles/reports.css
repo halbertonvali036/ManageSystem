@@ -43,7 +43,7 @@
 }
 
 .report-category--classes {
-  --rc: var(--color-role-teacher);
+  --rc: var(--color-accent-2);
 }
 
 /* Top accent hairline: appears on hover / keyboard focus.    */

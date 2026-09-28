@@ -1,0 +1,57 @@
+/* Builder chrome only: never apply neon interaction treatment to Preview. */
+.editor { --builder-motion: 160ms; --builder-ease: cubic-bezier(.2, .7, .2, 1); }
+.editor-topbar__save { transition: color 160ms ease, background-color 160ms ease; }
+.editor-panel { transition: transform 200ms var(--builder-ease), opacity var(--builder-motion) ease; }
+.editor-dialog { animation: builder-surface-in 180ms var(--builder-ease, ease-out) both; }
+.editor-dialog__backdrop, .editor-scrim { animation: fade-in 140ms ease-out both; }
+.editor-panel__section, .editor [role='tabpanel'] { animation: builder-surface-in 160ms var(--builder-ease) both; }
+.editor-panel__section:focus-within, .editor [role='tabpanel']:focus-within { animation: none; }
+.editor-dialog-layer .editor-section-library__item,
+.editor :is(.editor-icon-button, .editor-topbar__icon-button, [role='tab'], .editor-block-list__item, .editor-section-list__item, .editor-input, .editor-section-library__item) {
+  transition: background-color var(--builder-motion) ease, border-color var(--builder-motion) ease, color var(--builder-motion) ease, transform var(--builder-motion) var(--builder-ease);
+}
+.editor [role='menu'], .editor [role='listbox'], .editor [role='tooltip'], .editor details[open] > :not(summary) { animation: builder-surface-in 140ms ease-out; }
+.editor-canvas-scroll:not([data-preview='true']) :is(.editor-canvas__block, .editor-canvas__section) { transition: outline-color 140ms ease, opacity 140ms ease; }
+.editor-canvas-scroll:not([data-preview='true']) :is(.editor-canvas__block:hover, .editor-canvas__section:hover) { outline: 1px solid color-mix(in srgb, #39ff14 45%, transparent); outline-offset: -1px; }
+.editor-canvas-scroll:not([data-preview='true']) :is(.editor-canvas__block.is-selected, .editor-canvas__section.is-selected) { outline: 2px solid color-mix(in srgb, #39ff14 70%, transparent); outline-offset: -2px; }
+.editor-canvas-scroll:not([data-preview]) .editor-canvas__section.is-selected .editor-canvas__section-band:not(:focus-visible) { outline: none; }
+.editor-canvas__section-badge { left: 36px; }
+.editor-canvas__insert { transition: opacity 140ms ease, transform 140ms ease; }
+.editor-canvas__insert-line { background: #39ff14; }
+.editor-canvas__badge, .editor-canvas__section-badge { animation: builder-surface-in 120ms ease-out; }
+.editor-canvas-scroll:not([data-preview='true']) :is(.editor-canvas__block, .editor-canvas__section-band):focus-visible,
+.canvas-drag-handle:focus-visible { outline: 2px solid #39ff14; outline-offset: 3px; }
+.canvas-drag-handle { position: absolute; right: 4px; top: 4px; z-index: 5; display: grid; place-items: center; width: 26px; height: 26px; padding: 0; border: 1px solid var(--color-border); border-radius: 5px; background: var(--color-surface); color: var(--color-text); cursor: grab; opacity: 0; transition: opacity 140ms ease; }
+.editor-canvas__section > .canvas-drag-handle { right: auto; left: 4px; }
+.editor-canvas__section:hover > .canvas-drag-handle, .editor-canvas__block-slot:hover > .canvas-drag-handle, .canvas-drag-handle:focus-visible { opacity: 1; }
+.canvas-drag-handle:active { cursor: grabbing; }
+.canvas-drag-handle:focus-visible { transition: none; }
+.canvas-drag-handle::after { content: attr(data-tooltip); position: absolute; top: 100%; right: 0; min-width: 150px; padding: 6px 8px; border-radius: 5px; background: var(--color-surface); color: var(--color-text); font-size: 11px; pointer-events: none; visibility: hidden; opacity: 0; transform: translateY(-2px); transition: opacity 140ms ease, transform 140ms ease; }
+.editor-canvas__section > .canvas-drag-handle::after { left: 0; right: auto; }
+.canvas-drag-handle:is(:hover, :focus-visible)::after { visibility: visible; opacity: 1; transform: translateY(4px); }
+.editor-canvas-scroll:not([data-preview]) [data-dragging='true'] { opacity: .5; }
+.editor-canvas-scroll:not([data-preview]) [data-drop-position]::after { content: ''; position: absolute; left: 0; right: 0; height: 2px; z-index: 6; background: #39ff14; pointer-events: none; animation: fade-in 100ms ease-out; }
+.editor-canvas-scroll:not([data-preview]) [data-drop-position='before']::after { top: 0; }
+.editor-canvas-scroll:not([data-preview]) [data-drop-position='after']::after { bottom: 0; }
+.motion-settings { display: grid; gap: 10px; }
+.motion-settings input[type='range'] { accent-color: var(--color-accent); }
+@keyframes builder-surface-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@media (hover: hover) {
+  .editor-section-library__item:hover { transform: translateY(-2px); }
+}
+@media (max-width: 768px) {
+  .editor { --builder-motion: 120ms; }
+  .editor-panel { transition-duration: 160ms; }
+  /* Closed drawers cannot leave invisible controls in the keyboard order. */
+  .editor-panel:not(.is-open) { visibility: hidden; }
+  .canvas-drag-handle { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .editor *, .editor *::before, .editor *::after,
+  .editor-dialog-layer *, .editor-dialog-layer *::before, .editor-dialog-layer *::after {
+    animation: none !important; transition: none !important; scroll-behavior: auto !important;
+  }
+}
+
+.editor-canvas__block-slot { position: relative; }
+.editor-canvas-scroll:not([data-preview]) .editor-canvas__block-slot:focus-within > .canvas-drag-handle { opacity: 1; }

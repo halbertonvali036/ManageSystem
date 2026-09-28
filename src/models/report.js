@@ -17,7 +17,6 @@ export const REPORT_FILTER_TYPES = Object.freeze({
   STUDENT_ID: 'studentId',
   CLASS_ID: 'classId',
   COURSE_ID: 'courseId',
-  TEACHER_ID: 'teacherId',
   STATUS: 'status',
   ACADEMIC_YEAR: 'academicYear',
   SEMESTER: 'semester',
@@ -29,7 +28,6 @@ export const REPORT_FILTER_LABELS = Object.freeze({
   [REPORT_FILTER_TYPES.STUDENT_ID]: 'Student',
   [REPORT_FILTER_TYPES.CLASS_ID]: 'Class',
   [REPORT_FILTER_TYPES.COURSE_ID]: 'Course',
-  [REPORT_FILTER_TYPES.TEACHER_ID]: 'Teacher',
   [REPORT_FILTER_TYPES.STATUS]: 'Status',
   [REPORT_FILTER_TYPES.ACADEMIC_YEAR]: 'Academic year',
   [REPORT_FILTER_TYPES.SEMESTER]: 'Semester',
@@ -57,14 +55,12 @@ export const REPORT_CATEGORIES = Object.freeze([
   {
     key: REPORT_TYPES.COURSES,
     title: 'Course Reports',
-    description:
-      'Course details, assigned teachers and course status information.',
+    description: 'Course details, enrolment counts and course status information.',
   },
   {
     key: REPORT_TYPES.CLASSES,
     title: 'Class Reports',
-    description:
-      'Class rosters, assigned teachers and class status information.',
+    description: 'Class rosters, capacity and class status information.',
   },
 ])
 
@@ -101,7 +97,6 @@ export const REPORT_CATEGORY_FILTERS = Object.freeze({
     REPORT_FILTER_TYPES.DATE_FROM,
     REPORT_FILTER_TYPES.DATE_TO,
     REPORT_FILTER_TYPES.COURSE_ID,
-    REPORT_FILTER_TYPES.TEACHER_ID,
     REPORT_FILTER_TYPES.STATUS,
     REPORT_FILTER_TYPES.ACADEMIC_YEAR,
     REPORT_FILTER_TYPES.SEMESTER,
@@ -110,7 +105,6 @@ export const REPORT_CATEGORY_FILTERS = Object.freeze({
     REPORT_FILTER_TYPES.DATE_FROM,
     REPORT_FILTER_TYPES.DATE_TO,
     REPORT_FILTER_TYPES.CLASS_ID,
-    REPORT_FILTER_TYPES.TEACHER_ID,
     REPORT_FILTER_TYPES.STATUS,
     REPORT_FILTER_TYPES.ACADEMIC_YEAR,
     REPORT_FILTER_TYPES.SEMESTER,
@@ -143,7 +137,6 @@ export const createReportFilters = () => ({
   [REPORT_FILTER_TYPES.STUDENT_ID]: '',
   [REPORT_FILTER_TYPES.CLASS_ID]: '',
   [REPORT_FILTER_TYPES.COURSE_ID]: '',
-  [REPORT_FILTER_TYPES.TEACHER_ID]: '',
   [REPORT_FILTER_TYPES.STATUS]: '',
   [REPORT_FILTER_TYPES.ACADEMIC_YEAR]: '',
   [REPORT_FILTER_TYPES.SEMESTER]: '',

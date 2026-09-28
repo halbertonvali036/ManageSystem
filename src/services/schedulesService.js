@@ -26,9 +26,6 @@ const buildQuery = (params = {}) => {
   if (params.courseId) {
     query.set('courseId', params.courseId)
   }
-  if (params.teacherId) {
-    query.set('teacherId', params.teacherId)
-  }
   if (params.dayOfWeek) {
     query.set('dayOfWeek', params.dayOfWeek)
   }

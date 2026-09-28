@@ -14,7 +14,6 @@ import useCourses from '@/hooks/useCourses'
 import useDeleteSchedule from '@/hooks/useDeleteSchedule'
 import useSchedules from '@/hooks/useSchedules'
 import useSemesters from '@/hooks/useSemesters'
-import useTeachers from '@/hooks/useTeachers'
 import {
   formatScheduleClassName,
   formatScheduleCourseName,
@@ -71,7 +70,6 @@ function SchedulesPage() {
   const [academicYearFilter, setAcademicYearFilter] = useState('all')
   const [semesterFilter, setSemesterFilter] = useState('all')
   const [classFilter, setClassFilter] = useState('all')
-  const [teacherFilter, setTeacherFilter] = useState('all')
   const [courseFilter, setCourseFilter] = useState('all')
   const [dayFilter, setDayFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
@@ -79,7 +77,6 @@ function SchedulesPage() {
   const { academicYears, isLoading: academicYearsLoading } = useAcademicYears()
   const { classes, isLoading: classesLoading } = useClasses()
   const { courses, isLoading: coursesLoading } = useCourses()
-  const { teachers, isLoading: teachersLoading } = useTeachers()
 
   const selectedAcademicYear = academicYears.find(
     (academicYear) => String(academicYear.id) === academicYearFilter,
@@ -93,7 +90,6 @@ function SchedulesPage() {
     ...(academicYearFilter !== 'all' ? { academicYearId: academicYearFilter } : {}),
     ...(semesterFilter !== 'all' ? { semesterId: semesterFilter } : {}),
     ...(classFilter !== 'all' ? { classId: classFilter } : {}),
-    ...(teacherFilter !== 'all' ? { teacherId: teacherFilter } : {}),
     ...(courseFilter !== 'all' ? { courseId: courseFilter } : {}),
     ...(dayFilter !== 'all' ? { dayOfWeek: dayFilter } : {}),
     ...(statusFilter !== 'all' ? { status: statusFilter } : {}),
@@ -114,7 +110,6 @@ function SchedulesPage() {
     setAcademicYearFilter('all')
     setSemesterFilter('all')
     setClassFilter('all')
-    setTeacherFilter('all')
     setCourseFilter('all')
     setDayFilter('all')
     setStatusFilter('all')
@@ -175,7 +170,7 @@ function SchedulesPage() {
     <div className="schedules-page schedule-page">
       <p className="page-description">
         Manage the master timetable for every academic year, semester and
-        class. Filter by period, class, teacher, course or day, and switch
+        class. Filter by period, class, course or day, and switch
         between the weekly timetable and list views.
       </p>
 
@@ -194,10 +189,6 @@ function SchedulesPage() {
         classesLoading={classesLoading}
         classId={classFilter}
         onClassChange={setClassFilter}
-        teachers={teachers}
-        teachersLoading={teachersLoading}
-        teacherId={teacherFilter}
-        onTeacherChange={setTeacherFilter}
         courses={courses}
         coursesLoading={coursesLoading}
         courseId={courseFilter}

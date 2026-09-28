@@ -3,7 +3,6 @@ export const EMPTY_SCHEDULE_ENTRY_FORM_VALUES = {
   semesterId: '',
   classId: '',
   courseId: '',
-  teacherId: '',
   dayOfWeek: '',
   startTime: '',
   endTime: '',
@@ -44,11 +43,6 @@ export const toScheduleEntryFormValues = (entry = EMPTY_SCHEDULE_ENTRY_FORM_VALU
     resolveId(entry.course, 'courseId') ??
     (typeof entry.course === 'string' ? entry.course : '') ??
     '',
-  teacherId:
-    entry.teacherId ??
-    resolveId(entry.teacher, 'teacherId') ??
-    (typeof entry.teacher === 'string' ? entry.teacher : '') ??
-    '',
   dayOfWeek: entry.dayOfWeek ?? '',
   startTime: entry.startTime ?? '',
   endTime: entry.endTime ?? '',
@@ -64,7 +58,6 @@ export const validateScheduleEntry = (
   {
     classOptions = [],
     courseOptions = [],
-    teacherOptions = [],
     yearOptions = [],
     semesterOptions = [],
   } = {},
@@ -73,7 +66,6 @@ export const validateScheduleEntry = (
 
   const classesAvailable = classOptions.length > 0
   const coursesAvailable = courseOptions.length > 0
-  const teachersAvailable = teacherOptions.length > 0
   const yearsAvailable = yearOptions.length > 0
   const semestersAvailable = semesterOptions.length > 0
 
@@ -121,16 +113,6 @@ export const validateScheduleEntry = (
     errors.courseId = 'Course is required.'
   }
 
-  if (
-    values.teacherId &&
-    teachersAvailable &&
-    !optionHasValue(teacherOptions, values.teacherId)
-  ) {
-    errors.teacherId = 'Select a valid teacher.'
-  } else if (!values.teacherId && teachersAvailable) {
-    errors.teacherId = 'Teacher is required.'
-  }
-
   if (!values.dayOfWeek) {
     errors.dayOfWeek = 'Day of week is required.'
   }
@@ -161,7 +143,6 @@ export const extractScheduleEntryPayload = (values) => ({
   semesterId: values.semesterId,
   classId: values.classId,
   courseId: values.courseId,
-  teacherId: values.teacherId,
   dayOfWeek: values.dayOfWeek,
   startTime: values.startTime,
   endTime: values.endTime,

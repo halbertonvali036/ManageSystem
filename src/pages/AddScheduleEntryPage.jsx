@@ -5,7 +5,6 @@ import useAcademicYears from '@/hooks/useAcademicYears'
 import useClasses from '@/hooks/useClasses'
 import useCourses from '@/hooks/useCourses'
 import useCreateSchedule from '@/hooks/useCreateSchedule'
-import useTeachers from '@/hooks/useTeachers'
 
 function AddScheduleEntryPage() {
   const navigate = useNavigate()
@@ -13,7 +12,6 @@ function AddScheduleEntryPage() {
   const { academicYears, isLoading: academicYearsLoading } = useAcademicYears()
   const { classes, isLoading: classesLoading } = useClasses()
   const { courses, isLoading: coursesLoading } = useCourses()
-  const { teachers, isLoading: teachersLoading } = useTeachers()
 
   const handleCancel = () => {
     navigate('/schedules')
@@ -29,8 +27,8 @@ function AddScheduleEntryPage() {
   return (
     <div className="page">
       <p className="page-description">
-        Add a new timetable entry. Select the academic period, class, course
-        and teacher from existing records, then set the day, times and room.
+        Add a new timetable entry. Select the academic period, class and course
+        from existing records, then set the day, times and room.
       </p>
       <Card title="Add Schedule Entry">
         <ScheduleEntryForm
@@ -45,8 +43,6 @@ function AddScheduleEntryPage() {
           classesLoading={classesLoading}
           courses={courses}
           coursesLoading={coursesLoading}
-          teachers={teachers}
-          teachersLoading={teachersLoading}
         />
       </Card>
     </div>

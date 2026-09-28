@@ -8,30 +8,68 @@
   --landing-ink: var(--color-text);
   --landing-muted: var(--color-text-muted);
   --landing-accent: var(--auth-accent);
-  --landing-hero-glow: rgba(104, 115, 204, 0.11);
-  --landing-hero-from: #fbfcff;
-  --landing-hero-to: #f5f7fc;
-  --landing-dots: rgba(83, 95, 157, 0.11);
-  --landing-line: #aeb8d6;
-  --landing-connector: rgba(79, 70, 229, 0.5);
-  --landing-node: #6974c1;
-  --landing-line-core: #f7f8fc;
+  /*
+   * --landing-hero-glow, --landing-hero-from and --landing-hero-to are kept for
+   * backwards compatibility only. The hero no longer reads them — it overrides
+   * all three in its own rule below. These values now reach only the product
+   * visual, the mobile band and the phone mockup, which still use this accent.
+   * To recolour the hero, change the .landing-hero rule, never these.
+   */
+  --landing-hero-glow: var(--color-accent-soft);
+  --landing-hero-from: var(--color-bg);
+  --landing-hero-to: var(--color-surface);
+  --landing-dots: var(--color-border);
+  --landing-line: var(--color-border-strong);
+  --landing-connector: color-mix(in srgb, var(--color-accent) 40%, transparent);
+  --landing-node: var(--color-accent);
+  --landing-line-core: var(--color-bg);
   min-height: 100vh;
   overflow: clip;
   color: var(--landing-ink);
   background: var(--auth-page-bg);
 }
 
+/* ------------------------------------------------------------
+   Hero background only.
+
+   --landing-hero-glow is shared with the product visual, the mobile
+   band and the phone mockup, so it cannot be recoloured without
+   repainting those sections too. The hero therefore owns its own
+   pair of glow tokens, and the hero gradient resolves straight from
+   the site surface tokens. That keeps the hero background in the
+   same green-black neon palette as the rest of the product, with no
+   blue or purple tint, and changes nothing else on the page.
+   ------------------------------------------------------------ */
+.landing-hero {
+  --landing-hero-glow: var(--color-accent-soft);
+  --landing-hero-glow-far: var(--color-accent-soft);
+  --landing-hero-from: var(--color-bg);
+  --landing-hero-to: var(--color-bg);
+}
+
 [data-theme='dark'] .landing-page {
-  --landing-accent: #8b95ff;
-  --landing-hero-glow: rgba(129, 140, 248, 0.14);
-  --landing-hero-from: #121c36;
-  --landing-hero-to: #0b101d;
-  --landing-dots: rgba(148, 163, 184, 0.18);
-  --landing-line: rgba(148, 163, 184, 0.4);
-  --landing-connector: rgba(129, 140, 248, 0.55);
-  --landing-node: #818cf8;
-  --landing-line-core: #0b101d;
+  --landing-accent: var(--color-accent);
+  /* Hero-override only — see the note in the base .landing-page block. */
+  --landing-hero-glow: var(--color-accent-soft);
+  --landing-hero-from: var(--color-surface);
+  --landing-hero-to: var(--color-bg);
+  --landing-dots: var(--color-border);
+  --landing-line: var(--color-border-strong);
+  --landing-connector: color-mix(in srgb, var(--color-accent) 40%, transparent);
+  --landing-node: var(--color-accent);
+  --landing-line-core: var(--color-bg);
+}
+
+/*
+ * Dark theme: the hero is the same green-black the rest of the product uses
+ * (#050b07 background, #08110b field), lifted a touch at the top, with a very
+ * subtle neon-green wash rather than the old navy/indigo.
+ */
+[data-theme='dark'] .landing-hero {
+  --landing-hero-glow: rgba(57, 255, 20, 0.075);
+  --landing-hero-glow-far: rgba(45, 212, 167, 0.05);
+  --landing-hero-from: #08110b;
+  --landing-hero-to: #050b07;
 }
 
 /* ============================================================
@@ -77,13 +115,38 @@
 
 .public-brand .brand-logo {
   border-radius: 10px;
-  box-shadow: 0 4px 11px rgba(79, 70, 229, 0.2);
+  box-shadow: 0 4px 11px rgba(57, 255, 20, 0.1);
 }
 
 .public-nav {
   display: flex;
   align-items: center;
   gap: 28px;
+}
+
+.public-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.public-nav__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.public-nav__link:hover {
+  color: var(--landing-accent);
+}
+
+.public-nav__link svg {
+  color: var(--color-text-soft);
 }
 
 .public-nav__home,
@@ -100,7 +163,13 @@
   color: var(--landing-accent);
 }
 
-.public-nav__sign-in {
+.landing-mobile__note a,
+.landing-hero__tertiary {
+  text-decoration-thickness: 1px;
+}
+
+/* Create account is the primary header action; Sign In stays secondary. */
+.public-nav__register {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -117,12 +186,12 @@
   transition: transform var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
 }
 
-.public-nav__sign-in:hover {
+.public-nav__register:hover {
   transform: translateY(-1px);
   box-shadow: var(--shadow-cta);
 }
 
-.public-nav__register {
+.public-nav__sign-in {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -138,7 +207,7 @@
   transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
 }
 
-.public-nav__register:hover {
+.public-nav__sign-in:hover {
   color: var(--landing-accent);
   background: var(--color-surface-2);
   border-color: var(--color-border-strong);
@@ -166,7 +235,7 @@
   padding: clamp(56px, 7.5vw, 92px) 32px clamp(72px, 8vw, 116px);
   background:
     radial-gradient(ellipse 58% 58% at 84% 14%, var(--landing-hero-glow), transparent 70%),
-    radial-gradient(ellipse 40% 46% at 6% 88%, var(--landing-hero-glow), transparent 68%),
+    radial-gradient(ellipse 40% 46% at 6% 88%, var(--landing-hero-glow-far), transparent 68%),
     linear-gradient(180deg, var(--landing-hero-from) 0%, var(--landing-hero-to) 100%);
 }
 
@@ -311,6 +380,24 @@
   text-overflow: ellipsis;
 }
 
+.landing-hero__tertiary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--color-text-muted);
+  font-size: 0.84rem;
+  font-weight: 620;
+  text-decoration: underline;
+  text-decoration-color: var(--color-border-strong);
+  text-underline-offset: 4px;
+  transition: color var(--transition-fast), text-decoration-color var(--transition-fast);
+}
+
+.landing-hero__tertiary:hover {
+  color: var(--color-accent);
+  text-decoration-color: var(--color-accent);
+}
+
 /* ============================================================
    Product visual — roles connected to shared academic flows
    ============================================================ */
@@ -449,15 +536,15 @@
   box-shadow: var(--shadow-lg);
 }
 
-.landing-visual__role--admin { top: 15%; left: 0; }
-.landing-visual__role--teacher { top: 15%; right: 0; }
-.landing-visual__role--student {
+.landing-visual__role--accent { top: 15%; left: 0; }
+.landing-visual__role--lime { top: 15%; right: 0; }
+.landing-visual__role--amber {
   bottom: 5%;
   left: 50%;
   transform: translateX(-50%);
 }
 
-.landing-visual__role--student:hover {
+.landing-visual__role--amber:hover {
   transform: translate(-50%, -2px);
 }
 
@@ -472,12 +559,12 @@
   background: var(--color-accent-soft);
 }
 
-.landing-visual__role--teacher .landing-visual__role-icon {
-  color: var(--color-role-teacher);
+.landing-visual__role--lime .landing-visual__role-icon {
+  color: var(--color-success);
   background: var(--color-success-bg);
 }
 
-.landing-visual__role--student .landing-visual__role-icon {
+.landing-visual__role--amber .landing-visual__role-icon {
   color: var(--color-role-student);
   background: var(--color-warning-bg);
 }
@@ -513,6 +600,7 @@
   width: min(100% - 64px, 1160px);
   margin-inline: auto;
   padding-block: clamp(72px, 8vw, 108px);
+  scroll-margin-top: 96px;
 }
 
 .landing-section__heading {
@@ -600,11 +688,15 @@
   padding: 34px 30px;
 }
 
-.landing-role-card--teacher {
+.landing-role-card--lime {
   --landing-role-wash: var(--color-success-bg);
 }
 
-.landing-role-card--student {
+.landing-role-card--accent {
+  --landing-role-wash: var(--color-accent-bg);
+}
+
+.landing-role-card--amber {
   --landing-role-wash: var(--color-warning-bg);
 }
 
@@ -646,13 +738,19 @@
   background: var(--color-accent-soft);
 }
 
-.landing-role-card--teacher .landing-role-card__icon {
-  color: var(--color-role-teacher);
+.landing-role-card--lime .landing-role-card__icon {
+  color: var(--color-success);
   border-color: var(--color-success-bg);
   background: var(--color-success-bg);
 }
 
-.landing-role-card--student .landing-role-card__icon {
+.landing-role-card--accent .landing-role-card__icon {
+  color: var(--color-role-admin);
+  border-color: var(--color-primary-bg);
+  background: var(--color-accent-bg);
+}
+
+.landing-role-card--amber .landing-role-card__icon {
   color: var(--color-role-student);
   border-color: var(--color-warning-bg);
   background: var(--color-warning-bg);
@@ -766,13 +864,13 @@
   transition: transform var(--transition-fast);
 }
 
-.landing-feature--teacher .landing-feature__icon {
-  color: var(--color-role-teacher);
+.landing-feature--lime .landing-feature__icon {
+  color: var(--color-success);
   border-color: var(--color-success-bg);
   background: var(--color-success-bg);
 }
 
-.landing-feature--student .landing-feature__icon {
+.landing-feature--amber .landing-feature__icon {
   color: var(--color-role-student);
   border-color: var(--color-warning-bg);
   background: var(--color-warning-bg);
@@ -853,9 +951,567 @@
   font-size: 1.18rem;
 }
 
-/* Wide cards (Reports, Announcements) */
+/* Wide cards (Reports, Announcements, Notifications, Account & security) */
 .landing-feature--half {
   grid-column: span 6;
+}
+
+/* ============================================================
+   Pricing — provisional plans, no prices, no purchase
+   ============================================================ */
+.landing-pricing {
+  padding-top: clamp(56px, 6vw, 80px);
+}
+
+.landing-pricing__disclosure {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 760px;
+  margin: 0 auto 34px;
+  padding: 14px 18px;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: 14px;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.landing-pricing__disclosure svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: var(--color-accent);
+}
+
+.landing-pricing__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.landing-plan {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 28px 26px 26px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.landing-plan:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.landing-plan--featured {
+  background: linear-gradient(180deg, var(--color-primary-soft) 0%, var(--color-surface) 120%);
+  border-color: var(--color-primary-bg);
+  box-shadow: var(--shadow-md);
+}
+
+.landing-plan__badge {
+  align-self: flex-start;
+  margin-bottom: 14px;
+  padding: 5px 12px;
+  color: var(--color-primary);
+  background: var(--color-accent-soft);
+  border: 1px solid var(--color-primary-bg);
+  border-radius: var(--radius-full);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.landing-plan__name {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1.24rem;
+  font-weight: 730;
+  letter-spacing: -0.025em;
+}
+
+.landing-plan__audience {
+  min-height: 3.2em;
+  margin: 8px 0 0;
+  color: var(--landing-muted);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.landing-plan__price {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 20px 0 0;
+  padding: 16px 0;
+  border-top: 1px solid var(--color-hairline);
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+.landing-plan__price-label {
+  color: var(--color-text);
+  font-size: 1.05rem;
+  font-weight: 680;
+  letter-spacing: -0.02em;
+}
+
+.landing-plan__status {
+  color: var(--color-text-soft);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.landing-plan__highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0 26px;
+  padding: 0;
+  list-style: none;
+}
+
+.landing-plan__highlights li {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: var(--landing-muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.landing-plan__highlights svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: var(--color-success);
+}
+
+.landing-plan__cta {
+  width: 100%;
+  margin-top: auto;
+}
+
+/* Availability list — what exists today, without inventing entitlements */
+.landing-pricing__availability {
+  margin-top: 34px;
+  padding: 26px 28px 24px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-hairline);
+  border-radius: 20px;
+}
+
+.landing-pricing__availability-title {
+  margin: 0 0 16px;
+  color: var(--color-text);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.landing-pricing__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 10px 22px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.landing-pricing__item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+}
+
+.landing-pricing__item svg {
+  flex: 0 0 auto;
+  color: var(--color-success);
+}
+
+.landing-pricing__item-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.landing-pricing__item-status {
+  margin-left: auto;
+  flex: 0 0 auto;
+  color: var(--color-text-soft);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.landing-pricing__item[data-status='coming-soon'] svg,
+.landing-pricing__item[data-status='coming-soon'] .landing-pricing__item-status {
+  color: var(--color-warning);
+}
+
+.landing-pricing__footnote {
+  margin: 18px 0 0;
+  color: var(--color-text-soft);
+  font-size: 0.78rem;
+}
+
+/* ============================================================
+   Mobile app promotion — abstract phone, honest availability
+   ============================================================ */
+.landing-mobile {
+  position: relative;
+  overflow: hidden;
+}
+
+.landing-mobile::before {
+  position: absolute;
+  inset: 8% -10% auto;
+  block-size: 420px;
+  z-index: 0;
+  background: radial-gradient(ellipse 60% 60% at 78% 40%, var(--landing-hero-glow), transparent 70%);
+  content: '';
+  pointer-events: none;
+}
+
+.landing-mobile__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  align-items: center;
+  gap: clamp(36px, 5vw, 68px);
+}
+
+.landing-mobile h2 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  font-weight: 720;
+  letter-spacing: -0.04em;
+  line-height: 1.14;
+}
+
+.landing-mobile__summary {
+  max-width: 52ch;
+  margin: 16px 0 0;
+  color: var(--landing-muted);
+  font-size: 0.96rem;
+  line-height: 1.7;
+}
+
+.landing-mobile__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 22px 0 0;
+  padding: 8px 16px;
+  color: var(--color-primary);
+  background: var(--color-accent-soft);
+  border: 1px solid var(--color-primary-bg);
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.landing-mobile__capabilities {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 22px;
+  margin: 30px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.landing-mobile__capabilities li {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  min-width: 0;
+}
+
+.landing-mobile__capability-icon {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  place-items: center;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border: 1px solid var(--color-primary-bg);
+  border-radius: 9px;
+}
+
+.landing-mobile__capability-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.landing-mobile__capability-title {
+  color: var(--color-text);
+  font-size: 0.86rem;
+  font-weight: 680;
+}
+
+.landing-mobile__capability-text {
+  color: var(--landing-muted);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+/* Phone frame — pure CSS, no screenshot */
+.landing-phone {
+  position: relative;
+  width: min(100%, 320px);
+  margin-inline: auto;
+  isolation: isolate;
+}
+
+.landing-phone__glow {
+  position: absolute;
+  inset: 14% 6%;
+  z-index: -1;
+  border-radius: 50%;
+  background: var(--landing-hero-glow);
+  filter: blur(46px);
+}
+
+.landing-phone__frame {
+  position: relative;
+  padding: 12px;
+  background: linear-gradient(160deg, var(--color-surface), var(--color-surface-2));
+  border: 1px solid var(--color-border-strong);
+  border-radius: 40px;
+  box-shadow: var(--shadow-lg);
+}
+
+.landing-phone__notch {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  z-index: 2;
+  width: 74px;
+  height: 5px;
+  transform: translateX(-50%);
+  background: var(--color-border-strong);
+  border-radius: var(--radius-full);
+  opacity: 0.7;
+}
+
+.landing-phone__screen {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 34px 14px 18px;
+  background: var(--auth-page-bg);
+  border: 1px solid var(--color-hairline);
+  border-radius: 30px;
+}
+
+.landing-phone__status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.landing-phone__status-bar {
+  width: 38px;
+  height: 5px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+.landing-phone__status-icons {
+  display: flex;
+  gap: 4px;
+}
+
+.landing-phone__status-icons i {
+  width: 5px;
+  height: 5px;
+  background: var(--color-border);
+  border-radius: 50%;
+}
+
+.landing-phone__header {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 6px 2px 2px;
+}
+
+.landing-phone__greeting {
+  width: 46px;
+  height: 5px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+.landing-phone__title {
+  color: var(--color-text);
+  font-size: 1.05rem;
+  font-weight: 760;
+  letter-spacing: -0.03em;
+}
+
+.landing-phone__subtitle {
+  width: 62%;
+  height: 5px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  opacity: 0.8;
+}
+
+.landing-phone__card {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 13px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-hairline);
+  border-radius: 16px;
+  box-shadow: var(--shadow-xs);
+}
+
+.landing-phone__card--schedule {
+  gap: 11px;
+}
+
+.landing-phone__card-label {
+  color: var(--color-text-soft);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.landing-phone__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.landing-phone__chip {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 auto;
+  background: var(--color-accent-soft);
+  border-radius: 8px;
+}
+
+.landing-phone__chip--muted {
+  background: var(--color-surface-3);
+}
+
+.landing-phone__line {
+  display: block;
+  width: 58%;
+  height: 6px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+.landing-phone__line--wide {
+  width: 100%;
+}
+
+.landing-phone__line--short {
+  width: 72%;
+}
+
+.landing-phone__card--alert,
+.landing-phone__card--qr {
+  flex-direction: row;
+  align-items: center;
+  gap: 9px;
+}
+
+.landing-phone__alert-icon {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  place-items: center;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border-radius: 8px;
+}
+
+.landing-phone__pill {
+  margin-left: auto;
+  padding: 3px 8px;
+  color: var(--color-text-soft);
+  background: var(--color-surface-3);
+  border-radius: var(--radius-full);
+  font-size: 0.55rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* Reserved download slot — deliberately unavailable */
+.landing-mobile__download {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 26px auto 0;
+  padding: 18px 20px;
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: 16px;
+  text-align: center;
+}
+
+.landing-mobile__download-label {
+  color: var(--color-text);
+  font-size: 0.86rem;
+  font-weight: 680;
+}
+
+.landing-mobile__download-note {
+  color: var(--color-text-soft);
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+.landing-mobile__download-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 8px;
+  padding: 8px 16px;
+  color: var(--color-text-soft);
+  background: var(--color-surface-3);
+  border-radius: var(--radius-full);
+  font-size: 0.74rem;
+  font-weight: 650;
+  cursor: not-allowed;
+}
+
+.landing-mobile__note {
+  margin: 18px 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.landing-mobile__note a {
+  color: var(--color-accent);
+  font-weight: 620;
+  text-underline-offset: 3px;
 }
 
 /* ============================================================
@@ -883,7 +1539,7 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 90% at 88% 12%, rgba(129, 140, 248, 0.2), transparent 65%),
+    radial-gradient(ellipse 70% 90% at 88% 12%, var(--color-accent-soft), transparent 65%),
     radial-gradient(circle, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
   background-size: auto, 30px 30px;
   pointer-events: none;
@@ -895,7 +1551,7 @@
 
 .landing-final-cta .landing-eyebrow {
   margin-bottom: 10px;
-  color: #c6ccef;
+  color: #c4dec9;
 }
 
 .landing-final-cta h2 {
@@ -908,7 +1564,7 @@
 .landing-final-cta__content > p:last-child {
   max-width: 58ch;
   margin: 10px 0 0;
-  color: rgba(241, 244, 255, 0.74);
+  color: rgba(233, 246, 237, 0.74);
   font-size: 0.88rem;
   line-height: 1.6;
 }
@@ -923,7 +1579,7 @@
 .landing-button--light {
   min-height: 50px;
   padding: 0 24px;
-  color: #293354;
+  color: #14291b;
   background: #fff;
   box-shadow: 0 5px 14px rgba(4, 9, 25, 0.16);
 }
@@ -944,7 +1600,7 @@
 .landing-button--ghost-on-dark {
   min-height: 50px;
   padding: 0 18px;
-  color: rgba(241, 244, 255, 0.82);
+  color: rgba(233, 246, 237, 0.82);
   background: transparent;
   border-color: rgba(255, 255, 255, 0.22);
   font-size: 0.86rem;
@@ -960,14 +1616,23 @@
    Footer
    ============================================================ */
 .public-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 22px;
   width: min(100% - 64px, 1240px);
-  min-height: 88px;
-  margin-inline: auto;
+  margin: 0 auto;
+  padding: 56px 0 28px;
   border-top: 1px solid var(--color-border);
+}
+
+.public-footer__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
+  gap: 40px;
+}
+
+.public-footer__brand {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .public-brand--footer {
@@ -975,8 +1640,55 @@
 }
 
 .public-footer__caption {
+  max-width: 40ch;
+  margin: 0;
   color: var(--color-text-soft);
-  font-size: 0.76rem;
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.public-footer__columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.public-footer__column h2 {
+  margin: 0 0 12px;
+  color: var(--color-text);
+  font-size: 0.74rem;
+  font-weight: 720;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.public-footer__column ul {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.public-footer__column .public-footer__link {
+  font-size: 0.82rem;
+}
+
+.public-footer__base {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-hairline);
+}
+
+.public-footer__note {
+  color: var(--color-text-soft);
+  font-size: 0.74rem;
 }
 
 /* ============================================================
@@ -1000,6 +1712,18 @@
     width: min(100%, 520px);
     justify-self: center;
   }
+
+  .landing-mobile__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .landing-mobile__copy {
+    max-width: 640px;
+  }
+
+  .landing-phone {
+    width: min(100%, 300px);
+  }
 }
 
 @media (max-width: 900px) {
@@ -1009,6 +1733,16 @@
 
   .landing-role-card--lead {
     grid-row: auto;
+  }
+
+  .landing-pricing__grid {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 560px;
+    margin-inline: auto;
+  }
+
+  .landing-plan__audience {
+    min-height: 0;
   }
 }
 
@@ -1022,6 +1756,14 @@
   .landing-feature--lead,
   .landing-feature--tall {
     min-height: 0;
+  }
+
+  .public-nav__links {
+    display: none;
+  }
+
+  .public-footer__inner {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -1049,10 +1791,6 @@
 
   .public-nav {
     gap: 14px;
-  }
-
-  .public-nav__home {
-    font-size: 0.8rem;
   }
 
   .public-nav__sign-in {
@@ -1140,9 +1878,9 @@
     border-radius: 12px;
   }
 
-  .landing-visual__role--admin { top: 11%; left: 0; }
-  .landing-visual__role--teacher { top: 11%; right: 0; }
-  .landing-visual__role--student { bottom: 4%; }
+.landing-visual__role--accent { top: 11%; left: 0; }
+.landing-visual__role--lime { top: 11%; right: 0; }
+.landing-visual__role--amber { bottom: 4%; }
 
   .landing-visual__role-icon {
     width: 27px;
@@ -1215,15 +1953,42 @@
   }
 
   .public-footer {
-    min-height: 78px;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 10px 16px;
-    padding-block: 16px;
+    padding: 40px 0 24px;
   }
 
-  .public-footer__caption {
-    display: none;
+  .public-footer__columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 18px;
+  }
+
+  .public-footer__base {
+    margin-top: 30px;
+  }
+
+  .landing-pricing__disclosure {
+    padding: 12px 15px;
+    font-size: 0.76rem;
+  }
+
+  .landing-pricing__availability {
+    padding: 22px 20px;
+  }
+
+  .landing-pricing__list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .landing-pricing__item-label {
+    white-space: normal;
+  }
+
+  .landing-mobile__capabilities {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .landing-mobile__status {
+    font-size: 0.74rem;
   }
 }
 
@@ -1233,16 +1998,18 @@
     font-size: 0.72rem;
   }
 
+  /* Two-row header: brand on top, actions underneath. Nothing is dropped. */
   .public-header__inner {
+    flex-wrap: wrap;
+    row-gap: 8px;
     gap: 8px;
+    padding-block: 8px;
   }
 
   .public-nav {
+    width: 100%;
+    justify-content: flex-end;
     gap: 7px;
-  }
-
-  .public-nav__home {
-    display: none;
   }
 
   .public-nav__register {
@@ -1261,6 +2028,39 @@
   .landing-final-cta__actions .landing-button {
     width: 100%;
   }
+
+  .public-footer__columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .landing-hero__tertiary {
+    min-height: 36px;
+  }
+
+  .landing-plan {
+    padding: 24px 20px 22px;
+  }
+
+  .landing-phone {
+    width: min(100%, 264px);
+  }
+
+  .landing-phone__frame {
+    border-radius: 34px;
+  }
+
+  .landing-phone__screen {
+    padding: 30px 12px 16px;
+    border-radius: 26px;
+  }
+
+  .landing-mobile__download {
+    padding: 16px;
+  }
+
+  .landing-section {
+    scroll-margin-top: 132px;
+  }
 }
 
 /* ============================================================
@@ -1268,6 +2068,7 @@
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   .public-nav__home,
+  .public-nav__link,
   .public-nav__register,
   .public-nav__sign-in,
   .landing-button,
@@ -1276,11 +2077,11 @@
   .landing-role-card::before,
   .landing-feature,
   .landing-feature__icon,
+  .landing-plan,
   .landing-visual__role {
     transition: none;
   }
 
-  .public-nav__sign-in:hover,
   .public-nav__register:hover,
   .landing-button--primary:hover,
   .landing-button--light:hover,
@@ -1288,7 +2089,35 @@
   .landing-button--secondary:hover,
   .landing-role-card:hover,
   .landing-feature:hover,
+  .landing-plan:hover,
   .landing-visual__role:hover {
     transform: none;
   }
+}
+/* Phase 14: consistent green-black product stage in either UI theme. */
+.landing-page .landing-hero {
+  --landing-muted: #adbdaf;
+  --landing-dots: #7e9c78;
+  background: radial-gradient(ellipse 52% 64% at 78% 42%, #39ff140a, transparent 72%), #071009;
+  color: #eef5ed;
+}
+.landing-hero h1 { color: #eef5ed; }
+.landing-hero .landing-eyebrow, .landing-hero__accent { color: #39ff14; }
+.landing-hero > .ambient-visual { --ambient-color: #8eae87; }
+.landing-hero::before { display: none; }
+.landing-hero .landing-button--primary { background: #39ff14; color: #10200c; box-shadow: 0 4px 20px #39ff1414; }
+.landing-hero .landing-button--secondary { background: #142019; color: #e2ece0; border-color: #bad9b526; }
+.landing-hero .landing-hero__tertiary { color: #b6c6b5; }
+.landing-hero__flowline { color: #a4b89f; }
+.landing-hero__inner { gap: clamp(32px, 4vw, 60px); }
+.landing-hero > .ambient-visual { opacity: .42; }
+.landing-page .public-brand .brand-logo {
+  color: #39ff14;
+  background: #122719;
+  border: 1px solid #39ff142e;
+  box-shadow: 0 4px 14px #39ff140a;
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+  .landing-hero__inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; }
+  .landing-hero h1 { font-size: clamp(2.7rem, 4.6vw, 3.4rem); }
 }

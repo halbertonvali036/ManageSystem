@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import ThemeContext from '@/context/ThemeContext'
 import {
   applyThemeAttribute,
+  DEFAULT_THEME,
   persistTheme,
   readAppliedTheme,
   readStoredTheme,
@@ -11,28 +12,12 @@ import {
 const ANIM_CLASS = 'theme-anim'
 const ANIM_DURATION = 360
 
-function useSystemThemePreference() {
-  const [prefersDark, setPrefersDark] = useState(
-    () => window.matchMedia('(prefers-color-scheme: dark)').matches,
-  )
-
-  useEffect(() => {
-    const media = window.matchMedia('(prefers-color-scheme: dark)')
-    const onChange = (event) => setPrefersDark(event.matches)
-    media.addEventListener('change', onChange)
-    return () => media.removeEventListener('change', onChange)
-  }, [])
-
-  return prefersDark ? 'dark' : 'light'
-}
-
 function ThemeProvider({ children }) {
-  // The user's explicit choice ("light" | "dark"), or null while no choice
-  // has been saved yet (in which case the OS preference wins).
+  // The user's explicit choice ("light" | "dark"), or null while no choice has
+  // been saved yet — in which case the product default (dark) applies.
   const [explicitTheme, setExplicitTheme] = useState(() => readStoredTheme())
-  const systemTheme = useSystemThemePreference()
 
-  const theme = explicitTheme ?? systemTheme
+  const theme = explicitTheme ?? DEFAULT_THEME
 
   const apply = useCallback((nextTheme) => {
     applyThemeAttribute(nextTheme)

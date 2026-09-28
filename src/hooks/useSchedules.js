@@ -8,7 +8,6 @@ function useSchedules(filters = {}) {
     semesterId,
     classId,
     courseId,
-    teacherId,
     dayOfWeek,
     status,
   } = filters
@@ -26,7 +25,6 @@ function useSchedules(filters = {}) {
         semesterId,
         classId,
         courseId,
-        teacherId,
         dayOfWeek,
         status,
       })
@@ -57,7 +55,6 @@ function useSchedules(filters = {}) {
     semesterId,
     classId,
     courseId,
-    teacherId,
     dayOfWeek,
     status,
   ])
@@ -72,7 +69,6 @@ function useSchedules(filters = {}) {
         semesterId,
         classId,
         courseId,
-        teacherId,
         dayOfWeek,
         status,
       })
@@ -88,7 +84,6 @@ function useSchedules(filters = {}) {
     semesterId,
     classId,
     courseId,
-    teacherId,
     dayOfWeek,
     status,
   ])

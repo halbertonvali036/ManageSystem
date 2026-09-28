@@ -17,9 +17,9 @@
 }
 
 .admin-dashboard .dashboard-chip--admin {
-  color: #4338ca;
-  background: rgba(99, 102, 241, 0.12);
-  border: 1px solid rgba(99, 102, 241, 0.28);
+  color: var(--color-accent-contrast);
+  background: var(--color-accent-soft);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 28%, transparent);
 }
 
 .dashboard-chip__link {
@@ -154,15 +154,15 @@
   gap: var(--space-4);
   min-height: 112px;
   padding: var(--space-5);
-  border-color: #e7eaf1;
+  border-color: var(--color-border);
   border-radius: 14px;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.035);
+  box-shadow: var(--shadow-xs);
 }
 
 .admin-dashboard .stat-card-link:hover .stat-card {
   transform: translateY(-2px);
-  border-color: #cfd5e2;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.075);
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-md);
 }
 
 .admin-dashboard .stat-card__icon {
@@ -173,23 +173,23 @@
 }
 
 .admin-dashboard .stat-card__icon--primary {
-  color: #4c53b8;
-  background: #eef0ff;
+  color: var(--color-accent-contrast);
+  background: var(--color-accent-soft);
 }
 
 .admin-dashboard .stat-card__icon--success {
-  color: #168263;
-  background: #e8f6f1;
+  color: var(--color-success);
+  background: var(--color-success-bg);
 }
 
 .admin-dashboard .stat-card__icon--warning {
-  color: #a96d12;
-  background: #fff4df;
+  color: var(--color-warning);
+  background: var(--color-warning-bg);
 }
 
 .admin-dashboard .stat-card__icon--danger {
-  color: #b84e56;
-  background: #fcedee;
+  color: var(--color-danger);
+  background: var(--color-danger-bg);
 }
 
 .admin-dashboard .stat-card__value {
@@ -212,21 +212,21 @@
 
 .admin-dashboard .card {
   min-width: 0;
-  border-color: #e7eaf1;
+  border-color: var(--color-border);
   border-radius: 14px;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.035);
+  box-shadow: var(--shadow-xs);
 }
 
 .admin-dashboard .card:hover {
   transform: translateY(-1px);
-  border-color: #d5dae5;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.065);
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-md);
 }
 
 .admin-dashboard .card__header {
   min-height: 60px;
   padding: var(--space-4) var(--space-5);
-  background: #fcfcfe;
+  background: var(--color-surface-2);
 }
 
 .admin-dashboard .card__title {
@@ -277,9 +277,9 @@
 .admin-dashboard .widget-empty {
   gap: var(--space-1);
   padding: var(--space-5) var(--space-4);
-  border-color: #e1e5ee;
+  border-color: var(--color-border);
   border-radius: 10px;
-  background: #fafbfc;
+  background: var(--color-surface-2);
 }
 
 .admin-dashboard .widget-empty--compact {
@@ -309,7 +309,7 @@
 
 .admin-dashboard .attendance-bar__track {
   height: 8px;
-  background: #eef0f4;
+  background: var(--color-surface-3);
 }
 
 .admin-dashboard .attendance-actions,
@@ -324,7 +324,7 @@
 
 .admin-dashboard .reports-quick__link:hover {
   padding-inline: var(--space-2);
-  background: #f8f9fc;
+  background: var(--color-surface-3);
 }
 
 .admin-dashboard .reports-quick__description {
