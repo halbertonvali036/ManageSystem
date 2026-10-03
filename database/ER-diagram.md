@@ -116,3 +116,68 @@ erDiagram
 - `PK` = primary key, `FK` = foreign key, `UK` = unique value.
 - `enrollments` links students and classes (many-to-many).
 - `classes.academic_year` and `classes.semester` are plain text by design.
+
+# ER diagram (website builder part)
+
+Run `schema-website-builder.sql` after `schema.sql`. The editor document
+(sections, blocks, form definitions, motion, theme) is stored as JSON in
+`site_drafts.document`.
+
+```mermaid
+erDiagram
+    users ||--o{ websites : "owns"
+    site_templates ||--o{ websites : "starts from"
+    websites ||--|| site_drafts : "current draft"
+    websites ||--o{ site_publications : "published as"
+    websites ||--o{ site_media : "has"
+    websites ||--o{ site_domains : "served at"
+    site_domains ||--o{ domain_dns_records : "requires"
+    websites ||--o{ form_submissions : "receives"
+    websites ||--o{ site_form_settings : "configures"
+
+    websites {
+        bigint id PK
+        bigint owner_id FK
+        bigint template_id FK
+        string name
+        string slug UK
+        enum publication_status
+        string published_url
+    }
+    site_drafts {
+        bigint website_id PK
+        jsonb document
+        int version
+    }
+    site_publications {
+        bigint id PK
+        bigint website_id FK
+        jsonb snapshot
+        timestamp published_at
+    }
+    site_media {
+        bigint id PK
+        bigint website_id FK
+        string file_name
+        string storage_key UK
+    }
+    site_domains {
+        bigint id PK
+        bigint website_id FK
+        string hostname UK
+        enum status
+        enum ssl_status
+    }
+    domain_dns_records {
+        bigint id PK
+        bigint domain_id FK
+        enum record_type
+        string value
+    }
+    form_submissions {
+        bigint id PK
+        bigint website_id FK
+        string form_id
+        jsonb payload
+    }
+```
