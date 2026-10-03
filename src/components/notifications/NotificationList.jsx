@@ -53,7 +53,7 @@ function NotificationEmpty({ message, compact = false, isAvailable = true }) {
       <p className="widget-empty__text">
         {message ??
           (isAvailable
-            ? 'When your institution publishes an announcement, or your schedule, attendance, assessment or grade changes, it appears here.'
+            ? 'Website, publishing, domain and account updates appear here.'
             : 'This account has no notification service attached yet, so no records are shown. Nothing is being held back locally.')}
       </p>
     </div>

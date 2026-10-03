@@ -63,7 +63,7 @@ function SecurityActivityCard({ events }) {
                   <Icon size={17} />
                 </span>
                 <div className="activity-item__body">
-                  <p className="activity-item__label">{getSecurityEventLabel(type)}</p>
+                  <p className="activity-item__label">{copy(getSecurityEventLabel(type))}</p>
                   <p className="activity-item__meta">
                     {[
                       event.device ?? null,

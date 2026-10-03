@@ -61,14 +61,14 @@ function BillingPaymentMethods({ paymentMethods, canManageBilling }) {
                 </span>
                 <div className="payment-item__identity">
                   <p className="payment-item__label">
-                    {label ?? UNAVAILABLE_LABEL}
+                    {label ?? copy(UNAVAILABLE_LABEL)}
                     {method.isDefault ? (
                       <span className="payment-item__badge">{t('accountPolish.default')}</span>
                     ) : null}
                   </p>
                   <p className="payment-item__meta">
-                    {typeLabel ? `${typeLabel} · ` : ''}
-                    {expiry ? `Expires ${expiry}` : copy('Expiry not reported')}
+                    {typeLabel ? `${copy(typeLabel)} · ` : ''}
+                    {expiry ? t('accountPolish.expiresOn', { date: expiry }) : copy('Expiry not reported')}
                   </p>
                 </div>
                 <span className="payment-item__actions">

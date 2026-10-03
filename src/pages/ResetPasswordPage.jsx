@@ -82,9 +82,9 @@ function ResetPasswordPage() {
       <div className="auth-card anim-scale-in">
         <div className="auth-card__head">
           <p className="auth-card__eyebrow anim-fade-up anim-delay-1">Account recovery</p>
-          <h2 className="auth-card__title anim-fade-up anim-delay-1">
+          <h1 className="auth-card__title anim-fade-up anim-delay-1">
             Reset password
-          </h2>
+          </h1>
           <p className="auth-card__subtitle anim-fade-up anim-delay-2">
             We could not process your request.
           </p>
@@ -174,9 +174,9 @@ function ResetPasswordPage() {
       <div className="auth-card anim-scale-in">
         <div className="auth-card__head">
           <p className="auth-card__eyebrow anim-fade-up anim-delay-1">Account recovery</p>
-          <h2 className="auth-card__title anim-fade-up anim-delay-1">
+          <h1 className="auth-card__title anim-fade-up anim-delay-1">
             Password reset
-          </h2>
+          </h1>
           <p className="auth-card__subtitle anim-fade-up anim-delay-2">
             Please sign in with your new password.
           </p>
@@ -206,9 +206,9 @@ function ResetPasswordPage() {
     <div className="auth-card anim-scale-in">
       <div className="auth-card__head">
         <p className="auth-card__eyebrow anim-fade-up anim-delay-1">Account recovery</p>
-        <h2 className="auth-card__title anim-fade-up anim-delay-1">
+        <h1 className="auth-card__title anim-fade-up anim-delay-1">
           Set a new password
-        </h2>
+        </h1>
         <p className="auth-card__subtitle anim-fade-up anim-delay-2">
           Choose a strong password you have not used before.
         </p>

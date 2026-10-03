@@ -14,9 +14,18 @@ export const isValidDate = (value) => {
   return !Number.isNaN(date.getTime())
 }
 
+export const isValidUrl = (value) => {
+  try {
+    const url = new URL(value)
+    return url.protocol === 'http:' || url.protocol === 'https:'
+  } catch {
+    return false
+  }
+}
+
 export const isFutureDate = (value) => {
   const date = new Date(`${value}T00:00:00`)
   return date.getTime() > Date.now()
 }
 
-export default { isValidEmail, isValidPhone, isValidDate, isFutureDate }
+export default { isValidEmail, isValidPhone, isValidDate, isValidUrl, isFutureDate }

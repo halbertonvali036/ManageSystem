@@ -1,0 +1,192 @@
+/* Premium feature panel for the landing hero. The decorative layers are marked
+   aria-hidden in the markup and hold no text. Motion is CSS-only; the drifting
+   lights and points come from the shared AmbientParticles field mounted inside
+   .hero-panel__ambient, so the hero keeps a single ambient engine. */
+
+.hero-panel {
+  --panel-base: #071310;
+  --panel-base-2: #0b1f17;
+  --panel-edge: rgba(127, 224, 172, .2);
+  --panel-rule: rgba(127, 224, 172, .14);
+  --panel-ink: #eaf6ee;
+  --panel-muted: #b9d2c2;
+  --panel-soft: #86a893;
+  --panel-mint: #7fe0ac;
+  --panel-accent: #39ff14;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin-top: clamp(26px, 3vw, 38px);
+  padding: clamp(18px, 2.1vw, 26px);
+  border: 1px solid var(--panel-edge);
+  border-radius: 18px;
+  background:
+    radial-gradient(120% 100% at 8% 0%, #12452c 0%, transparent 58%),
+    linear-gradient(158deg, var(--panel-base-2), var(--panel-base) 62%);
+  box-shadow: 0 26px 54px -26px #000c, 0 1px 0 #d8ffe81f inset;
+}
+
+.hero-panel__ambient {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.hero-panel__ambient .ambient-particles { opacity: .5; }
+
+/* Lattice echoes the sidebar mesh so both surfaces read as one system. */
+.hero-panel__mesh {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(90deg, rgba(127, 224, 172, .07) 1px, transparent 1px),
+    linear-gradient(rgba(127, 224, 172, .07) 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: radial-gradient(120% 100% at 20% 0%, #000 0%, transparent 72%);
+}
+
+.hero-panel__ribbon {
+  position: absolute;
+  left: -25%;
+  width: 150%;
+  height: 62%;
+  border-radius: 50%;
+  filter: blur(26px);
+  animation: hero-panel-ribbon 74s ease-in-out infinite alternate;
+}
+.hero-panel__ribbon--back {
+  top: -34%;
+  opacity: .5;
+  background: linear-gradient(90deg, transparent, #1c6b3f 42%, #2b8f52 58%, transparent);
+}
+.hero-panel__ribbon--front {
+  bottom: -40%;
+  opacity: .26;
+  background: linear-gradient(90deg, transparent, #39ff14 46%, #7fe0ac 62%, transparent);
+  animation-duration: 96s;
+  animation-direction: alternate-reverse;
+}
+
+.hero-panel__bloom {
+  position: absolute;
+  top: -30%;
+  right: -18%;
+  width: 62%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(57, 255, 20, .17), transparent 66%);
+  animation: hero-panel-bloom 58s ease-in-out infinite alternate;
+}
+
+@keyframes hero-panel-ribbon {
+  from { transform: translate3d(-6%, 0, 0) rotate(-4deg); }
+  to { transform: translate3d(6%, 0, 0) rotate(4deg); }
+}
+@keyframes hero-panel-bloom {
+  from { transform: scale(.92); opacity: .75; }
+  to { transform: scale(1.08); opacity: 1; }
+}
+
+.hero-panel__content { position: relative; z-index: 1; display: grid; gap: 14px; }
+
+.hero-panel__head { display: flex; align-items: flex-start; gap: 12px; }
+.hero-panel__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--panel-edge);
+  border-radius: 11px;
+  background: linear-gradient(150deg, #1b5c39, #0d2c1e);
+  color: var(--panel-accent);
+  box-shadow: 0 8px 20px -8px #39ff1455;
+}
+.hero-panel__headings { display: grid; gap: 5px; min-width: 0; }
+.hero-panel__title {
+  margin: 0;
+  font-size: clamp(1.02rem, 1.5vw, 1.16rem);
+  font-weight: 700;
+  letter-spacing: -.015em;
+  color: var(--panel-ink);
+}
+.hero-panel__status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  font-size: .76rem;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--panel-mint);
+}
+.hero-panel__pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--panel-accent);
+  animation: hero-panel-pulse 2.6s ease-out infinite;
+}
+@keyframes hero-panel-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(57, 255, 20, .45); }
+  70%, 100% { box-shadow: 0 0 0 9px rgba(57, 255, 20, 0); }
+}
+
+.hero-panel__description { margin: 0; font-size: .9rem; line-height: 1.62; color: var(--panel-muted); }
+
+/* One card per step: the row grid keeps the labels aligned and the numbers
+   tabular so the sequence reads as an ordered flow. */
+.hero-panel__features { display: grid; gap: 8px; margin: 2px 0 0; padding: 0; list-style: none; }
+.hero-panel__feature {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 12px;
+  border: 1px solid var(--panel-rule);
+  border-radius: 11px;
+  background: linear-gradient(150deg, rgba(23, 43, 31, .82), rgba(10, 26, 19, .72));
+  box-shadow: 0 1px 0 #d8ffe814 inset;
+}
+.hero-panel__feature-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 27px;
+  height: 27px;
+  border: 1px solid var(--panel-rule);
+  border-radius: 8px;
+  background: #10281d;
+  color: var(--panel-mint);
+}
+.hero-panel__feature-label { flex: 1; min-width: 0; font-size: .875rem; font-weight: 620; color: var(--panel-ink); }
+.hero-panel__feature-step {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  font-variant-numeric: tabular-nums;
+  color: var(--panel-soft);
+}
+
+/* The publish row is the payoff, so it carries the neon edge. */
+.hero-panel__feature:last-child { border-color: rgba(57, 255, 20, .3); }
+.hero-panel__feature:last-child .hero-panel__feature-icon {
+  border-color: rgba(57, 255, 20, .28);
+  background: #14331f;
+  color: var(--panel-accent);
+}
+
+@media (max-width: 480px) {
+  .hero-panel { padding: 16px; border-radius: 15px; }
+  .hero-panel__feature { padding: 9px 10px; }
+  .hero-panel__feature-label { font-size: .82rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-panel__ribbon,
+  .hero-panel__bloom,
+  .hero-panel__pulse { animation: none; }
+  .hero-panel__pulse { box-shadow: none; }
+}

@@ -1,0 +1,205 @@
+/* Account content only: the shared navigation and provider flows stay independent. */
+.premium-account {
+  --account-surface: #fff;
+  --account-raised: #f4f9f6;
+  --account-edge: #d8e6de;
+  --account-accent: #16794c;
+  --account-wash: #d8eee166;
+  --account-depth: 0 14px 32px -24px #224e3940;
+  --account-positive: #216444;
+  --account-positive-bg: #e7f3ec;
+  --account-pending: #805d21;
+  --account-pending-bg: #faf3e5;
+  min-width: 0;
+}
+[data-theme='dark'] .premium-account {
+  --account-surface: #0f2118;
+  --account-raised: #162e21;
+  --account-edge: #8fceab2b;
+  --account-accent: #a7e2bb;
+  --account-wash: #2f7a4a38;
+  --account-depth: 0 14px 32px -24px #0009;
+  --account-positive: #a7e2bb;
+  --account-positive-bg: #1b3b2b;
+  --account-pending: #e0c78e;
+  --account-pending-bg: #332e21;
+}
+.premium-account :is(.billing-page, .account-security-page, .account-page, .support-page) { gap: 28px; }
+.premium-account :is(.billing-section, .account-security-section, .card) {
+  min-width: 0;
+  background: var(--account-surface);
+  border-color: var(--account-edge);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--account-depth);
+}
+.premium-account :is(.billing-section__header, .account-security-section__header) {
+  background: transparent;
+  border-color: var(--account-edge);
+  padding: 26px;
+  flex-wrap: wrap;
+}
+.premium-account :is(.billing-section__heading, .account-security-section__heading) { flex: 1 1 200px; }
+.premium-account :is(.billing-section__body, .account-security-section__body) { padding: 26px; gap: 20px; }
+.premium-account :is(.billing-section__description, .account-security-section__description) { margin-top: 8px; line-height: 1.7; }
+.premium-account :is(.billing-section__eyebrow, .account-security-section__eyebrow, .plan-card__eyebrow) { color: var(--account-accent); line-height: 1.5; }
+.premium-account :is(.billing-section__icon, .account-security-section__icon, .security-item__icon, .qr-login-point__icon, .activity-item__icon, .session-item__icon, .payment-item__icon) {
+  background: var(--account-raised); color: var(--account-accent); border-color: var(--account-edge); box-shadow: none;
+}
+.premium-account :is(.plan-summary, .account-summary, .profile-summary) {
+  background: radial-gradient(ellipse at 100% 0%, var(--account-wash), transparent 65%), var(--account-surface);
+}
+.premium-account .plan-summary { border-top: 2px solid var(--account-accent); }
+.premium-account .plan-summary > .billing-section__header { padding: clamp(24px, 3vw, 36px); }
+.premium-account .plan-summary .billing-section__title { font-size: clamp(1.5rem, 2.5vw, 2rem); letter-spacing: -.035em; }
+.premium-account .plan-summary__fields { gap: 24px; }
+.premium-account .plan-summary__field { gap: 10px; }
+.premium-account :is(.plan-summary__label, .plan-summary__hint, .plan-summary__aside-label, .account-summary__label, .account-summary__hint) { color: var(--color-text-muted); }
+.premium-account .plan-summary__aside { padding: 22px; background: var(--account-raised); border-color: var(--account-edge); box-shadow: none; }
+.premium-account .plan-summary__aside-note { line-height: 1.7; }
+.premium-account .plans-section { background: transparent; border-color: transparent; box-shadow: none; border-radius: 0; }
+.premium-account .plans-section > .billing-section__header { padding: 8px 0 24px; border: 0; }
+.premium-account .plans-section > .billing-section__body { padding: 0; }
+.premium-account .plans-grid { gap: 18px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.premium-account .plan-card { min-width: 0; background: var(--account-surface); border-color: var(--account-edge); border-radius: var(--radius-lg); box-shadow: none; }
+.premium-account .plan-card--recommended { border-color: var(--account-accent); }
+.premium-account .plan-card--current { background: var(--account-raised); border-color: var(--color-accent); }
+.premium-account .plan-card__name { font-size: 1.35rem; }
+.premium-account .plan-card__amount { font-variant-numeric: tabular-nums; }
+.premium-account .plan-card__amount--pending { font-size: 1rem; line-height: 1.5; color: var(--color-text-muted); }
+.premium-account .plan-card__price { min-height: 64px; border-color: var(--account-edge); }
+.premium-account .plan-card__feature-icon { color: var(--account-accent); background: var(--account-raised); }
+.premium-account .plan-card__feature--excluded .plan-card__feature-icon { color: var(--color-text-muted); }
+.premium-account .plan-card__footer { margin-top: auto; border-color: var(--account-edge); }
+.premium-account .cycle-toggle__option--selected { color: var(--color-primary-contrast, #fff); }
+[data-theme='dark'] .premium-account .cycle-toggle__option--selected { color: #08200f; }
+.premium-account :is(.plan-card__badge--recommended, .plan-card__saving) { color: var(--account-accent); background: var(--account-raised); border-color: var(--account-edge); }
+.premium-account .billing-columns { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+.premium-account .billing-columns .billing-section { box-shadow: none; }
+.premium-account :is(.billing-notice, .account-security-notice) { background: var(--account-raised); border-color: var(--account-edge); line-height: 1.75; }
+.premium-account :is(.billing-notice__icon, .account-security-notice__icon) { color: var(--account-accent); }
+.premium-account :is(.billing-notice--pending, .account-security-notice--pending) { border-left: 3px solid var(--account-pending); }
+.premium-account :is(.payment-section__empty, .invoices-section__empty, .security-empty) { padding: 30px 22px; background: var(--account-raised); border: 1px dashed var(--account-edge); border-radius: 12px; }
+.premium-account :is(.table-state__text, .security-empty__text) { line-height: 1.75; }
+.premium-account :is(.session-item, .payment-item, .connected-account, .twofactor-step, .security-item) { background: var(--account-raised); border-color: var(--account-edge); box-shadow: none; }
+.premium-account :is(.account-summary__avatar, .account-profile__avatar) { color: var(--account-accent); background: var(--account-raised); border: 1px solid var(--account-edge); box-shadow: none; }
+.premium-account :is(.account-summary__name, .account-summary__email, .verification-section__value, .session-item__meta, .payment-item__meta, .connected-account__meta) { overflow-wrap: anywhere; }
+.premium-account :is(.session-item__identity, .payment-item__identity, .activity-item__body) { min-width: 0; }
+.premium-account :is(.session-item__meta, .activity-item__detail, .connected-account__hint) { line-height: 1.7; }
+.premium-account .invoices-table { font-variant-numeric: tabular-nums; }
+.premium-account .invoices-table thead th { background: var(--account-raised); color: var(--color-text-muted); }
+.premium-account .invoices-table :is(th, td) { border-color: var(--account-edge); overflow-wrap: anywhere; }
+.premium-account .invoices-table tbody tr:hover :is(th, td) { background: var(--account-raised); }
+.premium-account .invoices-table__receipt { white-space: nowrap; max-width: none; }
+.premium-account .invoices-table__action { min-width: 110px; }
+
+/* Status meaning remains in the existing labels and backend-derived variants. */
+.premium-account :is(.status-badge, .security-unavailable, .plan-summary__unavailable, .account-summary__unavailable, .session-item__badge, .payment-item__badge) {
+  display: inline-flex; align-items: center; gap: 6px; max-width: 100%;
+  border: 1px solid var(--account-edge); border-radius: 8px; padding: 5px 9px;
+  font-size: .75rem; font-weight: 600; line-height: 1.5; white-space: normal;
+  color: var(--color-text-muted); background: var(--account-raised); box-shadow: none;
+}
+.premium-account .status-badge::before { flex-shrink: 0; box-shadow: none; }
+.premium-account :is(.status-badge--active, .status-badge--connected, .status-badge--invoice-paid, .session-item__badge, .payment-item__badge) { color: var(--account-positive); background: var(--account-positive-bg); }
+.premium-account :is(.status-badge--pending, .status-badge--upcoming, .status-badge--on-leave, .status-badge--trial, .status-badge--invoice-open, .status-badge--incomplete) { color: var(--account-pending); background: var(--account-pending-bg); }
+.premium-account .status-badge--past-due { color: var(--color-danger); background: color-mix(in srgb, var(--color-danger) 8%, var(--account-surface)); }
+
+.premium-account .profile-summary > .card__body { padding: clamp(22px, 3vw, 36px); }
+.profile-summary__heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 32px; }
+.profile-summary__heading h2 { margin: 0; font-size: 1.3rem; letter-spacing: -.025em; }
+.premium-account .account-profile { align-items: flex-start; gap: 28px; }
+.premium-account .account-profile__avatar { width: 80px; height: 80px; border-radius: 24px; }
+.premium-account .account-profile__details { gap: 24px; }
+.premium-account .account-profile__row { display: grid; gap: 8px; }
+.premium-account .account-profile__row dd { font-size: 1rem; line-height: 1.6; }
+.profile-summary__notice { margin: 30px 0 0; padding: 18px 20px; border: 1px solid var(--account-edge); border-radius: 12px; background: var(--account-raised); line-height: 1.75; }
+.account-profile-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.account-profile-links > a { display: flex; align-items: center; gap: 16px; padding: 24px; border: 1px solid var(--account-edge); border-radius: 16px; background: var(--account-surface); color: var(--account-accent); text-decoration: none; transition: border-color 180ms ease; }
+.account-profile-links svg { flex-shrink: 0; }
+.account-profile-links span { flex: 1; min-width: 0; }
+.account-profile-links strong { display: block; color: var(--color-text); font-size: .95rem; }
+.account-profile-links small { display: block; margin-top: 8px; color: var(--color-text-muted); font-size: .82rem; line-height: 1.7; }
+.account-profile-links > a:hover { border-color: var(--account-accent); }
+
+/* A second block below the details card. The links repeat the sidebar on purpose:
+   a reader who arrived at Profile from somewhere else still sees the whole
+   account from one place. */
+.profile-destinations > h2,
+.support-related > h2 { margin: 0 0 20px; font-size: 1.3rem; letter-spacing: -.025em; }
+.profile-destinations .account-profile-links { margin: 0; }
+
+/* Support is a page, so it gets the same rhythm as the other account pages. */
+.support-page { display: grid; gap: 28px; }
+.support-page .page-description { margin: 0; }
+.support-related { min-width: 0; }
+.premium-account .back-link { width: fit-content; min-height: 40px; padding: 8px 12px; border: 1px solid var(--account-edge); border-radius: 10px; background: var(--account-surface); color: var(--color-text-muted); }
+.premium-account :is(a, button, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+.premium-account .btn { max-width: 100%; white-space: normal; }
+.premium-account .btn svg { flex-shrink: 0; }
+.premium-account .btn:disabled { opacity: 1; color: var(--color-text-muted); background: var(--account-raised); border-color: var(--account-edge); box-shadow: none; }
+@media (max-width: 1199px) {
+  .premium-account .plans-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+}
+@media (max-width: 768px) {
+  .premium-account :is(.billing-page, .account-security-page, .account-page, .support-page) { gap: 22px; }
+  .premium-account :is(.billing-section__header, .billing-section__body, .account-security-section__header, .account-security-section__body) { padding: 20px; }
+  .account-profile-links { grid-template-columns: minmax(0, 1fr); }
+  .premium-account :is(.session-item, .payment-item) { flex-wrap: wrap; }
+  .premium-account :is(.session-item__actions, .payment-item__actions) { width: 100%; }
+  .premium-account :is(.session-item__action, .payment-item__action) { width: 100%; }
+}
+@media (max-width: 480px) {
+  .premium-account :is(.billing-section__header, .account-security-section__header) { gap: 12px; }
+  .premium-account :is(.billing-section__heading, .account-security-section__heading) { flex-basis: 160px; }
+  .premium-account .plan-summary__actions { flex-direction: column; }
+  .premium-account .plan-summary__action { width: 100%; }
+  .premium-account .account-profile__avatar { width: 64px; height: 64px; border-radius: 18px; }
+  .profile-summary__heading { margin-bottom: 24px; }
+  .account-profile-links > a { padding: 20px; }
+  .premium-account :is(.payment-section__empty, .invoices-section__empty, .security-empty) { padding: 24px 16px; }
+}
+/* Profile: identity first, then the details in two columns, then the platform
+   access list an admin role reaches. The gradient surface is shared with the
+   billing and security summaries so Profile reads as the same family. */
+.premium-account :is(.profile-identity, .profile-detail, .profile-access) {
+  background: radial-gradient(ellipse at 100% 0%, var(--account-wash), transparent 65%), var(--account-surface);
+}
+.premium-account :is(.profile-identity, .profile-detail) > .card__body { padding: clamp(22px, 3vw, 36px); }
+.profile-identity { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; }
+.premium-account .profile-identity .account-profile__avatar {
+  width: 72px; height: 72px; border-radius: 22px;
+  font-size: 1.4rem; font-weight: 700; letter-spacing: .02em;
+}
+.profile-identity__text { flex: 1 1 200px; min-width: 0; }
+.profile-identity__name { margin: 0; font-size: 1.35rem; font-weight: 700; letter-spacing: -.025em; color: var(--color-text); overflow-wrap: anywhere; }
+.profile-identity__email { margin: 8px 0 0; color: var(--color-text-muted); line-height: 1.6; overflow-wrap: anywhere; }
+.profile-identity__badges { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.profile-identity__role {
+  padding: var(--space-1) var(--space-3);
+  font-size: 0.76rem; font-weight: 700; line-height: 1.4;
+  border: 1px solid var(--account-edge); border-radius: var(--radius-full);
+  background: var(--account-raised); color: var(--account-accent);
+}
+.profile-detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.profile-detail-grid .profile-summary__heading { margin-bottom: 24px; }
+.profile-detail .account-profile__details { gap: 20px; }
+.profile-detail .account-profile__row { display: grid; gap: 6px; }
+.profile-detail .account-profile__row dd { font-size: 1rem; line-height: 1.6; overflow-wrap: anywhere; }
+.profile-access__list {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin: 0; padding: 0; list-style: none;
+}
+.profile-access__list li {
+  padding: 8px 14px;
+  font-size: 0.85rem; font-weight: 600;
+  border: 1px solid var(--account-edge); border-radius: var(--radius-full);
+  background: var(--account-raised); color: var(--color-text-soft);
+}
+@media (max-width: 900px) {
+  .profile-detail-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .premium-account *, .premium-account *::before, .premium-account *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .premium-account .plan-card:hover { transform: none; }
+}

@@ -1,4 +1,5 @@
 import { Component } from 'react'
+import { useLocation } from 'react-router-dom'
 import ErrorFallback from '@/components/errors/ErrorFallback'
 
 class RouteErrorBoundary extends Component {
@@ -13,6 +14,12 @@ class RouteErrorBoundary extends Component {
 
   componentDidCatch(error) {
     console.error('Route error caught by RouteErrorBoundary:', error)
+  }
+
+  componentDidUpdate(previousProps) {
+    if (this.state.hasError && previousProps.resetKey !== this.props.resetKey) {
+      this.handleReset()
+    }
   }
 
   handleReset = () => {
@@ -32,4 +39,9 @@ class RouteErrorBoundary extends Component {
   }
 }
 
-export default RouteErrorBoundary
+function NavigationErrorBoundary({ children }) {
+  const location = useLocation()
+  return <RouteErrorBoundary resetKey={location.key}>{children}</RouteErrorBoundary>
+}
+
+export default NavigationErrorBoundary

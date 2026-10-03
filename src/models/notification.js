@@ -1,5 +1,5 @@
 import { roleMatchesPortal } from '@/utils/roles'
-import { BILLING_PATH, SECURITY_PATH } from '@/utils/constants'
+import { BILLING_PATH, SECURITY_PATH, WORKSPACES_PATH } from '@/utils/constants'
 
 /**
  * Severity reported by the backend. Purely presentational: it drives the icon
@@ -27,76 +27,27 @@ export const NOTIFICATION_TYPES = Object.freeze(Object.values(NOTIFICATION_TYPE)
  * real destination to open. Nothing here creates a record or a route.
  */
 export const NOTIFICATION_CATEGORY = Object.freeze({
-  ANNOUNCEMENT: 'announcement',
-  SCHEDULE: 'schedule',
-  ATTENDANCE: 'attendance',
-  ASSESSMENT: 'assessment',
-  GRADE: 'grade',
-  ACCOUNT: 'account',
-  BILLING: 'billing',
+  WEBSITE: 'website', PUBLISHING: 'publishing', DOMAIN: 'domain',
+  SYSTEM: 'system', ACCOUNT: 'account', BILLING: 'billing',
 })
-
 export const NOTIFICATION_CATEGORIES = Object.freeze(Object.values(NOTIFICATION_CATEGORY))
-
 const CATEGORY_ALIASES = Object.freeze({
-  announcement: NOTIFICATION_CATEGORY.ANNOUNCEMENT,
-  announcements: NOTIFICATION_CATEGORY.ANNOUNCEMENT,
-  notice: NOTIFICATION_CATEGORY.ANNOUNCEMENT,
-  news: NOTIFICATION_CATEGORY.ANNOUNCEMENT,
-  schedule: NOTIFICATION_CATEGORY.SCHEDULE,
-  schedules: NOTIFICATION_CATEGORY.SCHEDULE,
-  timetable: NOTIFICATION_CATEGORY.SCHEDULE,
-  class_schedule: NOTIFICATION_CATEGORY.SCHEDULE,
-  attendance: NOTIFICATION_CATEGORY.ATTENDANCE,
-  attendance_alert: NOTIFICATION_CATEGORY.ATTENDANCE,
-  assessment: NOTIFICATION_CATEGORY.ASSESSMENT,
-  assessments: NOTIFICATION_CATEGORY.ASSESSMENT,
-  exam: NOTIFICATION_CATEGORY.ASSESSMENT,
-  grade: NOTIFICATION_CATEGORY.GRADE,
-  grades: NOTIFICATION_CATEGORY.GRADE,
-  result: NOTIFICATION_CATEGORY.GRADE,
-  results: NOTIFICATION_CATEGORY.GRADE,
-  account: NOTIFICATION_CATEGORY.ACCOUNT,
-  security: NOTIFICATION_CATEGORY.ACCOUNT,
-  account_security: NOTIFICATION_CATEGORY.ACCOUNT,
-  profile: NOTIFICATION_CATEGORY.ACCOUNT,
-  billing: NOTIFICATION_CATEGORY.BILLING,
-  invoice: NOTIFICATION_CATEGORY.BILLING,
-  payment: NOTIFICATION_CATEGORY.BILLING,
-  subscription: NOTIFICATION_CATEGORY.BILLING,
+  site: 'website', websites: 'website', publish: 'publishing', domains: 'domain',
+  security: 'account', account_security: 'account', profile: 'account',
+  invoice: 'billing', payment: 'billing', subscription: 'billing',
 })
-
 const CATEGORY_META = Object.freeze({
-  [NOTIFICATION_CATEGORY.ANNOUNCEMENT]: { label: 'Announcement', icon: 'megaphone' },
-  [NOTIFICATION_CATEGORY.SCHEDULE]: { label: 'Schedule', icon: 'calendar' },
-  [NOTIFICATION_CATEGORY.ATTENDANCE]: { label: 'Attendance', icon: 'clipboard' },
-  [NOTIFICATION_CATEGORY.ASSESSMENT]: { label: 'Assessment', icon: 'list' },
-  [NOTIFICATION_CATEGORY.GRADE]: { label: 'Grade', icon: 'award' },
-  [NOTIFICATION_CATEGORY.ACCOUNT]: { label: 'Account & Security', icon: 'shield' },
-  [NOTIFICATION_CATEGORY.BILLING]: { label: 'Billing', icon: 'card' },
+  website: { label: 'Website', icon: 'globe' },
+  publishing: { label: 'Publishing', icon: 'globe' },
+  domain: { label: 'Domain', icon: 'globe' },
+  system: { label: 'System', icon: 'info' },
+  account: { label: 'Account & Security', icon: 'shield' },
+  billing: { label: 'Billing', icon: 'card' },
 })
-
-/**
- * Category → existing route, expressed relative to the signed-in role's portal
- * so it is resolved by `resolveNotificationTarget`. Account-level pages are
- * absolute and listed in `ACCOUNT_LEVEL_PATHS`.
- */
 const CATEGORY_TARGET = Object.freeze({
-  [NOTIFICATION_CATEGORY.ANNOUNCEMENT]: '/announcements',
-  [NOTIFICATION_CATEGORY.SCHEDULE]: '/schedules',
-  [NOTIFICATION_CATEGORY.ATTENDANCE]: '/attendance',
-  [NOTIFICATION_CATEGORY.ASSESSMENT]: '/assessments',
-  [NOTIFICATION_CATEGORY.GRADE]: '/grades',
-  [NOTIFICATION_CATEGORY.ACCOUNT]: SECURITY_PATH,
-  [NOTIFICATION_CATEGORY.BILLING]: BILLING_PATH,
+  website: WORKSPACES_PATH, publishing: WORKSPACES_PATH, domain: WORKSPACES_PATH, system: '/notifications',
+  account: SECURITY_PATH, billing: BILLING_PATH,
 })
-
-/**
- * Routes that are identical for every role. They must never be prefixed with a
- * role portal, otherwise `/security` would become a non-existent
- * `/student/security`.
- */
-
 
 export const NOTIFICATION_CATEGORY_LABELS = Object.freeze(
   Object.fromEntries(
@@ -114,12 +65,6 @@ export const NOTIFICATION_READ_STATE = Object.freeze({
   READ: 'read',
   UNREAD: 'unread',
 })
-
-/**
- * Role portal prefixes used to scope notification target routes.
- * Admin routes live at the root, the student route is portal-scoped.
- */
-
 
 const resolveReadState = (notification) => {
   if (!notification) {
@@ -289,9 +234,9 @@ const scopePath = (path, role) => {
  * is never created, altered or routed anywhere new.
  *
  * Supported target shapes:
- * - `{ path: '/grades' }`                    → direct route (auto-scoped to role portal)
- * - `{ path: '/student/grades', role }`      → explicit route reserved for a role
- * - `{ route: 'grades/:id', id: '5', role }` → relative route + params, resolved under the role portal
+ * - `{ path: '/sites' }`                    → direct route (auto-scoped to role portal)
+ * - `{ path: '/admin/audit', role }`      → explicit route reserved for a role
+ * - `{ route: 'sites/:id', id: '5', role }` → relative route + params, resolved under the role portal
  *
  * Returns `null` when the target is absent or not meant for the given role,
  * so cross-role routes are never generated.

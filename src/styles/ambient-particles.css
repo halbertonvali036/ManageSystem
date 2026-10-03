@@ -1,0 +1,139 @@
+/* Isolated platform decoration: never targets site canvas/preview content. */
+.ambient-particles {
+  --ambient-base: #f7fbf8;
+  --ambient-haze: #d5f3e344;
+  --ambient-dot: #69b99b;
+  --ambient-highlight: #74cda4;
+  --ambient-strength: .26;
+  --ambient-density: 1;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  contain: paint;
+  pointer-events: none;
+  user-select: none;
+  background:
+    radial-gradient(ellipse at 84% 16%, var(--ambient-haze), transparent 58%),
+    radial-gradient(ellipse at 16% 90%, var(--ambient-haze), transparent 52%),
+    var(--ambient-base);
+}
+
+[data-theme='dark'] .ambient-particles {
+  --ambient-base: #060e0a;
+  --ambient-haze: #136c3f24;
+  --ambient-dot: #60d79b;
+  --ambient-highlight: #39ff14;
+  --ambient-strength: .58;
+}
+
+.ambient-particles--auth { --ambient-density: 1; }
+.ambient-particles--dashboard { --ambient-density: .55; }
+.ambient-particles--admin { --ambient-density: .35; }
+.ambient-particles--landing { --ambient-density: .8; }
+[data-theme='dark'] .ambient-particles--dashboard { --ambient-base: #091710; --ambient-haze: #226d452b; }
+[data-theme='dark'] .ambient-particles--admin { --ambient-base: #0b1611; --ambient-haze: #226d451a; }
+.ambient-particles--dashboard .ambient-particles__point { animation-duration: calc(var(--point-duration) * 1.3); }
+.ambient-particles--low .ambient-particles__streaks path:nth-child(n + 2) { display: none; }
+
+/* Landing sits on its own emerald gradient, so the field must not paint a base
+   colour of its own — it only adds the drifting points. */
+.ambient-particles--landing { background: none; }
+.ambient-particles--landing .ambient-particles__point { box-shadow: 0 0 5px currentColor; }
+.ambient-particles--landing .ambient-particles__point--soft { display: none; }
+.ambient-particles--landing .ambient-particles__streaks { display: none; }
+.ambient-particles--landing .ambient-particles__field { inset: 0; }
+/* Landing hero pass. The drift stays restrained — small travel, near-flat
+   opacity, no pulsing brightness — but the cycle is deliberately short enough
+   that the field reads as living rather than frozen. At 2.1x a point needed
+   40-90s per pass, which sat below the notice threshold; 1.7x is ~24% faster
+   and still slow enough that it never pulls attention off the copy. */
+.ambient-particles--landing .ambient-particles__point {
+  animation-name: ambient-particle-drift-calm;
+  animation-duration: calc(var(--point-duration) * 1.7);
+}
+[data-theme='dark'] .ambient-particles--landing { --ambient-strength: .42; --ambient-dot: #6fd39b; --ambient-highlight: #2ee06a; }
+
+.ambient-particles__field {
+  position: absolute;
+  inset: -14px;
+  opacity: calc(var(--ambient-strength) * var(--ambient-density));
+  transform: translate3d(var(--ambient-pointer-x, 0px), var(--ambient-pointer-y, 0px), 0);
+  transition: transform 700ms ease-out;
+}
+
+.ambient-particles__point {
+  position: absolute;
+  width: var(--point-size);
+  height: var(--point-size);
+  border-radius: 50%;
+  color: var(--ambient-dot);
+  background: currentColor;
+  box-shadow: 0 0 7px currentColor;
+  opacity: .5;
+  animation: ambient-particle-drift var(--point-duration) ease-in-out var(--point-delay) infinite alternate;
+}
+
+.ambient-particles__point:nth-child(7n) { color: var(--ambient-highlight); }
+.ambient-particles__point--soft {
+  background: radial-gradient(circle, var(--ambient-dot), transparent 70%);
+  box-shadow: none;
+  filter: blur(2px);
+}
+
+.ambient-particles__streaks { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ambient-particles__streaks path {
+  stroke: var(--ambient-dot);
+  stroke-width: .7;
+  stroke-linecap: round;
+  opacity: 0;
+  animation: ambient-streak 23s ease-in-out infinite;
+}
+.ambient-particles__streaks path:nth-child(2) { animation-delay: -9s; }
+.ambient-particles__streaks path:nth-child(3) { animation-delay: -16s; }
+.ambient-particles--admin .ambient-particles__streaks path { animation-duration: 38s; }
+
+.ambient-particles[data-paused='true'] .ambient-particles__point,
+.ambient-particles[data-paused='true'] .ambient-particles__streaks path { animation-play-state: paused; }
+
+@keyframes ambient-particle-drift {
+  from { transform: translate3d(0, 0, 0) scale(.85); opacity: .28; }
+  to { transform: translate3d(var(--point-dx), var(--point-dy), 0) scale(1.08); opacity: .85; }
+}
+/* Restrained variant: a smaller travel and a near-flat opacity, so the field
+   reads as slow ambient depth rather than blinking lights. */
+@keyframes ambient-particle-drift-calm {
+  from { transform: translate3d(0, 0, 0) scale(.9); opacity: .3; }
+  to { transform: translate3d(calc(var(--point-dx) * .55), calc(var(--point-dy) * .55), 0) scale(1); opacity: .52; }
+}
+@keyframes ambient-streak {
+  0%, 66%, 100% { opacity: 0; transform: translate3d(0, 0, 0); }
+  78%, 84% { opacity: .23; }
+  94% { opacity: 0; transform: translate3d(12px, -8px, 0); }
+}
+
+/* Only the main content receives decoration; header/sidebar structure is unchanged. */
+.app-layout__main.ambient-particles-host { position: relative; isolation: isolate; }
+
+/* Auth's illustration panel used fixed dark colors; follow platform theme here. */
+.auth-visual.ambient-particles-host { color: var(--color-text); background: var(--color-bg); }
+.auth-visual.ambient-particles-host::before { display: none; }
+.ambient-particles-host .auth-visual__title { color: var(--color-text); }
+.ambient-particles-host .auth-visual__eyebrow { color: var(--color-accent); }
+.ambient-particles-host .auth-visual__subtitle { color: var(--color-text-muted); }
+.ambient-particles-host .auth-visual__foot p { color: var(--color-text-soft); }
+
+@media (max-width: 768px) {
+  .ambient-particles__point:nth-child(n + 11),
+  .ambient-particles__point--soft,
+  .ambient-particles__streaks { display: none; }
+  .ambient-particles__field { transform: none; transition: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-particles__point { animation: none; opacity: .3; }
+  .ambient-particles__point:nth-child(n + 9),
+  .ambient-particles__streaks { display: none; }
+  .ambient-particles__field { transform: none; transition: none; }
+}
+

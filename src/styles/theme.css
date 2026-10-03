@@ -11,7 +11,7 @@
    The accent is a saturated #39FF14. It is applied as a
    highlight — focus rings, active edges, primary actions and
    status accents — not as a fill on every surface. Surfaces
-   stay layered near-black greens with premium hairline borders
+   stay layered dark greens with premium hairline borders
    so text contrast is never sacrificed to the accent.
 
    Dark mode is the strongest expression of the system. Light
@@ -48,7 +48,7 @@
   /* Text hierarchy */
   --color-text: #0f1a13;
   --color-text-muted: #4a5a50;
-  --color-text-soft: #6f8076;
+  --color-text-soft: #5e7065;
   --color-inverse-text: #ffffff;
 
   /* Brand accent (canonical) — deep green for light surfaces */
@@ -59,7 +59,7 @@
   --color-accent-bg: rgba(21, 128, 61, 0.1);
   --color-accent-text: #ffffff;
   --color-accent-strong: #15803d;
-  --color-accent-strong-start: #22a34d;
+  --color-accent-strong-start: #198344;
   --color-accent-strong-hover: #1c8f43;
   --color-accent-contrast: #0f5a2b;
   /* The raw neon, kept for small highlights and glows only. */
@@ -69,7 +69,7 @@
   /* Secondary + role accents */
   --color-accent-2: #0f766e;
   --color-role-admin: #15803d;
-  --color-role-student: #a16207;
+  --color-highlight-amber: #a16207;
 
   /* Semantic status colors */
   --color-success: #15803d;
@@ -78,8 +78,8 @@
   --color-warning-bg: rgba(180, 83, 9, 0.1);
   --color-danger: #dc2626;
   --color-danger-bg: rgba(220, 38, 38, 0.1);
-  --color-info: #0369a1;
-  --color-info-bg: rgba(3, 105, 161, 0.1);
+  --color-info: #0f766e;
+  --color-info-bg: rgba(15, 118, 110, 0.1);
 
   /* Focus + selection */
   --color-focus: #15803d;
@@ -94,14 +94,14 @@
   --color-primary-text: var(--color-accent-text);
 
   /* Shell (sidebar / overlays) */
-  --color-sidebar-bg: #0c1a11;
-  --color-sidebar-border: rgba(57, 255, 20, 0.12);
-  --color-sidebar-text: #8fa89a;
+  --color-sidebar-bg: #0a1a11;
+  --color-sidebar-border: rgba(57, 255, 20, 0.14);
+  --color-sidebar-text: #9db4a6;
   --color-sidebar-text-hover: #ffffff;
-  --color-backdrop: rgba(9, 20, 13, 0.6);
+  --color-backdrop: rgba(6, 18, 11, 0.62);
 
   /* Glass surface used by the public header over the dark hero */
-  --color-surface-glass: rgba(12, 26, 17, 0.42);
+  --color-surface-glass: rgba(15, 34, 24, 0.44);
 
   /* Typography */
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto,
@@ -171,39 +171,47 @@
   --auth-accent-hover: #4aeb7c;
   --auth-accent-active: #21c85a;
   --auth-page-bg: #f4f7f4;
+  /* The form side is its own layered surface, not the flat page fill, so the
+     form never sits on a block that reads as unfinished. */
+  --auth-form-bg:
+    radial-gradient(ellipse 78% 42% at 4% -4%, rgba(34, 197, 94, 0.07), transparent 60%),
+    radial-gradient(ellipse 64% 44% at 102% 106%, rgba(16, 185, 129, 0.06), transparent 58%),
+    linear-gradient(168deg, #f8fbf8 0%, #f1f7f1 52%, #eaf3ea 100%);
+  --auth-form-card: #ffffff;
+  --auth-form-field: #f7faf6;
 }
 
 /* ─── Dark theme tokens ──────────────────────────────────────── */
-/* The primary expression of the system. Layered green-black
-   surfaces, a single bright accent used as a highlight, and
-   hairline borders that carry the premium feel. Nothing is pure
-   black, and the neon never becomes a surface fill. */
+/* The primary expression of the system. A professional dark emerald:
+   layered green surfaces rather than near-black, a single bright accent used
+   as a highlight, and hairline borders that carry the premium feel. Nothing is
+   pure black, and the neon never becomes a surface fill. */
 [data-theme='dark'] {
   color-scheme: dark;
 
   /* Surfaces & containers */
-  --color-bg: #050b07;
-  --color-bg-glow-1: rgba(57, 255, 20, 0.07);
-  --color-bg-glow-2: rgba(16, 185, 129, 0.05);
-  --color-surface: #0a140d;
-  --color-surface-2: #0e1a11;
-  --color-surface-3: #122016;
-  --color-elevated: #122016;
-  --color-field: #08110b;
-  --color-field-hover: #0c170f;
+  --color-bg: #0a1c12;
+  --color-bg-glow-1: rgba(57, 255, 20, 0.08);
+  --color-bg-glow-2: rgba(16, 185, 129, 0.06);
+  --color-surface: #0f2118;
+  --color-surface-2: #13281d;
+  --color-surface-3: #162e21;
+  --color-elevated: #162e21;
+  --color-field: #0d2016;
+  --color-field-hover: #13281d;
 
   /* Borders & hairlines */
   --color-border: rgba(120, 220, 140, 0.13);
   --color-border-strong: rgba(120, 220, 140, 0.24);
   --color-hairline: rgba(120, 220, 140, 0.1);
-  --color-header-bg: rgba(8, 17, 11, 0.88);
-  --color-header-border: rgba(120, 220, 140, 0.12);
+  --color-header-bg: rgba(11, 26, 17, 0.9);
+  --color-header-border: rgba(120, 220, 140, 0.14);
   --color-accent-border: rgba(57, 255, 20, 0.4);
 
   /* Text hierarchy */
   --color-text: #e8f5ea;
   --color-text-muted: #9cb3a3;
-  --color-text-soft: #6f8876;
+  --color-text-soft: #90a99a;
   --color-inverse-text: #04140a;
 
   /* Brand accent (neon, tuned for dark contrast) */
@@ -214,6 +222,7 @@
   --color-accent-bg: rgba(57, 255, 20, 0.16);
   --color-accent-text: #04140a;
   --color-accent-strong: #39ff14;
+  --color-accent-strong-start: #2ee06a;
   --color-accent-strong-hover: #55ff35;
   --color-accent-contrast: #39ff14;
   --color-neon: #39ff14;
@@ -222,7 +231,7 @@
   /* Secondary + role accents */
   --color-accent-2: #2dd4a7;
   --color-role-admin: #39ff14;
-  --color-role-student: #fbbf24;
+  --color-highlight-amber: #fbbf24;
 
   /* Semantic status colors */
   --color-success: #39ff14;
@@ -231,8 +240,8 @@
   --color-warning-bg: rgba(251, 191, 36, 0.14);
   --color-danger: #ff6b6b;
   --color-danger-bg: rgba(255, 107, 107, 0.14);
-  --color-info: #7dd3fc;
-  --color-info-bg: rgba(125, 211, 252, 0.14);
+  --color-info: #5ee0b5;
+  --color-info-bg: rgba(94, 224, 181, 0.14);
 
   /* Focus + selection */
   --color-focus: #39ff14;
@@ -247,7 +256,7 @@
   --color-primary-text: var(--color-accent-text);
 
   /* Shell (sidebar / overlays) */
-  --color-sidebar-bg: #060e08;
+  --color-sidebar-bg: #0b1e14;
   --color-sidebar-border: rgba(57, 255, 20, 0.12);
   --color-sidebar-text: #7f9c8a;
   --color-sidebar-text-hover: #eaffee;
@@ -276,7 +285,16 @@
   --auth-accent: #39ff14;
   --auth-accent-hover: #55ff35;
   --auth-accent-active: #2ee06a;
-  --auth-page-bg: #050b07;
+  --auth-page-bg: #0a1c12;
+  /* Dark emerald, not black. Three stops of green-black plus two low-energy
+     hazes give the form side depth; a flat #000-style fill read as a hole cut
+     out of the product next to the emerald surfaces everywhere else. */
+  --auth-form-bg:
+    radial-gradient(ellipse 74% 44% at 2% -6%, rgba(57, 255, 20, 0.075), transparent 62%),
+    radial-gradient(ellipse 62% 46% at 104% 108%, rgba(45, 212, 160, 0.09), transparent 60%),
+    linear-gradient(168deg, #0a1a12 0%, #0c2016 46%, #0e2a1b 100%);
+  --auth-form-card: #11241a;
+  --auth-form-field: #0a1a12;
 }
 
 /* ─── Base paint ───────────────────────────────────────────── */

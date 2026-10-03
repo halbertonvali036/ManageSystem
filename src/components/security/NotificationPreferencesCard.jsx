@@ -5,7 +5,6 @@ import PreferenceSwitch from '@/components/settings/PreferenceSwitch'
 import SecurityNotice from '@/components/security/SecurityNotice'
 import SecuritySection from '@/components/security/SecuritySection'
 import useNotificationPreferences from '@/hooks/useNotificationPreferences'
-import useAuth from '@/hooks/useAuth'
 import { getRequestErrorMessage } from '@/services/httpClient'
 import {
   NOTIFICATION_PREFERENCE_FIELDS,
@@ -22,7 +21,6 @@ import {
  * preference has been applied.
  */
 function NotificationPreferencesCard() {
-  const { user } = useAuth()
   const copy = useAccountCopy()
   const { t } = useTranslation()
   const {
@@ -69,11 +67,11 @@ function NotificationPreferencesCard() {
           ) : null}
 
           <div className="preference-list">
-            {NOTIFICATION_PREFERENCE_FIELDS.filter(field => user?.role === 'admin' || field.key !== 'academicUpdates').map((field) => (
+            {NOTIFICATION_PREFERENCE_FIELDS.map((field) => (
               <PreferenceSwitch
                 key={field.key}
                 label={copy(field.label)}
-                description={copy(field.channel === NOTIFICATION_PREFERENCE_CHANNEL.IN_APP && field.key === 'inApp' && user?.role !== 'admin' ? 'Website and account updates inside your workspace.' : field.description)}
+                description={copy(field.description)}
                 checked={Boolean(draft[field.key])}
                 unknown={!isAvailable}
                 disabled={isSaving}

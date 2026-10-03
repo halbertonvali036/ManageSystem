@@ -4,6 +4,7 @@ import FormSettings from '@/components/editor/FormSettings'
 import { Copy, Image as ImageIcon, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import useTranslation from '@/hooks/useTranslation'
+import EditorPanelGroup from '@/components/editor/EditorPanelGroup'
 import {
   BLOCK_TYPE,
   BLOCK_TYPE_LABELS,
@@ -596,8 +597,7 @@ function EditorSettingsPanel({
 
   const sectionSettings = section ? (
     <>
-      <section className="editor-panel__section">
-        <h3 className="editor-panel__subtitle">{t('editor.section.settingsTitle')}</h3>
+      <EditorPanelGroup title={t('editor.section.settingsTitle')} defaultOpen>
 
         <DeviceOverrideBar
           device={device}
@@ -679,16 +679,15 @@ function EditorSettingsPanel({
             {t('editor.settings.deleteAction')}
           </button>
         </div>
-      </section>
+      </EditorPanelGroup>
 
-      <section className="editor-panel__section">
-        <h3 className="editor-panel__subtitle">{t('editor.background.title')}</h3>
+      <EditorPanelGroup title={t('editor.background.title')}>
         <BackgroundImageSettings
           section={section}
           onUpdate={(patch) => onUpdateSection(section.id, patch)}
           onOpenMedia={onOpenMedia}
         />
-      </section>
+      </EditorPanelGroup>
     </>
   ) : null
 
@@ -698,8 +697,7 @@ function EditorSettingsPanel({
 
   const blockSettings = block ? (
     <>
-      <section className="editor-panel__section">
-        <h3 className="editor-panel__subtitle">{t('editor.settings.content')}</h3>
+      <EditorPanelGroup title={t('editor.settings.content')} defaultOpen>
 
         {block.type === BLOCK_TYPE.FORM && <FormSettings key={block.id} form={block.content.form} onChange={(form) => onUpdateBlock(block.id, { content: { form } })} />}
 
@@ -771,10 +769,9 @@ function EditorSettingsPanel({
             onOpenMedia={onOpenMedia}
           />
         ) : null}
-      </section>
+      </EditorPanelGroup>
 
-      <section className="editor-panel__section">
-        <h3 className="editor-panel__subtitle">{t('editor.settings.style')}</h3>
+      <EditorPanelGroup title={t('editor.settings.style')}>
 
         <DeviceOverrideBar
           device={device}
@@ -890,7 +887,7 @@ function EditorSettingsPanel({
             STYLE_BOUNDS.radius,
           )
         ) : null}
-      </section>
+      </EditorPanelGroup>
     </>
   ) : null
 
@@ -947,6 +944,8 @@ function EditorSettingsPanel({
         )}
       </section>
 
+      {sectionSettings}
+      {blockSettings}
       <SiteDesignPanel document={document} onChange={onUpdateSiteDesign} onPreset={onUpdateSiteTheme} />
       {(block || section) && <section className="editor-panel__section">
         <p className="editor-panel__hint">{t('siteDesign.inheritance')}</p>
@@ -956,8 +955,6 @@ function EditorSettingsPanel({
       </section>}
       <MotionSettings node={block || section} siteMotion={document.motion} onSiteChange={onUpdateSiteMotion}
         onChange={(patch) => block ? onUpdateBlock(block.id, patch) : onUpdateSection(section.id, patch)} />
-      {sectionSettings}
-      {blockSettings}
 
       <button
         type="button"

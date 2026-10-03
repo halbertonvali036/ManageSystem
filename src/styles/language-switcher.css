@@ -1,73 +1,118 @@
 /* ============================================================
    Language switcher
    ------------------------------------------------------------
-   One control, one behaviour: it delegates to the LocaleProvider
-   and only styles the button. Shared by the public header, the
-   auth shell and the authenticated app header.
+   A compact segmented pair — AZ / EN — in the product's neon
+   green. One control per place: it delegates the choice to the
+   LocaleProvider and only styles the two options, so the active
+   option is always the one the provider says is active.
    ============================================================ */
 
 .language-switcher {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  min-height: 34px;
-  padding: 0 var(--space-3);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-full);
-  background: var(--color-surface-2);
-  color: var(--color-text-muted);
+  flex-shrink: 0;
   font-family: inherit;
-  font-size: var(--text-label);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  transition:
-    color var(--transition-fast),
-    border-color var(--transition-fast),
-    background-color var(--transition-fast),
-    box-shadow var(--transition-base);
-}
-
-.language-switcher:hover {
-  color: var(--color-accent);
-  border-color: var(--color-accent-border, var(--color-accent));
-  background: var(--color-accent-bg);
-  box-shadow: var(--shadow-neon-sm);
-}
-
-.language-switcher:focus-visible {
-  outline: none;
-  box-shadow: var(--color-focus-ring);
 }
 
 .language-switcher__icon {
   flex-shrink: 0;
+  color: var(--color-text-soft);
 }
 
-.language-switcher__label {
+/* The track: a hairline pill that holds the two options. It is not itself a
+   control, so it takes no cursor and no hover treatment. */
+.language-switcher__options {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+.language-switcher__option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  min-height: 26px;
+  padding: 0 10px;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
   line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--color-text-soft);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast),
+    box-shadow var(--transition-base);
 }
 
-/* On dark hero surfaces the button keeps a neon edge. */
-.language-switcher--on-dark {
-  color: var(--color-text-muted);
+.language-switcher__option:hover {
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+}
+
+/* The active option carries the accent itself: on a dark surface the neon reads
+   as light, on a light surface the deep green of the accent token keeps the
+   contrast. `--color-accent-text` is the token that pairs with both. */
+.language-switcher__option--active,
+.language-switcher__option--active:hover {
+  color: var(--color-accent-text);
+  background: var(--color-accent);
+  box-shadow: var(--shadow-neon-sm);
+}
+
+.language-switcher__option:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* On dark hero surfaces the track reads as glass over the gradient. */
+.language-switcher--on-dark .language-switcher__options {
   background: var(--color-surface-glass);
   border-color: var(--color-border);
 }
 
-.language-switcher--on-dark:hover {
-  color: var(--color-accent);
-  background: var(--color-accent-bg);
+.language-switcher--on-dark .language-switcher__icon {
+  color: rgba(255, 255, 255, 0.7);
 }
 
-/* Inside the app header it sits beside the theme toggle. */
+/* Inside the app header it sits beside the theme toggle, so it drops the icon
+   and the row padding to keep the page title's room. */
 .language-switcher--compact {
-  min-height: 32px;
-  padding: 0 var(--space-2);
+  gap: 0;
+}
+
+.language-switcher--compact .language-switcher__icon {
+  display: none;
+}
+
+.language-switcher--compact .language-switcher__options {
+  padding: 2px;
+}
+
+.language-switcher--compact .language-switcher__option {
+  min-width: 32px;
+  min-height: 28px;
+  padding: 0 9px;
 }
 
 @media (max-width: 480px) {
   .language-switcher__icon {
     display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .language-switcher__option {
+    transition: none;
   }
 }

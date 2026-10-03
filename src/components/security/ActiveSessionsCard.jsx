@@ -51,7 +51,7 @@ function ActiveSessionsCard({
       {sessions.length > 0 ? (
         <ul className="sessions-list">
           {sessions.map((session) => {
-            const device = formatSessionDevice(session) ?? UNKNOWN_DEVICE
+            const device = formatSessionDevice(session) ?? copy(UNKNOWN_DEVICE)
             const lastActive = formatSecurityLastActive(session.lastActiveAt)
             const isPendingRevoke = pendingAction === `session:${session.id}`
 
@@ -73,7 +73,7 @@ function ActiveSessionsCard({
                   <p className="session-item__meta">
                     {session.location ? `${session.location} · ` : ''}
                     {session.ipAddress ? `IP ${session.ipAddress} · ` : ''}
-                    {lastActive ? `Last active ${lastActive}` : copy('Last active not reported')}
+                    {lastActive ? t('accountPolish.lastActiveOn', { date: lastActive }) : copy('Last active not reported')}
                   </p>
                 </div>
                 <span className="session-item__actions">

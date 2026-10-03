@@ -56,7 +56,7 @@ function NotificationsPage() {
     <div className="notifications-page">
       <div className="notifications-toolbar">
         <p className="page-description">
-          Announcements, schedule changes, attendance, assessment and grade updates for this
+          Website, publishing, domain and account updates for this
           account. Read state is stored by the backend.
         </p>
 

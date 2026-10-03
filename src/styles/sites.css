@@ -826,16 +826,6 @@
   white-space: nowrap;
   border: 0;
 }
-
-/*
- * A real theme preview, painted with the preset's own tokens.
- *
- * The old swatch was a fixed set of CSS classes that named palettes like "neon".
- * That could not describe an actual theme, and it put a neon swatch in front of
- * someone choosing a deliberately non-neon site. The swatch now takes the
- * preset's background, accent and radius inline, so what is shown is what the
- * theme actually contains.
- */
 .create-site-theme-swatch {
   display: flex;
   flex-shrink: 0;

@@ -4,12 +4,12 @@
  * The frontend collects a request and hands it to the backend. It does not
  * create, store, number or resolve anything itself, and it never pretends a
  * ticket exists. The authenticated account is inferred by the backend from the
- * session, so no user, student or staff id is sent from the client.
+ * session, so no account id is sent from the client.
  */
 
 export const SUPPORT_CATEGORY = Object.freeze({
   ACCOUNT: 'account',
-  ACADEMIC_ACCESS: 'academic_access',
+  WEBSITE: 'website',
   BILLING: 'billing',
   TECHNICAL: 'technical',
   OTHER: 'other',
@@ -21,9 +21,8 @@ const CATEGORY_ALIASES = Object.freeze({
   account: SUPPORT_CATEGORY.ACCOUNT,
   login: SUPPORT_CATEGORY.ACCOUNT,
   security: SUPPORT_CATEGORY.ACCOUNT,
-  academic_access: SUPPORT_CATEGORY.ACADEMIC_ACCESS,
-  academic: SUPPORT_CATEGORY.ACADEMIC_ACCESS,
-  access: SUPPORT_CATEGORY.ACADEMIC_ACCESS,
+  website: SUPPORT_CATEGORY.WEBSITE,
+  access: SUPPORT_CATEGORY.WEBSITE,
   billing: SUPPORT_CATEGORY.BILLING,
   invoice: SUPPORT_CATEGORY.BILLING,
   payment: SUPPORT_CATEGORY.BILLING,
@@ -40,9 +39,9 @@ export const SUPPORT_CATEGORY_META = Object.freeze({
     label: 'Account',
     description: 'Sign-in, password, verification, connected accounts or sessions.',
   },
-  [SUPPORT_CATEGORY.ACADEMIC_ACCESS]: {
-    label: 'Academic access',
-    description: 'Courses, classes, timetable, attendance, assessments or grades you cannot open.',
+  [SUPPORT_CATEGORY.WEBSITE]: {
+    label: 'Website',
+    description: 'Editor, preview, publishing or domain access.',
   },
   [SUPPORT_CATEGORY.BILLING]: {
     label: 'Billing',

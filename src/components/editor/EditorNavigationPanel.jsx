@@ -10,6 +10,7 @@ import {
   Wand2,
 } from 'lucide-react'
 import useTranslation from '@/hooks/useTranslation'
+import EditorPanelGroup from '@/components/editor/EditorPanelGroup'
 import { MENU_ITEM_TYPE, isMenuItemLinked, isSafeLinkUrl } from '@/models/siteNavigation'
 import { getMenuItemText, getNavigationItems } from '@/models/siteEditor'
 
@@ -43,11 +44,10 @@ function EditorNavigationPanel({
   const items = getNavigationItems(document)
 
   return (
-    <section className="editor-panel__section">
-      <h2 className="editor-panel__title">
+    <EditorPanelGroup title={<>
         <ListTree size={15} aria-hidden="true" />
         {t('editor.nav.title')}
-      </h2>
+      </>}>
       <p className="editor-panel__hint">{t('editor.nav.hint')}</p>
 
       {items.length ? (
@@ -254,7 +254,7 @@ function EditorNavigationPanel({
         <Link2 size={12} aria-hidden="true" />
         {t('editor.nav.localOnly')}
       </p>
-    </section>
+    </EditorPanelGroup>
   )
 }
 

@@ -1,0 +1,598 @@
+/* ============================================================
+   Workspace Activity — Fəaliyyət
+   Same dark + green-neon tokens as the rest of the portal.
+
+   Two ideas drive the styling here.
+
+   A metric is either a real measurement or it is nothing. The unavailable state is
+   styled as a deliberate, readable panel — a muted dashed tile with a dash where
+   the number would be — rather than as a zero in a dimmed font. It must be obvious
+   at a glance that nothing is being claimed.
+
+   A progress bar only exists when it can be drawn truthfully. There is no
+   empty-track state, because an empty bar reads as "0% used" and that is a claim
+   this page refuses to make without two real numbers.
+   ============================================================ */
+
+/* ── Page ─────────────────────────────────────────────────── */
+.act-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.act-page__notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.act-page__notice svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-accent);
+}
+
+/* ── Events section ───────────────────────────────────────── */
+.act-events {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.act-events__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.act-events__description {
+  margin: 0;
+  max-width: 68ch;
+  font-size: var(--text-meta);
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+/* ── Filters ──────────────────────────────────────────────── */
+.act-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.act-filters__search {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.act-filters__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.act-filters__field .form__select,
+.act-filters__field .form__input {
+  min-width: 150px;
+}
+
+.act-filters__range {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+
+.act-filters__range-label {
+  font-size: var(--text-xs, 11px);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+}
+
+.act-filters__range-separator {
+  padding-bottom: var(--space-2);
+  color: var(--color-text-soft);
+}
+
+.act-filters__clear {
+  flex-shrink: 0;
+}
+
+/* ── Event rows ───────────────────────────────────────────── */
+.act-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.act-row {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  transition: border-color var(--transition-fast);
+}
+
+.act-row:hover {
+  border-color: var(--color-border-strong);
+}
+
+.act-row__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+}
+
+/* The left edge carries the group, so a trail can be skimmed by colour before it
+   is read. Each is a hue the product already uses, not a new palette. */
+.act-row--workspace { border-left-color: var(--color-accent); }
+.act-row--site { border-left-color: var(--color-success); }
+.act-row--member { border-left-color: var(--color-info); }
+.act-row--record { border-left-color: var(--color-primary-text); }
+.act-row--model { border-left-color: var(--color-primary-text); }
+.act-row--integration { border-left-color: var(--color-primary-text); }
+.act-row--domain { border-left-color: var(--color-warning); }
+.act-row--deployment { border-left-color: var(--color-warning); }
+.act-row--billing { border-left-color: var(--color-danger); }
+.act-row--security { border-left-color: var(--color-danger); }
+.act-row--system { border-left-color: var(--color-border-strong); }
+
+.act-row--workspace .act-row__icon { color: var(--color-accent); }
+.act-row--site .act-row__icon { color: var(--color-success); }
+.act-row--member .act-row__icon { color: var(--color-info); }
+.act-row--domain .act-row__icon,
+.act-row--deployment .act-row__icon { color: var(--color-warning); }
+.act-row--billing .act-row__icon,
+.act-row--security .act-row__icon { color: var(--color-danger); }
+
+.act-row__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.act-row__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.act-row__target {
+  font-weight: 500;
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+.act-row__target::before {
+  content: '·';
+  margin-right: var(--space-2);
+  color: var(--color-text-soft);
+}
+
+.act-row__description {
+  margin: 0;
+  max-width: 76ch;
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.act-row__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: 2px;
+}
+
+.act-row__actor {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text-soft);
+}
+
+.act-row__actor svg {
+  flex-shrink: 0;
+}
+
+.act-row__time {
+  font-size: var(--text-meta);
+  color: var(--color-text-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+/* An event whose timestamp could not be read. Said plainly, because the alternative
+   — sorting it to the top and calling it "now" — would put a false claim in the
+   place where the real time should be. */
+.act-row__time--missing {
+  font-style: italic;
+}
+
+.act-row__link {
+  align-self: center;
+  flex-shrink: 0;
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.act-row__link:hover {
+  text-decoration: underline;
+}
+
+/* ── Empty state ──────────────────────────────────────────── */
+.act-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  background: var(--color-surface-2);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+}
+
+.act-empty__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: var(--space-1);
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-md);
+}
+
+.act-empty__title {
+  margin: 0;
+  font-size: var(--text-body);
+  color: var(--color-text);
+}
+
+.act-empty__text {
+  margin: 0;
+  max-width: 60ch;
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+/* ── Usage tiles ──────────────────────────────────────────── */
+.usage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.usage__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.usage__description {
+  margin: 0;
+  max-width: 68ch;
+  font-size: var(--text-meta);
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+.usage__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-3);
+}
+
+.usage-tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.usage-tile--over {
+  border-color: color-mix(in srgb, var(--color-danger) 45%, transparent);
+}
+
+.usage-tile__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.usage-tile__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-md);
+}
+
+.usage-tile__label {
+  margin: 0;
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.usage-tile__value {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 650;
+  line-height: 1.1;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Nothing measured. The dash is not a placeholder for a number to come — it is the
+   statement that there is no number, and the tile is visibly inert so it cannot be
+   skimmed as a real reading. */
+.usage-tile__value--missing {
+  color: var(--color-text-soft);
+  opacity: 0.6;
+}
+
+.usage-tile--unavailable {
+  border-style: dashed;
+  background: transparent;
+}
+
+.usage-tile__state {
+  margin: 0;
+  font-size: var(--text-meta);
+  color: var(--color-text-soft);
+}
+
+.usage-tile__limit {
+  margin: 0;
+  font-size: var(--text-meta);
+  color: var(--color-text-soft);
+}
+
+.usage-tile__bar {
+  height: 5px;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+.usage-tile__bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: var(--radius-full);
+}
+
+.usage-tile--over .usage-tile__bar-fill {
+  background: var(--color-danger);
+}
+
+.usage-tile__over {
+  margin: 0;
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-danger);
+}
+
+/* ── Limits panel ─────────────────────────────────────────── */
+.limits {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.limits__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.limits__description {
+  margin: 0;
+  max-width: 68ch;
+  font-size: var(--text-meta);
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+.limits__plan {
+  margin: 0;
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+.limits__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.limits__row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.limits__row--over {
+  border-color: color-mix(in srgb, var(--color-danger) 45%, transparent);
+}
+
+.limits__row-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.limits__row-label {
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.limits__row-values {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  font-size: var(--text-meta);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+}
+
+.limits__row-used {
+  font-weight: 650;
+  color: var(--color-text);
+}
+
+.limits__row-separator {
+  color: var(--color-text-soft);
+}
+
+.limits__row-limit {
+  color: var(--color-text-soft);
+}
+
+.limits__bar {
+  height: 5px;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+.limits__bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: var(--radius-full);
+}
+
+.limits__row--over .limits__bar-fill {
+  background: var(--color-danger);
+}
+
+.limits__row-over {
+  margin: 0;
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-danger);
+}
+
+.limits__unavailable {
+  padding: var(--space-4);
+  background: var(--color-surface-2);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+}
+
+.limits__unavailable-title {
+  margin: 0 0 var(--space-1);
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.limits__unavailable-text {
+  margin: 0;
+  max-width: 60ch;
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .act-row {
+    grid-template-columns: 34px minmax(0, 1fr);
+  }
+
+  .act-row__link {
+    grid-column: 2;
+    align-self: start;
+  }
+
+  .act-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .act-filters__field .form__select,
+  .act-filters__field .form__input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .act-filters__range {
+    align-items: stretch;
+  }
+
+  .usage__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .act-row {
+    transition: none;
+  }
+}

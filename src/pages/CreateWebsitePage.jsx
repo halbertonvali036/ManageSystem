@@ -20,9 +20,16 @@ import {
 } from '@/models/site'
 import { SITE_THEME_PRESETS } from '@/models/siteTheme'
 import siteService from '@/services/siteService'
+import workspaceService from '@/services/workspaceService'
 import config from '@/config'
 import { BackendNotConnectedError } from '@/services/httpClient'
-import { SITES_PATH, SITE_DETAILS_PATH, SITE_EDITOR_PATH } from '@/utils/constants'
+import {
+  SITES_PATH,
+  SITE_DETAILS_PATH,
+  SITE_EDITOR_PATH,
+  WORKSPACE_SITES_PATH,
+  WORKSPACE_SITE_DETAILS_PATH,
+} from '@/utils/constants'
 
 const LAST_STEP = 4
 
@@ -45,7 +52,7 @@ const STEPS = Object.freeze([
  * (`?template=business`), so "start from this template" does not drop the visitor
  * back into an empty wizard with their choice forgotten.
  */
-function CreateWebsitePage() {
+function CreateWebsitePage({ workspaceId = null }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -150,8 +157,19 @@ function CreateWebsitePage() {
     try {
       // `templateId` travels with the draft so a future backend can build the
       // project's pages from the template's section skeleton.
-      const created = await siteService.createSite(buildSiteDraft(values))
-      navigate(created?.id ? SITE_DETAILS_PATH(created.id) : SITES_PATH)
+      const draft = buildSiteDraft(values)
+      let created
+      if (workspaceId) {
+        created = await workspaceService.createWorkspaceSite(workspaceId, draft)
+        navigate(
+          created?.id
+            ? WORKSPACE_SITE_DETAILS_PATH(workspaceId, created.id)
+            : WORKSPACE_SITES_PATH(workspaceId)
+        )
+      } else {
+        created = await siteService.createSite(draft)
+        navigate(created?.id ? SITE_DETAILS_PATH(created.id) : SITES_PATH)
+      }
     } catch (error) {
       setFormError(
         error instanceof BackendNotConnectedError

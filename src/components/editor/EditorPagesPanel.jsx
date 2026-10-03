@@ -9,6 +9,7 @@ import {
   Trash2,
 } from 'lucide-react'
 import useTranslation from '@/hooks/useTranslation'
+import EditorPanelGroup from '@/components/editor/EditorPanelGroup'
 import { canDeletePage } from '@/models/siteEditor'
 import { isValidSlug } from '@/models/siteNavigation'
 
@@ -57,11 +58,10 @@ function EditorPagesPanel({
   const canDelete = canDeletePage(document)
 
   return (
-    <section className="editor-panel__section">
-      <h2 className="editor-panel__title">
+    <EditorPanelGroup defaultOpen title={<>
         <Layers size={15} aria-hidden="true" />
         {t('editor.sidebar.pages')}
-      </h2>
+      </>}>
 
       <ul className="editor-page-list">
         {document.pages.map((page, index) => {
@@ -274,7 +274,7 @@ function EditorPagesPanel({
         <Plus size={14} aria-hidden="true" />
         {t('editor.page.createAction')}
       </button>
-    </section>
+    </EditorPanelGroup>
   )
 }
 

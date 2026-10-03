@@ -5,7 +5,6 @@ import { AlertCircle, Check, LifeBuoy, Send } from 'lucide-react'
 import SecurityNotice from '@/components/security/SecurityNotice'
 import SecuritySection from '@/components/security/SecuritySection'
 import useSupportRequest from '@/hooks/useSupportRequest'
-import useAuth from '@/hooks/useAuth'
 import {
   SUPPORT_CATEGORIES,
   SUPPORT_CATEGORY_META,
@@ -15,13 +14,12 @@ import {
 /**
  * Support / contact.
  *
- * A short, professional intake form: category, subject, message. The account is
+ * The form behind the Support page: category, subject, message. The account is
  * never asked for — the backend resolves the signed-in user from the session.
  * Without a support service the form can be filled in but cannot be sent, and
  * the card says exactly that instead of producing a ticket number.
  */
 function SupportContactCard() {
-  const { user } = useAuth()
   const copy = useAccountCopy()
   const { t } = useTranslation()
   const {
@@ -92,7 +90,7 @@ function SupportContactCard() {
                 disabled={isSubmitting}
               >
                 <option value="">{t('accountPolish.chooseACategory')}</option>
-                {SUPPORT_CATEGORIES.filter(category => user?.role === 'admin' || category !== 'academic_access').map((category) => (
+                {SUPPORT_CATEGORIES.map((category) => (
                   <option key={category} value={category}>
                     {copy(SUPPORT_CATEGORY_META[category].label)} —{' '}
                     {copy(SUPPORT_CATEGORY_META[category].description)}
@@ -114,7 +112,7 @@ function SupportContactCard() {
                 className="form__input"
                 value={draft.subject}
                 maxLength={SUPPORT_FIELD_LIMITS.SUBJECT_MAX}
-                placeholder={t('accountPolish.shortSummaryForExampleCannotOpenMyGradeDetails')}
+                placeholder={t('accountPolish.shortSummaryWebsitePreview')}
                 onChange={(event) => setField('subject', event.target.value)}
                 aria-describedby={errors.subject ? subjectHintId : undefined}
                 aria-invalid={Boolean(errors.subject)}

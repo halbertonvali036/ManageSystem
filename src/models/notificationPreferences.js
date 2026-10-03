@@ -11,7 +11,7 @@
  * 3. `email` and the topic switches describe *intent*. While no delivery
  *    service exists they are shown as unavailable rather than described as
  *    active, so nobody is told email is on when nothing delivers it.
- * 4. No user, student or staff id is ever sent from the client: the backend
+ * 4. No account id is ever sent from the client: the backend
  *    infers the authenticated account from the session.
  * 5. Unknown fields are dropped rather than guessed, and a response that omits
  *    a field leaves it unknown instead of defaulting it to a saved value.
@@ -22,7 +22,7 @@ export const NOTIFICATION_PREFERENCE_KEY = Object.freeze({
   IN_APP: 'inApp',
   EMAIL: 'email',
   SECURITY_ALERTS: 'securityAlerts',
-  ACADEMIC_UPDATES: 'academicUpdates',
+  WEBSITE_UPDATES: 'websiteUpdates',
   BILLING_UPDATES: 'billingUpdates',
 })
 
@@ -40,10 +40,10 @@ const FIELD_ALIASES = Object.freeze({
     'security_alerts',
     'securityNotifications',
   ],
-  [NOTIFICATION_PREFERENCE_KEY.ACADEMIC_UPDATES]: [
-    'academicUpdates',
-    'academic_updates',
-    'academicNotifications',
+  [NOTIFICATION_PREFERENCE_KEY.WEBSITE_UPDATES]: [
+    'websiteUpdates',
+    'website_updates',
+    'websiteNotifications',
   ],
   [NOTIFICATION_PREFERENCE_KEY.BILLING_UPDATES]: [
     'billingUpdates',
@@ -62,7 +62,7 @@ export const NOTIFICATION_PREFERENCE_FIELDS = Object.freeze([
     channel: NOTIFICATION_PREFERENCE_CHANNEL.IN_APP,
     label: 'In-app notifications',
     description:
-      'Shows announcements, schedule changes, attendance, assessment and grade updates inside the portal.',
+      'Shows website, publishing, domain and account updates in your workspace.',
   }),
   Object.freeze({
     key: NOTIFICATION_PREFERENCE_KEY.EMAIL,
@@ -79,10 +79,10 @@ export const NOTIFICATION_PREFERENCE_FIELDS = Object.freeze([
       'Sign-in, password and connected-account changes. Critical alerts may be mandatory, so the backend can refuse to disable them.',
   }),
   Object.freeze({
-    key: NOTIFICATION_PREFERENCE_KEY.ACADEMIC_UPDATES,
+    key: NOTIFICATION_PREFERENCE_KEY.WEBSITE_UPDATES,
     channel: NOTIFICATION_PREFERENCE_CHANNEL.IN_APP,
-    label: 'Academic updates',
-    description: 'Announcements, timetable changes, attendance and assessment activity.',
+    label: 'Website updates',
+    description: 'Website edits, publishing status and domain activity.',
   }),
   Object.freeze({
     key: NOTIFICATION_PREFERENCE_KEY.BILLING_UPDATES,

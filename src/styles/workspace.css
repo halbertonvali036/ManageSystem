@@ -1,14 +1,3 @@
-/* ============================================================
-   Workspace overview — authenticated account/workspace panels
-   Shared by the Student dashboard. Loaded last so these
-   rules win the cascade. Token-driven; light + dark safe. Role
-   accent resolves through --dashboard-accent.
-   ============================================================ */
-
-.student-dashboard {
-  --dashboard-accent: var(--color-role-student);
-}
-
 /* ── Workspace hero (welcome panel) ───────────────────────── */
 .workspace-hero {
   position: relative;

@@ -1,9 +1,9 @@
-import { ArrowRight, LayoutTemplate } from 'lucide-react'
+import { ArrowRight, Eye, LayoutTemplate } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import useTranslation from '@/hooks/useTranslation'
 import { countTemplateSections, TEMPLATE_CATEGORY_LABELS } from '@/models/siteTemplate'
 import { getSiteTheme } from '@/models/siteTheme'
-import { getSiteSection } from '@/models/siteSection'
+import { getSiteSection, SECTION_TYPE_LABELS } from '@/models/siteSection'
 import { NEW_SITE_PATH } from '@/utils/constants'
 
 /**
@@ -26,17 +26,20 @@ function TemplatePreview({ template }) {
       style={{
         background: theme.tokens.background,
         color: theme.tokens.text,
+        '--template-accent': theme.tokens.primary,
       }}
       data-theme={theme.id}
     >
       {pages.map((page) => (
         <span className="template-card__page" key={page.id}>
+          <span className="template-card__browser"><i /><i /><i /></span>
           {page.sections.length ? (
             page.sections.map((sectionId) => {
               const section = getSiteSection(sectionId)
               return (
                 <span
                   className="template-card__band"
+                  data-section={sectionId}
                   key={`${page.id}-${sectionId}`}
                   style={{
                     background:
@@ -46,9 +49,13 @@ function TemplatePreview({ template }) {
                           ? theme.tokens.accentSoft
                           : 'transparent',
                     borderRadius: section?.style.radius ? theme.tokens.radiusScale : 0,
-                    height: sectionId === 'hero' ? 34 : 18,
+                    minHeight: sectionId === 'hero' ? 62 : 28,
                   }}
-                />
+                >
+                  <span className="template-card__skeleton-heading" />
+                  <span className="template-card__skeleton-line" />
+                  {sectionId === 'hero' || sectionId === 'cta' ? <span className="template-card__skeleton-button" /> : null}
+                </span>
               )
             })
           ) : (
@@ -94,6 +101,17 @@ function TemplateCard({ template }) {
         </ul>
       </div>
 
+      <details className="template-card__inspect">
+        <summary><Eye size={15} aria-hidden="true" />{t('builderPolish.previewStructure')}</summary>
+        <ul>
+          {template.pages.map((page) => <li key={page.id}>
+            <strong>{t(page.nameKey)}</strong>
+            <span>{page.sections.length
+              ? page.sections.map((id) => t(SECTION_TYPE_LABELS[id] ?? 'editor.section.custom')).join(' · ')
+              : t('builderPolish.blankPage')}</span>
+          </li>)}
+        </ul>
+      </details>
       <div className="template-card__actions">
         {/*
           The template id travels in the query string rather than as router

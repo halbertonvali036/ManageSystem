@@ -6,7 +6,7 @@ import {
   applyDocumentLocale,
   persistLocale,
   readAppliedLocale,
-  readStoredLocale,
+  resolveInitialLocale,
 } from '@/utils/locale'
 
 /**
@@ -16,7 +16,11 @@ import {
  * `useTranslation`, so no component owns language-switch behaviour of its own.
  */
 function LocaleProvider({ children }) {
-  const [locale, setLocaleState] = useState(() => readStoredLocale() ?? 'az')
+  // Resolved through one helper so the stored locale, the `az` default and the
+  // pre-paint script in index.html cannot drift apart. AZ always means
+  // Azerbaijani and EN always means English; anything unrecognised in storage
+  // falls back to the product's first language rather than to whatever was there.
+  const [locale, setLocaleState] = useState(resolveInitialLocale)
 
   useEffect(() => {
     if (readAppliedLocale() !== locale) {

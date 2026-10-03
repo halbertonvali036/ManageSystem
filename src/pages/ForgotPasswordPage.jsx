@@ -65,9 +65,9 @@ function ForgotPasswordPage() {
       <div className="auth-card anim-scale-in">
         <div className="auth-card__head">
           <p className="auth-card__eyebrow anim-fade-up anim-delay-1">Account recovery</p>
-          <h2 className="auth-card__title anim-fade-up anim-delay-1">
+          <h1 className="auth-card__title anim-fade-up anim-delay-1">
             Check your inbox
-          </h2>
+          </h1>
           <p className="auth-card__subtitle anim-fade-up anim-delay-2">
             Recovery link on its way
           </p>
@@ -97,9 +97,9 @@ function ForgotPasswordPage() {
     <div className="auth-card anim-scale-in">
       <div className="auth-card__head">
         <p className="auth-card__eyebrow anim-fade-up anim-delay-1">Account recovery</p>
-        <h2 className="auth-card__title anim-fade-up anim-delay-1">
+        <h1 className="auth-card__title anim-fade-up anim-delay-1">
           Forgot password?
-        </h2>
+        </h1>
         <p className="auth-card__subtitle anim-fade-up anim-delay-2">
           No worries — we will help you get back in.
         </p>

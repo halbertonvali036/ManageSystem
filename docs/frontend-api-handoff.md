@@ -1,136 +1,238 @@
-# Website Builder — Frontend → Backend API Handoff
+# SiteBuilder — Frontend → Backend API Handoff
 
 Reference for the backend developer connecting the existing frontend.
-The frontend is ready and does NOT require the backend to adopt any exact
-framework shape — these are the contracts it already understands.
 
-The public product is a website builder. Project/editor persistence, publishing,
-forms, billing and security integration notes are also maintained in the phase
-documents alongside this file. Academic resources below are retained for internal
-Admin only; references to Teacher/Student portals describe legacy contracts, not
-active public routes.
+The product is a **website builder**: people create a site project, edit pages in
+a visual editor, manage domains and deployments inside a workspace, and are
+billed per plan. The frontend service layer is complete and does **not** require
+any particular backend framework — these are the contracts it already
+understands.
 
-## Final status (2026-09)
+Every path below is relative to `VITE_API_BASE_URL`. Nothing is hardcoded in
+components; every service reads `config.api.baseUrl`.
 
--   Frontend service layer is complete and ready to consume a real API.
--   Auth is currently mock/demo-only (`authService` demo accounts); the backend
-    is expected to provide real token-based auth (login/logout/me). The public
-    sign-in form takes email + password only and routes on the role the session
-    returns — there is no public role picker and no public demo credentials.
--   Admin access has a separate, unlisted entry point at `/admin/login`. It is
-    not linked from the landing page, the public sign-in or registration.
--   The account profile uses the shared implementation
-    (`src/components/profile/ProfileView.jsx`). It renders session and backend
-    data only, and shows an explicit "backend not connected" state until a
-    profile endpoint is available.
--   Demo login must be removed when real backend auth is integrated.
--   Error handling for 401/403/404/409/422/500 is already prepared in
-    `src/services/httpClient.js` and `src/utils/apiErrors.js`.
+## Final status (verified 2026-10)
+
+- The frontend service layer is complete and ready to consume a real API.
+- **Authentication transport is not yet settled.** `httpClient` sends only
+  `Content-Type: application/json`. It attaches **no bearer token** and does
+  **not** set `credentials: 'include'`. The backend team and frontend must agree
+  on one transport before real accounts are enabled.
+- Sign-in is mock/demo **only in Vite dev mode** (`import.meta.env.DEV`). A
+  production build has an empty demo account list, refuses any request to
+  `authService.login` without a connected backend, and discards saved sessions
+  that carry the demo token. **Remove the demo accounts when real auth lands.**
+- Registration (`authService.register`) always throws
+  `BackendNotConnectedError` until a registration contract is agreed.
+- Admin is a separate internal role reachable only through the unlinked
+  `/admin/login` route. It is never linked from the landing page, public sign-in
+  or registration, and public registration cannot create an admin account.
+- **Client-side route guards and role checks are UI isolation, not security.**
+  The backend must enforce every authorization rule. See
+  `src/utils/roles.js` and `src/models/workspacePermission.js`.
 
 ## Conventions (already implemented client-side)
 
-- Single HTTP client: `src/services/httpClient.js` (base URL from `VITE_API_BASE_URL`).
-  Nothing is hardcoded in components; all services read `config.api.baseUrl` and
-  short-circuit to empty lists when it is unset.
-- Error taxonomy (already implemented): `RequestError` carries `status`, `code`, `data`;
-  `httpErrorCodeForStatus` maps 400/401/403/404/422/500+; `getRequestErrorCode` /
-  `getRequestErrorMessage` give stable codes + messages. Reuse — do not duplicate.
-- Field error normalization: `src/utils/apiErrors.js` → `normalizeFieldErrors`
-  (flat `{ field: message }`) and `getSubmitFeedback`. Forms render
-  `serverFieldErrors` + `submitError`; mutations track `dirty`/`isSaving`/
-  `saveError`/`savedSuccessfully`/`validationMessage`.
-- Identity: authenticated identity is inferred on the backend from auth scope. The
-  frontend NEVER sends `teacherId`/`studentId` in My‑X calls and NEVER hardcodes them.
-- No frontend "conflict engine": 409/422/field errors are surfaced, not resolved, in the UI.
-- No fake data anywhere; mutations throw `BackendNotConnectedError` when not connected.
+- **Single HTTP client** — `src/services/httpClient.js`. Exports
+  `httpClient.get/post/put/patch/delete/upload`. `upload` drops the JSON
+  content type so the browser sets the multipart boundary.
+- **Error taxonomy** — `RequestError` carries `{ status, code, data, message }`.
+  `codeForStatus` maps 400→`UNKNOWN`, 401→`UNAUTHORIZED`, 403→`FORBIDDEN`,
+  404→`NOT_FOUND`, 422→`VALIDATION`, 5xx→`SERVER`; a network failure produces
+  `NETWORK`. Helpers `getRequestErrorCode` and `getRequestErrorMessage` give a
+  stable code plus a localised-safe default message. Reuse — do not duplicate.
+- **Error body** — the client reads `data.message` for the thrown message and
+  keeps the whole parsed body on `error.data`. **Return `{ message, errors? }`**
+  where `errors` maps field→message or field→string[].
+- **Response unwrapping** — services accept a bare array/object *or* an
+  enveloped `{ data }` / `{ items }` response (`response?.data ?? response`).
+  Either shape works.
+- **204 / empty body** — handled and returned as `null`.
+- **Not connected** — with an empty `VITE_API_BASE_URL`, `httpClient` throws
+  `BackendNotConnectedError` before any fetch. Reads render honest empty states
+  and writes render an explicit "integration unavailable" state.
+- **No fake data anywhere.** No seeded projects, prices, invoices, users,
+  submissions or successful requests. Mutations refuse rather than simulate.
+- **No frontend conflict engine.** 409/422/field errors are surfaced to the
+  user, never auto-resolved.
+- **Identity is server-derived.** The frontend never sends a user id for "me"
+  reads. Roles come back from the session.
 
-## Per-resource summary (frontend expectation)
+## Per-resource contract
 
-### Auth
-- Service: `authService`
-- Operations: login, logout, me, change password, sign up (platform user; no role selection).
-- Expects: token-based identity; `me` returns `{ id, name, email, role }`.
+### Auth — `src/services/authService.js`
 
-### Students
-- Service: `studentService` (admin) / `useStudents`; student self-view via `/student/*`.
-- Ops: list, get, create, update, delete.
-- IDs: `studentId` (query param `studentId`), requires `classId`/enrollment join for rosters.
-- Filters: `search`, `status`, `classId`.
+| Method | Request |
+| --- | --- |
+| `login` | `POST /auth/login` `{ email, password }` → `{ token, user: { id, name, email, role } }` |
+| `logout` | client-side only (clears storage); add an endpoint if you need server revocation |
+| `register` | **not implemented** — always refuses |
+| `forgotPassword` | `POST /auth/forgot-password` `{ email }` |
+| `resetPassword` | `POST /auth/reset-password` `{ token, newPassword }` |
+| `resendVerification` | `POST /auth/resend-verification` `{ email }` |
+| `beginGoogleLogin` | `POST /auth/oauth/google/start` `{ intent, returnTo }` → `{ authorizationUrl }` |
+| `handleOAuthCallback` | `POST /auth/oauth/google/callback` `{ code, state }` |
+| `linkGoogleAccount` | `POST /auth/oauth/google/link` `{ intent, returnTo }` → `{ authorizationUrl }` |
 
-### Teachers
-- Service: `teacherService` (admin) / `useTeachers`.
-- Ops: list, get, create, update, delete.
-- ID: `teacherId`; joined to classes (`teacherId` on class) and users via `userId`.
+`role` must be one of the values in `src/utils/roles.js`; an unknown role causes
+the client to discard the session. `intent` is a routing hint only — the backend
+still decides which account and role the caller ends up with. The returned
+`authorizationUrl` is host-validated against Google's domains before redirect.
 
-### Departments / Subjects
-- Services: `departmentsService`, `subjectsService`.
-- Ops: list/get/create/update/delete.
-- IDs: `departmentId`, `subjectId`; subject requires `departmentId`.
+### Workspaces — `workspaceService.js`
 
-### Courses
-- Service: `coursesService`, `useCourses/useCourse`.
-- Ops: list/get/create/update/delete.
-- ID: `courseId`; linked to `subjectId` + `teacherId`; filters `search/name/code/departmentId`.
+`GET /workspaces` · `POST /workspaces` · `GET /workspaces/:id` ·
+`PUT /workspaces/:id` · `DELETE /workspaces/:id` ·
+`POST /workspaces/:workspaceId/sites`
 
-### Classes
-- Service: `classesService`, `useClasses/useClass`.
-- Ops: list/get/create/update/delete.
-- Relationships: `courseId`, `teacherId`, free-text `academicYear`/`semester` names,
-  `schedule` (days + time range), `capacity`, `status`.
-- Filters: `search/course/teacher/academicYear/semester/status`.
+### Sites — `siteService.js`
 
-### Enrollments
-- Service: `enrollmentsService` / `useEnrollStudents` + roster readers.
-- Ops: list (`classId`, `studentId`), add student to class, remove student from class.
-- Identity: `studentId` + `classId`; uses the class roster (no separate data source).
+`GET /sites` (filters `search`, `status`, …) · `GET /sites/:id` ·
+`POST /sites` · `PUT /sites/:id` · `DELETE /sites/:id` ·
+`POST /sites/:id/duplicate`
 
-### Academic Years / Semesters
-- Services: `academicYearsService`, `semestersService` (admin); `useAcademicYears`,
-  `useSemesters`.
-- Ops: list/get/create/update/delete.
-- ID‑based: `semestersService` via `/academic-years/:id/semesters` (ID‑dependent selects);
-  IDs `academicYearId`/`semesterId`. NOTE: the **Class** module intentionally stores
-  free-text `academicYear`/`semester` NAMES (kept for backward compat) — do not convert
-  both to IDs; classes keep names unless a dedicated refactor is agreed.
-  Academic years use `name` labels (`2025-2026`), `startDate`, `endDate`, `status`.
+### Editor draft & site settings
 
-### Schedules
-- Service: `schedulesService` / teacher `useMySchedule`, student `useMySchedule`.
-- Ops: list/get/create/update/delete.
-- ID‑based: `academicYearId`/`semesterId`/`classId`/`courseId`/`teacherId`;
-  filters `search/academicYearId/semesterId/classId/courseId/teacherId/dayOfWeek/date`.
-- Derived into teacher/student "My Schedule" via auth scope (no extra ids sent).
+- `GET|PUT /sites/:siteId/draft` — `siteEditorService.js`. Round-trips the whole
+  normalized editor document, including theme tokens, motion metadata and form
+  blocks.
+- `GET|PUT /sites/:siteId/settings` — `siteSettingsService.js`. Publication
+  status is **read-only** and is deliberately omitted from the mutation payload.
 
-### Attendance
-- Service: `attendanceService` (admin), teacher `useMyClassStudents`-based marking,
-  student read-only.
-- Ops: list, get, create marks (bulk `POST`), delete.
-- Statuses: `PRESENT/ABSENT/LATE/EXCUSED` via shared Attendance model constants.
-- Marking requires `classId` + `date` + real roster; teacher/student read-only views
-  in their portals.
+### Publishing — `src/services/sitePublishService.js`
 
-### Assessments
-- Service: `assessmentsService`, teacher `useMyAssessments`, student read-only.
-- Ops: list/get/create/update/delete; no assessmentId sent unless creating.
-- Relationships: `courseId`/`classId`-scoped; statuses `DRAFT/PUBLISHED/CLOSED`;
-  type labels from the shared Assessment model.
+**Intentionally has no endpoints.** `publishSite`, `unpublishSite`,
+`getPublishStatus` and `getPublishedUrl` always refuse
+(`BackendNotConnectedError`) even when an API URL *is* configured. Reads return
+unknown status and a `null` published URL. Real deployment work goes through
+`deploymentService` below; do not invent publishing endpoints.
 
-### Grades
-- Service: `gradesService` (admin), `useMyGrades`/`useMyGrade` (teacher/student read-only).
-- Ops: list/get/create/update/delete; bulk save `POST /grades/bulk`.
-- Keys: `studentId` + `courseId` + `assessmentId` (optional); `score`, `notes`,
-  `assessmentType`, `assessmentName`, `assessmentDate`, `maxScore`.
-- Read-only student view; grades reference `assessmentId` where present; no GPA/average
-  computed client-side.
+### Deployments — `deploymentService.js`
 
-## Backend-side notes (items 13–15)
+`GET /workspaces/:workspaceId/deployments` (filters `siteId`, `status`) ·
+`GET /workspaces/:workspaceId/deployments/:deploymentId` ·
+`POST /workspaces/:workspaceId/deployments` ·
+`POST .../deployments/:deploymentId/redeploy` · `/rollback` · `/stop` ·
+`GET /workspaces/:workspaceId/sites` (deployable sites)
 
-- Teacher/Student endpoints: infer `teacherId`/`studentId` from authenticated identity.
-  Admin endpoints are system-wide.
-- Return errors: 401/403/404/409/422 with `{ message, errors? }` where `errors` maps
-  field→string[] (e.g. `email`, `classId`, `courseId`, `semesterId`, `score`). The
-  frontend normalizes these into per-field + form-level errors automatically.
-- Conflicts (409): duplicate record, duplicate enrollment, class capacity reached,
-  schedule overlap, teacher schedule conflict — return a clear `message`; the frontend
-  displays it in the form error area. No fake resolution.
-- Do not invent endpoints; reuse the operations above registered under a single base URL.
+### Domains — `domainService.js`
+
+`GET /workspaces/:workspaceId/domains` ·
+`POST /workspaces/:workspaceId/domains` ·
+`GET|DELETE /workspaces/:workspaceId/domains/:domainId` ·
+`POST .../domains/:domainId/verify` · `POST .../domains/:domainId/primary`
+
+DNS record values are supplied by the backend; the UI never invents them.
+Statuses: `unconfigured | pending | connected | error` (SSL: `unconfigured |
+pending | active | error`).
+
+### Database / schema builder — `databaseService.js`
+
+`GET|POST /workspaces/:workspaceId/database/models` ·
+`GET|PUT|DELETE .../models/:modelId` ·
+`GET|POST .../models/:modelId/records` ·
+`GET|PUT|DELETE .../models/:modelId/records/:recordId`
+
+### Members — `memberService.js`
+
+`GET|POST /workspaces/:workspaceId/members` ·
+`GET|PATCH|DELETE .../members/:memberId` ·
+`POST .../members/:memberId/invite/resend`
+
+Invite is a `POST` to the collection. Role updates use `PATCH` with `{ role }`.
+
+### Capabilities — `capabilityService.js`
+
+`GET /workspaces/:workspaceId/capabilities` ·
+`GET /workspaces/:workspaceId/capabilities/:capabilityId` ·
+`POST .../capabilities/:capabilityId/enable` · `/disable` ·
+`PUT .../capabilities/:capabilityId` (config, body `{ config }`)
+
+### Integrations — `integrationService.js`
+
+`GET /workspaces/:workspaceId/integrations` ·
+`GET /workspaces/:workspaceId/integrations/:integrationId` ·
+`POST .../integrations/:integrationId/connect` · `/disconnect` ·
+`PUT .../integrations/:integrationId` (config)
+
+### Activity & usage — `activityService.js`
+
+`GET /workspaces/:workspaceId/activity` · `GET .../usage` · `GET .../usage/limits`
+· `GET /admin/audit` (platform-wide, admin scope)
+
+### AI assistant — `aiService.js`
+
+`GET /workspaces/:workspaceId/ai/conversations` ·
+`GET .../conversations/current` · `.../conversations/:conversationId` ·
+`GET .../ai/suggestions` · `POST .../conversations/messages` ·
+`POST .../ai/actions`
+
+Reads append a context query string (site/domain scope) via `buildAiContext`;
+honour it as a filter and echo it back in the response shape the client expects.
+
+### Account security — `accountSecurityService.js`
+
+`GET /account/security` · `POST /account/security/password` ·
+`POST /account/security/verification-email` ·
+`GET /account/security/sessions` · `DELETE /account/security/sessions/:sessionId`
+· `POST /account/security/sessions/revoke-others` ·
+`GET /account/security/activity` ·
+`POST /account/security/two-factor/setup` · `/setup/confirm` · `/disable` ·
+`POST /account/security/qr-login` · `GET|DELETE /account/security/qr-login/:sessionId`
+
+### Billing — `billingService.js`
+
+`GET /billing` · `GET /billing/plans` · `GET /billing/payment-methods` ·
+`GET /billing/invoices` · `GET /billing/invoices/:invoiceId/receipt` ·
+`POST /billing/checkout-session` · `POST /billing/portal-session` ·
+`POST /billing/subscription` · `POST /billing/subscription/resume` ·
+`POST /billing/payment-methods` ·
+`POST /billing/payment-methods/:paymentMethodId/default` ·
+`DELETE /billing/payment-methods/:paymentMethodId`
+
+Checkout/portal sessions are expected to return a provider URL to redirect to,
+the same shape as the OAuth authorization URL.
+
+### Notifications — `notificationsService.js`
+
+`GET /notifications` (filters `category`) · `GET /notifications/unread-count` ·
+`PATCH /notifications/:id/read` · `POST /notifications/read-all` ·
+`GET|PATCH /notifications/preferences`
+
+### Support — `supportService.js`
+
+`POST /support/requests`
+
+### Users (admin) — `usersService.js`
+
+`GET /users` (filters `search`, `status`, …) · `GET /users/:id` ·
+`POST /users` · `PUT /users/:id` · `DELETE /users/:id` ·
+`POST /users/:id/activate` · `POST /users/:id/deactivate`
+
+### Admin collections — `adminPlatformService.js`
+
+`GET /admin/:section` where `section` ∈ `users | websites | templates | billing |
+domains | notifications | support | audit` (see `ADMIN_COLLECTIONS` in
+`src/models/adminPlatform.js`, which also defines each table's columns). `users`
+routes through `usersService` instead.
+
+## Backend-side requirements
+
+- **Return errors as** 401/403/404/409/422 with `{ message, errors? }` where
+  `errors` maps field→message or field→string[] (e.g. `email`, `hostname`,
+  `name`, `role`). The client surfaces these verbatim.
+- **Enforce authorization server-side.** `role` on the session drives UI only.
+  Workspace membership and per-capability permission checks must be enforced on
+  every scoped endpoint.
+- **Agree the auth transport** (bearer header vs. cookie session) before real
+  accounts are enabled. The client is ready for either; it currently sends
+  neither credential.
+- **Do not invent endpoints** beyond those listed. The client short-circuits to
+  honest states for anything not yet built, so partial rollout is safe.
+
+## Backend work still outstanding
+
+Server persistence for sites/editor drafts/media · publishing and hosting ·
+form submission delivery and storage (see `src/services/siteFormService.js`,
+which deliberately always refuses) · payments · QR pairing completion ·
+Google sign-in completion.

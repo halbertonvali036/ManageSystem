@@ -1,0 +1,558 @@
+/* ============================================================
+   Workspace Team / Members
+   Reuses the existing dark + green-neon design tokens. This is a
+   product of this codebase, not a copy of any other tool's design.
+
+   Two things here are deliberately kept apart. A role says what
+   somebody may do, and a status says where they are between "invited"
+   and "working here" — so they get separate palettes, and an
+   invitation never borrows the colour of an active member.
+   ============================================================ */
+
+/* ── Page shell ────────────────────────────────────────────── */
+.mem-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.mem-page__head-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.mem-page__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.mem-page__count {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.mem-page__cta {
+  flex-shrink: 0;
+}
+
+.mem-page__notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.mem-page__notice svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-accent);
+}
+
+.mem-page__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.mem-page__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.mem-page__filter {
+  display: block;
+  min-width: 0;
+}
+
+/* ── Chips ─────────────────────────────────────────────────── */
+.mem-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-2);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs, 11px);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* Role: how much somebody may do. */
+.mem-chip--owner {
+  background: var(--color-accent-bg);
+  border-color: var(--color-accent-border);
+  color: var(--color-accent);
+}
+
+.mem-chip--admin {
+  background: var(--color-primary-bg);
+  border-color: var(--color-primary-soft);
+  color: var(--color-primary-text);
+}
+
+.mem-chip--editor {
+  background: var(--color-info-bg);
+  border-color: color-mix(in srgb, var(--color-info) 40%, transparent);
+  color: var(--color-info);
+}
+
+.mem-chip--viewer {
+  background: var(--color-surface-2);
+  border-color: var(--color-border);
+  color: var(--color-text-soft);
+}
+
+/* Status: where the membership stands. Deliberately not the role palette —
+   an invitation must not read like an active member. */
+.mem-chip--active {
+  background: var(--color-success-bg);
+  border-color: color-mix(in srgb, var(--color-success) 40%, transparent);
+  color: var(--color-success);
+}
+
+.mem-chip--invited {
+  background: var(--color-warning-bg);
+  border-color: color-mix(in srgb, var(--color-warning) 40%, transparent);
+  color: var(--color-warning);
+}
+
+.mem-chip--suspended {
+  background: var(--color-danger-bg);
+  border-color: color-mix(in srgb, var(--color-danger) 40%, transparent);
+  color: var(--color-danger);
+}
+
+/* ── Member rows ───────────────────────────────────────────── */
+.mem-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mem-row {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: border-color var(--transition-fast);
+}
+
+.mem-row:hover {
+  border-color: var(--color-border-strong);
+}
+
+.mem-row__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-full);
+  user-select: none;
+}
+
+.mem-row__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.mem-row__name {
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mem-row__name-missing {
+  font-weight: 500;
+  font-style: italic;
+  color: var(--color-text-soft);
+}
+
+.mem-row__email {
+  margin: 0;
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mem-row__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.mem-role__select {
+  min-width: 132px;
+}
+
+.mem-row__dates {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  min-width: 0;
+}
+
+.mem-row__date {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-size: var(--text-meta);
+}
+
+.mem-row__date dt {
+  flex-shrink: 0;
+  color: var(--color-text-soft);
+}
+
+.mem-row__date dd {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mem-row__hint {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-soft);
+}
+
+.mem-row__hint svg {
+  flex-shrink: 0;
+}
+
+.mem-row__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.mem-row__action {
+  flex-shrink: 0;
+}
+
+.mem-row__action--danger:hover:not(:disabled) {
+  color: var(--color-danger);
+  border-color: color-mix(in srgb, var(--color-danger) 40%, transparent);
+}
+
+/* The owner's row has no remove control, so the column explains why rather than
+   leaving an empty gap in the row. */
+.mem-row__locked {
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-soft);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ── Empty state ───────────────────────────────────────────── */
+.mem-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  background: var(--color-surface-2);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+}
+
+.mem-empty__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: var(--space-1);
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-md);
+}
+
+.mem-empty__title {
+  margin: 0;
+  font-size: var(--text-body);
+  color: var(--color-text);
+}
+
+.mem-empty__text {
+  margin: 0;
+  max-width: 52ch;
+  font-size: var(--text-meta);
+  line-height: 1.5;
+}
+
+.mem-empty__cta {
+  margin-top: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* ── Invite dialog ─────────────────────────────────────────── */
+.mem-invite__hint {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.mem-invite__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-5) 0;
+}
+
+.mem-invite__note {
+  margin: var(--space-4) var(--space-5) 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-warning-bg);
+  border: 1px solid color-mix(in srgb, var(--color-warning) 40%, transparent);
+  border-radius: var(--radius-md);
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--color-warning);
+}
+
+.mem-invite .modal__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ── Permission matrix ─────────────────────────────────────── */
+.mem-matrix {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.mem-matrix__description {
+  margin: var(--space-1) 0 0;
+  max-width: 68ch;
+  font-size: var(--text-meta);
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+.mem-matrix__summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.mem-matrix__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.mem-matrix__chip--owner {
+  background: var(--color-accent-bg);
+  border-color: var(--color-accent-border);
+  color: var(--color-accent);
+}
+
+.mem-matrix__chip--admin {
+  background: var(--color-primary-bg);
+  border-color: var(--color-primary-soft);
+  color: var(--color-primary-text);
+}
+
+.mem-matrix__chip-count {
+  padding-left: var(--space-2);
+  border-left: 1px solid currentColor;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.mem-matrix__scroll {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.mem-matrix__table {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  font-size: var(--text-meta);
+}
+
+.mem-matrix__table th,
+.mem-matrix__table td {
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mem-matrix__table thead th {
+  font-size: var(--text-xs, 11px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  background: var(--color-surface-2);
+  white-space: nowrap;
+}
+
+.mem-matrix__table tbody tr:last-child th,
+.mem-matrix__table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.mem-matrix__table tbody tr:hover {
+  background: var(--color-surface-2);
+}
+
+.mem-matrix__table tbody th {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.mem-matrix__action {
+  display: block;
+}
+
+.mem-matrix__action-hint {
+  display: block;
+  margin-top: 1px;
+  font-size: var(--text-xs, 11px);
+  font-weight: 500;
+  color: var(--color-text-soft);
+  white-space: normal;
+}
+
+.mem-matrix__cell {
+  width: 72px;
+  text-align: center !important;
+}
+
+.mem-matrix__mark--on {
+  color: var(--color-success);
+}
+
+.mem-matrix__mark--off {
+  color: var(--color-text-soft);
+  opacity: 0.55;
+}
+
+.mem-matrix__note {
+  margin: 0;
+  font-size: var(--text-xs, 11px);
+  line-height: 1.55;
+  color: var(--color-text-soft);
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .mem-row {
+    grid-template-columns: 40px minmax(0, 1fr);
+    row-gap: var(--space-2);
+  }
+
+  .mem-row__meta,
+  .mem-row__dates,
+  .mem-row__actions {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+
+  .mem-row__locked {
+    text-align: left;
+  }
+}
+
+@media (max-width: 640px) {
+  .mem-page__head-actions {
+    align-items: stretch;
+  }
+
+  .mem-page__toolbar,
+  .mem-page__filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mem-page__filter .form__select {
+    width: 100%;
+  }
+
+  .mem-role__select {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mem-row {
+    transition: none;
+  }
+}

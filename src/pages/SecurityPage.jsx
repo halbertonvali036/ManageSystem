@@ -12,7 +12,6 @@ import PasswordChangeCard from '@/components/security/PasswordChangeCard'
 import QrLoginCard from '@/components/security/QrLoginCard'
 import SecurityActivityCard from '@/components/security/SecurityActivityCard'
 import SecurityNotice from '@/components/security/SecurityNotice'
-import SupportContactCard from '@/components/security/SupportContactCard'
 import TwoFactorCard from '@/components/security/TwoFactorCard'
 import useAccountSecurity from '@/hooks/useAccountSecurity'
 import useAuth from '@/hooks/useAuth'
@@ -42,6 +41,10 @@ const resolveTwoFactorStatus = (enabled) => {
  * resolves safe empty values, so the page renders explicit unavailable and
  * empty states. No verification, revocation, two-factor change or QR pairing is
  * ever fabricated.
+ *
+ * Support lives on its own page. Asking the account team for help is a different
+ * job from hardening the account, and putting it here made a long page longer
+ * while giving the sidebar no destination it could link to.
  */
 function SecurityPage() {
   const { t } = useTranslation()
@@ -183,8 +186,6 @@ function SecurityPage() {
       <NotificationPreferencesCard />
 
       <SecurityActivityCard events={events} />
-
-      <SupportContactCard />
     </div>
   )
 }

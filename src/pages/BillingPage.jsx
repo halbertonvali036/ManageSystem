@@ -32,6 +32,13 @@ function BillingPage() {
     refetch,
     startCheckout,
     openBillingPortal,
+    cancelSubscription,
+    resumeSubscription,
+    cycle,
+    selectCycle,
+    currentPlan,
+    subscriptionActions,
+    cancellationScheduled,
   } = useBillingOverview()
 
   if (isLoading) {
@@ -49,7 +56,9 @@ function BillingPage() {
         <div className="table-state table-state--error">
           <h2 className="table-state__title">{t('accountPolish.failedToLoadBilling')}</h2>
           <p className="table-state__text">{loadError}</p>
-          <button type="button" className="btn btn--primary" onClick={refetch}>{t('accountPolish.retry')}</button>
+          <button type="button" className="btn btn--primary" onClick={() => refetch()}>
+            {t('accountPolish.retry')}
+          </button>
         </div>
       </Card>
     )
@@ -61,18 +70,25 @@ function BillingPage() {
 
       <BillingPlanSummary
         overview={overview}
+        subscriptionActions={subscriptionActions}
+        cancellationScheduled={cancellationScheduled}
         canManageBilling={canManageBilling}
         pendingAction={pendingAction}
         actionError={actionError}
         onManageSubscription={openBillingPortal}
+        onCancelSubscription={cancelSubscription}
+        onResumeSubscription={resumeSubscription}
       />
 
       <BillingPlansSection
         plans={plans}
         isPlaceholderCatalogue={isPlaceholderCatalogue}
-        currentPlanId={overview?.planId ?? null}
+        currentPlan={currentPlan}
+        currentStatus={overview?.status ?? null}
+        cycle={cycle}
+        onCycleChange={selectCycle}
         canSelect={canManageBilling}
-        onSelect={(plan) => startCheckout(plan.id)}
+        onSelect={(plan) => startCheckout(plan.id, cycle)}
       />
 
       <div className="billing-columns">

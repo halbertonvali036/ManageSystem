@@ -32,11 +32,11 @@ Builder chrome includes restrained panel/dialog/disclosure entrances, device/con
 - Visual foundation: `src/components/common/AmbientVisual.jsx`, `src/layouts/AuthLayout.jsx`, `src/pages/LandingPage.jsx`.
 - Styles/imports: `src/styles/site-motion.css`, `src/styles/builder-motion.css`, `src/main.jsx`.
 - Localization: `src/i18n/motionLocales.js`, `src/i18n/locales/az.js`, `src/i18n/locales/en.js`. Azerbaijani first, matching English translations.
-- Checks: `phase12-check.cjs`; this document.
+- Checks: `scripts/validation/phase12-check.cjs`; this document.
 
 ## Verification
 
-Run `npm run lint` and `npm run build`. Browser checks use an already available Playwright installation (no project dependency added): start Vite on port 5173, set `PLAYWRIGHT_MODULE` to the installed `playwright-core` module path, and run `node phase12-check.cjs`.
+Run `npm run lint` and `npm run build`. Browser checks use an already available Playwright installation (no project dependency added): start Vite on port 5173, set `PLAYWRIGHT_MODULE` to the installed `playwright-core` module path, and run `node scripts/validation/phase12-check.cjs`.
 
 The checks exercise metadata roundtrips and duplication, unchanged content, validation/defaults, Azerbaijani controls, local Preview behavior, keyboard/native drag reordering, one-time scroll entrances including tall targets, focus visibility, initial/live reduced motion, mobile timing, narrow drawers, and the landing decoration. This is targeted Chromium coverage, not a full cross-browser or assistive-technology audit.
 

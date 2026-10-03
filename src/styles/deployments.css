@@ -1,0 +1,412 @@
+/* ============================================================
+   Workspace Deployments
+   Reuses the existing dark + green-neon design tokens. This is a
+   product of this codebase, not a copy of any other tool's design.
+
+   Nothing here animates toward a finished state on its own: the
+   spinner marks a build the backend says is running, and the
+   timeline only ticks a stage the backend reported reaching.
+   ============================================================ */
+
+/* ── Page shell ────────────────────────────────────────────── */
+.dep-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.dep-page__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.dep-page__count {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.dep-page__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.dep-page__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.dep-page__filter {
+  display: block;
+  min-width: 0;
+}
+
+.dep-page__actions,
+.dep-page__back {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.dep-page__back {
+  margin-bottom: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-meta);
+  text-decoration: none;
+}
+
+.dep-page__back:hover {
+  color: var(--color-accent);
+}
+
+/* ── State chips ───────────────────────────────────────────── */
+.dep-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-2);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs, 11px);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.dep-chip--draft {
+  background: transparent;
+  border-style: dashed;
+  color: var(--color-text-soft);
+}
+
+.dep-chip--queued,
+.dep-chip--building {
+  background: var(--color-warning-bg);
+  border-color: color-mix(in srgb, var(--color-warning) 40%, transparent);
+  color: var(--color-warning);
+}
+
+.dep-chip--live {
+  background: var(--color-accent-bg);
+  border-color: var(--color-accent-border);
+  color: var(--color-accent);
+}
+
+.dep-chip--failed {
+  background: var(--color-danger-bg);
+  border-color: color-mix(in srgb, var(--color-danger) 40%, transparent);
+  color: var(--color-danger);
+}
+
+.dep-chip--stopped {
+  background: var(--color-surface-2);
+  border-color: var(--color-border-strong);
+  color: var(--color-text-soft);
+}
+
+/* ── Cards ─────────────────────────────────────────────────── */
+.dep-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dep-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: border-color var(--transition-fast, 150ms) ease;
+}
+
+.dep-card:hover {
+  border-color: var(--color-border-strong);
+}
+
+.dep-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.dep-card__title {
+  margin: 0;
+  font-size: var(--text-body);
+  color: var(--color-text);
+  min-width: 0;
+}
+
+.dep-card__link {
+  color: var(--color-text);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.dep-card__link:hover {
+  color: var(--color-accent);
+}
+
+.dep-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-meta);
+  color: var(--color-text-soft);
+}
+
+.dep-card__url {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-accent);
+  word-break: break-all;
+}
+
+.dep-card__log {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-danger-bg);
+  border: 1px solid color-mix(in srgb, var(--color-danger) 40%, transparent);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono, monospace);
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--color-danger);
+  word-break: break-word;
+}
+
+.dep-card__hint {
+  margin: 0;
+  font-size: var(--text-meta);
+  color: var(--color-text-soft);
+}
+
+.dep-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.dep-card__action {
+  flex-shrink: 0;
+}
+
+/* ── Currently live ────────────────────────────────────────── */
+.dep-current {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-accent-bg);
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-md);
+}
+
+.dep-current__version {
+  margin: 0;
+  font-family: var(--font-mono, monospace);
+  font-weight: 600;
+  color: var(--color-accent);
+  word-break: break-all;
+}
+
+.dep-current__url {
+  color: var(--color-accent);
+  word-break: break-all;
+}
+
+.dep-deploy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.dep-deploy__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.dep-deploy__submit {
+  flex-shrink: 0;
+  margin-top: var(--space-6);
+}
+
+/* ── Timeline ──────────────────────────────────────────────── */
+.dep-timeline {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dep-timeline__step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  min-width: 0;
+}
+
+.dep-timeline__step--reached {
+  border-color: var(--color-accent-border);
+}
+
+.dep-timeline__step--skipped {
+  opacity: 0.6;
+  border-style: dashed;
+}
+
+.dep-timeline__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-border-strong);
+}
+
+.dep-timeline__step--reached .dep-timeline__dot {
+  background: var(--color-accent);
+}
+
+.dep-timeline__label {
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.dep-timeline__time,
+.dep-timeline__note {
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-soft);
+  word-break: break-word;
+}
+
+/* ── Detail ────────────────────────────────────────────────── */
+.dep-detail__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.dep-detail__row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.dep-detail__row dt {
+  font-size: var(--text-xs, 11px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-soft);
+}
+
+.dep-detail__row dd {
+  margin: 0;
+  font-size: var(--text-body);
+  color: var(--color-text);
+  word-break: break-word;
+}
+
+/* ── Empty state ───────────────────────────────────────────── */
+.dep-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-surface-2);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+}
+
+.dep-empty__title {
+  margin: 0;
+  font-size: var(--text-body);
+  color: var(--color-text);
+}
+
+.dep-empty__text {
+  margin: 0;
+  font-size: var(--text-meta);
+  line-height: 1.5;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .dep-list {
+    grid-template-columns: 1fr;
+  }
+
+  /* Three stages side by side is unreadable on a phone, so the track
+     becomes a vertical one and keeps the same order. */
+  .dep-timeline {
+    grid-template-columns: 1fr;
+  }
+
+  .dep-deploy {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dep-deploy__submit {
+    margin-top: 0;
+  }
+
+  .dep-page__toolbar,
+  .dep-page__filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dep-page__filter .form__select {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dep-card {
+    transition: none;
+  }
+}

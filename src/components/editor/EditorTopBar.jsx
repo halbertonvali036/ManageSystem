@@ -5,6 +5,7 @@ import {
   Monitor,
   Pencil,
   Settings,
+  Save,
   Smartphone,
   Tablet,
 } from 'lucide-react'
@@ -40,6 +41,7 @@ function EditorTopBar({
   onDeviceChange,
   isPreview,
   onTogglePreview,
+  onSave,
 }) {
   const { t } = useTranslation()
 
@@ -50,6 +52,7 @@ function EditorTopBar({
           to={siteId === 'local-draft' ? SITES_PATH : SITE_DETAILS_PATH(siteId)}
           className="editor-topbar__icon-button"
           aria-label={t('editor.topBar.backToSite')}
+          title={t('editor.topBar.backToSite')}
         >
           <ArrowLeft size={17} aria-hidden="true" />
         </Link>
@@ -58,6 +61,7 @@ function EditorTopBar({
           to={SITE_SETTINGS_PATH(siteId)}
           className="editor-topbar__icon-button"
           aria-label={t('editor.topBar.openSettings')}
+          title={t('editor.topBar.openSettings')}
         >
           <Settings size={17} aria-hidden="true" />
         </Link>
@@ -88,6 +92,7 @@ function EditorTopBar({
               type="button"
               className={`editor-topbar__icon-button${isActive ? ' is-active' : ''}`}
               aria-label={t(labelKey)}
+              title={t(labelKey)}
               aria-pressed={isActive}
               onClick={() => onDeviceChange(id)}
             >
@@ -99,6 +104,9 @@ function EditorTopBar({
       </div>
 
       <div className="editor-topbar__actions">
+        <button type="button" className="btn btn--outline editor-topbar__save-action" onClick={onSave}>
+          <Save size={16} aria-hidden="true" />{t('editor.save.action')}
+        </button>
         <button
           type="button"
           className={`btn ${isPreview ? 'btn--primary' : 'btn--outline'}`}

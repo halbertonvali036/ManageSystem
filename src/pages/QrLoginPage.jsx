@@ -45,9 +45,9 @@ function QrLoginPage() {
     <div className="auth-card auth-qr-card anim-scale-in">
       <div className="auth-card__head">
         <p className="auth-card__eyebrow anim-fade-up anim-delay-1">Secondary sign-in</p>
-        <h2 className="auth-card__title anim-fade-up anim-delay-1">
+        <h1 className="auth-card__title anim-fade-up anim-delay-1">
           Sign in with a QR code
-        </h2>
+        </h1>
         <p className="auth-card__subtitle anim-fade-up anim-delay-2">
           Approve this browser from the mobile app instead of typing a password.
         </p>

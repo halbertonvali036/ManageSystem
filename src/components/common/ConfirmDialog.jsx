@@ -7,6 +7,7 @@ function ConfirmDialog({
   message,
   children,
   confirmLabel = 'Delete',
+  confirmingLabel = 'Deleting…',
   cancelLabel = 'Cancel',
   isConfirming = false,
   error = null,
@@ -15,13 +16,38 @@ function ConfirmDialog({
 }) {
   const titleId = useId()
   const closeButtonRef = useRef(null)
+  const dialogRef = useRef(null)
+
+  useEffect(() => {
+    if (!open) return undefined
+    const previousFocus = document.activeElement
+    return () => { if (previousFocus?.isConnected) previousFocus.focus() }
+  }, [open])
 
   useEffect(() => {
     if (!open) {
       return undefined
     }
     const handleKeyDown = (event) => {
+      if (event.key === 'Tab') {
+        const targets = [...dialogRef.current.querySelectorAll(
+          'button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])',
+        )].filter(element => element.getClientRects().length)
+        const first = targets[0]
+        const last = targets[targets.length - 1]
+        if (!first) {
+          event.preventDefault()
+          dialogRef.current.focus()
+        } else if (event.shiftKey && (document.activeElement === first || !targets.includes(document.activeElement))) {
+          event.preventDefault()
+          last.focus()
+        } else if (!event.shiftKey && (document.activeElement === last || !targets.includes(document.activeElement))) {
+          event.preventDefault()
+          first.focus()
+        }
+      }
       if (event.key === 'Escape' && !isConfirming) {
+        event.preventDefault()
         onCancel?.()
       }
     }
@@ -48,6 +74,8 @@ function ConfirmDialog({
   return (
     <div className="modal-overlay" onMouseDown={handleOverlayClick}>
       <div
+        ref={dialogRef}
+        tabIndex={-1}
         className="modal"
         role="dialog"
         aria-modal="true"
@@ -97,7 +125,7 @@ function ConfirmDialog({
             {isConfirming ? (
               <>
                 <span className="spinner" aria-hidden="true" />
-                Deleting&hellip;
+                {confirmingLabel}
               </>
             ) : (
               confirmLabel

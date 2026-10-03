@@ -1,4 +1,5 @@
 import useTranslation from '@/hooks/useTranslation'
+import EditorPanelGroup from '@/components/editor/EditorPanelGroup'
 import { MOTION_TYPES, MOTION_PRESETS, normalizeAnimation, normalizeSiteMotion, resolveAnimation } from '@/models/siteMotion'
 
 export default function MotionSettings({ node, siteMotion, onChange, onSiteChange }) {
@@ -6,8 +7,7 @@ export default function MotionSettings({ node, siteMotion, onChange, onSiteChang
   const animation = normalizeAnimation(node?.animation)
   const resolved = resolveAnimation(animation, siteMotion)
   const update = (patch) => onChange({ animation: { ...animation, ...patch } })
-  return <section className="editor-panel__section motion-settings">
-    <h3 className="editor-panel__subtitle">{t('motion.title')}</h3>
+  return <EditorPanelGroup title={t('motion.title')}>
     <label className="editor-field">{t('motion.preset')}
       <select className="editor-input" value={normalizeSiteMotion(siteMotion).preset} onChange={(event) => onSiteChange({ preset: event.target.value })}>
         {Object.keys(MOTION_PRESETS).map((preset) => <option key={preset} value={preset}>{t(`motion.${preset}`)}</option>)}
@@ -36,5 +36,5 @@ export default function MotionSettings({ node, siteMotion, onChange, onSiteChang
       </>}
     </>}
     <p className="editor-panel__hint">{t('motion.previewHint')}</p>
-  </section>
+  </EditorPanelGroup>
 }

@@ -2,9 +2,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Compass, Home } from 'lucide-react'
 import StatusPage from '@/components/common/StatusPage'
 import useAuth from '@/hooks/useAuth'
+import useTranslation from '@/hooks/useTranslation'
 import { getRoleDashboardPath } from '@/utils/roles'
 
 function NotFoundPage() {
+  const { t } = useTranslation()
   const { isAuthenticated, user } = useAuth()
   const navigate = useNavigate()
   const dashboardPath = isAuthenticated
@@ -16,8 +18,8 @@ function NotFoundPage() {
       code="404"
       tone="neutral"
       icon={Compass}
-      title="Page not found"
-      description="The page you are looking for does not exist or may have been moved. Check the address or head back to a page you know."
+      title={t('audit.notFoundTitle')}
+      description={t('audit.notFoundDescription')}
       className="status-page--standalone"
     >
       <button
@@ -26,11 +28,11 @@ function NotFoundPage() {
         onClick={() => navigate(-1)}
       >
         <ArrowLeft size={16} aria-hidden="true" />
-        Go Back
+        {t('audit.back')}
       </button>
       <Link to={dashboardPath} className="btn btn--primary">
         <Home size={16} aria-hidden="true" />
-        {isAuthenticated ? 'Go to Dashboard' : 'Go to Login'}
+        {t(isAuthenticated ? 'audit.workspace' : 'audit.login')}
       </Link>
     </StatusPage>
   )

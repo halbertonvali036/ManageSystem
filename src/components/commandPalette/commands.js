@@ -1,36 +1,36 @@
 import { ROLES } from '@/utils/roles'
 import {
-  BILLING_PATH,
-  SECURITY_PATH,
-  WORKSPACE_NAV_ITEMS,
-  LEGACY_ACADEMIC_NAV_ITEMS,
+  ACCOUNT_NAV_ITEMS,
+  ADMIN_NAV_ITEMS,
+  getWorkspaceNavItems,
 } from '@/utils/constants'
 
 /**
- * Command palette sources.
+ * Account destinations the palette can jump to.
  *
- * Normal platform users get the website-builder navigation. The internal admin
- * additionally gets the legacy academic items so the area stays reachable from
- * search while it exists. Legacy academic roles keep their own portals.
+ * Every entry is a route, so the palette offers exactly the account destinations
+ * the sidebar lists. Profile is here even though the rail shows it as the pinned
+ * identity block: the palette is a search box, and a destination it cannot reach
+ * would read as a missing page rather than as a deliberate placement.
  */
-const NAV_BY_ROLE = Object.freeze({
-  [ROLES.USER]: WORKSPACE_NAV_ITEMS,
-  [ROLES.ADMIN]: [
-    ...WORKSPACE_NAV_ITEMS,
-    ...LEGACY_ACADEMIC_NAV_ITEMS.map((item) => ({ ...item, isLegacy: true })),
-  ],
-})
+const ACCOUNT_COMMANDS = Object.freeze(
+  ACCOUNT_NAV_ITEMS.map((item) => ({ ...item, isAccount: true })),
+)
 
-const ACCOUNT_COMMANDS = Object.freeze([
-  { key: 'billing', path: BILLING_PATH },
-  { key: 'security', path: SECURITY_PATH },
-])
+/**
+ * The palette indexes exactly what the sidebar renders.
+ *
+ * Built from the same groups rather than from a hand-kept second list, so a
+ * destination cannot be searchable in the palette and missing from the rail, or
+ * the other way round. Workspace-scoped commands follow the workspace currently
+ * open, which is why the palette takes a workspace id rather than a flat list.
+ */
+export const getCommandsForRole = (role, workspaceId) => {
+  const product = role === ROLES.ADMIN ? ADMIN_NAV_ITEMS : getWorkspaceNavItems(workspaceId)
+  return [...product, ...ACCOUNT_COMMANDS]
+}
 
-const ACCOUNT_COMMAND_PATHS = new Set(ACCOUNT_COMMANDS.map((item) => item.path))
-
-export const isAccountCommand = (path) => ACCOUNT_COMMAND_PATHS.has(path)
-
-export const getCommandsForRole = (role) => NAV_BY_ROLE[role] ?? WORKSPACE_NAV_ITEMS
+export const isAccountCommand = (command) => command?.isAccount === true
 
 const normalize = (value) => value.trim().toLowerCase()
 

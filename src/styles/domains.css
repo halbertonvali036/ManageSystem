@@ -1,0 +1,523 @@
+/* ============================================================
+   Workspace Domains
+   Reuses the existing dark + green-neon design tokens. This is a
+   product of this codebase, not a copy of any other tool's design.
+
+   The two states this section has to keep apart are colour-coded
+   separately on purpose: a domain that resolves (connected) and a
+   domain with a certificate (SSL) are independent facts, so they get
+   their own chips and never borrow each other's colour.
+   ============================================================ */
+
+/* ── Page shell ────────────────────────────────────────────── */
+.dom-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.dom-page__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.dom-page__count {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.dom-page__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.dom-page__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.dom-page__filter {
+  display: block;
+  min-width: 0;
+}
+
+.dom-page__actions,
+.dom-page__back {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.dom-page__back {
+  margin-bottom: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-meta);
+  text-decoration: none;
+}
+
+.dom-page__back:hover {
+  color: var(--color-accent);
+}
+
+/* ── State chips ───────────────────────────────────────────── */
+.dom-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-2);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs, 11px);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* Type: a platform subdomain is the platform's own, a custom domain is yours. */
+.dom-chip--platform {
+  background: var(--color-primary-bg);
+  border-color: var(--color-primary-soft);
+  color: var(--color-primary-text);
+}
+
+.dom-chip--custom {
+  background: var(--color-accent-bg);
+  border-color: var(--color-accent-border);
+  color: var(--color-accent);
+}
+
+/* Connection state */
+.dom-chip--notConnected {
+  background: var(--color-surface-2);
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.dom-chip--pending {
+  background: var(--color-warning-bg);
+  border-color: color-mix(in srgb, var(--color-warning) 40%, transparent);
+  color: var(--color-warning);
+}
+
+.dom-chip--connected {
+  background: var(--color-accent-bg);
+  border-color: var(--color-accent-border);
+  color: var(--color-accent);
+}
+
+.dom-chip--error {
+  background: var(--color-danger-bg);
+  border-color: color-mix(in srgb, var(--color-danger) 40%, transparent);
+  color: var(--color-danger);
+}
+
+/* SSL: deliberately its own scale, so "connected" never reads as "secure". */
+.dom-chip--ssl-none {
+  background: transparent;
+  border-style: dashed;
+  color: var(--color-text-soft);
+}
+
+.dom-chip--ssl-pending {
+  background: var(--color-warning-bg);
+  border-color: color-mix(in srgb, var(--color-warning) 40%, transparent);
+  color: var(--color-warning);
+}
+
+.dom-chip--ssl-active {
+  background: var(--color-success-bg);
+  border-color: color-mix(in srgb, var(--color-success) 40%, transparent);
+  color: var(--color-success);
+}
+
+.dom-chip--ssl-failed {
+  background: var(--color-danger-bg);
+  border-color: color-mix(in srgb, var(--color-danger) 40%, transparent);
+  color: var(--color-danger);
+}
+
+.dom-chip--primary {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent-border);
+  color: var(--color-accent);
+}
+
+/* ── Cards ─────────────────────────────────────────────────── */
+.dom-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dom-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: border-color var(--transition-fast, 150ms) ease;
+}
+
+.dom-card:hover {
+  border-color: var(--color-border-strong);
+}
+
+.dom-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.dom-card__name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-body);
+  color: var(--color-text);
+  min-width: 0;
+}
+
+.dom-card__link {
+  color: var(--color-text);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.dom-card__link:hover {
+  color: var(--color-accent);
+}
+
+.dom-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.dom-card__notice,
+.dom-card__message,
+.dom-card__hint {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-meta);
+  line-height: 1.5;
+}
+
+.dom-card__notice {
+  background: var(--color-warning-bg);
+  border: 1px solid color-mix(in srgb, var(--color-warning) 40%, transparent);
+  color: var(--color-warning);
+}
+
+/* The backend's own verification reason, shown verbatim. */
+.dom-card__message {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono, monospace);
+  word-break: break-word;
+}
+
+.dom-card__hint {
+  background: transparent;
+  color: var(--color-text-soft);
+}
+
+.dom-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.dom-card__action {
+  flex-shrink: 0;
+}
+
+/* ── Add-domain form ───────────────────────────────────────── */
+.dom-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.dom-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.dom-form__submit {
+  flex-shrink: 0;
+  margin-top: var(--space-6);
+}
+
+/* ── DNS records ───────────────────────────────────────────── */
+/* Reflows to stacked labelled rows on narrow screens: five columns
+   of a hostname and an IP do not fit on a phone. */
+.dom-dns {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.dom-dns__head,
+.dom-dns__row {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) minmax(0, 2fr) 88px 44px;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.dom-dns__head {
+  padding: 0 var(--space-3);
+  font-size: var(--text-xs, 11px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-soft);
+}
+
+.dom-dns__rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dom-dns__row {
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-meta);
+}
+
+.dom-dns__type {
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.dom-dns__value code {
+  word-break: break-all;
+}
+
+.dom-dns__priority {
+  color: var(--color-text-muted);
+}
+
+.dom-dns__copy {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dom-dns__copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color var(--transition-fast, 150ms) ease,
+              background-color var(--transition-fast, 150ms) ease;
+}
+
+.dom-dns__copy-btn:hover {
+  color: var(--color-accent);
+  background: var(--color-surface-3);
+}
+
+.dom-dns__copy-btn:focus-visible {
+  outline: 2px solid var(--color-focus-ring, var(--color-focus));
+  outline-offset: 1px;
+}
+
+.dom-dns__hints {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-meta);
+  color: var(--color-text-soft);
+}
+
+.dom-dns__hint strong {
+  display: inline-block;
+  min-width: 72px;
+  color: var(--color-text-muted);
+}
+
+/* ── Empty state ───────────────────────────────────────────── */
+.dom-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-surface-2);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+}
+
+.dom-empty__title {
+  margin: 0;
+  font-size: var(--text-body);
+  color: var(--color-text);
+}
+
+.dom-empty__text {
+  margin: 0;
+  font-size: var(--text-meta);
+  line-height: 1.5;
+}
+
+/* ── Detail ────────────────────────────────────────────────── */
+.dom-detail__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.dom-detail__row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.dom-detail__row dt {
+  font-size: var(--text-xs, 11px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-soft);
+}
+
+.dom-detail__row dd {
+  margin: 0;
+  font-size: var(--text-body);
+  color: var(--color-text);
+  word-break: break-word;
+}
+
+.dom-security__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding-left: var(--space-4);
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .dom-list {
+    grid-template-columns: 1fr;
+  }
+
+  .dom-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* The header row is hidden and each cell carries its own label instead,
+     so a record stays readable at phone width without horizontal scroll. */
+  .dom-dns__head {
+    display: none;
+  }
+
+  .dom-dns__row {
+    grid-template-columns: 1fr auto;
+    gap: var(--space-1) var(--space-2);
+  }
+
+  .dom-dns__type,
+  .dom-dns__host,
+  .dom-dns__value,
+  .dom-dns__priority {
+    grid-column: 1;
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+  }
+
+  .dom-dns__type::before,
+  .dom-dns__host::before,
+  .dom-dns__value::before,
+  .dom-dns__priority::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    min-width: 64px;
+    font-size: var(--text-xs, 11px);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-soft);
+  }
+
+  .dom-dns__copy {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .dom-page__filter .form__select {
+    width: 100%;
+  }
+
+  .dom-page__toolbar,
+  .dom-page__filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dom-card,
+  .dom-dns__copy-btn {
+    transition: none;
+  }
+}

@@ -1,9 +1,7 @@
-import AmbientVisual from '@/components/common/AmbientVisual'
 import {
   ArrowRight,
   BellRing,
   FileText,
-  Layers,
   LayoutTemplate,
   MonitorSmartphone,
   PanelsTopLeft,
@@ -12,6 +10,7 @@ import {
   Settings2,
   ShieldCheck,
   SlidersHorizontal,
+  Zap,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import BuilderVisual from '@/components/common/BuilderVisual'
@@ -73,6 +72,7 @@ const CAPABILITIES = [
 
 const STEP_INDEXES = ['01', '02', '03']
 
+
 function LandingPage() {
   const { t } = useTranslation()
 
@@ -82,34 +82,39 @@ function LandingPage() {
 
       <main>
         <section className="landing-hero" aria-labelledby="landing-title">
-          <AmbientVisual />
+          <svg className="landing-hero__constellation" viewBox="0 0 1500 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+            <g fill="none" stroke="currentColor" strokeWidth="1">
+              <path d="M530 0 610 160 860 245 1020 115 1290 30 1420 170 1500 90M610 160 680 460 860 245 1140 360 1290 30 1380 470 1420 170M680 460 900 680 1140 360 1380 470 1450 740 900 680 780 900M1020 115 1140 360 1420 170M0 710 170 630 360 810 680 460" />
+            </g>
+            {[ [610,160], [860,245], [1020,115], [1290,30], [1420,170], [680,460], [1140,360], [1380,470], [1450,740], [900,680], [170,630], [360,810] ].map(([cx,cy], index) => <circle key={index} cx={cx} cy={cy} r={index % 3 === 0 ? 4 : 2} style={{ animationDelay: `${index * -.7}s` }} />)}
+          </svg>
           <div className="landing-hero__inner">
             <div className="landing-hero__copy">
-              <p className="landing-eyebrow anim-fade-up anim-delay-1">{t('landing.eyebrow')}</p>
+              <span className="landing-hero__badge anim-fade-up anim-delay-1">
+                <Zap size={16} aria-hidden="true" />
+                <span>{t('landingHero.badge')}</span>
+              </span>
               <h1 id="landing-title" className="anim-fade-up anim-delay-2">
-                {t('landing.titleLine1')}<br />
-                <span className="landing-hero__accent">{t('landing.titleAccent')}</span>
+                {t('landingHero.titleLine1')}<br />
+                {t('landingHero.titlePrefix')} <span className="landing-hero__accent">{t('landingHero.titleAccent')}</span>
               </h1>
               <p className="landing-hero__description anim-fade-up anim-delay-3">
-                {t('landing.description')}
+                {t('landingHero.description')}
               </p>
               <div className="landing-hero__actions anim-fade-up anim-delay-4">
                 <Link to="/register" className="landing-button landing-button--primary">
-                  {t('landing.primaryCta')} <ArrowRight size={18} aria-hidden="true" />
+                  {t('landingHero.getStarted')} <ArrowRight size={18} aria-hidden="true" />
                 </Link>
                 <Link to="/login" className="landing-button landing-button--secondary">
-                  {t('landing.secondaryCta')}
+                  {t('landingHero.signIn')}
                 </Link>
                 <a className="landing-hero__tertiary" href="#capabilities">
-                  {t('landing.tertiaryCta')}
+                  {t('landingHero.whatsInside')}
                 </a>
               </div>
-              <p className="landing-hero__flowline anim-fade-up anim-delay-5">
-                <Layers size={15} aria-hidden="true" />
-                <span>{t('landing.flowline')}</span>
-              </p>
+
             </div>
-            <BuilderVisual />
+            <BuilderVisual variant="hero" />
           </div>
         </section>
 

@@ -1,10 +1,18 @@
 import useAccountCopy from '@/hooks/useAccountCopy'
 import useTranslation from '@/hooks/useTranslation'
-import { CalendarClock, CreditCard, RefreshCw, Sparkles } from 'lucide-react'
+import {
+  CalendarClock,
+  CreditCard,
+  RefreshCw,
+  RotateCcw,
+  Sparkles,
+  XCircle,
+} from 'lucide-react'
 import BillingNotice from '@/components/billing/BillingNotice'
 import BillingSection from '@/components/billing/BillingSection'
 import BillingStatusBadge from '@/components/billing/BillingStatusBadge'
 import {
+  BILLING_STATUS,
   formatBillingAmount,
   formatBillingDate,
   getBillingCycleLabel,
@@ -36,15 +44,23 @@ const PlanValue = ({ label, children, unavailableHint }) => {
 
 /**
  * Premium summary of the signed-in account's current plan.
- * Values render only when the backend reports them; otherwise each field
- * shows an explicit unavailable state and no subscription is implied.
+ *
+ * Values render only when the backend reports them; otherwise each field shows
+ * an explicit unavailable state and no subscription is implied. The same rule
+ * governs the actions: cancel and resume appear only for a status the backend
+ * actually reported, and every action stays unavailable until the billing
+ * backend is connected.
  */
 function BillingPlanSummary({
   overview,
+  subscriptionActions,
+  cancellationScheduled,
   canManageBilling,
   pendingAction,
   actionError,
   onManageSubscription,
+  onCancelSubscription,
+  onResumeSubscription,
 }) {
   const copy = useAccountCopy()
   const { t } = useTranslation()
@@ -53,6 +69,16 @@ function BillingPlanSummary({
   const amount = formatBillingAmount(overview?.price, overview?.currency)
   const renewsAt = formatBillingDate(overview?.renewsAt)
   const trialEndsAt = formatBillingDate(overview?.trialEndsAt)
+  const canceledAt = formatBillingDate(overview?.canceledAt)
+  const canCancel = Boolean(subscriptionActions?.canCancel) && canManageBilling
+  const canResume = Boolean(subscriptionActions?.canResume) && canManageBilling
+  const isCanceled = subscriptionActions?.status === BILLING_STATUS.CANCELED
+  const isFree = Boolean(subscriptionActions?.isFree)
+  const summaryDescription = planName
+    ? isFree
+      ? copy('You are on the free plan. Upgrade whenever you are ready to publish more.')
+      : copy('Your subscription, billing cycle and renewal date for this account.')
+    : copy('Your plan, billing cycle and renewal date appear here once the billing backend is connected.')
 
   return (
     <BillingSection
@@ -60,11 +86,7 @@ function BillingPlanSummary({
       className="plan-summary"
       eyebrow={t('accountPolish.currentPlan')}
       title={planName ?? copy('No plan details yet')}
-      description={
-        planName
-          ? copy('Your subscription, billing cycle and renewal date for this account.')
-          : copy('Your plan, billing cycle and renewal date appear here once the billing backend is connected.')
-      }
+      description={summaryDescription}
       icon={<Sparkles size={20} aria-hidden="true" />}
       action={<BillingStatusBadge status={overview?.status ?? null} />}
     >
@@ -77,13 +99,16 @@ function BillingPlanSummary({
             <BillingStatusBadge status={overview?.status ?? null} />
           </PlanValue>
           <PlanValue label={t('accountPolish.billingCycle')} unavailableHint={copy("No cycle reported")}>
-            {cycle ? getBillingCycleLabel(cycle) : BILLING_CYCLE_PENDING_LABEL}
+            {copy(cycle ? getBillingCycleLabel(cycle) : BILLING_CYCLE_PENDING_LABEL)}
           </PlanValue>
           <PlanValue label={t('accountPolish.nextRenewal')} unavailableHint={copy("No renewal date reported")}>
             {renewsAt}
           </PlanValue>
           {overview?.trialEndsAt ? (
             <PlanValue label={t('accountPolish.trialEnds')}>{trialEndsAt}</PlanValue>
+          ) : null}
+          {overview?.canceledAt ? (
+            <PlanValue label={t('accountPolish.canceledOn')}>{canceledAt}</PlanValue>
           ) : null}
           <PlanValue
             label={t('accountPolish.price')}
@@ -120,11 +145,64 @@ function BillingPlanSummary({
                 {pendingAction === 'portal' ? copy('Opening…') : copy('Manage subscription')}
               </button>
             </li>
+            {subscriptionActions?.canCancel ? (
+              <li>
+                <button
+                  type="button"
+                  className="btn btn--danger btn--icon-left plan-summary__action"
+                  disabled={!canCancel}
+                  aria-disabled={!canCancel}
+                  onClick={onCancelSubscription}
+                  title={
+                    canCancel
+                      ? copy('Cancel this subscription at the end of the paid period')
+                      : copy('Cancelling becomes available once the billing backend is connected')
+                  }
+                >
+                  <XCircle size={16} aria-hidden="true" />
+                  {pendingAction === 'cancel'
+                    ? copy('Cancelling…')
+                    : copy('Cancel subscription')}
+                </button>
+              </li>
+            ) : null}
+            {subscriptionActions?.canResume ? (
+              <li>
+                <button
+                  type="button"
+                  className="btn btn--icon-left plan-summary__action"
+                  disabled={!canResume}
+                  aria-disabled={!canResume}
+                  onClick={onResumeSubscription}
+                  title={
+                    canResume
+                      ? copy('Resume this subscription before the period ends')
+                      : copy('Resuming becomes available once the billing backend is connected')
+                  }
+                >
+                  <RotateCcw size={16} aria-hidden="true" />
+                  {pendingAction === 'resume' ? copy('Resuming…') : copy('Resume subscription')}
+                </button>
+              </li>
+            ) : null}
           </ul>
           <p className="plan-summary__aside-note">
             <CalendarClock size={14} aria-hidden="true" />{t('accountPolish.upgradesDowngradesAndCancellationsAreHandledInTheSecure')}</p>
         </div>
       </div>
+
+      {cancellationScheduled || isCanceled ? (
+        <BillingNotice
+          tone="pending"
+          title={t('accountPolish.cancellationState')}
+          className="plan-summary__notice"
+        >
+          {isCanceled
+            ? t('accountPolish.subscriptionCanceledNoAccessAfterDate')
+            : t('accountPolish.subscriptionEndsAtPeriodEnd')}
+          {renewsAt ? ` ${t('accountPolish.endsOn')} ${renewsAt}` : ''}
+        </BillingNotice>
+      ) : null}
 
       {!canManageBilling ? (
         <BillingNotice tone="pending" title={t('accountPolish.integrationPending')} className="plan-summary__notice">{t('accountPolish.subscriptionManagementBecomesAvailableOnceTheBillingBackendAnd')}</BillingNotice>

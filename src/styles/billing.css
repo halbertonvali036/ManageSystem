@@ -7,8 +7,6 @@
    from 1440px down to 375px. Loaded last so these rules refine the
    shared portal/card system instead of rebuilding it.
    ============================================================ */
-
-/* ── Focused account layout (no academic sidebar) ────────── */
 .app-layout--focused {
   grid-template-columns: minmax(0, 1fr);
 }
@@ -398,6 +396,136 @@
   color: var(--color-text-muted);
 }
 
+.plan-card__price:has(.plan-card__equivalent),
+.plan-card__price:has(.plan-card__saving) {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+}
+
+.plan-card__equivalent {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.plan-card__saving {
+  padding: 2px var(--space-2);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-success);
+  background: var(--color-success-bg);
+  border-radius: var(--radius-full);
+}
+
+.plan-card__badge--current {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 3px var(--space-2) 3px var(--space-3);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+  border: 1px solid var(--color-accent-bg);
+  border-radius: var(--radius-full);
+}
+
+.plan-card__status {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ── Billing cycle toggle ────────────────────────────────── */
+.cycle-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.cycle-toggle__legend {
+  padding: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+}
+
+.cycle-toggle__options {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+.cycle-toggle__option {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-4);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  user-select: none;
+  transition: color var(--motion-duration-fast) var(--motion-ease-out),
+    background var(--motion-duration-fast) var(--motion-ease-out);
+}
+
+.cycle-toggle__option:hover {
+  color: var(--color-text);
+}
+
+.cycle-toggle__option--selected {
+  color: var(--color-accent-contrast);
+  background: var(--color-accent);
+}
+
+/* The radio stays focusable but out of sight so the platform still drives
+   keyboard order, selection and the announced checked state. */
+.cycle-toggle__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.cycle-toggle__input:focus-visible + .cycle-toggle__text {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+.cycle-toggle__option:has(.cycle-toggle__input:focus-visible) {
+  box-shadow: 0 0 0 2px var(--color-focus-ring);
+}
+
+.cycle-toggle:disabled .cycle-toggle__option {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.cycle-toggle:disabled .cycle-toggle__option--selected {
+  color: var(--color-text-muted);
+  background: var(--color-surface-3);
+}
+
 .plan-card__description {
   margin: 0;
   font-size: 0.84rem;
@@ -474,6 +602,12 @@
 }
 
 /* ── Billing status badges (real statuses only) ──────────── */
+.status-badge--free {
+  color: var(--color-text-muted);
+  background: var(--color-surface-3);
+  box-shadow: inset 0 0 0 1px var(--color-border);
+}
+
 .status-badge--trial,
 .status-badge--invoice-open {
   color: var(--color-info);
@@ -780,6 +914,24 @@
     flex-wrap: wrap;
   }
 
+  /* The cycle switch shares the full-width action slot on narrow screens. */
+  .cycle-toggle {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+    width: 100%;
+  }
+
+  .cycle-toggle__options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cycle-toggle__option {
+    justify-content: center;
+    padding: var(--space-2) var(--space-3);
+  }
+
   .billing-section__action {
     width: 100%;
   }
@@ -875,6 +1027,11 @@
 
   .plan-summary__fields {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .plan-summary__actions,
+  .plan-summary__action {
+    width: 100%;
   }
 
   .payment-item {

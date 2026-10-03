@@ -1,0 +1,365 @@
+/* ============================================================
+   Workspace Integrations
+   Reuses the existing dark + green-neon design tokens. This is a
+   product of this codebase, not a copy of any other tool's design.
+   ============================================================ */
+
+/* ── Page shell ────────────────────────────────────────────── */
+.int-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.int-page__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.int-page__count {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.int-page__head-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.int-page__cta {
+  flex-shrink: 0;
+}
+
+.int-page__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.int-page__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.int-page__filter {
+  display: block;
+  min-width: 0;
+}
+
+/* Keys and secrets, called out wherever credentials are involved. */
+.int-page__security,
+.int-card__notice,
+.int-detail__warning {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-meta);
+  line-height: 1.5;
+}
+
+.int-page__security,
+.int-card__notice {
+  background: var(--color-warning-bg);
+  border: 1px solid color-mix(in srgb, var(--color-warning) 40%, transparent);
+  color: var(--color-warning);
+}
+
+.int-detail__warning {
+  background: var(--color-info-bg);
+  border: 1px solid color-mix(in srgb, var(--color-info) 40%, transparent);
+  color: var(--color-info);
+  margin-top: var(--space-3);
+}
+
+/* ── Catalog list ──────────────────────────────────────────── */
+.int-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.int-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: border-color var(--transition-fast, 150ms) ease,
+              transform var(--transition-fast, 150ms) ease;
+}
+
+.int-card:hover {
+  border-color: var(--color-accent-border);
+  transform: translateY(-1px);
+}
+
+.int-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.int-card__name {
+  margin: 0;
+  font-size: var(--text-card);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  min-width: 0;
+}
+
+.int-card__link {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.int-card__link:hover {
+  color: var(--color-accent);
+}
+
+.int-card__category {
+  margin: 0;
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.int-card__description {
+  margin: 0;
+  font-size: var(--text-helper);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.int-card__hint {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--color-text-soft);
+}
+
+.int-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-2);
+}
+
+.int-card__action {
+  flex-shrink: 0;
+}
+
+.int-card__module {
+  margin-left: auto;
+  text-decoration: none;
+}
+
+/* ── Status chip ───────────────────────────────────────────── */
+.int-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  font-size: var(--text-meta);
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.int-chip--available {
+  background: var(--color-surface-2);
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.int-chip--connected {
+  background: var(--color-accent-bg);
+  border-color: var(--color-accent-border);
+  color: var(--color-accent);
+}
+
+.int-chip--notConnected {
+  background: var(--color-danger-bg);
+  border-color: color-mix(in srgb, var(--color-danger) 40%, transparent);
+  color: var(--color-danger);
+}
+
+.int-chip--requiresConfig {
+  background: var(--color-info-bg);
+  border-color: color-mix(in srgb, var(--color-info) 40%, transparent);
+  color: var(--color-info);
+}
+
+/* ── Detail: config form ───────────────────────────────────── */
+.int-detail__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-hairline);
+}
+
+.int-config-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.int-config-form__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.int-config-form__hint {
+  margin: 0;
+  font-size: var(--text-helper);
+  color: var(--color-text-muted);
+}
+
+.int-config-form__security {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-warning-bg);
+  border: 1px solid color-mix(in srgb, var(--color-warning) 40%, transparent);
+  border-radius: var(--radius-md);
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--color-warning);
+}
+
+.int-config-form__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-4);
+}
+
+.int-config-form__field {
+  min-width: 0;
+}
+
+.int-config-form__label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.int-config-form__set {
+  padding: 1px var(--space-2);
+  background: var(--color-accent-bg);
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-meta);
+  font-weight: 700;
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+/* A secret input plus its reveal toggle, in one row. */
+.int-config-form__secret {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.int-config-form__secret .form__input {
+  padding-right: var(--space-8);
+}
+
+.int-config-form__reveal {
+  position: absolute;
+  right: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color var(--transition-fast, 150ms) ease,
+              background-color var(--transition-fast, 150ms) ease;
+}
+
+.int-config-form__reveal:hover:not(:disabled) {
+  color: var(--color-accent);
+  background: var(--color-surface-2);
+}
+
+.int-config-form__reveal:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.int-config-form__reveal:focus-visible {
+  outline: 2px solid var(--color-focus-ring, var(--color-focus));
+  outline-offset: 1px;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .int-list {
+    grid-template-columns: 1fr;
+  }
+
+  .int-card__module {
+    margin-left: 0;
+  }
+
+  .int-page__toolbar,
+  .int-page__filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .int-page__filter .form__select {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .int-card:hover {
+    transform: none;
+  }
+
+  .int-config-form__reveal {
+    transition: none;
+  }
+}

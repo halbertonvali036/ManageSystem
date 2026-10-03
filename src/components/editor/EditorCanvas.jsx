@@ -62,6 +62,10 @@ function EditorCanvas({
           data-device={device}
           style={{ '--editor-canvas-width': `${width}px` }}
         >
+          {!isPreview && <div className="editor-canvas__frame-bar" aria-hidden="true">
+            <span className="editor-canvas__frame-dots"><i /><i /><i /></span>
+            <span>{activePage?.name}</span>
+          </div>}
           <article ref={motionRef} className="editor-canvas__page" style={getCanvasCssStyle(document)}>
             <SiteHeaderPreview
               siteDocument={document}

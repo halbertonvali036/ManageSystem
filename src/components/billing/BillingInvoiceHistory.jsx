@@ -1,4 +1,5 @@
 import useTranslation from '@/hooks/useTranslation'
+import useAccountCopy from '@/hooks/useAccountCopy'
 import { Download, FileText } from 'lucide-react'
 import BillingSection from '@/components/billing/BillingSection'
 import {
@@ -19,6 +20,7 @@ const UNKNOWN_INVOICE_LABEL = 'Invoice'
  */
 function BillingInvoiceHistory({ invoices, canOpenInvoices }) {
   const { t } = useTranslation()
+  const copy = useAccountCopy()
   return (
     <BillingSection
       id="billing-history"
@@ -54,7 +56,7 @@ function BillingInvoiceHistory({ invoices, canOpenInvoices }) {
                 return (
                   <tr key={invoice.id}>
                     <th scope="row" className="invoices-table__id" data-label={t('accountPolish.invoice')}>
-                      {invoice.number ?? UNKNOWN_INVOICE_LABEL}
+                      {invoice.number ?? copy(UNKNOWN_INVOICE_LABEL)}
                       {invoice.planName ? (
                         <span className="invoices-table__plan">{invoice.planName}</span>
                       ) : null}
@@ -68,7 +70,7 @@ function BillingInvoiceHistory({ invoices, canOpenInvoices }) {
                     <td data-label={t('accountPolish.status')}>
                       <StatusBadge
                         status={statusVariant}
-                        labels={{ [statusVariant]: statusLabel }}
+                        labels={{ [statusVariant]: copy(statusLabel) }}
                       />
                     </td>
                     <td className="invoices-table__action" data-label={t('accountPolish.receipt')}>

@@ -1,6 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BILLING_PLANS } from '@/config/billing'
 import {
+  getPlanPriceForCycle,
+  getSubscriptionActions,
+  getToggleableCycle,
+  isCancellationScheduled,
   toBillingOverview,
   toInvoice,
   toPaymentMethod,
@@ -42,6 +46,7 @@ function useBillingOverview() {
   const [backendUnavailable, setBackendUnavailable] = useState(false)
   const [actionError, setActionError] = useState(null)
   const [pendingAction, setPendingAction] = useState(null)
+  const [requestedCycle, setRequestedCycle] = useState(null)
   const mountedRef = useRef(true)
 
   useEffect(() => {
@@ -92,11 +97,20 @@ function useBillingOverview() {
     fetchBillingData()
   }, [fetchBillingData])
 
-  const refetch = useCallback(() => {
-    setIsLoading(true)
-    setLoadError(null)
-    fetchBillingData()
-  }, [fetchBillingData])
+  /**
+   * `silent` re-reads without flipping the page back to its loading skeleton —
+   * used after a mutation so the refreshed state replaces the old one in place.
+   */
+  const refetch = useCallback(
+    ({ silent = false } = {}) => {
+      if (!silent) {
+        setIsLoading(true)
+        setLoadError(null)
+      }
+      return fetchBillingData()
+    },
+    [fetchBillingData],
+  )
 
   const runAction = useCallback(async (name, action) => {
     setPendingAction(name)
@@ -117,7 +131,8 @@ function useBillingOverview() {
   }, [])
 
   const startCheckout = useCallback(
-    (planId) => runAction('checkout', () => billingService.createCheckoutSession(planId)),
+    (planId, checkoutCycle) =>
+      runAction('checkout', () => billingService.createCheckoutSession(planId, checkoutCycle)),
     [runAction],
   )
 
@@ -126,11 +141,45 @@ function useBillingOverview() {
     [runAction],
   )
 
+  const cancelSubscription = useCallback(
+    () =>
+      runAction('cancel', async () => {
+        const result = await billingService.cancelSubscription({ atPeriodEnd: true })
+        await refetch({ silent: true })
+        return result
+      }),
+    [refetch, runAction],
+  )
+
+  const resumeSubscription = useCallback(
+    () =>
+      runAction('resume', async () => {
+        const result = await billingService.resumeSubscription()
+        await refetch({ silent: true })
+        return result
+      }),
+    [refetch, runAction],
+  )
+
+  const selectCycle = useCallback((cycle) => {
+    setRequestedCycle(getToggleableCycle(cycle))
+    setActionError(null)
+  }, [])
+
   const hasBackendPlans = backendPlans.length > 0
   const plans = hasBackendPlans ? backendPlans : BILLING_PLANS
   const isPlaceholderCatalogue = !hasBackendPlans
   const hasSubscription = Boolean(overview)
   const canManageBilling = hasSubscription && !backendUnavailable
+
+  // The toggle starts on whatever the backend says the account is billed on,
+  // and the customer's choice wins afterwards.
+  const cycle = requestedCycle ?? getToggleableCycle(overview?.cycle)
+  const currentPlan = useMemo(
+    () => plans.find((plan) => plan.id === overview?.planId) ?? null,
+    [overview?.planId, plans],
+  )
+  const actions = useMemo(() => getSubscriptionActions(overview), [overview])
 
   return {
     overview,
@@ -148,6 +197,14 @@ function useBillingOverview() {
     refetch,
     startCheckout,
     openBillingPortal,
+    cancelSubscription,
+    resumeSubscription,
+    cycle,
+    selectCycle,
+    currentPlan,
+    currentPlanPrice: getPlanPriceForCycle(currentPlan, cycle),
+    subscriptionActions: actions,
+    cancellationScheduled: isCancellationScheduled(overview),
   }
 }
 

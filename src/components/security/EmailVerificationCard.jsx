@@ -46,7 +46,7 @@ function EmailVerificationCard({ email, verified, verifiedAt, canSubmit, isPendi
           <p className="verification-section__label">{t('accountPolish.accountAddress')}</p>
           <p className="verification-section__value">{email ?? '—'}</p>
           {isVerified && verifiedOn ? (
-            <p className="verification-section__note">Verified on {verifiedOn}</p>
+            <p className="verification-section__note">{t('accountPolish.verifiedOn', { date: verifiedOn })}</p>
           ) : null}
         </div>
 

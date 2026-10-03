@@ -74,8 +74,7 @@
 
 /* Destructive: restrained outline (the modal confirm stays solid) */
 .details-page .details-toolbar__actions .btn--danger,
-.roster-section .card__action .btn--danger,
-.semesters-section .card__action .btn--danger {
+.roster-section .card__action .btn--danger {
   color: var(--color-danger);
   background: var(--color-surface);
   border-color: color-mix(in srgb, var(--color-danger) 32%, transparent);
@@ -83,8 +82,7 @@
 }
 
 .details-page .details-toolbar__actions .btn--danger:hover:not(:disabled),
-.roster-section .card__action .btn--danger:hover:not(:disabled),
-.semesters-section .card__action .btn--danger:hover:not(:disabled) {
+.roster-section .card__action .btn--danger:hover:not(:disabled) {
   background: var(--color-danger-bg);
   border-color: var(--color-danger);
   transform: translateY(0);
@@ -110,18 +108,6 @@
 }
 
 /* ---------- Profile header ---------- */
-.details-page > .card:is(
-  .student-profile__header,
-  .teacher-profile__header,
-  .course-profile__header,
-  .class-profile__header,
-  .assessment-profile__header,
-  .user-profile__header,
-  .role-profile__header,
-  .academic-year-profile__header
-) .card__body {
-  gap: var(--space-5);
-}
 
 .details-page [class$="-profile__avatar"],
 .app-layout__main:has(.profile-header) .profile-header__avatar {
@@ -178,24 +164,21 @@
 }
 
 /* ---------- Section (info grid) cards ---------- */
-.details-page > [class$="-details__grid"],
-.app-layout__main:has(.profile-header) .class-details__grid {
+.details-page > [class$="-details__grid"] {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: stretch;
   gap: var(--space-5);
   margin-top: 0;
 }
 
-.details-page > [class$="-details__grid"] > .card,
-.app-layout__main:has(.profile-header) .class-details__grid > .card {
+.details-page > [class$="-details__grid"] > .card {
   min-width: 0;
   border-color: var(--color-border);
   border-radius: 14px;
   box-shadow: var(--shadow-xs);
 }
 
-.details-page > [class$="-details__grid"] > .card .card__header,
-.app-layout__main:has(.profile-header) .class-details__grid > .card .card__header {
+.details-page > [class$="-details__grid"] > .card .card__header {
   min-height: 56px;
   padding: var(--space-4) var(--space-5);
   background: var(--color-surface-2);
@@ -203,7 +186,6 @@
 }
 
 .details-page > [class$="-details__grid"] > .card .card__title,
-.app-layout__main:has(.profile-header) .class-details__grid > .card .card__title,
 .details-page > [class$="-details__permissions"] .card .card__title {
   position: relative;
   padding-left: 14px;
@@ -213,7 +195,6 @@
 }
 
 .details-page > [class$="-details__grid"] > .card .card__title::before,
-.app-layout__main:has(.profile-header) .class-details__grid > .card .card__title::before,
 .details-page > [class$="-details__permissions"] .card .card__title::before {
   content: '';
   position: absolute;
@@ -226,8 +207,7 @@
   background: linear-gradient(180deg, var(--color-accent-strong-start), var(--color-accent-strong));
 }
 
-.details-page > [class$="-details__grid"] > .card .card__body,
-.app-layout__main:has(.profile-header) .class-details__grid > .card .card__body {
+.details-page > [class$="-details__grid"] > .card .card__body {
   padding: var(--space-5);
 }
 
@@ -274,22 +254,17 @@
 }
 
 /* ---------- Prose blocks ---------- */
-.details-page [class$="-profile__description"],
-.announcement-profile__message {
+.details-page [class$="-profile__description"] {
   max-width: 72ch;
   line-height: 1.7;
 }
-
-/* ---------- Related sections (roster, semesters, enrollments) ---------- */
-.roster-section,
-.semesters-section {
+.roster-section {
   border-color: var(--color-border-strong);
   border-radius: 16px;
   box-shadow: var(--shadow-sm);
 }
 
-.roster-section .card__header,
-.semesters-section .card__header {
+.roster-section .card__header {
   min-height: 60px;
   padding: var(--space-4) var(--space-5);
   gap: var(--space-3);
@@ -297,16 +272,14 @@
   border-bottom: 1px solid var(--color-hairline);
 }
 
-.roster-section .card__title,
-.semesters-section .card__title {
+.roster-section .card__title {
   position: relative;
   font-size: 0.97rem;
   font-weight: 750;
   letter-spacing: -0.01em;
 }
 
-.roster-section .card__action .btn,
-.semesters-section .card__action .btn {
+.roster-section .card__action .btn {
   min-height: 40px;
 }
 
@@ -343,16 +316,14 @@
   color: var(--color-text-soft);
 }
 
-.roster-section .table-state,
-.semesters-section .table-state {
+.roster-section .table-state {
   min-height: 190px;
   padding: var(--space-6) var(--space-5);
   border-color: var(--color-border-strong);
   border-radius: 10px;
 }
 
-.roster-section .page-status,
-.semesters-section .page-status {
+.roster-section .page-status {
   min-height: 112px;
   padding: var(--space-5);
   border: 1.5px dashed var(--color-border);
@@ -362,7 +333,6 @@
 
 /* ---------- Dark theme polish (token-driven refinements) ---------- */
 [data-theme='dark'] .details-page > [class$="-details__grid"] > .card,
-[data-theme='dark'] .app-layout__main:has(.profile-header) .class-details__grid > .card,
 [data-theme='dark'] .details-page > [class$="-details__permissions"] .card {
   box-shadow: var(--shadow-xs);
 }
@@ -384,8 +354,7 @@
    Responsive
    ============================================================ */
 @media (max-width: 1023px) {
-  .details-page > [class$="-details__grid"],
-  .app-layout__main:has(.profile-header) .class-details__grid {
+  .details-page > [class$="-details__grid"] {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -406,16 +375,14 @@
     min-width: 0;
   }
 
-  .details-page > [class$="-details__grid"],
-  .app-layout__main:has(.profile-header) .class-details__grid {
+  .details-page > [class$="-details__grid"] {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-4);
   }
 
   .details-page > .card .card__body,
   .details-page > [class$="-details__grid"] > .card .card__body,
-  .app-layout__main:has(.profile-header) .profile-header .card__body,
-  .app-layout__main:has(.profile-header) .class-details__grid > .card .card__body {
+  .app-layout__main:has(.profile-header) .profile-header .card__body {
     padding: var(--space-4);
   }
 
@@ -424,8 +391,7 @@
     margin-left: 0;
   }
 
-  .roster-section .card__header,
-  .semesters-section .card__header {
+  .roster-section .card__header {
     align-items: flex-start;
     flex-wrap: wrap;
   }

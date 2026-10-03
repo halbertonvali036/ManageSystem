@@ -1,8 +1,10 @@
 import useTranslation from '@/hooks/useTranslation'
 import { Layers } from 'lucide-react'
+import BillingCycleToggle from '@/components/billing/BillingCycleToggle'
 import BillingNotice from '@/components/billing/BillingNotice'
 import BillingPlanCard from '@/components/billing/BillingPlanCard'
 import BillingSection from '@/components/billing/BillingSection'
+import { getPlanRelation } from '@/models/billing'
 
 /**
  * Plan comparison section.
@@ -10,28 +12,24 @@ import BillingSection from '@/components/billing/BillingSection'
  * `plans` is either the backend catalogue or the frontend configuration
  * placeholder — `isPlaceholderCatalogue` makes that explicit in the UI so no
  * one mistakes the placeholder for a purchasable offer.
+ *
+ * The cycle switch re-reads published prices for the chosen period. It does not
+ * subscribe anyone to anything: checkout stays a separate, explicit step.
  */
 function BillingPlansSection({
   plans,
   isPlaceholderCatalogue,
-  currentPlanId,
+  currentPlan,
+  currentStatus,
+  cycle,
+  onCycleChange,
   canSelect,
   onSelect,
 }) {
   const { t } = useTranslation()
-  const currentIndex = currentPlanId
-    ? plans.findIndex((plan) => plan.id === currentPlanId)
+  const currentIndex = currentPlan
+    ? plans.findIndex((plan) => plan.id === currentPlan.id)
     : -1
-
-  const resolveRelation = (plan, index) => {
-    if (currentIndex < 0) {
-      return 'select'
-    }
-    if (index === currentIndex) {
-      return 'current'
-    }
-    return index > currentIndex ? 'upgrade' : 'downgrade'
-  }
 
   return (
     <BillingSection
@@ -41,6 +39,9 @@ function BillingPlansSection({
       title={t('accountPolish.comparePlans')}
       description={t('accountPolish.planStructureForThisWorkspacePricingAndCheckoutAre')}
       icon={<Layers size={20} aria-hidden="true" />}
+      action={
+        <BillingCycleToggle cycle={cycle} onChange={onCycleChange} />
+      }
     >
       {isPlaceholderCatalogue ? (
         <BillingNotice tone="pending" title={t('accountPolish.frontendConfiguration')} className="plans-section__notice">{t('accountPolish.thisCatalogueIsPlaceholderConfigurationUsedToLayOut')}</BillingNotice>
@@ -52,7 +53,9 @@ function BillingPlansSection({
             <BillingPlanCard
               key={plan.id}
               plan={plan}
-              relation={resolveRelation(plan, index)}
+              relation={getPlanRelation(plan, currentPlan, index, currentIndex)}
+              cycle={cycle}
+              currentStatus={currentStatus}
               canSelect={canSelect}
               isPlaceholder={isPlaceholderCatalogue || plan.purchasable !== true}
               onSelect={onSelect}

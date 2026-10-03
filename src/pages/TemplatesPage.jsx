@@ -1,4 +1,4 @@
-import { Plus } from 'lucide-react'
+import { LayoutTemplate, Plus } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import TemplateCard from '@/components/sites/TemplateCard'
@@ -28,6 +28,7 @@ function TemplatesPage() {
     <div className="sites-page templates-page">
       <header className="sites-page__head">
         <div className="sites-page__headline">
+          <p className="templates-page__eyebrow"><LayoutTemplate size={15} aria-hidden="true" />{t('builderPolish.templateEyebrow')}</p>
           <h1 className="sites-page__title">{t('templates.pageTitle')}</h1>
           <p className="page-description">{t('templates.pageDescription')}</p>
         </div>
@@ -37,11 +38,7 @@ function TemplatesPage() {
         </Link>
       </header>
 
-      {/*
-        A radio group rather than a set of buttons: a category is a single
-        choice, and arrow-key navigation plus `aria-pressed` state is what a
-        screen reader needs to convey "you are filtering by this".
-      */}
+      <div className="templates-page__browse">
       <div
         className="templates-filter"
         role="group"
@@ -59,6 +56,8 @@ function TemplatesPage() {
           </button>
         ))}
       </div>
+        <p className="templates-page__count" role="status">{t('builderPolish.templateCount', { count: templates.length })}</p>
+      </div>
 
       {templates.length ? (
         <ul className="templates-grid">
@@ -68,7 +67,9 @@ function TemplatesPage() {
         </ul>
       ) : (
         <div className="templates-empty">
+          <LayoutTemplate size={28} aria-hidden="true" />
           <p className="templates-empty__text">{t('templates.emptyText')}</p>
+          <button type="button" className="btn btn--outline" onClick={() => setCategory(ALL_TEMPLATE_CATEGORIES)}>{t('templates.filterAll')}</button>
         </div>
       )}
 

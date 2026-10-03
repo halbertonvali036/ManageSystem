@@ -1,120 +1,32 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import ConfirmDialog from '@/components/common/ConfirmDialog'
-import UsersTable from '@/components/users/UsersTable'
-import UsersToolbar from '@/components/users/UsersToolbar'
-import useDeleteUser from '@/hooks/useDeleteUser'
-import useRoles from '@/hooks/useRoles'
-import useUsers from '@/hooks/useUsers'
-import { formatUserEmail, formatUserName } from '@/models/user'
+import useTranslation from '@/hooks/useTranslation'
+import useAdminResource from '@/hooks/useAdminResource'
+import AdminDataTable from '@/components/admin/AdminDataTable'
+import { ADMIN_COLLECTIONS } from '@/models/adminPlatform'
+import { USER_STATUS } from '@/models/user'
+import { ROLES } from '@/utils/roles'
+import '@/styles/admin-platform.css'
 
-function UsersPage() {
-  const navigate = useNavigate()
+export default function UsersPage() {
+  const { t } = useTranslation()
   const [search, setSearch] = useState('')
-  const [roleFilter, setRoleFilter] = useState('all')
-  const [statusFilter, setStatusFilter] = useState('all')
-
-  const { roles } = useRoles()
-
-  const filters = {
-    ...(search ? { search } : {}),
-    ...(roleFilter !== 'all' ? { role: roleFilter } : {}),
-    ...(statusFilter !== 'all' ? { status: statusFilter } : {}),
-  }
-
-  const { users, isLoading, error, refetch } = useUsers(filters)
-
-  const [deleteTarget, setDeleteTarget] = useState(null)
-  const { isDeleting, deleteError, deleteUser } = useDeleteUser(
-    deleteTarget?.id,
-  )
-
-  const handleClearFilters = () => {
-    setSearch('')
-    setRoleFilter('all')
-    setStatusFilter('all')
-  }
-
-  const handleAddUser = () => {
-    navigate('/users/new')
-  }
-
-  const handleViewUser = (user) => {
-    navigate(`/users/${user.id}`)
-  }
-
-  const handleEditUser = (user) => {
-    navigate(`/users/${user.id}/edit`)
-  }
-
-  const handleDeleteRequest = (user) => {
-    setDeleteTarget(user)
-  }
-
-  const handleDeleteCancel = () => {
-    if (!isDeleting) {
-      setDeleteTarget(null)
-    }
-  }
-
-  const handleDeleteConfirm = async () => {
-    const result = await deleteUser()
-    if (result.ok) {
-      setDeleteTarget(null)
-      refetch()
-    }
-  }
-
-  return (
-    <section className="page" aria-label="Users">
-      <p className="page-description">
-        Manage user accounts and their access. Search by name or email and
-        filter by role or status to find the right account.
-      </p>
-      <UsersToolbar
-        search={search}
-        onSearchChange={setSearch}
-        roles={roles}
-        roleFilter={roleFilter}
-        onRoleChange={setRoleFilter}
-        statusFilter={statusFilter}
-        onStatusChange={setStatusFilter}
-        onClearFilters={handleClearFilters}
-        onAdd={handleAddUser}
-      />
-      <UsersTable
-        users={users}
-        isLoading={isLoading}
-        error={error}
-        onRetry={refetch}
-        onView={handleViewUser}
-        onEdit={handleEditUser}
-        onDelete={handleDeleteRequest}
-      />
-
-      <ConfirmDialog
-        open={Boolean(deleteTarget)}
-        title="Delete user"
-        message="This action is permanent and cannot be undone."
-        confirmLabel="Delete User"
-        isConfirming={isDeleting}
-        error={deleteError}
-        onConfirm={handleDeleteConfirm}
-        onCancel={handleDeleteCancel}
-      >
-        {deleteTarget ? (
-          <div className="modal__target">
-            <p className="modal__target-row">
-              User: <strong>{formatUserName(deleteTarget)}</strong>
-            </p>
-            <p className="modal__target-row">
-              Email: <strong>{formatUserEmail(deleteTarget)}</strong>
-            </p>
-          </div>
-        ) : null}
-      </ConfirmDialog>
-    </section>
-  )
+  const [role, setRole] = useState('')
+  const [status, setStatus] = useState('')
+  const { data, state, retry } = useAdminResource('users', { search, role, status })
+  return <section className="admin-platform" aria-label={t('admin.nav.users')}>
+    <p className="admin-intro">{t('admin.description.users')}</p>
+    <div className="admin-filters">
+      <label htmlFor="admin-user-search">{t('admin.searchUsers')}<input id="admin-user-search" className="editor-input" type="search" value={search} onChange={event => setSearch(event.target.value)} /></label>
+      <label htmlFor="admin-user-role">{t('admin.fields.role')}<select id="admin-user-role" className="editor-input" value={role} onChange={event => setRole(event.target.value)}>
+        <option value="">{t('admin.allRoles')}</option>{Object.values(ROLES).map(value => <option key={value} value={value}>{t(`admin.roles.${value}`)}</option>)}
+      </select></label>
+      <label htmlFor="admin-user-status">{t('admin.fields.status')}<select id="admin-user-status" className="editor-input" value={status} onChange={event => setStatus(event.target.value)}>
+        <option value="">{t('admin.allStatuses')}</option>{Object.values(USER_STATUS).map(value => <option key={value} value={value}>{t(`admin.status.${value}`)}</option>)}
+      </select></label>
+    </div>
+    <AdminDataTable section="users" columns={ADMIN_COLLECTIONS.users} rows={data ?? []} state={state} onRetry={retry} />
+    <div className="admin-foundation"><h2>{t('admin.accountAccess')}</h2><p id="admin-user-actions-note">{t('admin.userActionsHint')}</p>
+      <div className="admin-pending-actions" aria-describedby="admin-user-actions-note">{['manageRole', 'manageStatus', 'manageAccess'].map(action => <button className="btn btn--outline" type="button" disabled key={action}>{t(`admin.${action}`)}</button>)}</div>
+    </div>
+  </section>
 }
-
-export default UsersPage

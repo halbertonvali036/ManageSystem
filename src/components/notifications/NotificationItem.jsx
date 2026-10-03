@@ -1,12 +1,9 @@
 import {
-  Award,
-  CalendarClock,
   Check,
   CheckCircle2,
-  ClipboardList,
   CreditCard,
   Info,
-  Megaphone,
+  Globe,
   ShieldCheck,
   TriangleAlert,
 } from 'lucide-react'
@@ -37,13 +34,7 @@ const TYPE_ICONS = {
 
 /** Category icons for the small leading badge. */
 const CATEGORY_ICONS = {
-  megaphone: Megaphone,
-  calendar: CalendarClock,
-  clipboard: ClipboardList,
-  list: ClipboardList,
-  award: Award,
-  shield: ShieldCheck,
-  card: CreditCard,
+  globe: Globe, info: Info, shield: ShieldCheck, card: CreditCard,
 }
 
 /**

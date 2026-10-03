@@ -159,18 +159,14 @@ html[data-theme='dark'] .app-header {
   --ctx-accent: var(--color-accent);
 }
 
-/* Account-level routes (Plan & Billing, Account & Security) have no role pill. */
-.billing-context {
-  --ctx-accent: var(--color-accent-2);
-}
-
-.security-context {
+/* Account-level routes — Profile, Account & Security, Plan & Billing, Support —
+   share one pill, so the header says "Account" rather than naming the page. */
+.account-context {
   --ctx-accent: var(--color-accent-2);
 }
 
 .app-header .admin-context,
-.app-header .billing-context,
-.app-header .security-context {
+.app-header .account-context {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -189,8 +185,7 @@ html[data-theme='dark'] .app-header {
 }
 
 .app-header .admin-context::before,
-.app-header .billing-context::before,
-.app-header .security-context::before {
+.app-header .account-context::before {
   content: '';
   width: 6px;
   height: 6px;
@@ -268,170 +263,6 @@ html[data-theme='dark'] .app-header {
   border-radius: 999px;
 }
 
-/* ============================================================
-   User menu — identity + actions
-   ============================================================ */
-.user-menu {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-left: auto;
-  padding-left: var(--space-3);
-  border-left: 1px solid var(--color-border);
-}
-
-.user-menu__identity {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: 3px 5px 3px 3px;
-  border-radius: 999px;
-  text-decoration: none;
-  transition: background-color var(--transition-fast);
-}
-
-.user-menu__identity:hover {
-  background: var(--color-bg);
-}
-
-.user-menu__avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 38px;
-  height: 38px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--color-accent);
-  background: var(--color-accent-soft);
-  border-radius: 999px;
-  box-shadow:
-    0 0 0 2px var(--color-surface),
-    0 0 0 3.5px var(--color-border);
-  user-select: none;
-}
-
-.user-menu[data-role='admin'] .user-menu__avatar {
-  color: var(--color-accent);
-  background: var(--color-accent-soft);
-}
-
-.user-menu__info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1px;
-  min-width: 0;
-  line-height: 1.2;
-}
-
-.user-menu__name {
-  max-width: 160px;
-  overflow: hidden;
-  font-size: 0.85rem;
-  font-weight: 650;
-  letter-spacing: -0.01em;
-  color: var(--color-text);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.user-menu__meta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-}
-
-.user-menu__role {
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--color-text-muted);
-  text-transform: capitalize;
-  white-space: nowrap;
-}
-
-.user-menu__email {
-  max-width: 150px;
-  overflow: hidden;
-  font-size: 0.72rem;
-  color: var(--color-text-soft);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.user-menu__divider {
-  flex-shrink: 0;
-  width: 1px;
-  height: 24px;
-  background: var(--color-border);
-}
-
-.user-menu__actions {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.user-menu__action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-width: 40px;
-  height: 40px;
-  padding: 0 10px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    color var(--transition-fast),
-    background-color var(--transition-fast),
-    border-color var(--transition-fast);
-}
-
-.user-menu__action:hover {
-  color: var(--color-text);
-  background: var(--color-bg);
-  border-color: var(--color-border);
-}
-
-.user-menu__action--profile:hover {
-  color: var(--color-primary);
-  background: var(--color-primary-soft);
-  border-color: var(--color-primary-bg);
-}
-
-.user-menu__action--billing:hover,
-.user-menu__action--security:hover {
-  color: var(--color-accent-2);
-  background: color-mix(in srgb, var(--color-accent-2) 11%, transparent);
-  border-color: color-mix(in srgb, var(--color-accent-2) 28%, transparent);
-}
-
-.user-menu__action--logout:hover {
-  color: var(--color-danger);
-  background: var(--color-danger-bg);
-  border-color: var(--color-danger-bg);
-}
-
-.user-menu__action-label {
-  white-space: nowrap;
-}
-
-.user-menu__action:focus-visible,
-.user-menu__identity:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
 
 /* ============================================================
    Sidebar — always-dark premium rail with role accent glow
@@ -519,7 +350,7 @@ html[data-theme='dark'] .app-sidebar {
   letter-spacing: 0.12em;
   line-height: 1;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--sb-accent) 78%, var(--color-sidebar-text));
+  color: color-mix(in srgb, var(--color-neon) 78%, var(--color-sidebar-text));
   white-space: normal;
   line-height: 1.4;
   letter-spacing: .04em;
@@ -563,7 +394,8 @@ html[data-theme='dark'] .app-sidebar {
   line-height: 1;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--color-sidebar-text) 78%, transparent);
+  color: var(--color-sidebar-text);
+  opacity: 1;
 }
 
 .sidebar__link {
@@ -611,7 +443,7 @@ html[data-theme='dark'] .app-sidebar {
 }
 
 .app-sidebar .sidebar__link:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--sb-accent) 65%, #dbe3ff);
+  outline: 2px solid color-mix(in srgb, var(--sb-accent) 65%, #e8f5ea);
   outline-offset: 2px;
 }
 
@@ -782,10 +614,6 @@ html[data-theme='dark'] .app-sidebar {
   .app-header .command-trigger__kbd {
     display: none;
   }
-
-  .user-menu__email {
-    display: none;
-  }
 }
 
 @media (max-width: 767px) {
@@ -797,34 +625,7 @@ html[data-theme='dark'] .app-sidebar {
     gap: 4px;
   }
 
-  .app-header .admin-context,
-  .app-header .billing-context,
-  .app-header .security-context {
-    display: none;
-  }
-
-  .user-menu {
-    gap: 4px;
-    padding-left: var(--space-2);
-  }
-
-  .user-menu__identity {
-    padding: 2px;
-  }
-
-  .user-menu__name {
-    display: none;
-  }
-
-  .user-menu__actions {
-    gap: 2px;
-  }
-
-  .user-menu__action {
-    padding: 0;
-  }
-
-  .user-menu__action-label {
+  .app-header :is(.admin-context, .account-context) {
     display: none;
   }
 }
@@ -834,18 +635,14 @@ html[data-theme='dark'] .app-sidebar {
    ============================================================ */
 /* Compact utility labels before the fixed sidebar leaves too little room. */
 @media (max-width: 1279px) {
-  .app-header .user-menu__action-label,
-  .app-header .user-menu__info,
   .app-header .command-trigger__label,
   .app-header .command-trigger__kbd { display: none; }
   .app-header .command-trigger { width: 40px; min-width: 40px; padding: 0; justify-content: center; }
-  .app-header .user-menu__action { width: 36px; padding: 0; justify-content: center; }
 }
 @media (max-width: 520px) {
   .app-header { height: auto; min-height: var(--header-height); padding-block: 10px; align-items: flex-start; }
   .app-header__start { flex-shrink: 0; }
   .app-header__actions { min-width: 0; flex: 1; flex-wrap: wrap; justify-content: flex-end; row-gap: 8px; }
-  .app-header .user-menu { flex-basis: 100%; justify-content: flex-end; border-left: 0; padding-left: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -854,8 +651,7 @@ html[data-theme='dark'] .app-sidebar {
   .app-sidebar *::before,
   .app-sidebar *::after,
   .app-header *,
-  .sidebar-backdrop,
-  .user-menu * {
+  .sidebar-backdrop {
     transition: none !important;
     animation: none !important;
   }

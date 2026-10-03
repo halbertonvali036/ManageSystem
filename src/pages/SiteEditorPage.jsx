@@ -623,6 +623,7 @@ function SiteEditorPage() {
         onDeviceChange={setDevice}
         isPreview={isPreview}
         onTogglePreview={togglePreview}
+        onSave={handleSave}
       />}
       {!isPreview && (
         <p className="publication-state" role="status">

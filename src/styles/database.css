@@ -1,0 +1,842 @@
+/* ============================================================
+   Workspace Database / Schema Builder
+   Reuses the existing dark + green-neon design tokens. This is a
+   product of this codebase, not a copy of any other tool's design.
+   ============================================================ */
+
+/* ── Workspace Section Switcher ─────────────────────────────── */
+.workspace-sections {
+  margin-bottom: var(--space-2);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.workspace-sections__list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1);
+  margin: 0;
+  list-style: none;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  width: max-content;
+  min-width: 100%;
+}
+
+.workspace-sections__item {
+  display: flex;
+}
+
+.workspace-sections__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm, 10px);
+  font-size: var(--text-helper);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--motion-duration-fast) var(--motion-ease),
+              background-color var(--motion-duration-fast) var(--motion-ease);
+}
+
+.workspace-sections__link:hover {
+  color: var(--color-text);
+  background: var(--color-surface-2);
+}
+
+.workspace-sections__link--active,
+.workspace-sections__link--active:hover {
+  color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+}
+
+/* ── Page shell ────────────────────────────────────────────── */
+.db-page__head-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.db-page__cta {
+  flex-shrink: 0;
+}
+
+.db-page__back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  align-self: flex-start;
+}
+
+.db-page__back:hover {
+  color: var(--color-accent);
+}
+
+.db-page__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.db-page__count {
+  margin: 0;
+  font-size: var(--text-helper);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* ── List / schema toggle ──────────────────────────────────── */
+.db-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.db-toggle__btn {
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm, 10px);
+  background: transparent;
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color var(--motion-duration-fast) var(--motion-ease),
+              background-color var(--motion-duration-fast) var(--motion-ease);
+}
+
+.db-toggle__btn:hover {
+  color: var(--color-text);
+}
+
+.db-toggle__btn--active,
+.db-toggle__btn--active:hover {
+  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+  color: var(--color-accent);
+}
+
+/* ── Search ────────────────────────────────────────────────── */
+.db-search {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.db-search__icon {
+  position: absolute;
+  top: 2.15rem;
+  left: var(--space-3);
+  color: var(--color-text-soft);
+  pointer-events: none;
+}
+
+.db-search__label {
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.db-search__input {
+  padding-left: calc(var(--space-3) + 20px);
+}
+
+/* ── Model list ────────────────────────────────────────────── */
+.db-model-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.db-model {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  transition: border-color var(--motion-duration-fast) var(--motion-ease),
+              box-shadow var(--motion-duration-fast) var(--motion-ease);
+}
+
+.db-model:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.db-model__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.db-model__name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.db-model__link {
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color var(--motion-duration-fast) var(--motion-ease);
+}
+
+.db-model__link:hover {
+  color: var(--color-accent);
+}
+
+.db-model__key,
+.db-field__key,
+.db-schema__key {
+  margin: 0;
+  font-family: var(--font-mono, monospace);
+  font-size: var(--text-meta);
+  color: var(--color-text-soft);
+  overflow-wrap: anywhere;
+}
+
+.db-model__description {
+  margin: 0;
+  font-size: var(--text-helper);
+  color: var(--color-text-muted);
+}
+
+.db-model__meta,
+.db-field__meta {
+  margin: 0;
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+.db-model__meta-value {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.db-model__actions,
+.db-field__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.db-model__action,
+.db-field__actions .btn {
+  gap: var(--space-2);
+  padding-left: var(--space-3);
+  padding-right: var(--space-3);
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.db-model__action:hover,
+.db-field__actions .btn:hover {
+  color: var(--color-text);
+  background: var(--color-surface-2);
+}
+
+.db-model__action--danger,
+.db-field__action--danger {
+  color: var(--color-text-muted);
+}
+
+.db-model__action--danger:hover,
+.db-field__action--danger:hover {
+  color: var(--color-danger, #ef4444);
+}
+
+/* ── Chips ─────────────────────────────────────────────────── */
+.db-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--space-2);
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.db-chip--required {
+  color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+
+.db-chip--relation {
+  color: var(--color-text);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+}
+
+/* ── Model form ────────────────────────────────────────────── */
+.db-model-form {
+  max-width: 620px;
+}
+
+/* ── Field form ────────────────────────────────────────────── */
+.db-field-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 760px;
+}
+
+.db-field-form__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-4);
+}
+
+.db-field-form__relations {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  min-width: 0;
+}
+
+.db-field-form__relations legend {
+  padding: 0 var(--space-2);
+}
+
+.db-field-form__required {
+  align-self: flex-start;
+}
+
+/* ── Field list ────────────────────────────────────────────── */
+.db-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.db-field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.db-field__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.db-field__name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 650;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+
+.db-fields__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+  padding: var(--space-6) var(--space-4);
+}
+
+.db-fields__empty-title {
+  margin: 0;
+  font-size: var(--text-section);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.db-fields__empty-text {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-helper);
+  color: var(--color-text-muted);
+}
+
+/* ── Schema view ───────────────────────────────────────────── */
+.db-schema {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.db-schema__model {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.db-schema__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.db-schema__name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.db-schema__link {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.db-schema__link:hover {
+  color: var(--color-accent);
+}
+
+.db-schema__count {
+  margin: 0 0 0 auto;
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.db-schema__fields {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.db-schema__field {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.2fr) minmax(0, 0.8fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+  font-size: var(--text-helper);
+}
+
+.db-schema__field:first-child {
+  border-top: 0;
+}
+
+.db-schema__field-name {
+  font-weight: 600;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+
+.db-schema__field-key {
+  font-family: var(--font-mono, monospace);
+  font-size: var(--text-meta);
+  color: var(--color-text-soft);
+  overflow-wrap: anywhere;
+}
+
+.db-schema__field-type {
+  color: var(--color-text-muted);
+  font-size: var(--text-meta);
+}
+
+.db-schema__field-flags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.db-schema__empty {
+  margin: 0;
+  padding: var(--space-4);
+  font-size: var(--text-helper);
+  color: var(--color-text-muted);
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .db-schema__field {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+
+  .db-schema__field-flags {
+    justify-content: flex-start;
+  }
+
+  .db-schema__count {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .db-page__head-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .db-page__cta,
+  .db-toggle {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .db-toggle__btn {
+    flex: 1 1 0;
+  }
+
+  .db-model {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .db-model__actions,
+  .db-field__actions {
+    width: 100%;
+  }
+
+  .db-model__action,
+  .db-field__actions .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}
+
+/* ============================================================
+   Records — schema-driven table, toolbar and forms
+   ------------------------------------------------------------
+   Every rule here is token-driven and layout-only, so records
+   follow the same light/dark themes as the schema builder. The
+   column count is whatever the model declares; the table scrolls
+   horizontally rather than squashing its row actions.
+   ============================================================ */
+
+.records-summary {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-helper);
+  color: var(--color-text-muted);
+}
+
+/* ── Toolbar: search, filter, sort ──────────────────────────── */
+.records-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.records-toolbar__search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.records-toolbar__search .sites-toolbar__search-icon {
+  position: absolute;
+  inset-inline-start: var(--space-3);
+  color: var(--color-text-soft);
+  pointer-events: none;
+}
+
+/* The search icon sits inside the field, so the input needs room for it. */
+.records-toolbar__search .form__input {
+  padding-inline-start: calc(var(--space-3) + 16px + var(--space-2));
+}
+
+.records-toolbar__group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  color: var(--color-text-soft);
+}
+
+.records-toolbar__group .form__select {
+  max-width: 220px;
+}
+
+.records-toolbar__clear {
+  margin-inline-start: auto;
+}
+
+/* ── Table ─────────────────────────────────────────────────── */
+.records-table {
+  min-width: 720px;
+}
+
+.records-table__head {
+  white-space: nowrap;
+}
+
+.records-table__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.records-table__sort:hover {
+  color: var(--color-primary);
+}
+
+.records-table__sort:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.records-table__sort-idle {
+  opacity: 0.35;
+}
+
+.records-table__actions-head,
+.records-table__actions {
+  text-align: end;
+  white-space: nowrap;
+}
+
+.records-table__actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+.records-table__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--motion-duration-fast) var(--motion-ease-spring);
+}
+
+.records-table__action:hover:not(:disabled) {
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  border-color: var(--color-primary-bg);
+  transform: translateY(-1px);
+}
+
+.records-table__action--danger:hover:not(:disabled) {
+  color: var(--color-danger);
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger-bg);
+}
+
+.records-table__action:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+.records-table__cell--boolean {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* ── Forms ─────────────────────────────────────────────────── */
+.record-form {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.record-form__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.record-form__head h2 {
+  margin: 0;
+}
+
+.record-form__hint {
+  margin: 0;
+  font-size: var(--text-helper);
+  color: var(--color-text-muted);
+}
+
+.record-form__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-4);
+}
+
+.record-form__required {
+  margin-inline-start: 4px;
+  color: var(--color-danger);
+}
+
+.record-form__relations {
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.record-form__relation-list {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.record-form__relation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-size: var(--text-helper);
+}
+
+.record-form__relation-name {
+  font-weight: 650;
+  color: var(--color-text);
+}
+
+.record-form__relation-type,
+.record-form__relation-target {
+  color: var(--color-text-muted);
+}
+
+/* ── Single record detail ──────────────────────────────────── */
+.record-detail {
+  display: grid;
+  gap: 0;
+  margin: var(--space-3) 0 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.record-detail__row {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) 2fr;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+}
+
+.record-detail__row + .record-detail__row {
+  border-top: 1px solid var(--color-border);
+}
+
+.record-detail__label {
+  color: var(--color-text-muted);
+  font-size: var(--text-helper);
+}
+
+.record-detail__value {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.record-detail--meta {
+  border-style: dashed;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .record-detail__row {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+}
+
+@media (max-width: 640px) {
+  .records-toolbar__group {
+    width: 100%;
+  }
+
+  .records-toolbar__group .form__select {
+    flex: 1 1 0;
+    max-width: none;
+  }
+
+  .records-toolbar__clear {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .records-table__action {
+    transition: none;
+  }
+
+  .records-table__action:hover:not(:disabled) {
+    transform: none;
+  }
+}

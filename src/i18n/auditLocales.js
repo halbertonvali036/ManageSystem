@@ -1,4 +1,12 @@
 export const azAudit = {
+  errorTitle: 'Xəta baş verdi',
+  errorDescription: 'Bu səhifəni yükləmək mümkün olmadı. Yenidən cəhd edin və ya iş sahəsinə qayıdın.',
+  notFoundTitle: 'Səhifə tapılmadı',
+  notFoundDescription: 'Bu səhifə mövcud deyil və ya köçürülüb. Ünvanı yoxlayın və ya geri qayıdın.',
+  workspace: 'İş sahəsinə keç',
+  login: 'Daxil ol',
+  back: 'Geri qayıt',
+  technicalDetails: 'Texniki məlumatlar',
   authUnavailable: 'Daxil olmaq üçün autentifikasiya xidməti qoşulmalıdır.',
   adminOnly: 'Bu giriş yalnız administrator hesabları üçündür.',
   invalidCredentials: 'E-poçt və ya şifrə yanlışdır.',
@@ -9,6 +17,14 @@ export const azAudit = {
   registrationUnavailable: 'Qeydiyyat xidməti hələ qoşulmayıb. Hesab yaradılmadı.',
 }
 export const enAudit = {
+  errorTitle: 'Something went wrong',
+  errorDescription: 'This page could not be loaded. Try again or return to your workspace.',
+  notFoundTitle: 'Page not found',
+  notFoundDescription: 'This page does not exist or may have moved. Check the address or go back.',
+  workspace: 'Go to workspace',
+  login: 'Go to login',
+  back: 'Go back',
+  technicalDetails: 'Technical details',
   authUnavailable: 'Connect the authentication service to sign in.',
   adminOnly: 'This sign-in is reserved for administrator accounts.',
   invalidCredentials: 'Incorrect email or password.',

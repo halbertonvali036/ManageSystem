@@ -31,7 +31,9 @@ function ConfirmDialog({
 
   useEffect(() => {
     if (isOpen) {
+      const previousFocus = document.activeElement
       cancelRef.current?.focus()
+      return () => { if (previousFocus?.isConnected) previousFocus.focus() }
     }
   }, [isOpen])
 

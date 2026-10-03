@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Bell, CreditCard, ShieldCheck, User } from 'lucide-react'
+import { ArrowRight, Bell, CreditCard, LifeBuoy, ShieldCheck, User } from 'lucide-react'
 import useAuth from '@/hooks/useAuth'
 import useTranslation from '@/hooks/useTranslation'
 import {
@@ -7,19 +7,22 @@ import {
   NOTIFICATIONS_PATH,
   PROFILE_PATH,
   SECURITY_PATH,
+  SUPPORT_PATH,
 } from '@/utils/constants'
 
 /**
  * Account hub.
  *
- * A thin index over the account features that already exist: profile, security,
- * billing and notifications. It adds no new behaviour, it only gives the
- * website-builder navigation one place to point.
+ * A thin index over the account destinations that already exist, in the same
+ * order as the sidebar's account group. It adds no behaviour and no section of
+ * its own — Support sits here beside the others rather than inside Account &
+ * Security, because reaching the account team is not a security step.
  */
 const ACCOUNT_SECTIONS = [
   { key: 'profile', labelKey: 'account.sections.profile', textKey: 'account.sections.profileText', to: PROFILE_PATH, icon: User },
   { key: 'security', labelKey: 'account.sections.security', textKey: 'account.sections.securityText', to: SECURITY_PATH, icon: ShieldCheck },
   { key: 'billing', labelKey: 'account.sections.billing', textKey: 'account.sections.billingText', to: BILLING_PATH, icon: CreditCard },
+  { key: 'support', labelKey: 'account.sections.support', textKey: 'account.sections.supportText', to: SUPPORT_PATH, icon: LifeBuoy },
   { key: 'notifications', labelKey: 'account.sections.notifications', textKey: 'account.sections.notificationsText', to: NOTIFICATIONS_PATH, icon: Bell },
 ]
 

@@ -91,6 +91,7 @@ const parseResponseBody = async (response) => {
 }
 
 const request = async (path, options = {}) => {
+  if (!config.api.baseUrl) throw new BackendNotConnectedError()
   const url = `${config.api.baseUrl}${path}`
   const headers = { ...DEFAULT_HEADERS, ...options.headers }
   if (typeof FormData !== 'undefined' && options.body instanceof FormData) {

@@ -65,7 +65,7 @@ function ConnectedAccountsCard({
                 ) : (
                   copy('Linked to this account')
                 )}
-                {connectedOn ? ` — connected ${connectedOn}` : ''}
+                {connectedOn ? ` — ${t('accountPolish.connectedOn', { date: connectedOn })}` : ''}
               </p>
               <p className="connected-account__hint">{t('accountPolish.googleSignInWillOpenThisAccountYourEmail')}</p>
             </>
@@ -110,7 +110,7 @@ function ConnectedAccountsCard({
               }
             >
               <Link2 size={16} aria-hidden="true" />
-              {isPending ? copy('Connecting…') : `Connect ${providerLabel}`}
+              {isPending ? copy('Connecting…') : t('accountPolish.connectProvider', { provider: providerLabel })}
             </button>
           </div>
         )}

@@ -24,6 +24,14 @@ const AUTH_PATH = '/auth'
  * website-builder workspace can be exercised before the auth backend is
  * connected. Only /admin/login reads from this list by role, and it picks the
  * admin entry alone.
+ *
+ * There are two normal-user entries so a second signed-in user can be tested
+ * against a single-user session (a second tab, a second browser) before the auth
+ * backend exists. Both carry the plain `user` role: no admin privilege, and no
+ * role beyond user/admin is defined in this product.
+ *
+ * The list is empty outside development, so a production build cannot sign in
+ * with any of these.
  */
 export const DEMO_ACCOUNTS = Object.freeze(import.meta.env.DEV ? [
   {
@@ -34,10 +42,17 @@ export const DEMO_ACCOUNTS = Object.freeze(import.meta.env.DEV ? [
     role: 'user',
   },
   {
+    id: 'user-2',
+    name: 'Demo Member',
+    email: 'member@demo.com',
+    password: 'member123',
+    role: 'user',
+  },
+  {
     id: 'admin-1',
     name: 'System Admin',
-    email: 'admin@demo.com',
-    password: 'admin123',
+    email: 'admin001@gmail.com',
+    password: 'holb1234',
     role: 'admin',
   },
 ] : [])
@@ -49,13 +64,11 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 const normalizeEmail = (email) => email.trim().toLowerCase()
 
 const readStoredSession = () => {
-  const raw =
-    sessionStorage.getItem(SESSION_STORAGE_KEY) ??
-    localStorage.getItem(SESSION_STORAGE_KEY)
-  if (!raw) {
-    return null
-  }
   try {
+    const raw =
+      sessionStorage.getItem(SESSION_STORAGE_KEY) ??
+      localStorage.getItem(SESSION_STORAGE_KEY)
+    if (!raw) return null
     const session = JSON.parse(raw)
     if (!session?.token || !isKnownRole(session?.user?.role) ||
       (!import.meta.env.DEV && session.token === MOCK_TOKEN)) {

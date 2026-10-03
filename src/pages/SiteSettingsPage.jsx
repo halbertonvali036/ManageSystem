@@ -1,4 +1,5 @@
 import DomainFoundation from '@/components/sitesettings/DomainFoundation'
+import '@/styles/site-settings.css'
 import {
   ArrowLeft,
   Globe,

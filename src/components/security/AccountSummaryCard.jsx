@@ -21,7 +21,7 @@ function AccountSummaryCard({ user, overview }) {
   const copy = useAccountCopy()
   const name = user?.name ?? overview?.displayName ?? null
   const email = user?.email ?? overview?.email ?? null
-  const roleLabel = user?.role === 'user' ? t('userMenu.accountRole') : user?.role ? (ROLE_NAMES[user.role] ?? user.role) : null
+  const roleLabel = user?.role === 'user' ? t('accountIdentity.accountRole') : user?.role ? (ROLE_NAMES[user.role] ?? user.role) : null
   const lastSignIn = formatSecurityDateTime(overview?.lastSignInAt)
   const accountStatus = overview?.accountStatus ?? null
   const emailVerified = overview?.emailVerified ?? null

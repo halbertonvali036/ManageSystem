@@ -17,18 +17,43 @@
 }
 
 /* ── Form panel (left) ────────────────────────────────────── */
+/* Own layered emerald surface from --auth-form-bg rather than inheriting the
+   flat page fill. The card sits one step lighter than the field it contains, so
+   inputs still read as recessed and the copy keeps its contrast. */
 .auth-form {
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: clamp(var(--space-5), 4.5vw, var(--space-8));
-  background:
-    radial-gradient(ellipse 90% 46% at 6% -6%, var(--color-bg-glow-1), transparent 62%),
-    radial-gradient(ellipse 70% 46% at 104% 108%, var(--color-bg-glow-2), transparent 60%);
+  background: var(--auth-form-bg);
+  background-attachment: local;
+}
+
+/* A single soft emerald bloom behind the card: depth without a second glow
+   layer competing with the form controls. */
+.auth-form::before {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 62% 38% at 50% 42%,
+    rgba(57, 255, 20, 0.055),
+    transparent 72%
+  );
+  content: '';
+  opacity: 0.9;
+  pointer-events: none;
+}
+[data-theme='dark'] .auth-form::before {
+  background: radial-gradient(
+    ellipse 62% 38% at 50% 42%,
+    rgba(57, 255, 20, 0.07),
+    transparent 72%
+  );
 }
 
 .auth-form__inner {
+  position: relative;
   width: 100%;
   max-width: 424px;
   margin-inline: auto;
@@ -98,9 +123,12 @@
 }
 
 /* ── Auth card ────────────────────────────────────────────── */
+/* Sits one surface step above the form panel, and one step above its own
+   fields, so the card, the labels and the inputs stay separable on a
+   green-black ground. */
 .auth-card {
   padding: clamp(28px, 3vw, 40px);
-  background: var(--color-surface);
+  background: var(--auth-form-card);
   border: 1px solid var(--color-accent-bg);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-auth-card);
@@ -157,7 +185,9 @@
 
 .auth-card .form__input {
   min-height: var(--auth-input-height);
+  background: var(--auth-form-field);
   border-radius: 10px;
+  color: var(--color-text);
 }
 
 .auth-card .form__error {
@@ -452,7 +482,7 @@
 
 .auth-visual__foot p {
   margin: 0;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.8rem;
 }
 
@@ -544,6 +574,7 @@
 
 /* ── Reduced motion ───────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
+  .auth-layout,
   .auth-form__brand,
   .auth-form__helper,
   .auth-form__helper svg,

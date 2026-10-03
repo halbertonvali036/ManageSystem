@@ -24,6 +24,7 @@ const CHECKOUT_PATH = '/billing/checkout-session'
 const PORTAL_PATH = '/billing/portal-session'
 const PAYMENT_METHODS_PATH = '/billing/payment-methods'
 const INVOICES_PATH = '/billing/invoices'
+const SUBSCRIPTION_PATH = '/billing/subscription'
 
 const isBackendConnected = () => Boolean(config.api.baseUrl)
 
@@ -90,11 +91,14 @@ const getInvoices = async () => {
 
 /**
  * Creates a provider-hosted checkout session for a plan.
- * The backend must own plan pricing, taxes and the provider call.
+ *
+ * The backend must own plan pricing, taxes and the provider call. The chosen
+ * cycle is forwarded as an explicit intent; the backend still decides what that
+ * combination actually costs.
  */
-const createCheckoutSession = async (planId) => {
+const createCheckoutSession = async (planId, cycle) => {
   ensureBackendConnection()
-  const response = await httpClient.post(CHECKOUT_PATH, { planId })
+  const response = await httpClient.post(CHECKOUT_PATH, { planId, cycle: cycle ?? null })
   return response?.data ?? response ?? null
 }
 
@@ -102,6 +106,29 @@ const createCheckoutSession = async (planId) => {
 const openBillingPortal = async () => {
   ensureBackendConnection()
   const response = await httpClient.post(PORTAL_PATH, {})
+  return response?.data ?? response ?? null
+}
+
+/**
+ * Cancels the current subscription at the end of the paid period.
+ *
+ * The frontend never cancels anything itself: the backend owns the schedule,
+ * any prorated credit and the provider call. `cancelAtPeriodEnd` is sent as an
+ * explicit intent rather than an immediate cancellation so the UI cannot
+ * accidentally end access before the period is paid for.
+ */
+const cancelSubscription = async ({ atPeriodEnd = true } = {}) => {
+  ensureBackendConnection()
+  const response = await httpClient.post(SUBSCRIPTION_PATH, {
+    cancelAtPeriodEnd: atPeriodEnd,
+  })
+  return response?.data ?? response ?? null
+}
+
+/** Un-cancels a subscription that is set to end at the close of its period. */
+const resumeSubscription = async () => {
+  ensureBackendConnection()
+  const response = await httpClient.post(`${SUBSCRIPTION_PATH}/resume`, {})
   return response?.data ?? response ?? null
 }
 
@@ -139,6 +166,8 @@ const billingService = {
   getPaymentMethods,
   getInvoices,
   createCheckoutSession,
+  cancelSubscription,
+  resumeSubscription,
   openBillingPortal,
   addPaymentMethod,
   setDefaultPaymentMethod,

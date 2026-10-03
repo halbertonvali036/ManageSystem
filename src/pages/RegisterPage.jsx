@@ -26,7 +26,7 @@ const MIN_PASSWORD_LENGTH = 6
  * Public registration.
  *
  * There is no role selector: a visitor becomes a platform user, and the backend
- * decides the account it actually creates. Student and Admin are never
+ * decides the account it actually creates. Elevated roles are never
  * offered here — administration is provisioned internally.
  */
 const INITIAL_VALUES = {
@@ -47,7 +47,7 @@ function VerifyEmailView({ email, onResend, isResending, resendError }) {
     <div className="auth-card anim-scale-in">
       <div className="auth-card__head">
         <p className="auth-card__eyebrow anim-fade-up anim-delay-1">{t('auth.register.verifyEyebrow')}</p>
-        <h2 className="auth-card__title anim-fade-up anim-delay-1">{t('auth.register.verifyTitle')}</h2>
+        <h1 className="auth-card__title anim-fade-up anim-delay-1">{t('auth.register.verifyTitle')}</h1>
         <p className="auth-card__subtitle anim-fade-up anim-delay-2">
           {t('auth.register.verifySubtitle')}
         </p>
@@ -108,7 +108,7 @@ function AccountCreatedView() {
     <div className="auth-card anim-scale-in">
       <div className="auth-card__head">
         <p className="auth-card__eyebrow anim-fade-up anim-delay-1">{t('auth.register.createdEyebrow')}</p>
-        <h2 className="auth-card__title anim-fade-up anim-delay-1">{t('auth.register.createdTitle')}</h2>
+        <h1 className="auth-card__title anim-fade-up anim-delay-1">{t('auth.register.createdTitle')}</h1>
         <p className="auth-card__subtitle anim-fade-up anim-delay-2">
           {t('auth.register.createdSubtitle')}
         </p>
@@ -241,7 +241,7 @@ function RegisterPage() {
     setFormError('')
     try {
       // No role is sent: the backend decides what the account is. Public
-      // registration can never request a Student or Admin account.
+      // registration can never request an Admin account.
       const response = await authService.register({
         firstName: values.firstName.trim(),
         lastName: values.lastName.trim(),
@@ -361,7 +361,7 @@ function RegisterPage() {
     <div className="auth-card auth-register-card anim-scale-in">
       <div className="auth-card__head">
         <p className="auth-card__eyebrow anim-fade-up anim-delay-1">{t('auth.register.eyebrow')}</p>
-        <h2 className="auth-card__title anim-fade-up anim-delay-1">{t('auth.register.title')}</h2>
+        <h1 className="auth-card__title anim-fade-up anim-delay-1">{t('auth.register.title')}</h1>
         <p className="auth-card__subtitle anim-fade-up anim-delay-2">
           {t('auth.register.subtitle')}
         </p>

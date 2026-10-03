@@ -4,32 +4,45 @@ import { ArrowRight, Check, Minus } from 'lucide-react'
 import BillingStatusBadge from '@/components/billing/BillingStatusBadge'
 import { BILLING_PRICE_PENDING_LABEL } from '@/config/billing'
 import {
+  BILLING_CYCLE,
   formatBillingAmount,
-  getBillingCycleLabel,
+  getAnnualSavingPercent,
+  getBillingCyclePeriod,
+  getMonthlyEquivalent,
+  getPlanPriceForCycle,
+  getPlanRelationLabel,
 } from '@/models/billing'
-
-const RELATION_LABELS = {
-  upgrade: 'Upgrade',
-  downgrade: 'Change plan',
-  current: 'Current plan',
-  select: 'Select plan',
-}
 
 /**
  * Plan option card.
  *
- * Price, cycle and checkout state come from real data only: an unpublished
- * price renders as an explicit pending label and the CTA stays unavailable
- * until a payment provider is connected. `relation` is only ever set from a
- * plan the backend reports as current.
+ * The price shown is the one published for the cycle the customer selected.
+ * An unpublished price renders as an explicit pending label and the CTA stays
+ * unavailable until a payment provider is connected. `relation` is only ever
+ * set from a plan the backend reports as current.
  */
-function BillingPlanCard({ plan, relation, canSelect, isPlaceholder, onSelect }) {
+function BillingPlanCard({ plan, relation, cycle, currentStatus, canSelect, isPlaceholder, onSelect }) {
   const copy = useAccountCopy()
   const { t } = useTranslation()
-  const amount = formatBillingAmount(plan.price, plan.currency)
+  const price = getPlanPriceForCycle(plan, cycle)
+  const amount = price ? formatBillingAmount(price.amount, price.currency) : null
+  const period = getBillingCyclePeriod(price?.cycle ?? cycle)
+  const monthlyEquivalent = cycle === BILLING_CYCLE.ANNUAL ? getMonthlyEquivalent(plan) : null
+  const equivalentAmount =
+    monthlyEquivalent && monthlyEquivalent.amount
+      ? formatBillingAmount(monthlyEquivalent.amount, monthlyEquivalent.currency)
+      : null
+  const savingPercent = getAnnualSavingPercent(plan)
   const isCurrent = relation === 'current'
-  const ctaLabel = RELATION_LABELS[relation] ?? RELATION_LABELS.select
-  const ctaDisabled = isCurrent || !canSelect
+  const ctaLabel = getPlanRelationLabel(relation)
+  const ctaDisabled = isCurrent || !canSelect || plan.purchasable !== true
+  const unavailableReason = isCurrent
+    ? copy('This is your current plan')
+    : !canSelect
+      ? copy('Available once your subscription is reported by the backend')
+      : plan.purchasable !== true
+        ? copy('Checkout becomes available once the payment provider is connected')
+        : `Continue to secure checkout for ${plan.name}`
 
   const cardClassName = [
     'plan-card',
@@ -49,7 +62,12 @@ function BillingPlanCard({ plan, relation, canSelect, isPlaceholder, onSelect })
         {plan.tagline ? <p className="plan-card__tagline">{copy(plan.tagline)}</p> : null}
         <div className="plan-card__badges">
           {isCurrent ? (
-            <BillingStatusBadge status="active" className="plan-card__badge" />
+            <span className="plan-card__badge plan-card__badge--current">
+              {t('accountPolish.currentPlan')}
+              {currentStatus ? (
+                <BillingStatusBadge status={currentStatus} className="plan-card__status" />
+              ) : null}
+            </span>
           ) : null}
           {plan.recommended ? (
             <span className="plan-card__badge plan-card__badge--recommended">{t('accountPolish.recommended')}</span>
@@ -61,15 +79,24 @@ function BillingPlanCard({ plan, relation, canSelect, isPlaceholder, onSelect })
         {amount ? (
           <>
             <span className="plan-card__amount">{amount}</span>
-            <span className="plan-card__cycle">
-              {getBillingCycleLabel(plan.cycle)}
-            </span>
+            {period ? <span className="plan-card__cycle">{period}</span> : null}
           </>
         ) : (
           <span className="plan-card__amount plan-card__amount--pending">
             {copy(BILLING_PRICE_PENDING_LABEL)}
           </span>
         )}
+        {equivalentAmount ? (
+          <span className="plan-card__equivalent">
+            {copy('Billed yearly')}: {equivalentAmount}
+            {getBillingCyclePeriod(BILLING_CYCLE.MONTHLY)}
+          </span>
+        ) : null}
+        {savingPercent ? (
+          <span className="plan-card__saving">
+            {t('accountPolish.savePercent', { percent: savingPercent })}
+          </span>
+        ) : null}
       </div>
 
       {plan.description ? (
@@ -90,7 +117,7 @@ function BillingPlanCard({ plan, relation, canSelect, isPlaceholder, onSelect })
             <span className="plan-card__feature-label">
               {copy(feature.label)}
               <span className="visually-hidden">
-                {feature.included ? ' (included)' : ' (not included)'}
+                {' ('}{t(feature.included ? 'accountPolish.featureIncluded' : 'accountPolish.featureExcluded')}{')'}
               </span>
             </span>
           </li>
@@ -101,18 +128,12 @@ function BillingPlanCard({ plan, relation, canSelect, isPlaceholder, onSelect })
         <button
           type="button"
           className={`btn btn--block${
-            isCurrent ? '' : ' btn--primary'
+            isCurrent ? '' : plan.recommended ? ' btn--primary' : ' btn--outline'
           } plan-card__cta`}
           disabled={ctaDisabled}
           aria-disabled={ctaDisabled}
           onClick={() => onSelect?.(plan)}
-          title={
-            isCurrent
-              ? copy('This is your current plan')
-              : canSelect
-                ? `Continue to secure checkout for ${plan.name}`
-                : copy('Checkout becomes available once the payment provider is connected')
-          }
+          title={unavailableReason}
         >
           {copy(ctaLabel)}
           {!isCurrent ? <ArrowRight size={16} aria-hidden="true" /> : null}

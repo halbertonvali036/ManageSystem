@@ -67,7 +67,7 @@ const OAUTH_ERROR_DETAILS = Object.freeze({
   [OAUTH_ERROR.NOT_AUTHORIZED]: {
     title: 'This Google account is not authorized.',
     message: 'The address you chose is not linked to an account here, or it is not permitted to sign in yet.',
-    hint: 'Sign in with your email and password, or ask your institution to authorize the address.',
+    hint: 'Sign in with your email and password, or contact support to authorize the address.',
     recoverable: true,
   },
   [OAUTH_ERROR.PROVIDER]: {

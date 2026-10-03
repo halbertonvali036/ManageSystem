@@ -34,7 +34,7 @@ const INSTRUCTIONS = [
   {
     icon: Smartphone,
     title: 'Open the mobile app',
-    text: 'Use the companion app once QR sign-in is enabled for your institution.',
+    text: 'Use the companion app once QR sign-in is enabled for your account.',
   },
   {
     icon: ScanLine,

@@ -13,19 +13,8 @@
   gap: 6px;
 }
 
-.student-form,
-.teacher-form,
-.course-form,
-.class-form,
-.grade-form,
-.assessment-form,
-.department-form,
-.subject-form,
 .user-form,
-.role-form,
-.academic-period-form,
-.announcement-form,
-.schedule-entry-form {
+.role-form {
   gap: var(--space-5);
 }
 
@@ -204,135 +193,55 @@ textarea.form__input {
 }
 
 /* ── Action areas ────────────────────────────────────────── */
-.student-form__actions,
-.teacher-form__actions,
-.course-form__actions,
-.class-form__actions,
-.grade-form__actions,
-.department-form__actions,
-.subject-form__actions,
-.assessment-form__actions,
 .user-form__actions,
-.role-form__actions,
-.academic-period-form__actions,
-.announcement-form__actions,
-.schedule-entry-form__actions {
+.role-form__actions {
   margin-top: var(--space-6);
   padding-top: var(--space-5);
   border-top: 1px solid var(--color-hairline);
   gap: var(--space-3);
 }
 
-.student-form__actions .btn,
-.teacher-form__actions .btn,
-.course-form__actions .btn,
-.class-form__actions .btn,
-.grade-form__actions .btn,
-.department-form__actions .btn,
-.subject-form__actions .btn,
-.assessment-form__actions .btn,
 .user-form__actions .btn,
-.role-form__actions .btn,
-.academic-period-form__actions .btn,
-.announcement-form__actions .btn,
-.schedule-entry-form__actions .btn {
+.role-form__actions .btn {
   min-height: 42px;
   padding-inline: 20px;
   border-radius: 10px;
 }
 
-.student-form__actions .btn:not(.btn--primary),
-.teacher-form__actions .btn:not(.btn--primary),
-.course-form__actions .btn:not(.btn--primary),
-.class-form__actions .btn:not(.btn--primary),
-.grade-form__actions .btn:not(.btn--primary),
-.department-form__actions .btn:not(.btn--primary),
-.subject-form__actions .btn:not(.btn--primary),
-.assessment-form__actions .btn:not(.btn--primary),
 .user-form__actions .btn:not(.btn--primary),
-.role-form__actions .btn:not(.btn--primary),
-.academic-period-form__actions .btn:not(.btn--primary),
-.announcement-form__actions .btn:not(.btn--primary),
-.schedule-entry-form__actions .btn:not(.btn--primary) {
+.role-form__actions .btn:not(.btn--primary) {
   color: var(--color-text-muted);
   background: var(--color-surface);
   border-color: var(--color-border);
   box-shadow: none;
 }
 
-.student-form__actions .btn:not(.btn--primary):hover:not(:disabled),
-.teacher-form__actions .btn:not(.btn--primary):hover:not(:disabled),
-.course-form__actions .btn:not(.btn--primary):hover:not(:disabled),
-.class-form__actions .btn:not(.btn--primary):hover:not(:disabled),
-.grade-form__actions .btn:not(.btn--primary):hover:not(:disabled),
-.department-form__actions .btn:not(.btn--primary):hover:not(:disabled),
-.subject-form__actions .btn:not(.btn--primary):hover:not(:disabled),
-.assessment-form__actions .btn:not(.btn--primary):hover:not(:disabled),
 .user-form__actions .btn:not(.btn--primary):hover:not(:disabled),
-.role-form__actions .btn:not(.btn--primary):hover:not(:disabled),
-.academic-period-form__actions .btn:not(.btn--primary):hover:not(:disabled),
-.announcement-form__actions .btn:not(.btn--primary):hover:not(:disabled),
-.schedule-entry-form__actions .btn:not(.btn--primary):hover:not(:disabled) {
+.role-form__actions .btn:not(.btn--primary):hover:not(:disabled) {
   color: var(--color-primary);
   background: var(--color-primary-soft);
   border-color: var(--color-primary-bg);
 }
 
 /* Redundant hint after select grids keeps hierarchy quiet.   */
-.schedule-entry-form__conflict-hint {
-  margin-top: var(--space-1);
-}
 
 /* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 767px) {
-  .student-form__grid,
-  .teacher-form__grid,
-  .course-form__grid,
-  .class-form__grid,
-  .grade-form__grid,
-  .department-form__grid,
-  .subject-form__grid,
   .user-form__grid,
-  .role-form__grid,
-  .assessment-form__grid,
-  .academic-period-form__grid,
-  .announcement-form__grid,
-  .schedule-entry-form__grid {
+  .role-form__grid {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 520px) {
-  .student-form__actions,
-  .teacher-form__actions,
-  .course-form__actions,
-  .class-form__actions,
-  .grade-form__actions,
-  .department-form__actions,
-  .subject-form__actions,
-  .assessment-form__actions,
   .user-form__actions,
-  .role-form__actions,
-  .academic-period-form__actions,
-  .announcement-form__actions,
-  .schedule-entry-form__actions {
+  .role-form__actions {
     display: grid;
     grid-template-columns: 1fr;
   }
 
-  .student-form__actions .btn,
-  .teacher-form__actions .btn,
-  .course-form__actions .btn,
-  .class-form__actions .btn,
-  .grade-form__actions .btn,
-  .department-form__actions .btn,
-  .subject-form__actions .btn,
-  .assessment-form__actions .btn,
   .user-form__actions .btn,
-  .role-form__actions .btn,
-  .academic-period-form__actions .btn,
-  .announcement-form__actions .btn,
-  .schedule-entry-form__actions .btn {
+  .role-form__actions .btn {
     width: 100%;
   }
 }

@@ -23,7 +23,7 @@ import { BackendNotConnectedError } from '@/services/httpClient'
  * The visitor never picks a role. Authentication decides the role and the
  * dashboard is chosen from the role the session comes back with, so the same
  * form serves every public account once the backend owns sign-in. There is no
- * Student or Admin selector here, and no demo credential on screen.
+ * account role selector here, and no demo credential on screen.
  *
  * `restrictedRole` and `initialCredentials` exist only for the unlisted
  * /admin/login development entry point, which stays separate from public auth.
@@ -113,9 +113,9 @@ function LoginPage({ restrictedRole = null, initialCredentials = null }) {
         <p className="auth-card__eyebrow anim-fade-up anim-delay-1">
           {isAdminEntry ? ROLE_NAMES[ROLES.ADMIN] : t('auth.login.eyebrow')}
         </p>
-        <h2 className="auth-card__title anim-fade-up anim-delay-1">
+        <h1 className="auth-card__title anim-fade-up anim-delay-1">
           {isAdminEntry ? t('auth.login.adminTitle') : t('auth.login.title')}
-        </h2>
+        </h1>
         <p className="auth-card__subtitle anim-fade-up anim-delay-2">
           {isAdminEntry ? t('auth.login.adminSubtitle') : t('auth.login.subtitle')}
         </p>

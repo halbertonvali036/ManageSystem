@@ -1,0 +1,1151 @@
+/* ============================================================
+   AI assistant — `AI köməkçi`
+
+   The rest of the portal leans on the neon green. A chat panel is the one place that
+   does not: a conversation is mostly text, and glowing text is tiring to read. So the
+   neon is spent on two small things — the accent on the assistant's own bubble, and a
+   single hairline on the send button — and everything else is surface, border and
+   body text.
+
+   Light and dark both come from the shared tokens, so this panel is legible in either
+   theme without a second set of rules.
+   ============================================================ */
+
+.ai-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.ai-page__notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-accent-soft);
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.ai-page__notice svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-accent);
+}
+
+.ai-page__error-detail {
+  max-width: 60ch;
+  margin: 0;
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  color: var(--color-text-soft);
+}
+
+/* ── Layout ────────────────────────────────────────────────────────────────────
+   Three columns: history, conversation, review.
+
+   The order is the argument. The review queue is the part of this page that can change
+   someone's site, so it is not stacked under a transcript that grows without bound. The
+   history is the least urgent, so it goes first and is the first thing to collapse.
+
+   Two breakpoints rather than one, and both are deliberate. At 1280px the review column
+   folds under the conversation — narrow enough that a 340px queue beside a 340px
+   history would leave the transcript with about half a screen. At 1024px the history
+   folds too, and the page becomes chat-then-everything-else. At no width does anything
+   come above the composer. */
+.ai-layout {
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr) 340px;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.ai-layout__history,
+.ai-layout__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+/* The chat column owns the scroll container, so the two side columns must not stretch
+   it. `min-height: 0` on the grid item is what stops a long transcript from pushing the
+   composer below the fold instead of scrolling inside its own box. */
+.ai-layout__chat {
+  min-width: 0;
+}
+
+/* ── Chat surface ──────────────────────────────────────────── */
+.ai-chat {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.ai-chat__transcript {
+  /* A bounded, scrollable transcript rather than a page that grows forever: a
+     conversation is a log, and a log that pushes the composer off screen stops being
+     a place you can type in. */
+  height: min(58vh, 560px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-3);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.ai-messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ai-messages > li + li {
+  margin-top: 0;
+}
+
+/* ── Messages ──────────────────────────────────────────────── */
+.ai-msg {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: 78%;
+}
+
+.ai-msg--incoming {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+.ai-msg--outgoing {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.ai-msg__sender {
+  font-size: var(--text-xs, 11px);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+}
+
+.ai-msg__bubble {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+/* The assistant's bubble carries the one soft accent. A border rather than a glow:
+   the tint is enough to tell the two sides apart, and it survives a long read. */
+.ai-msg--assistant .ai-msg__bubble {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent-border);
+}
+
+.ai-msg--notice .ai-msg__bubble {
+  background: transparent;
+  border-style: dashed;
+  color: var(--color-text-muted);
+}
+
+.ai-msg__text {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: 1.6;
+  /* Long unbroken strings — a URL, a base64 fragment — must wrap rather than widen
+     the panel. */
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.ai-msg__time {
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Thinking ────────────────────────────────────────────────────────────────
+   Below the transcript, never inside it. A thinking row is a fact about a request, and
+   an element inside the log would be announced as a message that does not exist. */
+.ai-thinking {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+.ai-thinking__dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.ai-thinking__dots span {
+  width: 5px;
+  height: 5px;
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+  animation: ai-thinking-pulse 1.2s ease-in-out infinite;
+}
+
+.ai-thinking__dots span:nth-child(2) {
+  animation-delay: 0.16s;
+}
+
+.ai-thinking__dots span:nth-child(3) {
+  animation-delay: 0.32s;
+}
+
+@keyframes ai-thinking-pulse {
+  0%,
+  60%,
+  100% {
+    opacity: 0.28;
+  }
+  30% {
+    opacity: 1;
+  }
+}
+
+/* ── Send error ──────────────────────────────────────────────────────────────
+   Its own bordered row rather than a bare red line. The failure is the most actionable
+   thing on screen — the user's text is still in the composer — and a single line of red
+   text is easy to read past. */
+.ai-send-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-danger-bg);
+  border: 1px solid color-mix(in srgb, var(--color-danger) 32%, var(--color-border));
+  border-radius: var(--radius-md);
+}
+
+.ai-send-error__icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--color-danger);
+}
+
+.ai-send-error__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.ai-send-error__title {
+  margin: 0 0 2px;
+  font-size: var(--text-meta);
+  font-weight: 650;
+  color: var(--color-text);
+}
+
+.ai-send-error__text {
+  margin: 0;
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  color: var(--color-text-muted);
+}
+
+.ai-send-error__note {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-soft);
+}
+
+.ai-send-error__retry {
+  flex-shrink: 0;
+  gap: var(--space-1);
+  align-self: center;
+}
+
+/* ── Composer ──────────────────────────────────────────────── */
+.ai-composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.ai-composer__notice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+}
+
+.ai-composer__notice svg {
+  flex-shrink: 0;
+  color: var(--color-accent);
+}
+
+.ai-composer__row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast);
+}
+
+.ai-composer__row:focus-within {
+  border-color: var(--color-accent);
+}
+
+.ai-composer__input {
+  flex: 1;
+  min-width: 0;
+  /* Grows with its content up to a ceiling, so a long prompt does not push the
+     conversation out of view. */
+  min-height: 24px;
+  max-height: 160px;
+  padding: var(--space-2);
+  font: inherit;
+  font-size: var(--text-body);
+  line-height: 1.5;
+  color: var(--color-text);
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  field-sizing: content;
+}
+
+.ai-composer__input::placeholder {
+  color: var(--color-text-soft);
+}
+
+.ai-composer__send {
+  flex-shrink: 0;
+  gap: var(--space-1);
+}
+
+.ai-composer__hint {
+  margin: 0;
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-soft);
+}
+
+/* ── History ─────────────────────────────────────────────────────────────────
+   A quiet column. History is a reference, not the work, so it gets hairlines and small
+   type and no glow — the only accent it spends is the edge on the row that is open, and
+   that edge has to be findable at a glance when a long thread is loaded. */
+.ai-history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.ai-history__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.ai-history__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  font-size: var(--text-xs, 11px);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+}
+
+.ai-history__title svg {
+  color: var(--color-accent);
+}
+
+.ai-history__new {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  color: var(--color-accent);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm, 6px);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.ai-history__new:hover:not(:disabled) {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent-border);
+}
+
+.ai-history__new:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ai-history__state {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-xs, 11px);
+  line-height: 1.5;
+  color: var(--color-text-soft);
+}
+
+.ai-history__state--muted {
+  align-items: flex-start;
+}
+
+.ai-history__state--muted svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.ai-history__state--error {
+  flex-direction: column;
+  align-items: stretch;
+  color: var(--color-danger);
+}
+
+.ai-history__state-text {
+  margin: 0;
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.ai-history__retry {
+  align-self: flex-start;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+.ai-history__list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* Long histories scroll inside the column rather than stretching the page. The column
+     is a sibling of the transcript, so it cannot inherit the transcript's height. */
+  max-height: min(58vh, 560px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.ai-history__item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  padding: var(--space-2);
+  font: inherit;
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  /* The open row is marked with an edge rather than a fill. A filled row in a dark
+     theme at this size reads as a button that has been pressed. */
+  border-left: 2px solid transparent;
+  border-radius: var(--radius-sm, 6px);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.ai-history__item:hover:not(:disabled) {
+  background: var(--color-surface-2);
+}
+
+.ai-history__item--active {
+  background: var(--color-accent-soft);
+  border-left-color: var(--color-accent);
+}
+
+.ai-history__item:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.ai-history__item-label {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  font-size: var(--text-meta);
+  line-height: 1.4;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+
+.ai-history__item--active .ai-history__item-label {
+  font-weight: 600;
+}
+
+.ai-history__item-count {
+  font-size: var(--text-xs, 11px);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-soft);
+}
+
+/* ── Suggestions ──────────────────────────────────────────────────────────── */
+.ai-suggestions__label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-xs, 11px);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+}
+
+.ai-suggestions__label svg {
+  color: var(--color-accent);
+}
+
+.ai-suggestions__note {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-xs, 11px);
+  line-height: 1.5;
+  color: var(--color-text-soft);
+}
+
+.ai-suggestions__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ai-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  text-align: left;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.ai-chip:hover {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent-border);
+}
+
+.ai-chip__action {
+  font-size: var(--text-xs, 11px);
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.ai-chip__prompt {
+  font-size: var(--text-meta);
+  line-height: 1.4;
+  color: var(--color-text);
+}
+
+/* ── Proposals / approval ──────────────────────────────────── */
+.ai-proposals {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ai-proposals__description {
+  margin: 0;
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.ai-proposals__count {
+  margin: 0;
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text-soft);
+}
+
+.ai-proposals__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ai-proposals__error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  background: var(--color-danger-bg);
+  border: 1px solid color-mix(in srgb, var(--color-danger) 32%, var(--color-border));
+  border-radius: var(--radius-sm, 6px);
+  color: var(--color-text);
+}
+
+.ai-proposals__error svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-danger);
+}
+
+.ai-proposal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.ai-proposal--applied {
+  border-color: var(--color-accent-border);
+}
+
+.ai-proposal--rejected {
+  opacity: 0.66;
+}
+
+.ai-proposal__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.ai-proposal__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ai-proposal__action {
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 650;
+  color: var(--color-text);
+}
+
+.ai-proposal__target {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-soft);
+}
+
+.ai-proposal__deferred {
+  padding: 1px var(--space-2);
+  background: var(--color-warning-bg);
+  border-radius: var(--radius-full);
+  color: var(--color-warning);
+  font-weight: 600;
+}
+
+.ai-proposal__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+  padding: 2px var(--space-2);
+  background: var(--color-surface-3);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs, 11px);
+  font-weight: 600;
+  color: var(--color-text-soft);
+}
+
+.ai-proposal__status--applied {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.ai-proposal__status--rejected {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+.ai-proposal__summary {
+  margin: 0;
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.ai-proposal__description {
+  margin: 0;
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.ai-proposal__preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ai-proposal__preview-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  align-self: flex-start;
+  padding: 0;
+  font: inherit;
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.ai-proposal__caret {
+  transition: transform var(--transition-fast);
+}
+
+.ai-proposal__caret--open {
+  transform: rotate(180deg);
+}
+
+.ai-proposal__fields {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm, 6px);
+}
+
+.ai-proposal__field {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: var(--space-2);
+  align-items: baseline;
+}
+
+.ai-proposal__field-key {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-soft);
+  overflow-wrap: anywhere;
+}
+
+.ai-proposal__field-value {
+  margin: 0;
+  font-size: var(--text-meta);
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+
+.ai-proposal__no-preview,
+.ai-proposal__blocked {
+  margin: 0;
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.ai-proposal__blocked {
+  color: var(--color-warning);
+}
+
+.ai-proposal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.ai-proposal__reject {
+  gap: var(--space-1);
+}
+
+/* ── Context ────────────────────────────────────────────────────────────────
+   Five fixed rows, always all five. The point of this panel is to be countable: a
+   reader should be able to count the rows, compare them to what leaves the network, and
+   come away with the same answer the allowlist gives. */
+.ai-context {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ai-context__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.ai-context__count {
+  flex-shrink: 0;
+  font-size: var(--text-xs, 11px);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-soft);
+}
+
+.ai-context__description {
+  margin: 0;
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.ai-context__list {
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  padding: var(--space-2);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm, 6px);
+}
+
+.ai-context__item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-2);
+  align-items: baseline;
+  padding: 3px 0;
+}
+
+.ai-context__item-label {
+  font-size: var(--text-xs, 11px);
+  color: var(--color-text-muted);
+}
+
+/* The value is the only monospaced text on this panel. It is an identifier, and an
+   identifier that renders in body type is hard to read out or compare against a URL. */
+.ai-context__item-value {
+  margin: 0;
+  text-align: right;
+}
+
+.ai-context__item-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: var(--text-xs, 11px);
+  color: var(--color-accent);
+  overflow-wrap: anywhere;
+}
+
+.ai-context__item--missing .ai-context__item-label,
+.ai-context__item-empty {
+  color: var(--color-text-soft);
+}
+
+.ai-context__item-empty {
+  font-size: var(--text-xs, 11px);
+  font-style: italic;
+}
+
+.ai-context__hint {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  margin: 0;
+  font-size: var(--text-xs, 11px);
+  line-height: 1.5;
+  color: var(--color-text-soft);
+}
+
+.ai-context__hint svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-accent);
+}
+
+/* ── Action catalogue ─────────────────────────────────────────────────────── */
+.ai-catalog {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ai-catalog__description {
+  margin: 0;
+  font-size: var(--text-meta);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.ai-catalog__list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ai-catalog__item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm, 6px);
+}
+
+/* Ready actions get the soft accent; blocked ones stay flat. It is the same encoding
+   the proposal status uses, so "there is something to approve here" looks the same
+   wherever it appears on the page. */
+.ai-catalog__item--ready {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent-border);
+}
+
+.ai-catalog__item-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.ai-catalog__item-action {
+  margin: 0;
+  font-size: var(--text-meta);
+  font-weight: 650;
+  color: var(--color-text);
+}
+
+.ai-catalog__item-target {
+  margin: 0;
+  font-size: var(--text-xs, 11px);
+  line-height: 1.45;
+  color: var(--color-text-soft);
+  overflow-wrap: anywhere;
+}
+
+.ai-catalog__item-state {
+  align-self: flex-start;
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs, 11px);
+  font-weight: 600;
+  color: var(--color-text-soft);
+  background: var(--color-surface-3);
+}
+
+.ai-catalog__item--ready .ai-catalog__item-state {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.ai-catalog__footnote {
+  margin: 0;
+  font-size: var(--text-xs, 11px);
+  line-height: 1.5;
+  color: var(--color-text-soft);
+}
+
+/* ── Empty state ───────────────────────────────────────────── */
+.ai-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-4);
+  text-align: center;
+}
+
+.ai-empty__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: var(--space-1);
+  background: var(--color-accent-soft);
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-md);
+  color: var(--color-accent);
+}
+
+.ai-empty__title {
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 650;
+  color: var(--color-text);
+}
+
+.ai-empty__text {
+  margin: 0;
+  max-width: 46ch;
+  font-size: var(--text-meta);
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────────
+   The transcript is given a height at every width rather than allowed to grow the page.
+   A conversation that pushes the composer off screen stops being a place you can type
+   in, and on a phone that is the difference between using the assistant and scrolling
+   past it. */
+@media (max-width: 1280px) {
+  .ai-layout {
+    grid-template-columns: 232px minmax(0, 1fr);
+  }
+
+  /* The review queue goes full width under the conversation rather than into a third
+     column. `order` moves the whole group so the DOM order — history, chat, review —
+     keeps matching what is read first at wide widths. */
+  .ai-layout__side {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+}
+
+@media (max-width: 1024px) {
+  .ai-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ai-layout__history,
+  .ai-layout__side {
+    grid-column: 1;
+  }
+
+  /* Chat first at every width. A user who came here to ask something should never have
+     to scroll to find the box to ask it in. */
+  .ai-layout__history {
+    order: 2;
+  }
+
+  .ai-layout__chat {
+    order: 1;
+  }
+
+  .ai-layout__side {
+    order: 3;
+  }
+
+  /* Once the sidebar is full width it can sit beside the transcript again, which beats
+     a 232px column of truncated titles. */
+  .ai-history__list {
+    max-height: 220px;
+  }
+
+  .ai-chat__transcript {
+    height: min(50vh, 420px);
+  }
+}
+
+@media (max-width: 720px) {
+  .ai-msg {
+    max-width: 90%;
+  }
+
+  .ai-composer__row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ai-composer__send {
+    justify-content: center;
+  }
+
+  .ai-proposal__field {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .ai-proposal__actions {
+    flex-direction: column;
+  }
+
+  .ai-proposal__actions .btn {
+    justify-content: center;
+  }
+
+  /* The retry sits under the message on a narrow column rather than beside it, where it
+     would squeeze the text it is explaining into a few words per line. */
+  .ai-send-error {
+    flex-direction: column;
+  }
+
+  .ai-send-error__retry {
+    align-self: stretch;
+    justify-content: center;
+  }
+
+  .ai-context__item {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .ai-context__item-value {
+    text-align: left;
+  }
+}
+
+/* ── Motion ─────────────────────────────────────────────────────────────────
+   The thinking dots are the only animation in this panel, and they are the one thing
+   that can legitimately run forever — a slow request is a real state. With reduced
+   motion they stop moving and the label alone carries the meaning, so the state is not
+   carried by motion alone. */
+@media (prefers-reduced-motion: reduce) {
+  .ai-chip,
+  .ai-composer__row,
+  .ai-proposal__caret,
+  .ai-history__item,
+  .ai-history__new {
+    transition: none;
+  }
+
+  .ai-thinking__dots span {
+    animation: none;
+    opacity: 0.6;
+  }
+}

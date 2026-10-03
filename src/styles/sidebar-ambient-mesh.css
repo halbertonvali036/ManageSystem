@@ -1,0 +1,469 @@
+/* ============================================================
+   Sidebar ambient mesh
+   ============================================================
+   A decorative emerald ribbon field behind the navigation rail.
+
+   Mounted once, inside .app-sidebar, so the user and Admin shells share it.
+
+   Performance contract:
+   - Only transform and opacity are animated. Nothing here triggers layout.
+   - No canvas, no RAF, no listeners, no per-frame React work.
+   - Every animation is transform/opacity on a promoted layer, so the cost is
+     compositing a rail-sized surface, not re-rasterising path geometry.
+   - Pause on a hidden tab so a backgrounded browser does no compositing at all.
+   ============================================================ */
+
+.sidebar-ambient-mesh {
+  --mesh-base: #07110b;
+  --mesh-base-2: #09150d;
+  --mesh-emerald: #1f8f5f;
+  --mesh-green: #39ff14;
+  --mesh-mint: #7cff9b;
+  --mesh-bright: #34d399;
+  /* One shared, very soft ease for every layer. Sine-in-out rather than a
+     bezier with intent, because nothing here should ever look like it is
+     arriving at a destination. */
+  --mesh-ease: cubic-bezier(0.42, 0.08, 0.58, 0.92);
+
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  /* Translucent on purpose: the rail's own emerald radial glow stays part of the
+     picture and this layer adds to it, instead of replacing one glow with
+     another and reading as flat paint. */
+  background:
+    radial-gradient(128% 58% at 46% 106%, rgba(31, 143, 95, 0.44), transparent 68%),
+    radial-gradient(96% 44% at 96% 8%, rgba(57, 255, 20, 0.14), transparent 70%),
+    linear-gradient(178deg, rgba(9, 21, 13, 0.62) 0%, rgba(7, 17, 11, 0.72) 52%, rgba(5, 13, 8, 0.8) 100%);
+  /* The rail clips this already; repeating it keeps the effect sealed even if a
+     future variant gives the aside a visible overflow. */
+  isolation: isolate;
+}
+
+.sidebar-ambient-mesh__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* Sits under the veil and above the base wash. */
+  z-index: 1;
+}
+
+/* ── Mesh lattice ─────────────────────────────────────────────── */
+/* Two sets of curves at different opacities and drift rates. The grid is the
+   texture that makes the panel read as a woven mesh rather than a glow. */
+.sidebar-ambient-mesh__lattice {
+  fill: none;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.sidebar-ambient-mesh__lattice path {
+  stroke: var(--mesh-emerald);
+  stroke-width: 1.5;
+}
+
+.sidebar-ambient-mesh__lattice--columns {
+  opacity: 0.72;
+  stroke: var(--mesh-bright);
+  animation: mesh-drift-columns 74s var(--mesh-ease) infinite alternate;
+  will-change: transform;
+}
+
+.sidebar-ambient-mesh__lattice--rows {
+  opacity: 0.5;
+  stroke: var(--mesh-emerald);
+  animation: mesh-drift-rows 92s var(--mesh-ease) infinite alternate;
+  will-change: transform;
+}
+
+/* ── Ribbons ──────────────────────────────────────────────────── */
+/* Each layer gets its own weight, hue and drift so they separate into
+   foreground, middle and back rather than reading as one thick stroke. */
+.sidebar-ambient-mesh__ribbon-body {
+  fill: none;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.sidebar-ambient-mesh__ribbon-flow {
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 34 190;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Back: broad, dim, cool. Establishes depth behind everything else. */
+.sidebar-ambient-mesh__ribbon--back .sidebar-ambient-mesh__ribbon-body {
+  stroke: var(--mesh-emerald);
+  stroke-width: 34;
+  opacity: 0.55;
+  filter: blur(7px);
+  animation: ribbon-drift-back 82s var(--mesh-ease) infinite alternate;
+}
+
+.sidebar-ambient-mesh__ribbon--back .sidebar-ambient-mesh__ribbon-flow {
+  stroke: var(--mesh-mint);
+  stroke-width: 2.6;
+  opacity: 0.5;
+  animation:
+    ribbon-drift-back 82s var(--mesh-ease) infinite alternate,
+    ribbon-flow 26s linear infinite;
+}
+
+/* Mid A: the primary readable ribbon. */
+.sidebar-ambient-mesh__ribbon--mid-a .sidebar-ambient-mesh__ribbon-body {
+  stroke: var(--mesh-bright);
+  stroke-width: 15;
+  opacity: 0.82;
+  filter: blur(2px);
+  animation: ribbon-drift-a 64s var(--mesh-ease) infinite alternate;
+}
+
+.sidebar-ambient-mesh__ribbon--mid-a .sidebar-ambient-mesh__ribbon-flow {
+  stroke: var(--mesh-mint);
+  stroke-width: 3.2;
+  opacity: 0.92;
+  animation:
+    ribbon-drift-a 64s var(--mesh-ease) infinite alternate,
+    ribbon-flow 19s linear infinite;
+}
+
+/* Mid B: crosses the first at a different rate, which is what sells the
+   layered, woven look. */
+.sidebar-ambient-mesh__ribbon--mid-b .sidebar-ambient-mesh__ribbon-body {
+  stroke: var(--mesh-green);
+  stroke-width: 9;
+  opacity: 0.6;
+  filter: blur(1.5px);
+  animation: ribbon-drift-b 71s var(--mesh-ease) infinite alternate;
+}
+
+.sidebar-ambient-mesh__ribbon--mid-b .sidebar-ambient-mesh__ribbon-flow {
+  stroke: var(--mesh-green);
+  stroke-width: 2.4;
+  opacity: 0.82;
+  animation:
+    ribbon-drift-b 71s var(--mesh-ease) infinite alternate,
+    ribbon-flow 23s linear infinite;
+}
+
+/* Front: thin, brightest, sharpest. The neon note the eye lands on. */
+.sidebar-ambient-mesh__ribbon--front .sidebar-ambient-mesh__ribbon-body {
+  stroke: var(--mesh-mint);
+  stroke-width: 3.4;
+  opacity: 0.82;
+  animation: ribbon-drift-front 47s var(--mesh-ease) infinite alternate;
+}
+
+.sidebar-ambient-mesh__ribbon--front .sidebar-ambient-mesh__ribbon-flow {
+  stroke: var(--mesh-green);
+  stroke-width: 3.4;
+  opacity: 1;
+  animation:
+    ribbon-drift-front 47s var(--mesh-ease) infinite alternate,
+    ribbon-flow 15s linear infinite;
+}
+
+/* ── Nodes ────────────────────────────────────────────────────── */
+/* A wide halo and a tight core, so each point reads as a soft light source
+   rather than a flat circle. */
+.sidebar-ambient-mesh__node {
+  fill: var(--mesh-mint);
+  opacity: calc(0.5 - var(--node-depth) * 0.08);
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(var(--node-scale));
+  animation: node-drift var(--node-duration) var(--mesh-ease) infinite alternate;
+  will-change: transform, opacity;
+}
+
+/* ── Bloom, veil, active glow ─────────────────────────────────── */
+/* Wide, slow, low. Gives the lower half of the rail a warm floor so the effect
+   is present even where no ribbon happens to pass. */
+.sidebar-ambient-mesh__bloom {
+  position: absolute;
+  inset: auto -18% -12% -18%;
+  height: 62%;
+  z-index: 2;
+  background:
+    radial-gradient(58% 62% at 38% 78%, rgba(31, 143, 95, 0.34), transparent 70%),
+    radial-gradient(42% 48% at 68% 92%, rgba(57, 255, 20, 0.16), transparent 72%);
+  animation: bloom-breathe 58s var(--mesh-ease) infinite alternate;
+}
+
+/* Readability floor. Deliberately not opaque: the mesh has to survive it. The
+   strong stop sits over the brand row and the identity footer, where the text
+   sits directly on the busiest part of the panel. */
+.sidebar-ambient-mesh__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  /* Two gradients, one job each. The vertical one only has to protect the two
+     places where a bright ribbon could sit directly behind text: the brand row
+     and the identity footer. The middle is left almost clear on purpose, which
+     is where the mesh is meant to be seen. The horizontal one protects the icon
+     and label column and then gets out of the way, so the far half of the rail
+     carries the brightest light. */
+  background:
+    linear-gradient(
+      180deg,
+      rgba(4, 10, 6, 0.82) 0%,
+      rgba(4, 10, 6, 0.12) 17%,
+      rgba(4, 10, 6, 0.08) 72%,
+      rgba(4, 10, 6, 0.72) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(4, 10, 6, 0.62) 0%,
+      rgba(4, 10, 6, 0.34) 46%,
+      rgba(4, 10, 6, 0) 72%,
+      rgba(4, 10, 6, 0) 100%
+    );
+}
+
+/* Off unless something is actually selected, so the glow means something rather
+   than just being part of the wallpaper. */
+.sidebar-ambient-mesh__active-glow {
+  position: absolute;
+  top: 42%;
+  left: -6%;
+  z-index: 2;
+  width: 62%;
+  height: 26%;
+  opacity: 0;
+  background: radial-gradient(52% 50% at 24% 50%, rgba(57, 255, 20, 0.24), transparent 72%);
+  transition: opacity 420ms var(--mesh-ease);
+}
+
+.app-sidebar:has(.sidebar__link--active) .sidebar-ambient-mesh__active-glow {
+  opacity: 1;
+}
+
+/* ── Stacking ─────────────────────────────────────────────────── */
+/* The mesh is z-index 0 and inert. Every layer of real navigation is lifted
+   above it explicitly rather than relying on source order. */
+.app-sidebar > .sidebar__top,
+.app-sidebar > .sidebar__nav,
+.app-sidebar > .sidebar__footer {
+  position: relative;
+  z-index: 4;
+}
+
+/* ── Motion ───────────────────────────────────────────────────── */
+/* Very slow, small amplitude, and never reversing hard: the panel should feel
+   like it is breathing, not like an alert. */
+@keyframes mesh-drift-columns {
+  from { transform: translate3d(-9px, -14px, 0) scaleY(1.03) scaleX(1.01); }
+  to { transform: translate3d(11px, 16px, 0) scaleY(0.97) scaleX(0.99); }
+}
+
+@keyframes mesh-drift-rows {
+  from { transform: translate3d(7px, 10px, 0) scaleX(1.02); }
+  to { transform: translate3d(-10px, -12px, 0) scaleX(0.98); }
+}
+
+@keyframes ribbon-drift-back {
+  from { transform: translate3d(-6px, 0, 0) rotate(-1.2deg) scale(1.05); }
+  to { transform: translate3d(9px, 0, 0) rotate(1.4deg) scale(0.96); }
+}
+
+@keyframes ribbon-drift-a {
+  from { transform: translate3d(-8px, 4px, 0) rotate(-1.6deg) scale(1.06); }
+  to { transform: translate3d(10px, -5px, 0) rotate(1.8deg) scale(0.95); }
+}
+
+@keyframes ribbon-drift-b {
+  from { transform: translate3d(9px, -6px, 0) rotate(1.5deg) scale(0.95); }
+  to { transform: translate3d(-11px, 5px, 0) rotate(-1.7deg) scale(1.07); }
+}
+
+@keyframes ribbon-drift-front {
+  from { transform: translate3d(-5px, 6px, 0) rotate(-0.9deg) scale(1.04); }
+  to { transform: translate3d(7px, -7px, 0) rotate(1deg) scale(0.97); }
+}
+
+/* Dash offset is what makes a ribbon read as flowing rather than drawn. Linear
+   and slow enough to track without effort. */
+@keyframes ribbon-flow {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -224; }
+}
+
+@keyframes node-drift {
+  from { transform: translate3d(-4px, 8px, 0) scale(calc(var(--node-scale) * 0.82)); opacity: calc(0.36 - var(--node-depth) * 0.07); }
+  to { transform: translate3d(5px, -9px, 0) scale(calc(var(--node-scale) * 1.18)); opacity: calc(0.68 - var(--node-depth) * 0.08); }
+}
+
+@keyframes bloom-breathe {
+  from { transform: translate3d(-2%, 2%, 0) scale(0.97); opacity: 0.72; }
+  to { transform: translate3d(3%, -2%, 0) scale(1.06); opacity: 1; }
+}
+
+/* ── Variant: Admin ───────────────────────────────────────────── */
+/* Same field, shifted and slowed. Enough that the console does not read as the
+   user shell wearing a borrowed background, not enough to need a second
+   implementation. */
+.sidebar-ambient-mesh--admin {
+  --mesh-ease: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+
+.sidebar-ambient-mesh--admin .sidebar-ambient-mesh__lattice--columns {
+  animation-duration: 88s;
+}
+
+.sidebar-ambient-mesh--admin .sidebar-ambient-mesh__lattice--rows {
+  animation-duration: 104s;
+}
+
+.sidebar-ambient-mesh--admin .sidebar-ambient-mesh__ribbon--mid-a {
+  animation-duration: 76s;
+}
+
+.sidebar-ambient-mesh--admin .sidebar-ambient-mesh__ribbon--mid-b {
+  animation-duration: 81s;
+}
+
+.sidebar-ambient-mesh--admin .sidebar-ambient-mesh__ribbon--front {
+  animation-duration: 55s;
+}
+
+.sidebar-ambient-mesh--admin .sidebar-ambient-mesh__bloom {
+  inset: -10% -18% auto -18%;
+  height: 56%;
+  background:
+    radial-gradient(60% 58% at 34% 26%, rgba(31, 143, 95, 0.32), transparent 70%),
+    radial-gradient(44% 46% at 70% 44%, rgba(57, 255, 20, 0.14), transparent 72%);
+}
+
+/* ── Collapsed rail ───────────────────────────────────────────── */
+/* Only icons remain, so the mesh can come forward without competing with
+   anything and gets to be a little brighter. */
+.sidebar-ambient-mesh[data-collapsed='true'] .sidebar-ambient-mesh__lattice--columns {
+  opacity: 0.52;
+}
+
+.sidebar-ambient-mesh[data-collapsed='true'] .sidebar-ambient-mesh__lattice--rows {
+  opacity: 0.34;
+}
+
+.sidebar-ambient-mesh[data-collapsed='true'] .sidebar-ambient-mesh__ribbon--front .sidebar-ambient-mesh__ribbon-flow {
+  opacity: 1;
+}
+
+/* The horizontal scrim exists to protect the icon-and-label column. With no
+   labels there is nothing to protect, so drop it and let the mesh read fully. */
+.sidebar-ambient-mesh[data-collapsed='true'] .sidebar-ambient-mesh__veil {
+  background: linear-gradient(
+    180deg,
+    rgba(4, 10, 6, 0.82) 0%,
+    rgba(4, 10, 6, 0.3) 22%,
+    rgba(4, 10, 6, 0.3) 76%,
+    rgba(4, 10, 6, 0.8) 100%
+  );
+}
+
+/* ── Tablet and below ─────────────────────────────────────────── */
+/* Under 1024px the rail becomes an overlay drawer sitting on top of page
+   content, and the page behind it is already dimmed. Fewer layers and a lower
+   ceiling: enough to identify the shell, not enough to compete with the page. */
+@media (max-width: 1023px) {
+  .sidebar-ambient-mesh__lattice--rows {
+    display: none;
+  }
+
+  .sidebar-ambient-mesh__ribbon--back .sidebar-ambient-mesh__ribbon-flow {
+    display: none;
+  }
+
+  .sidebar-ambient-mesh__ribbon--mid-b .sidebar-ambient-mesh__ribbon-body {
+    display: none;
+  }
+
+  .sidebar-ambient-mesh__node:nth-child(n + 7) {
+    display: none;
+  }
+
+  .sidebar-ambient-mesh__veil {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(4, 10, 6, 0.9) 0%,
+        rgba(4, 10, 6, 0.46) 20%,
+        rgba(4, 10, 6, 0.44) 74%,
+        rgba(4, 10, 6, 0.88) 100%
+      ),
+      linear-gradient(90deg, rgba(4, 10, 6, 0.76) 0%, rgba(4, 10, 6, 0.34) 68%, rgba(4, 10, 6, 0.06) 100%);
+  }
+
+  .sidebar-ambient-mesh__bloom {
+    opacity: 0.72;
+  }
+}
+
+/* Phone: the drawer covers most of the screen, so this becomes a quiet
+   identity wash behind the menu rather than a moving field. */
+@media (max-width: 640px) {
+  .sidebar-ambient-mesh__lattice--columns {
+    display: none;
+  }
+
+  .sidebar-ambient-mesh__ribbon--back,
+  .sidebar-ambient-mesh__ribbon--mid-b {
+    display: none;
+  }
+
+  .sidebar-ambient-mesh__ribbon--mid-a .sidebar-ambient-mesh__ribbon-body {
+    stroke-width: 14;
+    opacity: 0.4;
+  }
+
+  .sidebar-ambient-mesh__node:nth-child(n + 5) {
+    display: none;
+  }
+
+  .sidebar-ambient-mesh__bloom {
+    opacity: 0.5;
+  }
+
+  .sidebar-ambient-mesh__active-glow {
+    display: none;
+  }
+}
+
+/* ── Reduced motion ───────────────────────────────────────────── */
+/* Hold the composition still instead of letting it collapse to nothing: the
+   ribbons, lattice and nodes are already positioned at their resting state, so
+   freezing here leaves a finished static panel rather than an empty rail. */
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-ambient-mesh,
+  .sidebar-ambient-mesh *,
+  .sidebar-ambient-mesh *::before,
+  .sidebar-ambient-mesh *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .sidebar-ambient-mesh__ribbon--front .sidebar-ambient-mesh__ribbon-flow,
+  .sidebar-ambient-mesh__ribbon--mid-a .sidebar-ambient-mesh__ribbon-flow {
+    /* dashoffset stays at its initial value, which already shows a lit segment
+       of each ribbon. Nothing further to do. */
+    stroke-dashoffset: 0;
+  }
+
+  .sidebar-ambient-mesh__node {
+    opacity: calc(0.62 - var(--node-depth) * 0.08);
+  }
+}
+
+/* ── Idle tabs ────────────────────────────────────────────────── */
+/* Stop compositing entirely when nothing is on screen. Purely additive: it only
+   ever removes work. */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-sidebar-mesh='idle'] .sidebar-ambient-mesh,
+  html[data-sidebar-mesh='idle'] .sidebar-ambient-mesh * {
+    animation-play-state: paused !important;
+  }
+}
