@@ -143,6 +143,151 @@ export const AI_ACTION_TARGET_KEYS = Object.freeze(
 )
 
 /**
+ * The readable name of one proposed operation.
+ *
+ * `action.*` is the contract vocabulary — short, mechanical, and identical to the
+ * wire name. `operation.*` is what a person reads on a proposal card: "Update text"
+ * instead of "Update block". Both exist on purpose: the contract stays untouched and
+ * the card never has to print a name that only a developer would use.
+ */
+export const AI_ACTION_OPERATION_LABEL_KEYS = Object.freeze(
+  Object.fromEntries(AI_ACTIONS.map((action) => [action, `aiAssistant.operation.${action}`])),
+)
+
+/* ── Risk, confirmation, undo ─────────────────────────────────────────────────── */
+
+/**
+ * How hard a proposed change is to undo, in the user's language rather than the
+ * developer's.
+ *
+ *   safe         — additive: nothing existing is altered, so there is nothing to roll
+ *                  back and nothing to warn about.
+ *   reversible   — the previous value is known, so the change can be undone later.
+ *   destructive  — public or structural: publishing goes live, a model changes the
+ *                  schema. These are the ones that must confirm before applying.
+ *
+ * This is a declared map, not an analysis. It exists so the risk shown on a card is
+ * one place to review, and so "which actions confirm?" has an answer that is not
+ * scattered across click handlers.
+ */
+export const AI_RISK = Object.freeze({
+  SAFE: 'safe',
+  REVERSIBLE: 'reversible',
+  DESTRUCTIVE: 'destructive',
+})
+
+export const AI_ACTION_RISK = Object.freeze({
+  [AI_ACTION.CREATE_SITE]: AI_RISK.SAFE,
+  [AI_ACTION.CREATE_PAGE]: AI_RISK.REVERSIBLE,
+  [AI_ACTION.ADD_SECTION]: AI_RISK.REVERSIBLE,
+  [AI_ACTION.UPDATE_BLOCK]: AI_RISK.REVERSIBLE,
+  [AI_ACTION.UPDATE_THEME]: AI_RISK.REVERSIBLE,
+  [AI_ACTION.CREATE_FORM]: AI_RISK.REVERSIBLE,
+  [AI_ACTION.CREATE_MODEL]: AI_RISK.DESTRUCTIVE,
+  [AI_ACTION.PUBLISH_SITE]: AI_RISK.DESTRUCTIVE,
+})
+
+export const getAiActionRisk = (action) => AI_ACTION_RISK[action] ?? AI_RISK.SAFE
+
+export const AI_RISK_LABEL_KEYS = Object.freeze({
+  [AI_RISK.SAFE]: 'aiAssistant.risk.safe',
+  [AI_RISK.REVERSIBLE]: 'aiAssistant.risk.reversible',
+  [AI_RISK.DESTRUCTIVE]: 'aiAssistant.risk.destructive',
+})
+
+/**
+ * Actions that must confirm before they are applied.
+ *
+ * Frontend confirmation only — it stops a mis-click, it is not a permission. The
+ * backend remains the thing that decides whether the change happens at all.
+ */
+export const AI_CONFIRM_ACTIONS = Object.freeze([
+  AI_ACTION.PUBLISH_SITE,
+  AI_ACTION.CREATE_MODEL,
+])
+
+const AI_CONFIRM_ACTION_SET = new Set(AI_CONFIRM_ACTIONS)
+
+export const requiresAiActionConfirmation = (action) => AI_CONFIRM_ACTION_SET.has(action)
+
+/**
+ * Actions whose effect the portal could ask to undo.
+ *
+ * Listed rather than derived from risk, because "reversible" describes the change
+ * and "undoable" describes whether *this* product can ask for the rollback. The
+ * control is a UI foundation: it appears when an applied change qualifies, and it
+ * says out loud that the rollback itself still needs the backend.
+ */
+export const AI_UNDOABLE_ACTIONS = Object.freeze([
+  AI_ACTION.ADD_SECTION,
+  AI_ACTION.UPDATE_BLOCK,
+  AI_ACTION.UPDATE_THEME,
+  AI_ACTION.CREATE_PAGE,
+  AI_ACTION.CREATE_FORM,
+])
+
+const AI_UNDOABLE_ACTION_SET = new Set(AI_UNDOABLE_ACTIONS)
+
+export const isAiActionUndoable = (action) => AI_UNDOABLE_ACTION_SET.has(action)
+
+/* ── Capability categories ────────────────────────────────────────────────────── */
+
+/**
+ * The eight actions, grouped the way a builder thinks about them.
+ *
+ * Raw action names are a contract, not an interface: nobody asks for `updateBlock`,
+ * they ask to fix a sentence. Each group carries a label and a one-line description so
+ * the panel reads as "what I can ask for", while `AI_ACTIONS` underneath stays exactly
+ * as the backend knows it. Every action appears in exactly one group — a capability
+ * listed twice is a capability whose readiness state can disagree with itself.
+ */
+export const AI_CAPABILITY_CATEGORIES = Object.freeze([
+  Object.freeze({
+    key: 'create',
+    icon: 'plus',
+    actions: Object.freeze([AI_ACTION.CREATE_SITE, AI_ACTION.CREATE_PAGE, AI_ACTION.PUBLISH_SITE]),
+  }),
+  Object.freeze({
+    key: 'edit',
+    icon: 'pencil',
+    actions: Object.freeze([AI_ACTION.ADD_SECTION]),
+  }),
+  Object.freeze({
+    key: 'content',
+    icon: 'type',
+    actions: Object.freeze([AI_ACTION.UPDATE_BLOCK, AI_ACTION.CREATE_FORM]),
+  }),
+  Object.freeze({
+    key: 'design',
+    icon: 'palette',
+    actions: Object.freeze([AI_ACTION.UPDATE_THEME]),
+  }),
+  Object.freeze({
+    key: 'data',
+    icon: 'database',
+    actions: Object.freeze([AI_ACTION.CREATE_MODEL]),
+  }),
+])
+
+export const AI_CAPABILITY_CATEGORY_LABEL_KEYS = Object.freeze(
+  Object.fromEntries(
+    AI_CAPABILITY_CATEGORIES.map((category) => [
+      category.key,
+      `aiAssistant.category.${category.key}`,
+    ]),
+  ),
+)
+
+export const AI_CAPABILITY_CATEGORY_DESCRIPTION_KEYS = Object.freeze(
+  Object.fromEntries(
+    AI_CAPABILITY_CATEGORIES.map((category) => [
+      category.key,
+      `aiAssistant.categoryDescription.${category.key}`,
+    ]),
+  ),
+)
+
+/**
  * Context each action needs before a proposal about it can mean anything.
  *
  * Read by `getMissingAiContext`, which reports the gap to the user. This is not
@@ -397,7 +542,34 @@ const AI_PROPOSAL_ENVELOPE_KEYS = new Set([
   'proposals',
   'actions',
   'changes',
+  'revision',
+  'draftRevision',
+  'draft_revision',
+  'baseRevision',
+  'base_revision',
+  'requiresNewPlan',
+  'requires_new_plan',
+  'stale',
+  'conflict',
 ])
+
+/**
+ * The revision of the draft a proposal was generated against, or null.
+ *
+ * Read from the same names a conflict response would plausibly use, and nothing else.
+ * A proposal that carries no revision is not treated as stale — "unknown" and "changed"
+ * are different facts, and only the second one may stop an Apply.
+ */
+const readAiProposalRevision = (raw) =>
+  readString(raw, 'revision', 'draftRevision', 'draft_revision', 'baseRevision', 'base_revision')
+
+/** True when the backend explicitly says this plan no longer matches the draft. */
+const readsAiProposalConflict = (raw) =>
+  raw?.requiresNewPlan === true ||
+  raw?.requires_new_plan === true ||
+  raw?.stale === true ||
+  raw?.conflict === true ||
+  readString(raw, 'requiresNewPlan', 'requires_new_plan') === 'true'
 
 /** Preview fields for one proposal, declared ones first, nothing dropped. */
 const normalizeAiProposalFields = (raw, { declaredKeys, isWholeRow }) => {
@@ -462,6 +634,15 @@ export const normalizeAiProposal = (raw, index = 0) => {
     description: readString(raw, 'description', 'details', 'message'),
     status,
     isDeferred: AI_DEFERRED_ACTIONS.has(action),
+    // Concurrency, read but never invented: a plan names the draft it was written
+    // against, and the page compares that against the draft on screen. With neither
+    // value present the plan is simply not judged stale, because "nobody said" is not
+    // the same as "it changed".
+    revision: readAiProposalRevision(raw),
+    declaresConflict: readsAiProposalConflict(raw),
+    risk: getAiActionRisk(action),
+    isConfirmationRequired: requiresAiActionConfirmation(action),
+    isUndoable: isAiActionUndoable(action),
     fields: normalizeAiProposalFields(source, {
       declaredKeys: AI_ACTION_FIELDS[action] ?? [],
       isWholeRow,
@@ -572,60 +753,50 @@ export const sortAiConversationSummaries = (summaries) => {
  * `action` is the intent this prompt expresses. It is not executed, and nothing here
  * turns a prompt into a request.
  *
- * One prompt per declared action, so the chip list is also a map of what the assistant
- * can be asked to change. `prompt` is the Azerbaijani text — the product's default
- * language — and `promptKey` is what a component actually renders, so switching to
- * English does not leave six Azerbaijani chips on an otherwise English page. The
- * literal is the fallback for a dictionary that has not caught up yet.
+ * Six prompts, one per kind of thing a builder actually asks for — a page, a section,
+ * the copy on it, a form, the colours, a data model. Every one of them lands on an
+ * allowlisted action, so the chip list is also a map of what the assistant can be asked
+ * to change. `prompt` is the Azerbaijani text — the product's default language — and
+ * `promptKey` is what a component actually renders, so switching to English does not
+ * leave six Azerbaijani chips on an otherwise English page. The literal is the fallback
+ * for a dictionary that has not caught up yet.
  */
 export const AI_EXAMPLE_PROMPTS = Object.freeze([
   {
-    id: 'createSite',
-    action: AI_ACTION.CREATE_SITE,
-    promptKey: 'aiAssistant.examples.createSite',
-    prompt: 'Mənə biznes saytı yarat',
-  },
-  {
-    id: 'createPage',
+    id: 'landingPage',
     action: AI_ACTION.CREATE_PAGE,
-    promptKey: 'aiAssistant.examples.createPage',
-    prompt: 'Yeni səhifə əlavə et',
+    promptKey: 'aiAssistant.examples.landingPage',
+    prompt: 'Mənim məhsulum üçün landing səhifəsi yarat',
   },
   {
-    id: 'addSection',
+    id: 'pricingSection',
     action: AI_ACTION.ADD_SECTION,
-    promptKey: 'aiAssistant.examples.addSection',
-    prompt: 'Hero bölməsi yarat',
+    promptKey: 'aiAssistant.examples.pricingSection',
+    prompt: 'Qiymətlər bölməsi əlavə et',
   },
   {
-    id: 'updateBlock',
+    id: 'heroCopy',
     action: AI_ACTION.UPDATE_BLOCK,
-    promptKey: 'aiAssistant.examples.updateBlock',
-    prompt: 'Seçilmiş blokun mətnini dəyiş',
+    promptKey: 'aiAssistant.examples.heroCopy',
+    prompt: 'Hero mətnini yaxşılaşdır',
   },
   {
-    id: 'updateTheme',
-    action: AI_ACTION.UPDATE_THEME,
-    promptKey: 'aiAssistant.examples.updateTheme',
-    prompt: 'Saytın rənglərini dəyiş',
-  },
-  {
-    id: 'createForm',
+    id: 'contactForm',
     action: AI_ACTION.CREATE_FORM,
-    promptKey: 'aiAssistant.examples.createForm',
-    prompt: 'Əlaqə forması əlavə et',
+    promptKey: 'aiAssistant.examples.contactForm',
+    prompt: 'Əlaqə forması yarat',
   },
   {
-    id: 'createModel',
+    id: 'themeColors',
+    action: AI_ACTION.UPDATE_THEME,
+    promptKey: 'aiAssistant.examples.themeColors',
+    prompt: 'Saytın rənglərini yenidən dizayn et',
+  },
+  {
+    id: 'databaseModel',
     action: AI_ACTION.CREATE_MODEL,
-    promptKey: 'aiAssistant.examples.createModel',
+    promptKey: 'aiAssistant.examples.databaseModel',
     prompt: 'Məlumat bazası modeli yarat',
-  },
-  {
-    id: 'publishSite',
-    action: AI_ACTION.PUBLISH_SITE,
-    promptKey: 'aiAssistant.examples.publishSite',
-    prompt: 'Saytı yayımla',
   },
 ])
 
@@ -710,6 +881,24 @@ export const formatAiMessageDate = (message, locale) => {
 }
 
 /**
+ * When a conversation was last touched, formatted for a history row.
+ *
+ * Same rule as a message time: null when the backend sent nothing readable, because a
+ * row stamped with the moment it was rendered is a timestamp nobody sent.
+ */
+export const formatAiConversationDate = (summary, locale) => {
+  const date = getAiConversationDate(summary)
+  if (!date) return null
+  return date.toLocaleString(locale, {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
+
+/**
  * How a history row is labelled.
  *
  * Prefers the backend's own title, then the first thing the user said, then nothing. The
@@ -738,10 +927,30 @@ export const getPendingAiProposals = (messages = []) => {
   return Object.freeze(proposals.filter(isPendingAiProposal))
 }
 
+/**
+ * Whether a plan no longer describes the draft on screen.
+ *
+ * Stale only when both ends of the comparison exist: a plan that named a revision, and
+ * a draft whose revision has since moved on — or a backend that said so outright. A
+ * plan with no revision is not stale, and a draft whose revision is unknown does not
+ * make every plan stale; the second failure would lock Apply for everyone who opened
+ * the assistant without a draft to read.
+ *
+ * The consequence is shown, not enforced: the page blocks Apply and asks for a new
+ * plan. Nothing here rewrites or discards the proposal, so the conversation still
+ * shows exactly what was proposed.
+ */
+export const isAiProposalStale = (proposal, draftRevision = null) => {
+  if (!proposal) return false
+  if (proposal.declaresConflict) return true
+  if (!proposal.revision || !draftRevision) return false
+  return proposal.revision !== draftRevision
+}
+
 /** One line describing a change, built from its action and its known fields. */
 export const summarizeAiProposal = (proposal, t) => {
   if (!proposal) return null
   const name = proposal.fields.find((field) => field.key === 'name' || field.key === 'title')
-  const label = t(AI_ACTION_LABEL_KEYS[proposal.action])
+  const label = t(AI_ACTION_OPERATION_LABEL_KEYS[proposal.action])
   return name ? `${label} — ${name.value}` : label
 }

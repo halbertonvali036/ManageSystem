@@ -1,6 +1,6 @@
 import { Sparkles } from 'lucide-react'
 import useTranslation from '@/hooks/useTranslation'
-import { AI_ACTION_LABEL_KEYS } from '@/models/ai'
+import { AI_ACTION_OPERATION_LABEL_KEYS } from '@/models/ai'
 
 /**
  * Suggested prompts.
@@ -12,18 +12,32 @@ import { AI_ACTION_LABEL_KEYS } from '@/models/ai'
  *
  * Choosing one fills the composer. It does not send. Autofiring would fire a request
  * the user has not read yet, and with no backend it would fail in a way that looks like
- * a broken feature rather than a missing one.
+ * a broken feature rather than a missing one. Focus moves to the composer too: a chip
+ * that fills a box the user then has to find only half worked.
+ *
+ * ── Two placements, one list ───────────────────────────────────────────────────
+ *
+ * `rail` sits above the composer as a horizontally scrolling row — the chips are an
+ * always-available way in, and a vertical list of them would push the input off the
+ * bottom of a conversation that has already started. `panel` is the stacked form for
+ * the onboarding card. Both render the same suggestions, so nothing depends on which
+ * width the reader happens to be at.
  *
  * ── The chip text is translated, not read off the model ────────────────────────
  *
  * A declared example carries both a `promptKey` and an Azerbaijani `prompt`. Rendering
- * the literal would leave six Azerbaijani chips sitting in an English page — a small
- * thing, and the kind of small thing that makes an otherwise translated screen feel
- * broken. The key is used when the dictionary has it, and the literal is the fallback.
- * `t` returns the key itself for a missing entry, so that check is what distinguishes
- * "no translation yet" from "translated".
+ * the literal would leave Azerbaijani chips on an otherwise English page — a small
+ * thing, and the kind of small thing that makes a translated screen feel broken. The
+ * key is used when the dictionary has it and the literal is the fallback: `t` returns
+ * the key itself for a missing entry, so that check is what distinguishes "no
+ * translation yet" from "translated".
  */
-function SuggestedPrompts({ suggestions = [], isUsingExamples = false, onSelect }) {
+function SuggestedPrompts({
+  suggestions = [],
+  isUsingExamples = false,
+  onSelect,
+  variant = 'rail',
+}) {
   const { t } = useTranslation()
 
   if (suggestions.length === 0) return null
@@ -35,12 +49,10 @@ function SuggestedPrompts({ suggestions = [], isUsingExamples = false, onSelect 
   }
 
   return (
-    <div className="ai-suggestions">
+    <div className={`ai-suggestions ai-suggestions--${variant}`}>
       <p className="ai-suggestions__label">
         <Sparkles size={13} aria-hidden="true" />
-        {isUsingExamples
-          ? t('aiAssistant.examples.label')
-          : t('aiAssistant.suggestions.label')}
+        {isUsingExamples ? t('aiAssistant.examples.label') : t('aiAssistant.suggestions.label')}
       </p>
 
       {isUsingExamples ? (
@@ -58,7 +70,7 @@ function SuggestedPrompts({ suggestions = [], isUsingExamples = false, onSelect 
               <button type="button" className="ai-chip" onClick={() => onSelect(prompt)}>
                 {suggestion.action ? (
                   <span className="ai-chip__action">
-                    {t(AI_ACTION_LABEL_KEYS[suggestion.action])}
+                    {t(AI_ACTION_OPERATION_LABEL_KEYS[suggestion.action])}
                   </span>
                 ) : null}
                 <span className="ai-chip__prompt">{prompt}</span>

@@ -1470,6 +1470,7 @@ language: {
       heading: 'Təkliflər və kontekst',
     },
     chat: {
+      title: 'AI köməkçi',
       heading: 'AI ilə danışma',
       you: 'Siz',
       assistant: 'AI köməkçi',
@@ -1483,16 +1484,42 @@ language: {
       draftKept: 'Mesajınız bölücüdə qalır — heç nə itirilməyib.',
       notConnected:
         'Köməkçi qoşulmayıb — mesaj göndərmək mümkün deyil.',
+      statusConnected: 'Qoşulub',
+      statusOffline: 'Qoşulmayıb',
+      noContext: 'Heç bir sayt, səhifə və ya blok açılmayıb',
+      noSite: 'Sayt seçilməyib',
+      noPage: 'Səhifə seçilməyib',
+      characterCount: '{count} / {max} simvol',
+      proposalsLinked: '{count} təklif olunan dəyişiklik — baxışda göstər',
+    },
+    layout: {
+      historyToggle: 'Tarixçə',
+      changesToggle: 'Dəyişikliklər',
     },
     history: {
       heading: 'Danışma tarixçəsi',
       current: 'Cari danışmaya qayıt',
       loading: 'Tarixçə yüklənir…',
       empty: 'Hələ danışma yoxdur.',
+      emptyHint: 'İlk mesajınızı göndərdikdə danışma burada görünəcək.',
       unavailable: 'Tarixçə backend qoşulduqdan sonra əlçədə olacaq.',
       untitled: 'Adsız danışma',
       notFound: 'Bu danışma açıla bilmədi.',
       messageCount: '{count} mesaj',
+      newConversation: 'Yeni danışma',
+      searchLabel: 'Danışmalarda axtarış',
+      searchPlaceholder: 'Danışmalarda axtarın…',
+      noResults: '{query} üçün nəticə tapılmadı',
+      clearSearch: 'Axtarışı təmizlə',
+      noActivity: 'Tarix yoxdur',
+      actionsFor: '{title} üçün əməliyyatlar',
+      delete: 'Sil',
+      deleteTitle: 'Danışmanı sil',
+      deleteMessage: '"{title}" silinsin?',
+      deleteConfirm: 'Sil',
+      deleting: 'Silinir…',
+      deleteUnavailable:
+        'Danışma silmə backend qoşulduqdan sonra əlçədə olacaq — heç nə silinmədi.',
     },
     empty: {
       title: 'Hələ sual yoxdur',
@@ -1500,6 +1527,16 @@ language: {
       offlineTitle: 'AI köməkçi hələ qoşulmayıb',
       offlineText:
         'Köməkçi backend tərəfdən təmin olunur, ona görə hazırda cavab verə bilmir. Heç bir cavab təqdim edilmir.',
+      step: {
+        ask: 'Sual verin',
+        review: 'Təklifə baxın',
+        apply: 'Təsdiq edin',
+      },
+      stepText: {
+        ask: 'Nə yaratmaq istədiyinizi sadə dildə yazın.',
+        review: 'AI dəyişikliyi əvvəlcə təklif edir — riski və təfərrüatı ilə.',
+        apply: 'Bəyəndiklərinizi tətbiq edin, qalanları ləğv edin.',
+      },
     },
     suggestions: {
       label: 'Təkliflər',
@@ -1507,14 +1544,89 @@ language: {
     examples: {
       label: 'Nümunə sorğular',
       note: 'Bunlar nümunədir — hələ heç nə icra olunmur.',
-      createSite: 'Mənə biznes saytı yarat',
-      createPage: 'Yeni səhifə əlavə et',
-      addSection: 'Hero bölməsi yarat',
-      updateBlock: 'Seçilmiş blokun mətnini dəyiş',
-      updateTheme: 'Saytın rənglərini dəyiş',
-      createForm: 'Əlaqə forması əlavə et',
-      createModel: 'Məlumat bazası modeli yarat',
+      landingPage: 'Mənim məhsulum üçün landing səhifəsi yarat',
+      pricingSection: 'Qiymətlər bölməsi əlavə et',
+      heroCopy: 'Hero mətnini yaxşılaşdır',
+      contactForm: 'Əlaqə forması yarat',
+      themeColors: 'Saytın rənglərini yenidən dizayn et',
+      databaseModel: 'Məlumat bazası modeli yarat',
+    },
+    operation: {
+      createSite: 'Sayt yarat',
+      createPage: 'Səhifə yarat',
+      addSection: 'Bölmə əlavə et',
+      updateBlock: 'Mətni yenilə',
+      updateTheme: 'Sayt üslubunu dəyiş',
+      createModel: 'Məlumat modeli yarat',
+      createForm: 'Forma yarat',
       publishSite: 'Saytı yayımla',
+    },
+    risk: {
+      safe: 'Təhlükəsiz',
+      reversible: 'Geri qaytarıla bilər',
+      destructive: 'Dəyişdirmək çətindir',
+    },
+    confirm: {
+      title: 'Təsdiq: {action}',
+      confirm: 'Təsdiq et',
+      confirming: 'Təsdiqlənir…',
+      message: {
+        createModel:
+          'Bu dəyişiklik məlumat bazasının strukturunu dəyişəcək. Davam edirsiniz?',
+        publishSite:
+          'Bu sayt canlı versiyada yayımlanacaq. Davam edirsiniz?',
+      },
+    },
+    changes: {
+      title: 'Dəyişikliklər',
+      description:
+        'Gözləyən və tətbiq olunmuş təkliflər burada görünür. Hər biri yalnız sizin təsdiqinizlə tətbiq olunur.',
+      emptyTitle: 'Hələ təklif yoxdur',
+      emptyText:
+        'Bir mesaj yazın. AI dəyişiklik təklif etsə, o burada görünəcək və yalnız sizin təsdiqinizlə tətbiq olunacaq.',
+      undo: 'Son dəyişikliyi geri qaytar',
+      undoHint: 'Geri qaytarma sorğusu backend tərəfindən icra olunacaq.',
+      undoUnavailable:
+        'Geri qaytarma hələ backend tərəfindən təmin olunmayıb — dəyişiklik olduğu kimi qalır.',
+    },
+    plan: {
+      title: 'Plan və istifadə',
+      tier: {
+        free: 'Pulsuz',
+        pro: 'Pro',
+      },
+      demoBadge: 'Demo',
+      demoNote:
+        'Bu rəqəmlər nümunədir — hələ heç bir istifadə qeyd olunmayıb.',
+      usageLabel: 'İstifadə',
+      usage: '{used} / {limit} mesaj',
+      noUsage: 'Məlum deyil',
+      resets: 'Hər {period} sıfırlanır',
+      reset: {
+        monthly: 'ay',
+        weekly: 'həftə',
+        yearly: 'il',
+      },
+      limitReached: 'Limit dolub',
+      upgrade: 'Yüksəlt',
+      limit: {
+        title: 'Limit dolub',
+        text: 'Planınızdakı mesaj limiti bitib. Davam etmək üçün planı yüksəltin.',
+      },
+    },
+    category: {
+      create: 'Yaratmaq',
+      edit: 'Redaktə etmək',
+      content: 'Məzmun',
+      design: 'Dizayn',
+      data: 'Məlumat',
+    },
+    categoryDescription: {
+      create: 'Yeni sayt, səhifə və ya yayımlama.',
+      edit: 'Açıq səhifəyə bölmə əlavə etmək.',
+      content: 'Blokların mətni və formalar.',
+      design: 'Saytın rəng və şrift üslubu.',
+      data: 'Məlumat bazasının strukturu.',
     },
     approval: {
       title: 'Təklif olunan dəyişikliklər',
@@ -1532,6 +1644,14 @@ language: {
       pending: 'Gözləyir',
       pendingCount: '{count} dəyişiklik gözləyir',
       deferred: 'Yayımdan sonra görünəcək',
+      preview: 'Dəyişikliklərə bax',
+      confirmNote: 'Təsdiq tələb olunur',
+      staleTitle: 'Bu plan köhnəlib.',
+      staleText: 'Qaralama dəyişib — zəhmət olmasa yenidən plan istəyin.',
+      newPlan: 'Yeni plan istə',
+      newPlanPrompt: 'Qaralama yeniləndi, zəhmət olmasa yenidən plan təklif et.',
+      undoHint:
+        'Tətbiq olunmuş dəyişikliyi geri qayartmaq üçün aşağıdakı düymədən istifadə edin.',
       missingContext:
         'Bu dəyişiklik üçün əvvəlcə {fields} lazımdır. Tələb olunan kontekst açılmadan tətbiq edilə bilməz.',
     },
@@ -1550,6 +1670,7 @@ language: {
         'Brauzerdən çıxan məlumat yalnız bu beş dəyərdir. Açar, token və ya sistem təlimatı heç vaxt göndərilmir.',
       present: '{total} dəyərdən {count} doldurulub',
       notSet: 'Açılmayıb',
+      technicalId: 'Texniki identifikator',
       hint: 'Sayt, səhifə və ya blok açın — AI nəyişdən danışdığınızı dəqiq biləsin.',
     },
     contextField: {

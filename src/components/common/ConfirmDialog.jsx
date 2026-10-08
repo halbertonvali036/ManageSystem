@@ -9,6 +9,9 @@ function ConfirmDialog({
   confirmLabel = 'Delete',
   confirmingLabel = 'Deleting…',
   cancelLabel = 'Cancel',
+  // Optional so existing callers keep the English default; callers with their own
+  // i18n pass the translated string.
+  closeLabel = 'Close dialog',
   isConfirming = false,
   error = null,
   onConfirm,
@@ -89,7 +92,7 @@ function ConfirmDialog({
             ref={closeButtonRef}
             type="button"
             className="modal__close"
-            aria-label="Close dialog"
+            aria-label={closeLabel}
             onClick={onCancel}
             disabled={isConfirming}
           >

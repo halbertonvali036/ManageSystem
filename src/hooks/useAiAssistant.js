@@ -65,6 +65,7 @@ function useAiAssistant(workspaceId, { context } = {}) {
   const [settledProposals, setSettledProposals] = useState({})
   const [actionError, setActionError] = useState(null)
   const [isApplying, setIsApplying] = useState(null)
+  const [undoNotice, setUndoNotice] = useState(null)
 
   /**
    * Which request the state on screen belongs to.
@@ -311,6 +312,9 @@ function useAiAssistant(workspaceId, { context } = {}) {
           ...current,
           [proposal.key]: AI_PROPOSAL_STATUS.APPLIED,
         }))
+        // A notice about the previous change would sit under this one and read as a
+        // failure of it, so the undo row starts over with the change just applied.
+        setUndoNotice(null)
         return result
       } catch (caught) {
         setActionError(getRequestErrorMessage(caught))
@@ -331,6 +335,8 @@ function useAiAssistant(workspaceId, { context } = {}) {
     }))
   }, [])
 
+  const clearUndoNotice = useCallback(() => setUndoNotice(null), [])
+
   /**
    * Proposals with the user's decision folded in.
    *
@@ -350,10 +356,49 @@ function useAiAssistant(workspaceId, { context } = {}) {
     [messages, settledProposals],
   )
 
-  /** Suggestions from the backend, or the declared examples when there are none. */
+  /**
+   * What has actually been applied, newest last, and the change undo would target.
+   *
+   * Derived from `proposals` — which only contains proposals the backend sent — so
+   * there is no separate list that could claim an application the transcript does not
+   * show. `canUndo` is false unless that change is one the portal could ask to reverse,
+   * so the control never appears on a publish it would have no way to take back.
+   */
+  const appliedProposals = useMemo(
+    () => proposals.filter((proposal) => proposal.status === AI_PROPOSAL_STATUS.APPLIED),
+    [proposals],
+  )
+
+  const lastAppliedProposal = appliedProposals[appliedProposals.length - 1] ?? null
+  const canUndo = Boolean(lastAppliedProposal?.isUndoable)
+
+  /**
+   * Undo, as a UI foundation rather than a rollback.
+   *
+   * Pressing it reverts nothing: there is no rollback call to make, and inventing one
+   * that reported success would be the same class of lie as marking an unapplied
+   * proposal applied. So the attempt resolves to an honest notice that sits beside the
+   * change it refers to, and the real rollback arrives with the backend.
+   */
+  const undoLastChange = useCallback(() => {
+    if (!canUndo || !lastAppliedProposal) return
+    setUndoNotice({
+      key: lastAppliedProposal.key,
+      message: t('aiAssistant.changes.undoUnavailable'),
+    })
+  }, [canUndo, lastAppliedProposal, t])
+
+  /**
+   * Suggestions from the backend, or the declared examples when there are none.
+   *
+   * The examples gain a `key` here rather than in the model: `AI_EXAMPLE_PROMPTS`
+   * entries are declared as copy, not as list rows, and the component renders whatever
+   * list it is handed — so the row identity is added at the one place the two meet.
+   */
   const availableSuggestions = useMemo(
     () =>
-      suggestions ?? AI_EXAMPLE_PROMPTS.map((item) => ({ ...item, isExample: true })),
+      suggestions ??
+      AI_EXAMPLE_PROMPTS.map((item) => ({ ...item, key: item.id, isExample: true })),
     [suggestions],
   )
 
@@ -390,6 +435,13 @@ function useAiAssistant(workspaceId, { context } = {}) {
     useSuggestion,
     applyProposal,
     rejectProposal,
+    // Undo foundation: the change it would target, whether that change is reversible
+    // at all, the attempt itself, and the honest notice the attempt produces.
+    lastAppliedProposal,
+    canUndo,
+    undoLastChange,
+    undoNotice,
+    clearUndoNotice,
     isLoading,
     isSending,
     isApplying,

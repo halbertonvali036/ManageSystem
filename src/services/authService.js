@@ -17,39 +17,37 @@ const SESSION_STORAGE_KEY = 'managesystem-auth-session'
 const AUTH_PATH = '/auth'
 
 /*
- * Local development accounts.
+ * Temporary demo sign-in for frontend testing on a deployed build, until the
+ * auth backend exists.
  *
- * These are never displayed on a public screen: the public sign-in shows no
- * credentials and public registration creates no role. They exist so the
- * website-builder workspace can be exercised before the auth backend is
- * connected. Only /admin/login reads from this list by role, and it picks the
- * admin entry alone.
+ * It is compiled in only when `VITE_ENABLE_DEMO_AUTH === 'true'`. With the flag
+ * false or missing — the default in `.env.example` — this list is empty, the
+ * demo branch below never runs, and sign-in behaves exactly as before: real
+ * backend, or BackendNotConnectedError. Nothing here is real authentication:
+ * the backend remains the only authority once it is connected.
  *
- * There are two normal-user entries so a second signed-in user can be tested
- * against a single-user session (a second tab, a second browser) before the auth
- * backend exists. Both carry the plain `user` role: no admin privilege, and no
- * role beyond user/admin is defined in this product.
+ * The credentials are never displayed on a public screen: the landing page,
+ * the public sign-in and registration show no credentials and create no role.
+ * Only /admin/login reads from this list, and it picks the admin entry alone.
  *
- * The list is empty outside development, so a production build cannot sign in
- * with any of these.
+ * `member@demo.com` carries the plain `user` role and `admin001@gmail.com` the
+ * `admin` role — the only two roles this product defines — so the existing
+ * route guards keep separating the two portals unchanged. The password is
+ * compared in memory and never written to storage; only the resulting
+ * `{ token, user }` session is stored, exactly as a backend session would be.
  */
-export const DEMO_ACCOUNTS = Object.freeze(import.meta.env.DEV ? [
+export const isDemoAuthEnabled = import.meta.env.VITE_ENABLE_DEMO_AUTH === 'true'
+
+export const DEMO_ACCOUNTS = Object.freeze(isDemoAuthEnabled ? [
   {
-    id: 'user-1',
-    name: 'Demo User',
-    email: 'user@demo.com',
-    password: 'user123',
-    role: 'user',
-  },
-  {
-    id: 'user-2',
+    id: 'demo-member',
     name: 'Demo Member',
     email: 'member@demo.com',
     password: 'member123',
     role: 'user',
   },
   {
-    id: 'admin-1',
+    id: 'demo-admin',
     name: 'System Admin',
     email: 'admin001@gmail.com',
     password: 'holb1234',
@@ -71,7 +69,7 @@ const readStoredSession = () => {
     if (!raw) return null
     const session = JSON.parse(raw)
     if (!session?.token || !isKnownRole(session?.user?.role) ||
-      (!import.meta.env.DEV && session.token === MOCK_TOKEN)) {
+      (!isDemoAuthEnabled && session.token === MOCK_TOKEN)) {
       clearStoredSession()
       return null
     }
@@ -131,23 +129,40 @@ const resendVerification = async (email) => {
 
 const login = async (credentials, { remember = false, restrictedRole = null } = {}) => {
   let session
-  if (config.api.baseUrl) {
-    const response = await httpClient.post(`${AUTH_PATH}/login`, {
-      email: normalizeEmail(credentials.email), password: credentials.password,
-    })
-    session = response?.data ?? response
-  } else if (import.meta.env.DEV) {
+
+  // Temporary demo sign-in. Compiled in only when VITE_ENABLE_DEMO_AUTH is
+  // 'true'; with the flag false or missing this branch never runs and the
+  // flow below is the original one: real backend, or BackendNotConnectedError.
+  // The password is compared here in memory and never persisted anywhere.
+  if (isDemoAuthEnabled) {
+    const demoAccount = DEMO_ACCOUNTS.find(
+      (item) => item.email === normalizeEmail(credentials.email),
+    )
     await delay(MOCK_LOGIN_DELAY_MS)
-    const account = DEMO_ACCOUNTS.find((item) => item.email === normalizeEmail(credentials.email))
-    if (!account || credentials.password !== account.password) {
-      throw new RequestError('Invalid email or password.', { code: 'INVALID_CREDENTIALS' })
+    if (demoAccount && credentials.password === demoAccount.password) {
+      session = {
+        token: MOCK_TOKEN,
+        user: {
+          id: demoAccount.id, name: demoAccount.name,
+          email: demoAccount.email, role: demoAccount.role,
+        },
+      }
     }
-    session = { token: MOCK_TOKEN, user: {
-      id: account.id, name: account.name, email: account.email, role: account.role,
-    } }
-  } else {
-    throw new BackendNotConnectedError('Sign-in requires a connected authentication backend.')
   }
+
+  if (!session) {
+    if (config.api.baseUrl) {
+      const response = await httpClient.post(`${AUTH_PATH}/login`, {
+        email: normalizeEmail(credentials.email), password: credentials.password,
+      })
+      session = response?.data ?? response
+    } else if (isDemoAuthEnabled) {
+      throw new RequestError('Invalid email or password.', { code: 'INVALID_CREDENTIALS' })
+    } else {
+      throw new BackendNotConnectedError('Sign-in requires a connected authentication backend.')
+    }
+  }
+
   if (!session?.token || !isKnownRole(session?.user?.role) ||
     (restrictedRole && session.user.role !== restrictedRole)) {
     throw new RequestError('This account cannot access this sign-in area.', { code: 'ROLE_NOT_ALLOWED' })

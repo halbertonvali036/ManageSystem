@@ -1468,6 +1468,7 @@ const en = {
       heading: 'Suggestions and context',
     },
     chat: {
+      title: 'AI assistant',
       heading: 'Conversation with the AI',
       you: 'You',
       assistant: 'AI assistant',
@@ -1481,16 +1482,42 @@ const en = {
       draftKept: 'Your message is still in the box — nothing was lost.',
       notConnected:
         'The assistant is not connected, so a message cannot be sent.',
+      statusConnected: 'Connected',
+      statusOffline: 'Not connected',
+      noContext: 'No site, page or block open',
+      noSite: 'No site selected',
+      noPage: 'No page selected',
+      characterCount: '{count} of {max} characters',
+      proposalsLinked: '{count} proposed change(s) — review them',
+    },
+    layout: {
+      historyToggle: 'History',
+      changesToggle: 'Changes',
     },
     history: {
       heading: 'Conversation history',
       current: 'Back to the current conversation',
       loading: 'Loading the history…',
       empty: 'No conversations yet.',
+      emptyHint: 'Send your first message and the conversation appears here.',
       unavailable: 'The history will be available once the backend is connected.',
       untitled: 'Untitled conversation',
       notFound: 'That conversation could not be opened.',
       messageCount: '{count} messages',
+      newConversation: 'New conversation',
+      searchLabel: 'Search conversations',
+      searchPlaceholder: 'Search conversations…',
+      noResults: 'No results for {query}',
+      clearSearch: 'Clear search',
+      noActivity: 'No timestamp',
+      actionsFor: 'Actions for {title}',
+      delete: 'Delete',
+      deleteTitle: 'Delete conversation',
+      deleteMessage: 'Delete “{title}”?',
+      deleteConfirm: 'Delete',
+      deleting: 'Deleting…',
+      deleteUnavailable:
+        'Deleting a conversation will be available once the backend is connected — nothing was deleted.',
     },
     empty: {
       title: 'No questions yet',
@@ -1498,6 +1525,16 @@ const en = {
       offlineTitle: 'The AI assistant is not connected yet',
       offlineText:
         'The assistant is provided by the backend, so it cannot reply at the moment. No reply is being shown.',
+      step: {
+        ask: 'Ask',
+        review: 'Review',
+        apply: 'Approve',
+      },
+      stepText: {
+        ask: 'Describe what you want to build, in plain words.',
+        review: 'The AI proposes a change first, with its risk and details.',
+        apply: 'Apply the ones you like and reject the rest.',
+      },
     },
     suggestions: {
       label: 'Suggestions',
@@ -1505,14 +1542,89 @@ const en = {
     examples: {
       label: 'Example prompts',
       note: 'These are examples — nothing is executed yet.',
-      createSite: 'Create a business website for me',
-      createPage: 'Add a new page',
-      addSection: 'Create a hero section',
-      updateBlock: 'Change the text of the selected block',
-      updateTheme: "Change the site's colours",
-      createForm: 'Add a contact form',
-      createModel: 'Create a database model',
-      publishSite: 'Publish the site',
+      landingPage: 'Create a landing page for my product',
+      pricingSection: 'Add a pricing section',
+      heroCopy: 'Improve the hero copy',
+      contactForm: 'Create a contact form',
+      themeColors: 'Redesign the site colours',
+      databaseModel: 'Create a database model',
+    },
+    operation: {
+      createSite: 'Create site',
+      createPage: 'Create page',
+      addSection: 'Add section',
+      updateBlock: 'Update content',
+      updateTheme: 'Change site theme',
+      createModel: 'Create data model',
+      createForm: 'Create form',
+      publishSite: 'Publish site',
+    },
+    risk: {
+      safe: 'Safe',
+      reversible: 'Reversible',
+      destructive: 'Hard to reverse',
+    },
+    confirm: {
+      title: 'Confirm: {action}',
+      confirm: 'Confirm',
+      confirming: 'Confirming…',
+      message: {
+        createModel:
+          'This change alters your database schema. Do you want to continue?',
+        publishSite:
+          'This will publish the site to its live version. Do you want to continue?',
+      },
+    },
+    changes: {
+      title: 'Changes',
+      description:
+        'Pending and applied proposals appear here. Each one is applied only with your approval.',
+      emptyTitle: 'No proposals yet',
+      emptyText:
+        'Send a message. When the AI proposes a change it appears here, and it is applied only with your approval.',
+      undo: 'Undo the last change',
+      undoHint: 'A rollback is carried out by the backend.',
+      undoUnavailable:
+        'Rollback is not available from the backend yet — the change stands as applied.',
+    },
+    plan: {
+      title: 'Plan and usage',
+      tier: {
+        free: 'Free',
+        pro: 'Pro',
+      },
+      demoBadge: 'Demo',
+      demoNote:
+        'These figures are illustrative — no usage has been recorded yet.',
+      usageLabel: 'Usage',
+      usage: '{used} of {limit} messages',
+      noUsage: 'Unknown',
+      resets: 'Resets every {period}',
+      reset: {
+        monthly: 'month',
+        weekly: 'week',
+        yearly: 'year',
+      },
+      limitReached: 'Limit reached',
+      upgrade: 'Upgrade',
+      limit: {
+        title: 'Limit reached',
+        text: 'You have used your plan’s message allowance. Upgrade to continue.',
+      },
+    },
+    category: {
+      create: 'Create',
+      edit: 'Edit',
+      content: 'Content',
+      design: 'Design',
+      data: 'Data',
+    },
+    categoryDescription: {
+      create: 'A new site, a new page, or a publish.',
+      edit: 'Adding a section to the open page.',
+      content: 'Block text and forms.',
+      design: 'The site’s colour and font theme.',
+      data: 'The database schema.',
     },
     approval: {
       title: 'Proposed changes',
@@ -1530,6 +1642,14 @@ const en = {
       pending: 'Pending',
       pendingCount: '{count} change(s) pending',
       deferred: 'Visible after publishing',
+      preview: 'Preview changes',
+      confirmNote: 'Confirmation required',
+      staleTitle: 'This plan is out of date.',
+      staleText: 'The draft has changed — please ask for a new plan.',
+      newPlan: 'Ask for a new plan',
+      newPlanPrompt: 'The draft has changed — please propose a new plan.',
+      undoHint:
+        'Use the button below to ask for a rollback of an applied change.',
       missingContext:
         'This change needs {fields} first. It cannot be applied until that context is open.',
     },
@@ -1548,6 +1668,7 @@ const en = {
         'Only these five values leave your browser. Keys, tokens and system prompts are never included.',
       present: '{count} of {total} filled in',
       notSet: 'Not open',
+      technicalId: 'Technical id',
       hint: 'Open a site, page or block so the AI knows what you are asking about.',
     },
     contextField: {
