@@ -1,19 +1,21 @@
+import useTranslation from '@/hooks/useTranslation'
 import { Link } from 'react-router-dom'
 import { ShieldCheck } from 'lucide-react'
 import StatusPage from '@/components/common/StatusPage'
 
 function SessionExpiredPage() {
+  const { t } = useTranslation()
   return (
     <StatusPage
       code="401"
       tone="neutral"
       icon={ShieldCheck}
-      title="Session expired"
-      description="Your session has ended for security. Please sign in again to continue."
+      title={t('auth.sessionExpired.title')}
+      description={t('auth.sessionExpired.description')}
       className="status-page--standalone"
     >
       <Link to="/login" className="btn btn--primary">
-        Return to Login
+        {t('auth.sessionExpired.cta')}
       </Link>
     </StatusPage>
   )

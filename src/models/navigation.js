@@ -147,7 +147,8 @@ export const routeOwnsHeading = (pathname) =>
   pathname === SITES_PATH ||
   pathname === NEW_SITE_PATH ||
   pathname === TEMPLATES_PATH ||
-  pathname === WORKSPACES_PATH
+  pathname === WORKSPACES_PATH ||
+  (pathname.startsWith(`${WORKSPACES_PATH}/`) && !/\/sites\/(?!new$)[^/]+$/.test(pathname))
 
 /**
  * Where a "back" action should return to.

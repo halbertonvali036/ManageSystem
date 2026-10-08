@@ -50,6 +50,20 @@ function EditorCanvas({
 
   const hasSections = (activePage?.sections?.length ?? 0) > 0
 
+  const handlePreviewLink = (event) => {
+    if (!isPreview) return
+    const link = event.target.closest('a[href]')
+    if (!link) return
+    const href = link.getAttribute('href')
+    if (!href?.startsWith('/') || href.startsWith('//')) return
+    const slug = href.split(/[?#]/)[0].replace(/^\/+|\/+$/g, '')
+    const page = document.pages.find(item => slug ? item.slug === slug : item.isHome)
+    if (page) {
+      event.preventDefault()
+      onNavigatePage(page.id)
+    }
+  }
+
   return (
     <CanvasDragProvider onMoveBlock={onMoveBlock} onMoveSection={onMoveSection}>
     <div className="editor-canvas-area">
@@ -66,7 +80,7 @@ function EditorCanvas({
             <span className="editor-canvas__frame-dots"><i /><i /><i /></span>
             <span>{activePage?.name}</span>
           </div>}
-          <article ref={motionRef} className="editor-canvas__page" style={getCanvasCssStyle(document)}>
+          <article ref={motionRef} className="editor-canvas__page" style={getCanvasCssStyle(document)} onClick={handlePreviewLink}>
             <SiteHeaderPreview
               siteDocument={document}
               device={device}

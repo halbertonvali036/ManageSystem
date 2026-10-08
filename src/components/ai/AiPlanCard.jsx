@@ -59,7 +59,7 @@ function AiPlanCard({ payload = null }) {
           <h2 className="ai-plan__title" id="ai-plan-title">
             {t('aiAssistant.plan.title')}
           </h2>
-          <p className="ai-plan__tier">{tierKey ? t(tierKey) : plan.tier}</p>
+          <p className="ai-plan__tier">{tierKey ? t(tierKey) : t('aiAssistant.plan.noUsage')}</p>
         </div>
 
         {isDemo ? <span className="ai-plan__demo">{t('aiAssistant.plan.demoBadge')}</span> : null}
@@ -93,7 +93,7 @@ function AiPlanCard({ payload = null }) {
             role="progressbar"
             aria-valuemin={0}
             aria-valuemax={plan.limit}
-            aria-valuenow={plan.used}
+            aria-valuenow={Math.min(plan.used, plan.limit)}
             aria-label={t('aiAssistant.plan.usageLabel')}
           >
             <span className="ai-plan__bar-fill" style={{ width: `${percent}%` }} />

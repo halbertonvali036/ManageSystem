@@ -44,11 +44,11 @@ export const AI_PLAN_RESET_PERIOD_LABEL_KEYS = Object.freeze({
  * replaces this object outright.
  */
 export const AI_PLAN_FALLBACK = Object.freeze({
-  source: 'frontend-fallback',
-  tier: AI_PLAN_TIER.FREE,
-  used: 12,
-  limit: 50,
-  resetPeriod: 'monthly',
+  source: import.meta.env.VITE_ENABLE_DEMO_AUTH === 'true' ? 'frontend-fallback' : 'unavailable',
+  tier: import.meta.env.VITE_ENABLE_DEMO_AUTH === 'true' ? AI_PLAN_TIER.FREE : null,
+  used: import.meta.env.VITE_ENABLE_DEMO_AUTH === 'true' ? 12 : null,
+  limit: import.meta.env.VITE_ENABLE_DEMO_AUTH === 'true' ? 50 : null,
+  resetPeriod: import.meta.env.VITE_ENABLE_DEMO_AUTH === 'true' ? 'monthly' : null,
 })
 
 const readCount = (value) =>
@@ -114,6 +114,6 @@ export const getAiPlanBarPercent = (plan) => {
 export const isAiPlanLimitReached = (plan) => {
   const used = readCount(plan?.used)
   const limit = readCount(plan?.limit)
-  if (used === null || limit === null || limit <= 0) return false
+  if (plan?.source !== 'backend' || used === null || limit === null) return false
   return used >= limit
 }

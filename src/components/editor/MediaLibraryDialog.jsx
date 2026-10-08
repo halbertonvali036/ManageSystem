@@ -35,9 +35,9 @@ function MediaDialogBody({ onClose, onPickLocalFile, onPickUrl }) {
       if (event.key !== 'Tab' || !dialogRef.current) {
         return
       }
-      const focusable = dialogRef.current.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-      )
+      const focusable = [...dialogRef.current.querySelectorAll(
+        'button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])',
+      )].filter(element => element.getClientRects().length > 0)
       if (focusable.length === 0) {
         return
       }

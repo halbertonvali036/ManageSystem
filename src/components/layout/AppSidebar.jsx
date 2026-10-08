@@ -72,6 +72,7 @@ function AppSidebar({ collapsed, mobileOpen, onToggleCollapsed, onCloseMobile })
     const sync = () => {
       root.dataset.sidebarMesh = document.hidden ? 'idle' : 'active'
     }
+    sync()
     document.addEventListener('visibilitychange', sync)
     return () => {
       document.removeEventListener('visibilitychange', sync)

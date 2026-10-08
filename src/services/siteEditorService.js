@@ -1,3 +1,4 @@
+import { getDemoSession } from '@/services/demoSession'
 import config from '@/config'
 import httpClient, { BackendNotConnectedError } from '@/services/httpClient'
 import {
@@ -36,6 +37,15 @@ const requireBackend = (message) => {
  * treats as "start from a local working state" rather than an error.
  */
 const getSiteDraft = async (siteId) => {
+  const demo = getDemoSession()
+  const site = demo?.sites.find(item => item.id === siteId)
+  if (site) {
+    if (!demo.documents[siteId]) {
+      const { createDemoWebsite } = await import('@/models/demoWebsite')
+      demo.documents[siteId] ??= createDemoWebsite(site)
+    }
+    return normalizeEditorDocument(demo.documents[siteId])
+  }
   if (!isBackendConnected() || !siteId) {
     return null
   }

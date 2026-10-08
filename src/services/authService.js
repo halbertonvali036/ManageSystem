@@ -1,3 +1,4 @@
+import { resetDemoSession } from '@/services/demoSession'
 import config from '@/config'
 import { isKnownRole } from '@/utils/roles'
 import httpClient, { BackendNotConnectedError, RequestError } from '@/services/httpClient'
@@ -80,6 +81,7 @@ const readStoredSession = () => {
 }
 
 const clearStoredSession = () => {
+  resetDemoSession()
   sessionStorage.removeItem(SESSION_STORAGE_KEY)
   localStorage.removeItem(SESSION_STORAGE_KEY)
 }

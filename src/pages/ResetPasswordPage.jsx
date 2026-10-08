@@ -1,3 +1,4 @@
+import useTranslation from '@/hooks/useTranslation'
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import {
@@ -22,6 +23,7 @@ function PasswordField({
   error,
   disabled,
 }) {
+  const { t } = useTranslation()
   return (
     <div className="form__field">
       <label className="form__label" htmlFor={id}>
@@ -34,7 +36,7 @@ function PasswordField({
           type={show ? 'text' : 'password'}
           name={id}
           autoComplete="new-password"
-          placeholder="Enter your new password"
+          placeholder={t('recovery.passwordPlaceholder')}
           value={value}
           onChange={onChange}
           onBlur={onBlur}
@@ -46,7 +48,7 @@ function PasswordField({
           type="button"
           className="form__toggle"
           onClick={onToggleShow}
-          aria-label={show ? 'Hide password' : 'Show password'}
+          aria-label={t(show ? 'auth.common.hidePassword' : 'auth.common.showPassword')}
           aria-pressed={show}
           disabled={disabled}
         >
@@ -57,12 +59,13 @@ function PasswordField({
           )}
         </button>
       </div>
-      {error ? <p className="form__error" id={`${id}-error`}>{error}</p> : null}
+      {error ? <p className="form__error" id={`${id}-error`}>{t(error)}</p> : null}
     </div>
   )
 }
 
 function ResetPasswordPage() {
+  const { t } = useTranslation()
   const [searchParams] = useSearchParams()
   const token = searchParams.get('token')
 
@@ -81,12 +84,12 @@ function ResetPasswordPage() {
     return (
       <div className="auth-card anim-scale-in">
         <div className="auth-card__head">
-          <p className="auth-card__eyebrow anim-fade-up anim-delay-1">Account recovery</p>
+          <p className="auth-card__eyebrow anim-fade-up anim-delay-1">{t('auth.forgot.eyebrow')}</p>
           <h1 className="auth-card__title anim-fade-up anim-delay-1">
-            Reset password
+            {t('auth.reset.submit')}
           </h1>
           <p className="auth-card__subtitle anim-fade-up anim-delay-2">
-            We could not process your request.
+            {t('recovery.invalidToken')}
           </p>
         </div>
 
@@ -97,18 +100,17 @@ function ResetPasswordPage() {
           >
             <KeyRound size={22} />
           </span>
-          <h3 className="auth-state__title">Invalid or missing token</h3>
+          <h3 className="auth-state__title">{t('recovery.invalidToken')}</h3>
           <p className="auth-state__text">
-            This password reset link is invalid or has expired. Please request a
-            new one to continue.
+            {t('recovery.invalidTokenText')}
           </p>
           <Link to="/forgot-password" className="btn btn--primary auth-cta">
-            Request a new link
+            {t('recovery.newLink')}
           </Link>
           <div className="auth-back">
             <Link to="/login" className="form__link">
               <ArrowLeft size={15} aria-hidden="true" />
-              Back to sign in
+              {t('recovery.back')}
             </Link>
           </div>
         </div>
@@ -122,22 +124,22 @@ function ResetPasswordPage() {
     const nextErrors = {}
 
     if (!toValidate.password) {
-      nextErrors.password = 'New password is required.'
+      nextErrors.password = 'auth.errors.passwordRequired'
     } else if (toValidate.password.length < 6) {
-      nextErrors.password = 'Password must be at least 6 characters.'
+      nextErrors.password = 'auth.errors.passwordShort'
     }
 
     if (!toValidate.confirm) {
-      nextErrors.confirm = 'Confirm your new password.'
+      nextErrors.confirm = 'auth.errors.confirmRequired'
     } else if (toValidate.confirm !== toValidate.password) {
-      nextErrors.confirm = 'Passwords do not match.'
+      nextErrors.confirm = 'auth.errors.passwordMismatch'
     }
 
     return nextErrors
   }
 
   const handleBlur = () => {
-    setErrors((prev) => ({ ...prev, ...validate() }))
+    setErrors(validate())
   }
 
   const toggleShow = (field) => () => {
@@ -160,9 +162,9 @@ function ResetPasswordPage() {
       setSucceeded(true)
     } catch (error) {
       if (error instanceof BackendNotConnectedError) {
-        setFormError(error.message)
+        setFormError('recovery.resetUnavailable')
       } else {
-        setFormError('Unable to reset your password. Please try again.')
+        setFormError('recovery.resetFailed')
       }
     } finally {
       setIsLoading(false)
@@ -173,12 +175,12 @@ function ResetPasswordPage() {
     return (
       <div className="auth-card anim-scale-in">
         <div className="auth-card__head">
-          <p className="auth-card__eyebrow anim-fade-up anim-delay-1">Account recovery</p>
+          <p className="auth-card__eyebrow anim-fade-up anim-delay-1">{t('auth.forgot.eyebrow')}</p>
           <h1 className="auth-card__title anim-fade-up anim-delay-1">
-            Password reset
+            {t('auth.reset.done')}
           </h1>
           <p className="auth-card__subtitle anim-fade-up anim-delay-2">
-            Please sign in with your new password.
+            {t('auth.reset.done')}
           </p>
         </div>
 
@@ -189,13 +191,13 @@ function ResetPasswordPage() {
           >
             <CheckCircle2 size={22} />
           </span>
-          <h3 className="auth-state__title">Password updated successfully.</h3>
+          <h3 className="auth-state__title">{t('auth.reset.done')}</h3>
           <p className="auth-state__text">
-            You can now sign in with your new password.
+            {t('auth.reset.done')}
           </p>
           <Link to="/login" className="btn btn--primary auth-cta">
             <ArrowLeft size={16} className="auth-cta__icon" aria-hidden="true" />
-            Back to sign in
+            {t('recovery.back')}
           </Link>
         </div>
       </div>
@@ -205,12 +207,12 @@ function ResetPasswordPage() {
   return (
     <div className="auth-card anim-scale-in">
       <div className="auth-card__head">
-        <p className="auth-card__eyebrow anim-fade-up anim-delay-1">Account recovery</p>
+        <p className="auth-card__eyebrow anim-fade-up anim-delay-1">{t('auth.forgot.eyebrow')}</p>
         <h1 className="auth-card__title anim-fade-up anim-delay-1">
-          Set a new password
+          {t('auth.reset.title')}
         </h1>
         <p className="auth-card__subtitle anim-fade-up anim-delay-2">
-          Choose a strong password you have not used before.
+          {t('auth.reset.subtitle')}
         </p>
       </div>
 
@@ -222,13 +224,13 @@ function ResetPasswordPage() {
             role="alert"
           >
             <AlertCircle size={16} aria-hidden="true" />
-            <span>{formError}</span>
+            <span>{t(formError)}</span>
           </div>
         ) : null}
 
         <PasswordField
           id="reset-password"
-          label="New Password"
+          label={t('recovery.newPassword')}
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           onBlur={handleBlur}
@@ -240,7 +242,7 @@ function ResetPasswordPage() {
 
         <PasswordField
           id="reset-password-confirm"
-          label="Confirm New Password"
+          label={t('recovery.confirmPassword')}
           value={confirm}
           onChange={(event) => setConfirm(event.target.value)}
           onBlur={handleBlur}
@@ -251,8 +253,7 @@ function ResetPasswordPage() {
         />
 
         <p className="form__hint">
-          Use at least 6 characters. Your new password must be different from
-          your previous passwords.
+          {t('recovery.passwordHint')}
         </p>
 
         <button
@@ -263,7 +264,7 @@ function ResetPasswordPage() {
           {isLoading ? (
             <>
               <span className="spinner" aria-hidden="true" />
-              Updating&hellip;
+              {t('auth.reset.submitting')}
             </>
           ) : (
             <>
@@ -272,7 +273,7 @@ function ResetPasswordPage() {
                 className="auth-cta__icon"
                 aria-hidden="true"
               />
-              Reset password
+              {t('auth.reset.submit')}
             </>
           )}
         </button>
@@ -280,7 +281,7 @@ function ResetPasswordPage() {
         <div className="auth-back">
           <Link to="/login" className="form__link">
             <ArrowLeft size={15} aria-hidden="true" />
-            Back to sign in
+            {t('recovery.back')}
           </Link>
         </div>
       </form>

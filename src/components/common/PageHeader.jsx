@@ -21,6 +21,8 @@ function PageHeader() {
   const isHome = pathname === homePath
   const ownsHeading = routeOwnsHeading(pathname)
 
+  if (pathname.startsWith('/workspaces/') && ownsHeading) return null
+
   return (
     <div className="page-header">
       <p className="breadcrumb">

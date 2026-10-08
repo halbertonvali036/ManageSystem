@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import useTranslation from '@/hooks/useTranslation'
 import {
   WORKSPACES_PATH,
+  WORKSPACE_PATH,
   WORKSPACE_ACTIVITY_PATH,
   WORKSPACE_AI_PATH,
   WORKSPACE_CAPABILITIES_PATH,
@@ -61,8 +62,12 @@ function WorkspaceBreadcrumb({ workspace, section = null, current = null }) {
 
         <Separator />
 
+        <li className="workspace-breadcrumb__item">
+          {section || current ? <Link to={workspaceId ? WORKSPACE_PATH(workspaceId) : WORKSPACES_PATH} className="workspace-breadcrumb__link">{workspaceName}</Link> : <span aria-current="page">{workspaceName}</span>}
+        </li>
         {section ? (
           <>
+            <Separator />
             <li className="workspace-breadcrumb__item">
               {current ? (
                 <Link
@@ -80,11 +85,12 @@ function WorkspaceBreadcrumb({ workspace, section = null, current = null }) {
                 </span>
               )}
             </li>
-            <Separator />
           </>
         ) : null}
 
         {current ? (
+          <>
+          <Separator />
           <li className="workspace-breadcrumb__item">
             {current.to ? (
               <Link to={current.to} className="workspace-breadcrumb__link">
@@ -99,14 +105,8 @@ function WorkspaceBreadcrumb({ workspace, section = null, current = null }) {
               </span>
             )}
           </li>
-        ) : (
-          <li
-            className="workspace-breadcrumb__item workspace-breadcrumb__item--current"
-            aria-current="page"
-          >
-            {workspaceName}
-          </li>
-        )}
+          </>
+        ) : null}
       </ol>
     </nav>
   )

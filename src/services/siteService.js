@@ -1,3 +1,4 @@
+import { getDemoSession, filterDemoSites } from '@/services/demoSession'
 import { publishSite, unpublishSite, getPublishStatus, getPublishedUrl } from '@/services/sitePublishService'
 import config from '@/config'
 import httpClient, { BackendNotConnectedError } from '@/services/httpClient'
@@ -54,6 +55,8 @@ const toList = (response) => {
 
 /** All projects for the signed-in account. Empty while the API is absent. */
 const getMySites = async (params = {}) => {
+  const demo = getDemoSession()
+  if (demo) return filterDemoSites(demo.sites, params).map(normalizeSite)
   if (!isBackendConnected()) {
     return []
   }
@@ -62,6 +65,8 @@ const getMySites = async (params = {}) => {
 
 /** A single project, or null when it is absent or the API is not connected. */
 const getSite = async (id) => {
+  const demo = getDemoSession()
+  if (demo) return normalizeSite(demo.sites.find(site => site.id === id))
   if (!isBackendConnected()) {
     return null
   }
@@ -69,6 +74,12 @@ const getSite = async (id) => {
 }
 
 const createSite = async (payload) => {
+  const demo = getDemoSession()
+  if (demo) {
+    const site = { ...buildSiteDraft(payload), id: crypto.randomUUID(), workspaceId: 'demo-workspace', status: 'draft' }
+    demo.sites.push(site)
+    return normalizeSite(site)
+  }
   requireBackend('Creating a website is unavailable until the backend is connected.')
   return normalizeSite(await httpClient.post(SITES_PATH, buildSiteDraft(payload)))
 }

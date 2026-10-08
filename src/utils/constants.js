@@ -143,9 +143,9 @@ export const WORKSPACE_MODULE_PATHS = Object.freeze({
   sites: WORKSPACE_SITES_PATH,
   database: WORKSPACE_DATABASE_PATH,
   settings: WORKSPACE_SETTINGS_PATH,
-  security: SECURITY_PATH,
-  notifications: NOTIFICATIONS_PATH,
-  billing: BILLING_PATH,
+  security: () => SECURITY_PATH,
+  notifications: () => NOTIFICATIONS_PATH,
+  billing: () => BILLING_PATH,
 })
 
 /** One schema model inside a workspace. */

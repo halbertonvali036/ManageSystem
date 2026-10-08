@@ -1,3 +1,4 @@
+import { isDemoSession, rememberDemoDraft } from '@/services/demoSession'
 import { createStarterForm } from '@/models/siteForm'
 import { getPublicationState } from '@/models/sitePublishing'
 import PreviewBar from '@/components/editor/PreviewBar'
@@ -88,7 +89,7 @@ const SAVE_STATUS = {
  * The status pill and the note under the canvas both say so in the visitor's
  * language.
  */
-function SiteEditorPage() {
+function SiteEditorDocument() {
   const { siteId } = useParams()
   const location = useLocation()
   const seed = siteId === 'local-draft' ? location.state?.localDraft : null
@@ -106,6 +107,23 @@ function SiteEditorPage() {
       },
     }), ...(seed ? { theme: normalizeSiteTheme(seed.themePresetId) } : {}) }),
   )
+  const [saveStatus, setSaveStatus] = useState(SAVE_STATUS.CLEAN)
+  const [draftLoading, setDraftLoading] = useState(true)
+  const [draftError, setDraftError] = useState(false)
+  useEffect(() => {
+    let active = true
+    siteEditorService.getSiteDraft(siteId).then(draft => {
+      if (active && draft) {
+        setDocument(draft)
+        if (draft.isLocalDraft) setSaveStatus(SAVE_STATUS.UNSAVED)
+      }
+    }).catch(() => { if (active) setDraftError(true) })
+      .finally(() => { if (active) setDraftLoading(false) })
+    return () => { active = false }
+  }, [siteId])
+  useEffect(() => {
+    if (!draftLoading && !draftError) rememberDemoDraft(siteId, document)
+  }, [siteId, document, draftLoading, draftError])
   // One selection for the whole editor, because a section and a block are both
   // selectable and they open different settings. A bare id would be ambiguous.
   const [selection, setSelection] = useState(null)
@@ -118,7 +136,6 @@ function SiteEditorPage() {
     return () => { active = false }
   }, [siteId])
   const site = siteResult?.siteId === siteId ? siteResult.site : null
-  const [saveStatus, setSaveStatus] = useState(SAVE_STATUS.CLEAN)
   const [isLeftOpen, setIsLeftOpen] = useState(false)
   const [isRightOpen, setIsRightOpen] = useState(false)
   const [isSectionLibraryOpen, setIsSectionLibraryOpen] = useState(false)
@@ -488,14 +505,13 @@ function SiteEditorPage() {
    */
   const openMedia = useCallback(
     (target) => {
-      const resolved = target ?? (selection ? { kind: selection.kind, id: selection.id } : null)
-      if (!resolved) {
-        return
-      }
+      const resolved = target ?? (selectedBlock?.type === 'image'
+        ? { kind: 'block', id: selectedBlock.id }
+        : selectedSection ? { kind: 'section', id: selectedSection.id } : { kind: 'newBlock' })
       setMediaTarget(resolved)
       setIsMediaOpen(true)
     },
-    [selection],
+    [selectedBlock, selectedSection],
   )
 
   const closeMedia = useCallback(() => {
@@ -515,7 +531,9 @@ function SiteEditorPage() {
       if (!mediaTarget) {
         return
       }
-      if (mediaTarget.kind === 'block') {
+      if (mediaTarget.kind === 'newBlock') {
+        applyEdit(current => insertBlock(current, 'image', { content: { media, alt: alt ?? '' } }))
+      } else if (mediaTarget.kind === 'block') {
         applyEdit((current) =>
           updateBlock(current, mediaTarget.id, {
             content: { media, alt: alt ?? '' },
@@ -573,11 +591,11 @@ function SiteEditorPage() {
    * safe: the copy keeps the picture alive.
    */
   useEffect(() => {
-    revokeMediaUrlsExcept(listMediaIdsInUse(document))
-  }, [document])
+    if (!draftLoading && !isDemoSession()) revokeMediaUrlsExcept(listMediaIdsInUse(document))
+  }, [document, draftLoading])
 
   // Nothing can keep an Object URL alive past the editor itself.
-  useEffect(() => () => revokeAllMediaUrls(), [])
+  useEffect(() => () => { if (!isDemoSession()) revokeAllMediaUrls() }, [])
 
   const handleSave = useCallback(async () => {
     setSaveStatus(SAVE_STATUS.UNSAVED)
@@ -611,6 +629,9 @@ function SiteEditorPage() {
 
   const isDrawerOpen = isLeftOpen || isRightOpen
   const publication = getPublicationState(site ? { status: site.status === 'draft' ? 'unpublished' : site.status } : null, Boolean(document.updatedAt))
+
+  if (draftLoading) return <div className="page-status" role="status">{t('common.loading')}</div>
+  if (draftError) return <div className="page-status" role="alert">{t('recovery.loadDraftFailed')} <button className="btn btn--outline" onClick={() => window.location.reload()}>{t('common.retry')}</button></div>
 
   return (
     <div className="editor" data-preview={isPreview ? 'true' : undefined}>
@@ -825,5 +846,5 @@ function SiteEditorPage() {
 
 export default function SiteEditorRoute() {
   const { siteId } = useParams()
-  return <SiteEditorPage key={siteId} />
+  return <SiteEditorDocument key={siteId} />
 }

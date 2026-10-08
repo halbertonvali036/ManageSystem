@@ -1,3 +1,4 @@
+import { getDemoSession, filterDemoSites } from '@/services/demoSession'
 import config from '@/config'
 import httpClient, { BackendNotConnectedError } from '@/services/httpClient'
 import {
@@ -53,6 +54,8 @@ const buildSiteQuery = ({ status = ALL_SITES_FILTER, search = '' } = {}) => {
 
 /** All workspaces for the signed-in account. Empty while the API is absent. */
 const getWorkspaces = async () => {
+  const demo = getDemoSession()
+  if (demo) return demo.workspaces.map(normalizeWorkspace)
   if (!isBackendConnected()) {
     return []
   }
@@ -61,6 +64,8 @@ const getWorkspaces = async () => {
 
 /** A single workspace, or null when absent or the API is not connected. */
 const getWorkspace = async (id) => {
+  const demo = getDemoSession()
+  if (demo) return normalizeWorkspace(demo.workspaces.find(item => item.id === id))
   if (!isBackendConnected()) {
     return null
   }
@@ -103,6 +108,8 @@ const deleteWorkspace = async (id) => {
  * Returns [] while the API is absent.
  */
 const getWorkspaceSites = async (workspaceId, params = {}) => {
+  const demo = getDemoSession()
+  if (demo) return filterDemoSites(demo.sites.filter(site => site.workspaceId === workspaceId), params).map(normalizeSite)
   if (!isBackendConnected()) {
     return []
   }
@@ -115,6 +122,12 @@ const getWorkspaceSites = async (workspaceId, params = {}) => {
  * Refused until a backend is available.
  */
 const createWorkspaceSite = async (workspaceId, payload) => {
+  const demo = getDemoSession()
+  if (demo?.workspaces.some(item => item.id === workspaceId)) {
+    const site = { ...normalizeSite(payload), id: crypto.randomUUID(), workspaceId, status: 'draft' }
+    demo.sites.push(site)
+    return normalizeSite(site)
+  }
   requireBackend(
     'Creating a site is unavailable until the backend is connected.'
   )

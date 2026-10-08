@@ -1,3 +1,4 @@
+import useTranslation from '@/hooks/useTranslation'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AlertCircle, ArrowLeft, Mail, Send } from 'lucide-react'
@@ -5,11 +6,8 @@ import authService from '@/services/authService'
 import { BackendNotConnectedError } from '@/services/httpClient'
 import { isValidEmail } from '@/utils/validation'
 
-// Neutral copy deliberately hides whether a specific account exists.
-const NEUTRAL_SUCCESS =
-  'If an account exists, recovery instructions have been sent.'
-
 function ForgotPasswordPage() {
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [errors, setErrors] = useState({})
   const [formError, setFormError] = useState('')
@@ -23,16 +21,16 @@ function ForgotPasswordPage() {
     const trimmedEmail = toValidate.email.trim()
 
     if (!trimmedEmail) {
-      nextErrors.email = 'Email is required.'
+      nextErrors.email = 'auth.errors.emailRequired'
     } else if (!isValidEmail(trimmedEmail)) {
-      nextErrors.email = 'Enter a valid email address.'
+      nextErrors.email = 'auth.errors.emailInvalid'
     }
 
     return nextErrors
   }
 
   const handleBlur = () => {
-    setErrors((prev) => ({ ...prev, ...validate() }))
+    setErrors(validate())
   }
 
   const handleSubmit = async (event) => {
@@ -51,9 +49,9 @@ function ForgotPasswordPage() {
       setSucceeded(true)
     } catch (error) {
       if (error instanceof BackendNotConnectedError) {
-        setFormError(error.message)
+        setFormError('recovery.recoveryUnavailable')
       } else {
-        setFormError('Unable to request recovery instructions. Please try again.')
+        setFormError('recovery.recoveryFailed')
       }
     } finally {
       setIsLoading(false)
@@ -64,12 +62,12 @@ function ForgotPasswordPage() {
     return (
       <div className="auth-card anim-scale-in">
         <div className="auth-card__head">
-          <p className="auth-card__eyebrow anim-fade-up anim-delay-1">Account recovery</p>
+          <p className="auth-card__eyebrow anim-fade-up anim-delay-1">{t('auth.forgot.eyebrow')}</p>
           <h1 className="auth-card__title anim-fade-up anim-delay-1">
-            Check your inbox
+            {t('recovery.inbox')}
           </h1>
           <p className="auth-card__subtitle anim-fade-up anim-delay-2">
-            Recovery link on its way
+            {t('auth.forgot.sent')}
           </p>
         </div>
 
@@ -81,12 +79,12 @@ function ForgotPasswordPage() {
             <Mail size={22} />
           </span>
           <h3 className="auth-state__title">
-            Recovery instructions sent
+            {t('recovery.inbox')}
           </h3>
-          <p className="auth-state__text">{NEUTRAL_SUCCESS}</p>
+          <p className="auth-state__text">{t('auth.forgot.sent')}</p>
           <Link to="/login" className="btn btn--primary auth-cta">
             <ArrowLeft size={16} className="auth-cta__icon" aria-hidden="true" />
-            Back to sign in
+            {t('recovery.back')}
           </Link>
         </div>
       </div>
@@ -96,12 +94,12 @@ function ForgotPasswordPage() {
   return (
     <div className="auth-card anim-scale-in">
       <div className="auth-card__head">
-        <p className="auth-card__eyebrow anim-fade-up anim-delay-1">Account recovery</p>
+        <p className="auth-card__eyebrow anim-fade-up anim-delay-1">{t('auth.forgot.eyebrow')}</p>
         <h1 className="auth-card__title anim-fade-up anim-delay-1">
-          Forgot password?
+          {t('auth.forgot.title')}
         </h1>
         <p className="auth-card__subtitle anim-fade-up anim-delay-2">
-          No worries — we will help you get back in.
+          {t('auth.forgot.subtitle')}
         </p>
       </div>
 
@@ -113,13 +111,13 @@ function ForgotPasswordPage() {
             role="alert"
           >
             <AlertCircle size={16} aria-hidden="true" />
-            <span>{formError}</span>
+            <span>{t(formError)}</span>
           </div>
         ) : null}
 
         <div className="form__field">
           <label className="form__label" htmlFor="forgot-email">
-            Email
+            {t('auth.common.email')}
           </label>
           <input
             id="forgot-email"
@@ -137,9 +135,9 @@ function ForgotPasswordPage() {
             aria-describedby={errors.email ? 'forgot-email-error' : 'forgot-email-hint'}
           />
           <p className="form__hint" id="forgot-email-hint">
-            We will send recovery instructions to this address.
+            {t('recovery.recoveryHint')}
           </p>
-          {errors.email ? <p className="form__error" id="forgot-email-error">{errors.email}</p> : null}
+          {errors.email ? <p className="form__error" id="forgot-email-error">{t(errors.email)}</p> : null}
         </div>
 
         <button
@@ -150,12 +148,12 @@ function ForgotPasswordPage() {
           {isLoading ? (
             <>
               <span className="spinner" aria-hidden="true" />
-              Sending&hellip;
+              {t('auth.forgot.submitting')}
             </>
           ) : (
             <>
               <Send size={16} className="auth-cta__icon" aria-hidden="true" />
-              Send recovery link
+              {t('auth.forgot.submit')}
             </>
           )}
         </button>
@@ -163,7 +161,7 @@ function ForgotPasswordPage() {
         <div className="auth-back">
           <Link to="/login" className="form__link">
             <ArrowLeft size={15} aria-hidden="true" />
-            Back to sign in
+            {t('recovery.back')}
           </Link>
         </div>
       </form>

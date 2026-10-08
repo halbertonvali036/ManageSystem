@@ -1,3 +1,4 @@
+import { demoNotices } from '@/i18n/recoveryLocales'
 import { enAdmin } from '@/i18n/adminLocales'
 import { enAccountPolish } from '@/i18n/accountPolishLocales'
 import { enAudit } from '@/i18n/auditLocales'
@@ -12,6 +13,8 @@ import { enForms } from '@/i18n/formLocales'
  */
 
 const en = {
+  recovery: {"back": "Back to sign in", "inbox": "Check your inbox", "recoveryHint": "We will send recovery instructions to this address.", "recoveryUnavailable": "Password recovery requires a connected service. No email was sent.", "recoveryFailed": "Unable to request recovery instructions. Please try again.", "resetUnavailable": "Password reset requires a connected service. Your password has not changed.", "resetFailed": "Unable to reset your password. Please try again.", "invalidToken": "Invalid or missing reset link", "invalidTokenText": "This password reset link is invalid or has expired. Request a new one to continue.", "newLink": "Request a new link", "newPassword": "New password", "confirmPassword": "Confirm new password", "passwordPlaceholder": "Enter your new password", "passwordHint": "Use at least 6 characters. Choose a password you have not used before.", "denied": "Access denied", "deniedText": "Your account does not have permission to access this area. Contact your administrator if you need access.", "home": "Return to workspace", "loadDraftFailed": "The draft could not be loaded. Try again before editing."},
+  demo: { notice: demoNotices.en },
   landingHero: {
     badge: 'Built with AI',
     titleLine1: 'A new home',

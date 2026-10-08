@@ -7,6 +7,9 @@
    ============================================================ */
 
 .editor-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
   min-height: 100dvh;
   background: var(--color-surface);
 }
@@ -14,7 +17,8 @@
 .editor {
   display: flex;
   flex-direction: column;
-  height: 100dvh;
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
   background: var(--color-surface);
 }

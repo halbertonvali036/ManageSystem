@@ -81,6 +81,7 @@ function useAiAssistant(workspaceId, { context } = {}) {
   const requestKey = `${workspaceId ?? ''}`
 
   const conversationIdRef = useRef(null)
+  const readVersion = useRef(0)
   const isConnected = isAiBackendConnected()
   const isLoading = loadedFor !== requestKey
 
@@ -101,11 +102,13 @@ function useAiAssistant(workspaceId, { context } = {}) {
    * showing the loading state rather than briefly displaying a stale conversation.
    */
   const read = useCallback(async () => {
+    const version = ++readVersion.current
     const [conversationResult, suggestionResult] = await Promise.allSettled([
       aiService.getConversation(workspaceId, { context }),
       aiService.getSuggestions(workspaceId, { context }),
     ])
 
+    if (version !== readVersion.current) return
     if (conversationResult.status === 'fulfilled') {
       const conversation = conversationResult.value
       setMessages(conversation?.messages ?? [])
@@ -193,8 +196,23 @@ function useAiAssistant(workspaceId, { context } = {}) {
   const selectConversation = useCallback(
     async (conversationId) => {
       const nextId = conversationId ?? null
+      if (!isConnected || isSending) return null
+      if (nextId === null) {
+        readVersion.current += 1
+        conversationIdRef.current = null
+        setActiveConversationId(null)
+        setMessages([])
+        setDraft('')
+        setSettledProposals({})
+        setSendError(null)
+        setActionError(null)
+        setUndoNotice(null)
+        setHistoryError(null)
+        setIsHistoryLoading(false)
+        return null
+      }
       if (nextId === activeConversationId) return null
-      if (!isConnected) return null
+      const version = ++readVersion.current
 
       setIsHistoryLoading(true)
       setHistoryError(null)
@@ -203,6 +221,7 @@ function useAiAssistant(workspaceId, { context } = {}) {
           conversationId: nextId,
           context,
         })
+        if (version !== readVersion.current) return null
         if (!conversation) {
           setHistoryError(t('aiAssistant.history.notFound'))
           return null
@@ -218,7 +237,7 @@ function useAiAssistant(workspaceId, { context } = {}) {
         setIsHistoryLoading(false)
       }
     },
-    [activeConversationId, isConnected, workspaceId, context, t],
+    [activeConversationId, isConnected, isSending, workspaceId, context, t],
   )
 
   /**
@@ -409,7 +428,7 @@ function useAiAssistant(workspaceId, { context } = {}) {
     () =>
       sortAiConversationSummaries(conversations ?? []).map((summary) => ({
         ...summary,
-        isActive: summary.id === activeConversationId || summary.isActive,
+        isActive: summary.id === activeConversationId,
       })),
     [conversations, activeConversationId],
   )

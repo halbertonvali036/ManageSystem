@@ -9,10 +9,10 @@ import {
   Smartphone,
   Tablet,
 } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import useTranslation from '@/hooks/useTranslation'
 import { EDITOR_DEVICE, EDITOR_DEVICES } from '@/models/siteEditor'
-import { SITES_PATH, SITE_DETAILS_PATH, SITE_SETTINGS_PATH } from '@/utils/constants'
+import { SITES_PATH, SITE_DETAILS_PATH, SITE_SETTINGS_PATH, WORKSPACE_SITE_DETAILS_PATH, WORKSPACE_SITE_SETTINGS_PATH } from '@/utils/constants'
 
 const DEVICE_ICONS = {
   [EDITOR_DEVICE.DESKTOP]: Monitor,
@@ -44,12 +44,13 @@ function EditorTopBar({
   onSave,
 }) {
   const { t } = useTranslation()
+  const { workspaceId } = useParams()
 
   return (
     <header className="editor-topbar">
       <div className="editor-topbar__left">
         <Link
-          to={siteId === 'local-draft' ? SITES_PATH : SITE_DETAILS_PATH(siteId)}
+          to={siteId === 'local-draft' ? SITES_PATH : workspaceId ? WORKSPACE_SITE_DETAILS_PATH(workspaceId, siteId) : SITE_DETAILS_PATH(siteId)}
           className="editor-topbar__icon-button"
           aria-label={t('editor.topBar.backToSite')}
           title={t('editor.topBar.backToSite')}
@@ -58,7 +59,7 @@ function EditorTopBar({
         </Link>
 
         <Link
-          to={SITE_SETTINGS_PATH(siteId)}
+          to={workspaceId ? WORKSPACE_SITE_SETTINGS_PATH(workspaceId, siteId) : SITE_SETTINGS_PATH(siteId)}
           className="editor-topbar__icon-button"
           aria-label={t('editor.topBar.openSettings')}
           title={t('editor.topBar.openSettings')}

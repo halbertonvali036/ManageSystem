@@ -1,3 +1,4 @@
+import DemoNotice from '@/components/common/DemoNotice'
 import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import AmbientParticles from '@/components/common/AmbientParticles'
@@ -37,6 +38,7 @@ function AccountLayout({ titleKey, path }) {
             <AmbientParticles variant="admin" intensity="low" />
             <div className="app-container premium-account">
               <AccountPageHeader titleKey={titleKey} path={path} />
+              <DemoNotice />
               <Outlet />
             </div>
           </main>

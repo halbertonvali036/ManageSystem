@@ -1,3 +1,4 @@
+import { getDemoSession, isDemoSession } from '@/services/demoSession'
 import DomainFoundation from '@/components/sitesettings/DomainFoundation'
 import '@/styles/site-settings.css'
 import {
@@ -49,7 +50,7 @@ import {
   SITE_TIMEZONES,
   SITE_VISIBILITIES,
 } from '@/models/siteSettings'
-import { SITE_DETAILS_PATH, SITE_EDITOR_PATH } from '@/utils/constants'
+import { SITE_DETAILS_PATH, SITE_EDITOR_PATH, WORKSPACE_SITE_DETAILS_PATH, WORKSPACE_SITE_EDITOR_PATH } from '@/utils/constants'
 
 const SECTIONS = [
   { id: 'settings-general', labelKey: 'siteSettings.nav.general' },
@@ -78,11 +79,11 @@ const SECTIONS = [
  * refuses while the backend is absent, and the live region reports the refusal.
  */
 function SiteSettingsPage() {
-  const { siteId } = useParams()
+  const { siteId, workspaceId } = useParams()
   const { t } = useTranslation()
 
   const [settings, setSettings] = useState(() =>
-    createLocalSiteSettings({ id: siteId, name: '', status: 'draft' }),
+    getDemoSession()?.settings[siteId] ?? createLocalSiteSettings({ id: siteId, name: getDemoSession()?.sites.find(site => site.id === siteId)?.name ?? '', status: 'draft' }),
   )
   const [isLoading, setIsLoading] = useState(() => siteSettingsService.isBackendConnected())
   const [hasChanges, setHasChanges] = useState(false)
@@ -90,6 +91,10 @@ function SiteSettingsPage() {
   const [activeSection, setActiveSection] = useState(SECTIONS[0].id)
   const [mediaField, setMediaField] = useState(null)
 
+  useEffect(() => {
+    const demo = getDemoSession()
+    if (demo?.sites.some(site => site.id === siteId)) demo.settings[siteId] = settings
+  }, [siteId, settings])
   const isBackendConnected = siteSettingsService.isBackendConnected()
 
   /* ---------------------------------------------------------------- *
@@ -138,11 +143,11 @@ function SiteSettingsPage() {
    * just chosen and blank the preview.
    */
   useEffect(() => {
-    revokeMediaUrlsExcept(listSettingsMediaIdsInUse(settings))
+    if (!isDemoSession()) revokeMediaUrlsExcept(listSettingsMediaIdsInUse(settings))
   }, [settings])
 
   // Nothing can keep an Object URL alive past this page.
-  useEffect(() => () => revokeAllMediaUrls(), [])
+  useEffect(() => () => { if (!isDemoSession()) revokeAllMediaUrls() }, [])
 
   /* ---------------------------------------------------------------- *
    * Editing
@@ -291,7 +296,7 @@ function SiteSettingsPage() {
       <header className="site-settings__topbar">
         <div className="site-settings__topbar-left">
           <Link
-            to={SITE_DETAILS_PATH(siteId)}
+            to={workspaceId ? WORKSPACE_SITE_DETAILS_PATH(workspaceId, siteId) : SITE_DETAILS_PATH(siteId)}
             className="editor-topbar__icon-button"
             aria-label={t('siteSettings.topBar.backToSite')}
           >
@@ -310,7 +315,7 @@ function SiteSettingsPage() {
 
         <div className="site-settings__topbar-actions">
           <Link
-            to={SITE_EDITOR_PATH(siteId)}
+            to={workspaceId ? WORKSPACE_SITE_EDITOR_PATH(workspaceId, siteId) : SITE_EDITOR_PATH(siteId)}
             className="btn btn--outline"
             aria-label={t('siteSettings.topBar.openEditor')}
           >
@@ -625,7 +630,7 @@ function SiteSettingsPage() {
               <p className="settings-note" id="site-settings-page-seo-note">
                 <Link2 size={14} aria-hidden="true" />
                 {t('siteSettings.seo.pageOverrideNote')}{' '}
-                <Link to={SITE_EDITOR_PATH(siteId)}>{t('siteSettings.seo.openEditor')}</Link>
+                <Link to={workspaceId ? WORKSPACE_SITE_EDITOR_PATH(workspaceId, siteId) : SITE_EDITOR_PATH(siteId)}>{t('siteSettings.seo.openEditor')}</Link>
               </p>
             </div>
           </SettingsCard>

@@ -1,3 +1,4 @@
+import { azRecovery, demoNotices } from '@/i18n/recoveryLocales'
 import { azAdmin } from '@/i18n/adminLocales'
 import { azAccountPolish } from '@/i18n/accountPolishLocales'
 import { azAudit } from '@/i18n/auditLocales'
@@ -12,6 +13,8 @@ import { azForms } from '@/i18n/formLocales'
  */
 
 const az = {
+  recovery: azRecovery,
+  demo: { notice: demoNotices.az },
   landingHero: {
     badge: 'AI ilə hazırlanır',
     titleLine1: 'Növ, hər bir fikir',
