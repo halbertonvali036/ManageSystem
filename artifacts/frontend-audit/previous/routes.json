@@ -1,0 +1,1100 @@
+{
+  "results": [
+    {
+      "route": "/",
+      "width": 1440,
+      "url": "/",
+      "title": "Növ, hər bir fikir\nüçün veb sayt qurun.",
+      "text": "AI ilə hazırlanır\nNöv, hər bir fikir\nüçün veb sayt qurun.\n\nAydın iş axını ilə veb sayt qurun. Layihə yaradın, şablonları fərdiləşdirin, nəticəyə baxın və hazır olduqda yayımlamağa hazır olun.\n\nBaşla\nDaxil ol\nDaxilində nə var?\nQaralama\nYayımla\nBaşlıq\nMətn\nŞəkil\nDüymə\nBölmə\nForm\nDaha çox\nSayt\nSizin ideyanız burada həyat tapır.\n\nYeni imkanları kəşf edin. Öz hekayənizi yaradın.\n\nƏtraflı\nŞablon\nSizin ideyanız burada həyat tapır.\nBölmələr\nBaş bölmə\nQalereya\nƏlaqə\nXidmətlər\nRəylər\nRedaktor\n01\nİdeya\n02\nŞablon\n03\nRedaktor\n04\nSayt\n05\nYayımla\n\nNƏ EDƏ BİLƏRSİNİZ\n\nLansana qədər ehtiyacınız olan hər şey.\n\nYaradıcılar üçün təmiz və fokuslanmış iş sahəsi.\n\n01\nBAŞLANĞIC\nYarat\n\nYeni veb sayt layihəsi başladın və işinizə uyğun başlanğıc nöqtəni seçin.\n\nHələ veb sayt layihəsi yoxdur\nBoş şablon\nYekun görünüş\n02\nŞEKİL\nFərdiləşdir\n\nSəhifələrin strukturunu, məzmununu və görünüşünü öz fikrinizə uyğun tənzimləyin.\n\nSəhifə fərdiləşdirməsi\nGörünüş\nMəzmun\n03\nBURAXMA\nYayımla\n\nİşinizi real cihaz ölçülərində baxın, layihələri tənzimləyin və hazır olduqda yayımlayın.\n\nBaxış\nYayımlama funksiyası növbəti mərhələdə hazırlanır. Layihələriniz bu vaxt da saxlanılır.\nBaşla\n\nƏSAS İMKANLAR\n\nBoş səhifədən hazır sayta qədər.",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/login",
+      "width": 1440,
+      "url": "/login",
+      "title": "Xoş gəlmisiniz",
+      "text": "SiteBuilder\nAZ\nAzərbaycanca\nEN\nEnglish\n\nTƏHLÜKƏSİZ GİRİŞ\n\nXoş gəlmisiniz\n\nHesabınızı yaratdığınız e-poçt ilə daxil olun.\n\nGoogle ilə davam et\n\nGoogle ilə giriş hələ mövcud deyil. E-poçt və şifrənizlə daxil ola bilərsiniz.\n\nQR ilə daxil ol\nMobil tətbiqdən bu brauzeri təsdiqləyin\nvə ya e-poçt ilə davam edin\nE-poçt\nŞifrə\nMəni xatırla\nŞifrəni unutmusunuz?\nDaxil ol\n\nHesabınız yoxdur? Hesab yaradın\n\nSayta qayıt",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/register",
+      "width": 1440,
+      "url": "/register",
+      "title": "Hesabınızı yaradın",
+      "text": "SiteBuilder\nAZ\nAzərbaycanca\nEN\nEnglish\n\nBAŞLANĞIC\n\nHesabınızı yaradın\n\nVeb sayt iş sahənəzə girişi tənzimləyin.\n\nGoogle ilə davam et\n\nGoogle ilə giriş hələ mövcud deyil. E-poçt və şifrənizlə daxil ola bilərsiniz.\n\nvə ya e-poçt ilə davam edin\n1\nMəlumatlarınız\n2\nTəhlükəsizlik\nAd\nSoyad\nE-poçt\n\nBu ünvan hesab bildirişləri və doğrulama üçün istifadə olunacaq.\n\nDavam et\n\nArtıq hesabınız var? Daxil ol\n\nSayta qayıt",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/forgot-password",
+      "width": 1440,
+      "url": "/forgot-password",
+      "title": "Forgot password?",
+      "text": "SiteBuilder\nAZ\nAzərbaycanca\nEN\nEnglish\n\nACCOUNT RECOVERY\n\nForgot password?\n\nNo worries — we will help you get back in.\n\nEmail\n\nWe will send recovery instructions to this address.\n\nSend recovery link\nBack to sign in\nSayta qayıt",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/reset-password",
+      "width": 1440,
+      "url": "/reset-password",
+      "title": "Reset password",
+      "text": "SiteBuilder\nAZ\nAzərbaycanca\nEN\nEnglish\n\nACCOUNT RECOVERY\n\nReset password\n\nWe could not process your request.\n\nInvalid or missing token\n\nThis password reset link is invalid or has expired. Please request a new one to continue.\n\nRequest a new link\nBack to sign in\nSayta qayıt",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/login/qr",
+      "width": 1440,
+      "url": "/login/qr",
+      "title": "Sign in with a QR code",
+      "text": "SiteBuilder\nAZ\nAzərbaycanca\nEN\nEnglish\n\nSECONDARY SİGN-İN\n\nSign in with a QR code\n\nApprove this browser from the mobile app instead of typing a password.\n\nQR sign-in is not available yet\n\nQR sign-in needs a backend-issued, single-use pairing session. Until that integration exists, no code is shown here.\n\nNot connected yet. A scannable code requires the backend to issue a short-lived, single-use pairing session and the mobile app to confirm it. No placeholder code is shown, because it could never sign anyone in.\n\nUse email and password instead\nSayta qayıt",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/auth/callback",
+      "width": 1440,
+      "url": "/auth/callback",
+      "title": "İdeyadan öz saytınıza.",
+      "text": "SiteBuilder\nAZ\nAzərbaycanca\nEN\nEnglish\n\nEXTERNAL SİGN-İN\n\nThis sign-in request could not be completed.\n\nThe request was missing or no longer valid, so it was stopped safely.\n\nWhat you can do next\n\nStart again from the sign-in page.\n\nBack to sign in\nSayta qayıt",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/session-expired",
+      "width": 1440,
+      "url": "/session-expired",
+      "title": "Session expired",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/not-found",
+      "width": 1440,
+      "url": "/not-found",
+      "title": "Səhifə tapılmadı",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/workspaces",
+      "width": 1440,
+      "url": "/workspaces",
+      "title": "My Workspaces",
+      "text": "Workspaces\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nA WORKSPACE FOR YOUR IDEAS\n\nMy Workspaces\n\nManage your websites in one place. Create a workspace, choose a template, and build your next idea.\n\nCreate Workspace\nExplore templates\n01\nWorkspaces\n\nBring your projects and team together in one place.\n\n02\nWebsites & templates\n\nChoose a template and shape each page in your style.\n\n03\nTowards launch\n\nReview your website and prepare it for publishing.\n\nAll Workspaces\n\n1 workspace(s)\n\nDemo Workspace\n\n/demo-workspace\n\nOpen",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces/new",
+      "width": 1440,
+      "url": "/workspaces/new",
+      "title": "Workspaces",
+      "text": "My Websites\n/\nWorkspaces\n\nWorkspaces\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\n…\nCreate Workspace\n\nCreate a new space to group your applications and websites.\n\nWorkspace Name\n\nThe workspace name is only visible to you and your team.\n\nURL Subdomain / Slug\n\nIdentifier used in the URL address.\n\nCreate Workspace",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace",
+      "title": "Workspaces",
+      "text": "My Websites\n/\nWorkspaces\n\nWorkspaces\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\nDemo Workspace\nOverview\nSites\nDatabase\nCapabilities\nIntegrations\nDomains\nDeployments\nTeam\nActivity\nAI assistant\nSettings\n\nWORKSPACE OVERVIEW\n\nDemo Workspace\n\n/demo-workspace\n\nCreate new site\nExplore templates\nFind a starting point for your next website.\nRecent activity\nReview changes across your workspace.\nSites & Applications\nView all sites (1)\nD\nDraft\nDemo Website · Orbit\n\n/orbit-demo\n\nLast updated:\nNot yet\n\nOpen",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {},
+        "workspace-sections__list",
+        "workspace-sections__item",
+        "workspace-sections__link"
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/settings",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/settings",
+      "title": "Settings",
+      "text": "My Websites\n/\nSettings\n\nSettings\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\nSettings\nDemo Workspace\nOverview\nSites\nDatabase\nCapabilities\nIntegrations\nDomains\nDeployments\nTeam\nActivity\nAI assistant\nSettings\nBack\nWorkspace Settings\n\nManage workspace name, identity, or delete the workspace.\n\nGeneral Information\nWorkspace Name\nURL Subdomain / Slug\nSave\nCancel\nDanger Zone\n\nDeleting a workspace may remove all sites and settings contained within it.\n\nDelete Workspace",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        "workspace-sections__list",
+        "workspace-sections__item",
+        "workspace-sections__link workspace-sections__link--active",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/sites",
+      "title": "Sites",
+      "text": "My Websites\n/\nSites\n\nSites\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\nSites\nDemo Workspace\nOverview\nSites\nDatabase\nCapabilities\nIntegrations\nDomains\nDeployments\nTeam\nActivity\nAI assistant\nSettings\nWorkspace Sites\n\nAll websites and applications belonging to this workspace.\n\nCreate Website\nSearch websites\nFilter by status\nAll statuses (1)\nDraft (1)\nPublished (0)\nUnpublished (0)\nArchived (0)\nRecent projects\n\n1 project | 1 projects\n\nD\nDraft\nDemo Website · Orbit\n\n/orbit-demo\n\nLast updated:\nNot yet\n\nOpen",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {},
+        "workspace-sections__list",
+        "workspace-sections__item",
+        "workspace-sections__link"
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites/new",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/sites/new",
+      "title": "Sites",
+      "text": "My Websites\n/\nSites\n\nSites\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\nSites\nDemo Workspace\n\nNew project\n\nCreate a website\n\nSet up your project in four steps: name, template, site theme and review.\n\n1\nProject\n2\nTemplate\n3\nSite theme\n4\nReview\nProject details\n\nChoose a project name and URL.\n\nProject name\n\nOnly you can see the project name.\n\nURL\n\nThis becomes part of your website address.\n\nCancel\nContinue",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/database",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/database",
+      "title": "Database",
+      "text": "My Websites\n/\nDatabase\n\nDatabase\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\nDatabase\nDemo Workspace\nOverview\nSites\nDatabase\nCapabilities\nIntegrations\nDomains\nDeployments\nTeam\nActivity\nAI assistant\nSettings\nDatabase\n\nDefine the models and fields for this workspace. The structure is not persisted yet.\n\nList\nSchema\nNew model\nNo models yet\n\nCreate your first model: give it a name, set a key, then add its fields.\n\nNew model",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        "workspace-sections__list",
+        "workspace-sections__item",
+        "workspace-sections__link",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/database/models/missing",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/database/models/missing",
+      "title": "Database",
+      "text": "My Websites\n/\nDatabase\n\nDatabase\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\nDatabase\nDemo Workspace\nWorkspace not found\n\nThe workspace you are looking for does not exist or could not be loaded.\n\nBack to models",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/database/models/missing/records",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/database/models/missing/records",
+      "title": "Database",
+      "text": "My Websites\n/\nDatabase\n\nDatabase\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\nDatabase\nDemo Workspace\nWorkspace not found\n\nThe model could not be read. Records will load once a backend is connected.\n\nBack to models",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/database/models/missing/records/missing",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/database/models/missing/records/missing",
+      "title": "Database",
+      "text": "My Websites\n/\nDatabase\n\nDatabase\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\nDatabase\nDemo Workspace\nWorkspace not found\n\nThe model could not be read. Records will load once a backend is connected.\n\nAll records",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/capabilities",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/capabilities",
+      "title": "Something went wrong",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/capabilities/missing",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/capabilities/missing",
+      "title": "Capabilities",
+      "text": "My Websites\n/\nCapabilities\n\nCapabilities\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\nCapabilities\nDemo Workspace\nCapability not found\n\nThis capability is not in the catalog or has not been loaded yet.\n\nBack to capabilities",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/integrations",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/integrations",
+      "title": "Something went wrong",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/integrations/missing",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/integrations/missing",
+      "title": "Integrations",
+      "text": "My Websites\n/\nIntegrations\n\nIntegrations\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\nIntegrations\nDemo Workspace\nIntegration not found\n\nThis integration is not in the catalog or has not been loaded yet.\n\nBack to integrations",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/domains",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/domains",
+      "title": "Domains",
+      "text": "My Websites\n/\nDomains\n\nDomains\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\nDomains\nDemo Workspace\nOverview\nSites\nDatabase\nCapabilities\nIntegrations\nDomains\nDeployments\nTeam\nActivity\nAI assistant\nSettings\nDomains\n\nThe names this workspace answers on: the platform subdomain and your own custom domains. Verification and SSL state are shown only when the backend reports them.\n\n0 domains\n0 connected\n0 pending verification\n0 in error\nAdd a domain\nDomain name\n\nJust the name — no scheme, no path, no trailing slash. Only the backend can confirm that you own it.\n\nAdd domain\nSearch domains\nFilter by status\nAll statuses\nNot connected\nPending verification\nConnected\nError\nFilter by type\nAll types\nPlatform subdomain\nCustom domain\nNo domains yet\n\nAdd your first custom domain with the form above. DNS records appear only once the backend has set them.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        "workspace-sections__list",
+        "workspace-sections__item",
+        "workspace-sections__link",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/domains/missing",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/domains/missing",
+      "title": "Domains",
+      "text": "My Websites\n/\nDomains\n\nDomains\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nOverview\nSites\nDatabase\nCapabilities\nIntegrations\nDomains\nDeployments\nTeam\nActivity\nAI assistant\nSettings\nDomain not found\n\nThis domain has not been loaded yet or no longer exists.\n\nBack to domains",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        "workspace-sections__list",
+        "workspace-sections__item",
+        "workspace-sections__link",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/deployments",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/deployments",
+      "title": "Deployments",
+      "text": "My Websites\n/\nDeployments\n\nDeployments\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\nDeployments\nDemo Workspace\nOverview\nSites\nDatabase\nCapabilities\nIntegrations\nDomains\nDeployments\nTeam\nActivity\nAI assistant\nSettings\nDeployments\n\nThe publish history for every site in this workspace. A deployment appears here only once the backend has recorded it.\n\n0 deployments\n0 live\n0 failed\nCurrently live\n\nNothing is live yet. No deployment has been designated by the backend.\n\nSite\nChoose a site\n\nThere is no site to deploy. Sites come from the backend and none of them are invented.\n\nDeploy\nSearch deployments\nFilter by status\nAll statuses\nDraft\nQueued\nBuilding\nLive\nFailed\nStopped\nNo deployments yet\n\nNothing has been published for this workspace. No sample \"live\" record is seeded anywhere, because a fabricated deployment is indistinguishable from a real one.\n\nworkspaceDeployments.deployHint",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        "workspace-sections__list",
+        "workspace-sections__item",
+        "workspace-sections__link",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/deployments/missing",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/deployments/missing",
+      "title": "Deployments",
+      "text": "My Websites\n/\nDeployments\n\nDeployments\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nOverview\nSites\nDatabase\nCapabilities\nIntegrations\nDomains\nDeployments\nTeam\nActivity\nAI assistant\nSettings\nDeployment not found\n\nThis deployment has not been loaded yet or no longer exists.\n\nBack to deployments",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        "workspace-sections__list",
+        "workspace-sections__item",
+        "workspace-sections__link",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/members",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/members",
+      "title": "Team",
+      "text": "My Websites\n/\nTeam\n\nTeam\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\nTeam\nDemo Workspace\nOverview\nSites\nDatabase\nCapabilities\nIntegrations\nDomains\nDeployments\nTeam\nActivity\nAI assistant\nSettings\nMembers\n\nThe people in this workspace and the role each of them holds. Changing a role, sending an invitation and removing a member are all confirmed by the backend.\n\n0 member(s)\n0 active\n0 awaiting invitation\nInvite\n\nThis page only shows records the backend has sent. Permissions are hidden here, but every action is checked again on the server.\n\nSearch members\nFilter by role\nAll roles\nOwner\nAdmin\nEditor\nViewer\nFilter by status\nAll statuses\nInvitation pending\nActive\nSuspended\nNo members yet\n\nThe backend has not recorded a member for this workspace yet. No sample member is shown: a made-up name next to a permissions table reads as a real colleague.\n\nInvite\nRoles and permissions\n\nWhich actions each role may perform in this workspace. This table is read-only — changing what a role may do is a backend decision.\n\nOwner\n8/8\nAdmin\n7/8\nEditor\n2/8\nViewer\n0/8\nWorkspace action permissions per role\nACTION\tO",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {},
+        "workspace-sections__list",
+        "workspace-sections__item",
+        "workspace-sections__link"
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/activity",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/activity",
+      "title": "Activity",
+      "text": "My Websites\n/\nActivity\n\nActivity\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\nActivity\nDemo Workspace\nOverview\nSites\nDatabase\nCapabilities\nIntegrations\nDomains\nDeployments\nTeam\nActivity\nAI assistant\nSettings\nActivity\n\nThe record of operations in this workspace, usage figures, and plan limits.\n\nThis page is read-only and shows only records supplied by the backend. Nothing here can be added to the log — an entry exists only after an operation happens on the server.\n\nUsage\n\nCurrent consumption against the plan limits. A metric that has not been measured is not shown as zero — an unmeasured metric is not a metric of zero.\n\nWebsites\n\n—\n\nNo data\n\nStorage\n\n—\n\nNo data\n\nDatabase records\n\n—\n\nNo data\n\nMembers\n\n—\n\nNo data\n\nDeployments\n\n—\n\nNo data\n\nBandwidth\n\n—\n\nNot counted yet\n\nAPI requests\n\n—\n\nNot counted yet\n\nLimits\n\nThe ceiling for each measure in your plan. A percentage appears only when both the usage and the limit are real numbers.\n\nPlan limits are not available\n\nPlan figures come from the backend. Nothing has been measured yet, so no percentage or ratio is shown.\n\nEvents\n\nThe records that ha",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {},
+        "workspace-sections__list",
+        "workspace-sections__item",
+        "workspace-sections__link"
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/ai",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/ai",
+      "title": "AI assistant",
+      "text": "My Websites\n/\nAI assistant\n\nAI assistant\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\nAI assistant\nDemo Workspace\nOverview\nSites\nDatabase\nCapabilities\nIntegrations\nDomains\nDeployments\nTeam\nActivity\nAI assistant\nSettings\nAI assistant\n\nTalk to the AI to write and change your sites and apps. Anything the AI proposes is applied only after you approve it.\n\nThe AI assistant is not connected to a backend yet. No message is sent and no reply is shown — everything in this panel is your own text until it is.\n\nCONVERSATION HISTORY\nNew conversation\n\nThe history will be available once the backend is connected.\n\nAI assistant\nNot connected\n\nDemo Workspace · No site selected · No page selected\n\nThe AI assistant is not connected yet\n\nThe assistant is provided by the backend, so it cannot reply at the moment. No reply is being shown.\n\nAsk\nDescribe what you want to build, in plain words.\nReview\nThe AI proposes a change first, with its risk and details.\nApprove\nApply the ones you like and reject the rest.\n\nEXAMPLE PROMPTS\n\nThese are examples — nothing is executed yet.\n\nCREATE PAGE\nCreate a landing page for",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {},
+        "workspace-sections__list",
+        "workspace-sections__item",
+        "workspace-sections__link"
+      ]
+    },
+    {
+      "route": "/templates",
+      "width": 1440,
+      "url": "/templates",
+      "title": "Templates",
+      "text": "My Websites\n/\nTemplates\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nYour next website starts here\n\nTemplates\n\nPick a starting point for your website.\n\nCreate Website\nAll\nBasic\nBusiness\nPersonal\nMarketing\n\n4 templates\n\nBASIC\n\nBlank\n\nAn empty project to start from scratch.\n\n1 pages\n0 sections\nPreview structure\nStart with this template\n\nBUSINESS\n\nBusiness\n\nFor a service business: hero, features, a call to action and a contact page.\n\n2 pages\n6 sections\nPreview structure\nStart with this template\n\nPERSONAL\n\nPortfolio\n\nFor presenting your work with text and image sections side by side.\n\n2 pages\n6 sections\nPreview structure\nStart with this template\n\nMARKETING\n\nLanding page\n\nA single-page introduction: hero, features, social proof and contact.\n\n1 pages\n6 sections\nPreview structure\nStart with this template\n\nA template gives a new project its starting structure. Each one is finished off in the editor — none of them is a published website.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {}
+      ]
+    },
+    {
+      "route": "/sites/new",
+      "width": 1440,
+      "url": "/sites/new",
+      "title": "Create a website",
+      "text": "My Websites\n/\n/sites/new\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nNew project\n\nCreate a website\n\nSet up your project in four steps: name, template, site theme and review.\n\n1\nProject\n2\nTemplate\n3\nSite theme\n4\nReview\nProject details\n\nChoose a project name and URL.\n\nProject name\n\nOnly you can see the project name.\n\nURL\n\nThis becomes part of your website address.\n\nCancel\nContinue",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites/demo-website",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/sites/demo-website",
+      "title": "Sites",
+      "text": "My Websites\n/\nSites\n\nSites\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nBack to My Websites\nDemo Website · Orbit\n\n/orbit-demo\n\nDraft\nPublish\nUnpublish\nEdit Website\nSettings\nPreview\nProject overview\nStatus\nDraft\nAddress\n/orbit-demo\nTemplate\nBusiness\nSite theme\nAurora\nCreated\nNot yet\nLast updated\nNot yet\nWhat comes next\n\nThe page editor, preview and publishing arrive in a later phase. The actions above stay disabled until then.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites/demo-website/editor",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/sites/demo-website/editor",
+      "title": "Something went wrong",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites/demo-website/settings",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/sites/demo-website/settings",
+      "title": "Site settings",
+      "text": "Demo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nSite settings\n\nLocal draft\n\nOpen editor\nSave\n\nThere is no backend yet, so changes on this page stay in this tab and are lost when you reload. Nothing is saved and nothing is published.\n\nGeneral\nIdentity and media\nSEO\nSocial preview\nBranding\nDomain\nPrivacy and indexing\nGeneral\n\nThe name and description of the site. These appear on the site itself and are reused by the settings around it.\n\nSite name\n\nThe name shown in headings and in the browser tab.\n\nDescription\n\nA short description of the site. If left blank, the brand description is used.\n\nDefault language\nAzerbaijani\nEnglish\nRussian\nTime zone\nNot set\nBaku (Europe/Baku)\nIstanbul (Europe/Istanbul)\nMoscow (Europe/Moscow)\nUTC\n\nUsed for date and time display. It can be left unset.\n\nStatus\nDraft\nPublished\nUnpublished\nArchived\n\nPublishing integration is pending. This action requires a backend.\n\nIdentity and media\n\nBrand name, logo and favicon. This is the site’s own identity, stored separately from the theme settings.\n\nBrand name\n\nSet this if the brand should read differently from the site name.\n\nShort brand ",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/account",
+      "width": 1440,
+      "url": "/account",
+      "title": "Account",
+      "text": "My Websites\n/\nAccount\n\nAccount\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nProfile, security, billing, support and notifications.\n\nmember@demo.com\n\nProfile\nYour name, email and account details.\nSecurity\nPassword change, sessions and sign-in methods.\nPlan & billing\nYour current plan and invoices.\nSupport\nAsk the account team a question or report a problem.\nNotifications\nNotifications and your channel preferences.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/account/profile",
+      "width": 1440,
+      "url": "/account/profile",
+      "title": "Profile",
+      "text": "My Websites\n/\nProfile\n\nProfile\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nYour account details.\n\nDM\n\nDemo Member\n\nmember@demo.com\n\nWebsite builder\nStatus unavailable\nPersonal information\nName\nDemo Member\nEmail\nmember@demo.com\nAccount ID\ndemo-member\nMember since\nNot set\nLast sign-in\nNot set\nAccount details\nRead only\nRole\nWebsite builder\nAccount status\nNot set\nLanguage\nEnglish\n\nEditing these details becomes available once the account API is connected.\n\nYour account\nAccount & security\nReview your password, sign-in methods and devices.\nPlan & billing\nReview your plan, payment methods and invoices.\nSupport\nAsk the account team a question or report a problem.\nNotifications\nRead what the platform has told you so far.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/security",
+      "width": 1440,
+      "url": "/security",
+      "title": "Account & security",
+      "text": "My Websites\n/\nAccount & security\n\nAccount & security\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nReview your account details, update your password, check where this account is signed in, and manage notification preferences.\n\nACCOUNT\n\nAccount summary\n\nThe identity and account state this session is signed in with.\n\nDemo Member\n\nmember@demo.com\n\nROLE\nAccount\nACCOUNT STATUS\nUnavailable\nEMAIL VERIFICATION\nUnavailable\nLAST SIGN-IN\nUnavailable\n\nOnly the backend can report account state for this session. Nothing on this summary is inferred or cached in the browser.\n\nSIGN-IN METHODS\n\nConnected accounts\n\nUse Google to sign in to the account you are already signed in to.\n\nGoogle\n\nNot connected. Link Google so you can sign in with either method.\n\nYou will confirm the connection on Google, and only the backend can attach it to this account.\n\nConnect Google\n\nNot available yet. Linking is a backend operation. The connect and remove actions stay disabled until the backend can confirm who you are and which Google address belongs to this account — nothing is linked from this page.\n\nGoogle access tokens are never s",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {}
+      ]
+    },
+    {
+      "route": "/billing",
+      "width": 1440,
+      "url": "/billing",
+      "title": "Plan & billing",
+      "text": "My Websites\n/\nPlan & billing\n\nPlan & billing\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nReview the plan on your account, how it renews, and every invoice issued to you.\n\nCURRENT PLAN\n\nNo plan details yet\n\nYour plan, billing cycle and renewal date appear here once the billing backend is connected.\n\nStatus unavailable\nPLAN\nUnavailable\nReported by the backend\nBILLING STATUS\nStatus unavailable\nBILLING CYCLE\nBilling cycle not set\nNEXT RENEWAL\nUnavailable\nNo renewal date reported\nPRICE\nUnavailable\nNo amount reported by the backend\n\nPLAN CHANGES\n\nChange plan\nManage subscription\n\nUpgrades, downgrades and cancellations are handled in the secure billing portal. Nothing is charged from this page.\n\nIntegration pending. Subscription management becomes available once the billing backend and payment provider are connected. No plan, renewal or charge is assumed in the meantime.\n\nPLAN OPTIONS\n\nCompare plans\n\nPlan structure for this workspace. Pricing and checkout are published by the backend.\n\nBILLING CYCLE\nMonthly\nYearly\n\nFrontend configuration. This catalogue is placeholder configuration used to lay out the pa",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {}
+      ]
+    },
+    {
+      "route": "/notifications",
+      "width": 1440,
+      "url": "/notifications",
+      "title": "Notifications",
+      "text": "My Websites\n/\nNotifications\n\nNotifications\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWebsite, publishing, domain and account updates for this account. Read state is stored by the backend.\n\nAll\nUnread\nMark all as read\nRefresh\nAll categories\nWebsite\nPublishing\nDomain\nSystem\nAccount & Security\nBilling\n\nYou are all caught up.\n\nWebsite, publishing, domain and account updates appear here.\n\nDelivery preferences, including email notifications, are managed on your account page: notification preferences.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/support",
+      "width": 1440,
+      "url": "/support",
+      "title": "Support",
+      "text": "My Websites\n/\nSupport\n\nSupport\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nTell the account team what is wrong and they will pick it up from here.\n\nHELP\n\nSupport & contact\n\nTell us what is wrong and the account team can pick it up from here.\n\nSending is not connected yet. No support service is attached to this account, so nothing can be delivered from here. Your message stays in this form and is not stored, emailed or queued — nothing is submitted until the service exists.\n\nWhat is this about?\nChoose a category\nAccount — Sign-in, password, verification, connected accounts or sessions.\nWebsite — Editor, preview, publishing or domain access.\nBilling — Plan, invoice or payment questions for this account.\nTechnical issue — Something behaves incorrectly, loads slowly or fails to load.\nOther — Anything that does not fit the categories above.\nSubject\nMessage\nSend request\nSent with your signed-in account. We do not ask for your password.\nBefore you write\nAccount & security\nReview your password, sign-in methods and devices.\nPlan & billing\nReview your plan, payment methods and invoices.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/admin",
+      "width": 1440,
+      "url": "/workspaces",
+      "title": "My Workspaces",
+      "text": "Workspaces\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nA WORKSPACE FOR YOUR IDEAS\n\nMy Workspaces\n\nManage your websites in one place. Create a workspace, choose a template, and build your next idea.\n\nCreate Workspace\nExplore templates\n01\nWorkspaces\n\nBring your projects and team together in one place.\n\n02\nWebsites & templates\n\nChoose a template and shape each page in your style.\n\n03\nTowards launch\n\nReview your website and prepare it for publishing.\n\nAll Workspaces\n\n1 workspace(s)\n\nDemo Workspace\n\n/demo-workspace\n\nOpen",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces",
+      "width": 1920,
+      "url": "/workspaces",
+      "title": "My Workspaces",
+      "text": "Workspaces\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nA WORKSPACE FOR YOUR IDEAS\n\nMy Workspaces\n\nManage your websites in one place. Create a workspace, choose a template, and build your next idea.\n\nCreate Workspace\nExplore templates\n01\nWorkspaces\n\nBring your projects and team together in one place.\n\n02\nWebsites & templates\n\nChoose a template and shape each page in your style.\n\n03\nTowards launch\n\nReview your website and prepare it for publishing.\n\nAll Workspaces\n\n1 workspace(s)\n\nDemo Workspace\n\n/demo-workspace\n\nOpen",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites/demo-website/editor",
+      "width": 1920,
+      "url": "/workspaces/demo-workspace/sites/demo-website/editor",
+      "title": "Something went wrong",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/ai",
+      "width": 1920,
+      "url": "/workspaces/demo-workspace/ai",
+      "title": "AI assistant",
+      "text": "My Websites\n/\nAI assistant\n\nAI assistant\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\nAI assistant\nDemo Workspace\nOverview\nSites\nDatabase\nCapabilities\nIntegrations\nDomains\nDeployments\nTeam\nActivity\nAI assistant\nSettings\nAI assistant\n\nTalk to the AI to write and change your sites and apps. Anything the AI proposes is applied only after you approve it.\n\nThe AI assistant is not connected to a backend yet. No message is sent and no reply is shown — everything in this panel is your own text until it is.\n\nCONVERSATION HISTORY\nNew conversation\n\nThe history will be available once the backend is connected.\n\nAI assistant\nNot connected\n\nDemo Workspace · No site selected · No page selected\n\nThe AI assistant is not connected yet\n\nThe assistant is provided by the backend, so it cannot reply at the moment. No reply is being shown.\n\nAsk\nDescribe what you want to build, in plain words.\nReview\nThe AI proposes a change first, with its risk and details.\nApprove\nApply the ones you like and reject the rest.\n\nEXAMPLE PROMPTS\n\nThese are examples — nothing is executed yet.\n\nCREATE PAGE\nCreate a landing page for",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {}
+      ]
+    },
+    {
+      "route": "/billing",
+      "width": 1920,
+      "url": "/billing",
+      "title": "Plan & billing",
+      "text": "My Websites\n/\nPlan & billing\n\nPlan & billing\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nReview the plan on your account, how it renews, and every invoice issued to you.\n\nCURRENT PLAN\n\nNo plan details yet\n\nYour plan, billing cycle and renewal date appear here once the billing backend is connected.\n\nStatus unavailable\nPLAN\nUnavailable\nReported by the backend\nBILLING STATUS\nStatus unavailable\nBILLING CYCLE\nBilling cycle not set\nNEXT RENEWAL\nUnavailable\nNo renewal date reported\nPRICE\nUnavailable\nNo amount reported by the backend\n\nPLAN CHANGES\n\nChange plan\nManage subscription\n\nUpgrades, downgrades and cancellations are handled in the secure billing portal. Nothing is charged from this page.\n\nIntegration pending. Subscription management becomes available once the billing backend and payment provider are connected. No plan, renewal or charge is assumed in the meantime.\n\nPLAN OPTIONS\n\nCompare plans\n\nPlan structure for this workspace. Pricing and checkout are published by the backend.\n\nBILLING CYCLE\nMonthly\nYearly\n\nFrontend configuration. This catalogue is placeholder configuration used to lay out the pa",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {}
+      ]
+    },
+    {
+      "route": "/account/profile",
+      "width": 1920,
+      "url": "/account/profile",
+      "title": "Profile",
+      "text": "My Websites\n/\nProfile\n\nProfile\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nYour account details.\n\nDM\n\nDemo Member\n\nmember@demo.com\n\nWebsite builder\nStatus unavailable\nPersonal information\nName\nDemo Member\nEmail\nmember@demo.com\nAccount ID\ndemo-member\nMember since\nNot set\nLast sign-in\nNot set\nAccount details\nRead only\nRole\nWebsite builder\nAccount status\nNot set\nLanguage\nEnglish\n\nEditing these details becomes available once the account API is connected.\n\nYour account\nAccount & security\nReview your password, sign-in methods and devices.\nPlan & billing\nReview your plan, payment methods and invoices.\nSupport\nAsk the account team a question or report a problem.\nNotifications\nRead what the platform has told you so far.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/templates",
+      "width": 1920,
+      "url": "/templates",
+      "title": "Templates",
+      "text": "My Websites\n/\nTemplates\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nYour next website starts here\n\nTemplates\n\nPick a starting point for your website.\n\nCreate Website\nAll\nBasic\nBusiness\nPersonal\nMarketing\n\n4 templates\n\nBASIC\n\nBlank\n\nAn empty project to start from scratch.\n\n1 pages\n0 sections\nPreview structure\nStart with this template\n\nBUSINESS\n\nBusiness\n\nFor a service business: hero, features, a call to action and a contact page.\n\n2 pages\n6 sections\nPreview structure\nStart with this template\n\nPERSONAL\n\nPortfolio\n\nFor presenting your work with text and image sections side by side.\n\n2 pages\n6 sections\nPreview structure\nStart with this template\n\nMARKETING\n\nLanding page\n\nA single-page introduction: hero, features, social proof and contact.\n\n1 pages\n6 sections\nPreview structure\nStart with this template\n\nA template gives a new project its starting structure. Each one is finished off in the editor — none of them is a published website.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces",
+      "width": 834,
+      "url": "/workspaces",
+      "title": "My Workspaces",
+      "text": "Workspaces\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nA WORKSPACE FOR YOUR IDEAS\n\nMy Workspaces\n\nManage your websites in one place. Create a workspace, choose a template, and build your next idea.\n\nCreate Workspace\nExplore templates\n01\nWorkspaces\n\nBring your projects and team together in one place.\n\n02\nWebsites & templates\n\nChoose a template and shape each page in your style.\n\n03\nTowards launch\n\nReview your website and prepare it for publishing.\n\nAll Workspaces\n\n1 workspace(s)\n\nDemo Workspace\n\n/demo-workspace\n\nOpen",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites/demo-website/editor",
+      "width": 834,
+      "url": "/workspaces/demo-workspace/sites/demo-website/editor",
+      "title": "Something went wrong",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/ai",
+      "width": 834,
+      "url": "/workspaces/demo-workspace/ai",
+      "title": "AI assistant",
+      "text": "My Websites\n/\nAI assistant\n\nAI assistant\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\nAI assistant\nDemo Workspace\nOverview\nSites\nDatabase\nCapabilities\nIntegrations\nDomains\nDeployments\nTeam\nActivity\nAI assistant\nSettings\nAI assistant\n\nTalk to the AI to write and change your sites and apps. Anything the AI proposes is applied only after you approve it.\n\nThe AI assistant is not connected to a backend yet. No message is sent and no reply is shown — everything in this panel is your own text until it is.\n\nCONVERSATION HISTORY\nNew conversation\n\nThe history will be available once the backend is connected.\n\nAI assistant\nNot connected\n\nDemo Workspace · No site selected · No page selected\n\nHistory\nChanges\nThe AI assistant is not connected yet\n\nThe assistant is provided by the backend, so it cannot reply at the moment. No reply is being shown.\n\nAsk\nDescribe what you want to build, in plain words.\nReview\nThe AI proposes a change first, with its risk and details.\nApprove\nApply the ones you like and reject the rest.\n\nEXAMPLE PROMPTS\n\nThese are examples — nothing is executed yet.\n\nCREATE PAGE\nCreate a ",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {},
+        "workspace-sections__list",
+        "workspace-sections__item",
+        "workspace-sections__link"
+      ]
+    },
+    {
+      "route": "/billing",
+      "width": 834,
+      "url": "/billing",
+      "title": "Plan & billing",
+      "text": "My Websites\n/\nPlan & billing\n\nPlan & billing\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nReview the plan on your account, how it renews, and every invoice issued to you.\n\nCURRENT PLAN\n\nNo plan details yet\n\nYour plan, billing cycle and renewal date appear here once the billing backend is connected.\n\nStatus unavailable\nPLAN\nUnavailable\nReported by the backend\nBILLING STATUS\nStatus unavailable\nBILLING CYCLE\nBilling cycle not set\nNEXT RENEWAL\nUnavailable\nNo renewal date reported\nPRICE\nUnavailable\nNo amount reported by the backend\n\nPLAN CHANGES\n\nChange plan\nManage subscription\n\nUpgrades, downgrades and cancellations are handled in the secure billing portal. Nothing is charged from this page.\n\nIntegration pending. Subscription management becomes available once the billing backend and payment provider are connected. No plan, renewal or charge is assumed in the meantime.\n\nPLAN OPTIONS\n\nCompare plans\n\nPlan structure for this workspace. Pricing and checkout are published by the backend.\n\nBILLING CYCLE\nMonthly\nYearly\n\nFrontend configuration. This catalogue is placeholder configuration used to lay out the pa",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {}
+      ]
+    },
+    {
+      "route": "/account/profile",
+      "width": 834,
+      "url": "/account/profile",
+      "title": "Profile",
+      "text": "My Websites\n/\nProfile\n\nProfile\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nYour account details.\n\nDM\n\nDemo Member\n\nmember@demo.com\n\nWebsite builder\nStatus unavailable\nPersonal information\nName\nDemo Member\nEmail\nmember@demo.com\nAccount ID\ndemo-member\nMember since\nNot set\nLast sign-in\nNot set\nAccount details\nRead only\nRole\nWebsite builder\nAccount status\nNot set\nLanguage\nEnglish\n\nEditing these details becomes available once the account API is connected.\n\nYour account\nAccount & security\nReview your password, sign-in methods and devices.\nPlan & billing\nReview your plan, payment methods and invoices.\nSupport\nAsk the account team a question or report a problem.\nNotifications\nRead what the platform has told you so far.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {}
+      ]
+    },
+    {
+      "route": "/templates",
+      "width": 834,
+      "url": "/templates",
+      "title": "Templates",
+      "text": "My Websites\n/\nTemplates\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nYour next website starts here\n\nTemplates\n\nPick a starting point for your website.\n\nCreate Website\nAll\nBasic\nBusiness\nPersonal\nMarketing\n\n4 templates\n\nBASIC\n\nBlank\n\nAn empty project to start from scratch.\n\n1 pages\n0 sections\nPreview structure\nStart with this template\n\nBUSINESS\n\nBusiness\n\nFor a service business: hero, features, a call to action and a contact page.\n\n2 pages\n6 sections\nPreview structure\nStart with this template\n\nPERSONAL\n\nPortfolio\n\nFor presenting your work with text and image sections side by side.\n\n2 pages\n6 sections\nPreview structure\nStart with this template\n\nMARKETING\n\nLanding page\n\nA single-page introduction: hero, features, social proof and contact.\n\n1 pages\n6 sections\nPreview structure\nStart with this template\n\nA template gives a new project its starting structure. Each one is finished off in the editor — none of them is a published website.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {}
+      ]
+    },
+    {
+      "route": "/workspaces",
+      "width": 390,
+      "url": "/workspaces",
+      "title": "My Workspaces",
+      "text": "Workspaces\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nA WORKSPACE FOR YOUR IDEAS\n\nMy Workspaces\n\nManage your websites in one place. Create a workspace, choose a template, and build your next idea.\n\nCreate Workspace\nExplore templates\nWorkspaces\n\nBring your projects and team together in one place.\n\nWebsites & templates\n\nChoose a template and shape each page in your style.\n\nTowards launch\n\nReview your website and prepare it for publishing.\n\nAll Workspaces\n\n1 workspace(s)\n\nDemo Workspace\n\n/demo-workspace\n\nOpen",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field"
+      ]
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites/demo-website/editor",
+      "width": 390,
+      "url": "/workspaces/demo-workspace/sites/demo-website/editor",
+      "title": "Something went wrong",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/ai",
+      "width": 390,
+      "url": "/workspaces/demo-workspace/ai",
+      "title": "AI assistant",
+      "text": "My Websites\n/\nAI assistant\n\nAI assistant\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWorkspaces\nAI assistant\nDemo Workspace\nOverview\nSites\nDatabase\nCapabilities\nIntegrations\nDomains\nDeployments\nTeam\nActivity\nAI assistant\nSettings\nAI assistant\n\nTalk to the AI to write and change your sites and apps. Anything the AI proposes is applied only after you approve it.\n\nThe AI assistant is not connected to a backend yet. No message is sent and no reply is shown — everything in this panel is your own text until it is.\n\nCONVERSATION HISTORY\nNew conversation\n\nThe history will be available once the backend is connected.\n\nAI assistant\nNot connected\n\nDemo Workspace · No site selected · No page selected\n\nThe AI assistant is not connected yet\n\nThe assistant is provided by the backend, so it cannot reply at the moment. No reply is being shown.\n\nAsk\nDescribe what you want to build, in plain words.\nReview\nThe AI proposes a change first, with its risk and details.\nApprove\nApply the ones you like and reject the rest.\n\nEXAMPLE PROMPTS\n\nThese are examples — nothing is executed yet.\n\nCREATE PAGE\nCreate a landing page for",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        "workspace-sections__list",
+        "workspace-sections__item",
+        "workspace-sections__link",
+        "workspace-sections__item",
+        "workspace-sections__link"
+      ]
+    },
+    {
+      "route": "/billing",
+      "width": 390,
+      "url": "/billing",
+      "title": "Plan & billing",
+      "text": "My Websites\n/\nPlan & billing\n\nPlan & billing\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nReview the plan on your account, how it renews, and every invoice issued to you.\n\nCURRENT PLAN\n\nNo plan details yet\n\nYour plan, billing cycle and renewal date appear here once the billing backend is connected.\n\nStatus unavailable\nPLAN\nUnavailable\nReported by the backend\nBILLING STATUS\nStatus unavailable\nBILLING CYCLE\nBilling cycle not set\nNEXT RENEWAL\nUnavailable\nNo renewal date reported\nPRICE\nUnavailable\nNo amount reported by the backend\n\nPLAN CHANGES\n\nChange plan\nManage subscription\n\nUpgrades, downgrades and cancellations are handled in the secure billing portal. Nothing is charged from this page.\n\nIntegration pending. Subscription management becomes available once the billing backend and payment provider are connected. No plan, renewal or charge is assumed in the meantime.\n\nPLAN OPTIONS\n\nCompare plans\n\nPlan structure for this workspace. Pricing and checkout are published by the backend.\n\nBILLING CYCLE\nMonthly\nYearly\n\nFrontend configuration. This catalogue is placeholder configuration used to lay out the pa",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field"
+      ]
+    },
+    {
+      "route": "/account/profile",
+      "width": 390,
+      "url": "/account/profile",
+      "title": "Profile",
+      "text": "My Websites\n/\nProfile\n\nProfile\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nYour account details.\n\nDM\n\nDemo Member\n\nmember@demo.com\n\nWebsite builder\nStatus unavailable\nPersonal information\nName\nDemo Member\nEmail\nmember@demo.com\nAccount ID\ndemo-member\nMember since\nNot set\nLast sign-in\nNot set\nAccount details\nRead only\nRole\nWebsite builder\nAccount status\nNot set\nLanguage\nEnglish\n\nEditing these details becomes available once the account API is connected.\n\nYour account\nAccount & security\nReview your password, sign-in methods and devices.\nPlan & billing\nReview your plan, payment methods and invoices.\nSupport\nAsk the account team a question or report a problem.\nNotifications\nRead what the platform has told you so far.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field"
+      ]
+    },
+    {
+      "route": "/templates",
+      "width": 390,
+      "url": "/templates",
+      "title": "Templates",
+      "text": "My Websites\n/\nTemplates\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nYour next website starts here\n\nTemplates\n\nPick a starting point for your website.\n\nCreate Website\nAll\nBasic\nBusiness\nPersonal\nMarketing\n\n4 templates\n\nBASIC\n\nBlank\n\nAn empty project to start from scratch.\n\n1 pages\n0 sections\nPreview structure\nStart with this template\n\nBUSINESS\n\nBusiness\n\nFor a service business: hero, features, a call to action and a contact page.\n\n2 pages\n6 sections\nPreview structure\nStart with this template\n\nPERSONAL\n\nPortfolio\n\nFor presenting your work with text and image sections side by side.\n\n2 pages\n6 sections\nPreview structure\nStart with this template\n\nMARKETING\n\nLanding page\n\nA single-page introduction: hero, features, social proof and contact.\n\n1 pages\n6 sections\nPreview structure\nStart with this template\n\nA template gives a new project its starting structure. Each one is finished off in the editor — none of them is a published website.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field"
+      ]
+    },
+    {
+      "route": "/admin",
+      "width": 1440,
+      "url": "/admin",
+      "title": "Overview",
+      "text": "Overview\n\nOverview\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nPLATFORM ADMINISTRATION\n\nYour platform at a glance\n\nAn overview of platform users, websites and services. Metrics come only from real service data.\n\nView audit\nUsers\nWebsites\nTemplates\nDomains\nPlans & Billing\nSupport\nNotifications\nAudit\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.\n\nTotal users\n—\nData unavailable\nTotal websites\n—\nData unavailable\nPublished sites\n—\nData unavailable\nDrafts\n—\nData unavailable\nSubscriptions\n—\nData unavailable\nDomains\n—\nData unavailable\nSupport requests\n—\nData unavailable\nRecent platform activity\nView audit\nAudit\nAction\tActor\tTarget\tDate\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/admin/users",
+      "width": 1440,
+      "url": "/admin/users",
+      "title": "Users",
+      "text": "Overview\n/\nUsers\n\nUsers\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nReview platform accounts by name, email, role and status. Account management depends on server authorization.\n\nSearch name or email\nRole\nAll roles\nUser\nAdministrator\nStatus\nAll statuses\nActive\nInactive\nUsers\nName\tEmail\tRole\tStatus\tLast sign-in\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.\n\nAccount and access management\n\nServer authorization rules must be agreed before changing roles, status or access. Account changes are currently unavailable.\n\nManage role\nManage status\nManage access",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/admin/websites",
+      "width": 1440,
+      "url": "/admin/websites",
+      "title": "Websites",
+      "text": "Overview\n/\nWebsites\n\nWebsites\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nWebsites across all users: ownership, draft and publishing status, last update and domain.\n\nWebsites\nName\tOwner\tStatus\tLast updated\tPublished at\tDomain\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/admin/templates",
+      "width": 1440,
+      "url": "/admin/templates",
+      "title": "Templates",
+      "text": "Overview\n/\nTemplates\n\nTemplates\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nPlatform template catalogue and management foundation. Packaged starter templates are shown separately.\n\nTemplates\nName\tCategory\tStatus\tLast updated\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.\n\nPackaged starter templates\n\nThese are the existing starter templates used by the editor, not a server catalogue or publication status.\n\nBlank\n\nAn empty project to start from scratch.\n\nFrontend configuration\nBusiness\n\nFor a service business: hero, features, a call to action and a contact page.\n\nFrontend configuration\nPortfolio\n\nFor presenting your work with text and image sections side by side.\n\nFrontend configuration\nLanding page\n\nA single-page introduction: hero, features, social proof and contact.\n\nFrontend configuration\nCreate template\nEdit template\nEnable\nDisable\n\nSaving changes and authorizing access require a backend contract. These actions are currently unavailable.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/admin/billing",
+      "width": 1440,
+      "url": "/admin/billing",
+      "title": "Plans & Billing",
+      "text": "Overview\n/\nPlans & Billing\n\nPlans & Billing\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nSubscriptions, plans and billing cycles. Payment processing and revenue reporting are not available yet.\n\nPlans & Billing\nOwner\tPlan\tStatus\tBilling cycle\tLast updated\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.\n\nPlan architecture\n\nThe existing plan structure comes from frontend configuration. These are not saleable offers or actual subscriptions.\n\nStarter\n\nPricing and billing cycle are not approved. Payments are not accepted.\n\nFrontend configuration\nPro\n\nPricing and billing cycle are not approved. Payments are not accepted.\n\nFrontend configuration\nAgency\n\nPricing and billing cycle are not approved. Payments are not accepted.\n\nFrontend configuration",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/admin/domains",
+      "width": 1440,
+      "url": "/admin/domains",
+      "title": "Domains",
+      "text": "Overview\n/\nDomains\n\nDomains\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nDomain ownership, linked websites, verification and SSL status. DNS and SSL operations require service integration.\n\nDomains\nDomain\tOwner\tWebsite\tStatus\tVerification\tSSL\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/admin/notifications",
+      "width": 1440,
+      "url": "/admin/notifications",
+      "title": "Notifications",
+      "text": "Overview\n/\nNotifications\n\nNotifications\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nPlatform and system notifications: audience, type and delivery status.\n\nNotifications\nTitle\tType\tAudience\tStatus\tDate\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/admin/support",
+      "width": 1440,
+      "url": "/admin/support",
+      "title": "Support",
+      "text": "Overview\n/\nSupport\n\nSupport\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nUser support requests and resolution status. Requests will appear once the service is connected.\n\nSupport\nSubject\tOwner\tStatus\tLast updated\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/admin/audit",
+      "width": 1440,
+      "url": "/admin/audit",
+      "title": "Audit",
+      "text": "Overview\n/\nAudit\n\nAudit\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nPlatform events for sign-in, site creation, publishing, billing and security changes.\n\nAudit\nAction\tActor\tTarget\tDate\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/admin/settings",
+      "width": 1440,
+      "url": "/admin/settings",
+      "title": "Platform Settings",
+      "text": "Overview\n/\nPlatform Settings\n\nPlatform Settings\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nBack\n\nProduct details, registration policy, language and public platform configuration. No secrets are stored here.\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.\n\nRead only. Existing public frontend configuration is shown when service values are absent; unknown values remain blank.\n\nProduct name\nSupport contact\nRegistration policy\nDefault language\nPlatform URL\nAPI base URL\nPlatform base domain\n\nSaving changes and authorizing access require a backend contract. These actions are currently unavailable.\n\nSave settings",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/account/profile",
+      "width": 1440,
+      "url": "/account/profile",
+      "title": "Profile",
+      "text": "My Websites\n/\nProfile\n\nProfile\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nYour account details.\n\nSA\n\nSystem Admin\n\nadmin001@gmail.com\n\nPlatform administrator\nStatus unavailable\nPersonal information\nName\nSystem Admin\nEmail\nadmin001@gmail.com\nAccount ID\ndemo-admin\nMember since\nNot set\nLast sign-in\nNot set\nAccount details\nRead only\nRole\nPlatform administrator\nAccount status\nNot set\nLanguage\nEnglish\n\nEditing these details becomes available once the account API is connected.\n\nPlatform access\nOverview\nUsers\nWebsites\nTemplates\nPlans & Billing\nDomains\nAudit\nPlatform Settings\nSupport\nNotifications\n\nThe console areas this admin role reaches in the frontend. What the account is actually permitted to do is decided by the backend, not by this page.\n\nYour account\nAccount & security\nReview your password, sign-in methods and devices.\nPlan & billing\nReview your plan, payment methods and invoices.\nSupport\nAsk the account team a question or report a problem.\nNotifications\nRead what the platform has told you so far.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {}
+      ]
+    },
+    {
+      "route": "/security",
+      "width": 1440,
+      "url": "/security",
+      "title": "Account & security",
+      "text": "My Websites\n/\nAccount & security\n\nAccount & security\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nReview your account details, update your password, check where this account is signed in, and manage notification preferences.\n\nACCOUNT\n\nAccount summary\n\nThe identity and account state this session is signed in with.\n\nSystem Admin\n\nadmin001@gmail.com\n\nROLE\nAdmin\nACCOUNT STATUS\nUnavailable\nEMAIL VERIFICATION\nUnavailable\nLAST SIGN-IN\nUnavailable\n\nOnly the backend can report account state for this session. Nothing on this summary is inferred or cached in the browser.\n\nSIGN-IN METHODS\n\nConnected accounts\n\nUse Google to sign in to the account you are already signed in to.\n\nGoogle\n\nNot connected. Link Google so you can sign in with either method.\n\nYou will confirm the connection on Google, and only the backend can attach it to this account.\n\nConnect Google\n\nNot available yet. Linking is a backend operation. The connect and remove actions stay disabled until the backend can confirm who you are and which Google address belongs to this account — nothing is linked from this page.\n\nGoogle access tokens are never",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {}
+      ]
+    },
+    {
+      "route": "/admin",
+      "width": 1920,
+      "url": "/admin",
+      "title": "Overview",
+      "text": "Overview\n\nOverview\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nPLATFORM ADMINISTRATION\n\nYour platform at a glance\n\nAn overview of platform users, websites and services. Metrics come only from real service data.\n\nView audit\nUsers\nWebsites\nTemplates\nDomains\nPlans & Billing\nSupport\nNotifications\nAudit\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.\n\nTotal users\n—\nData unavailable\nTotal websites\n—\nData unavailable\nPublished sites\n—\nData unavailable\nDrafts\n—\nData unavailable\nSubscriptions\n—\nData unavailable\nDomains\n—\nData unavailable\nSupport requests\n—\nData unavailable\nRecent platform activity\nView audit\nAudit\nAction\tActor\tTarget\tDate\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/admin/users",
+      "width": 1920,
+      "url": "/admin/users",
+      "title": "Users",
+      "text": "Overview\n/\nUsers\n\nUsers\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nReview platform accounts by name, email, role and status. Account management depends on server authorization.\n\nSearch name or email\nRole\nAll roles\nUser\nAdministrator\nStatus\nAll statuses\nActive\nInactive\nUsers\nName\tEmail\tRole\tStatus\tLast sign-in\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.\n\nAccount and access management\n\nServer authorization rules must be agreed before changing roles, status or access. Account changes are currently unavailable.\n\nManage role\nManage status\nManage access",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/admin/settings",
+      "width": 1920,
+      "url": "/admin/settings",
+      "title": "Platform Settings",
+      "text": "Overview\n/\nPlatform Settings\n\nPlatform Settings\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nBack\n\nProduct details, registration policy, language and public platform configuration. No secrets are stored here.\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.\n\nRead only. Existing public frontend configuration is shown when service values are absent; unknown values remain blank.\n\nProduct name\nSupport contact\nRegistration policy\nDefault language\nPlatform URL\nAPI base URL\nPlatform base domain\n\nSaving changes and authorizing access require a backend contract. These actions are currently unavailable.\n\nSave settings",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {}
+      ]
+    },
+    {
+      "route": "/admin",
+      "width": 834,
+      "url": "/admin",
+      "title": "Overview",
+      "text": "Overview\n\nOverview\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nPLATFORM ADMINISTRATION\n\nYour platform at a glance\n\nAn overview of platform users, websites and services. Metrics come only from real service data.\n\nView audit\nUsers\nWebsites\nTemplates\nDomains\nPlans & Billing\nSupport\nNotifications\nAudit\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.\n\nTotal users\n—\nData unavailable\nTotal websites\n—\nData unavailable\nPublished sites\n—\nData unavailable\nDrafts\n—\nData unavailable\nSubscriptions\n—\nData unavailable\nDomains\n—\nData unavailable\nSupport requests\n—\nData unavailable\nRecent platform activity\nView audit\nAudit\nAction\tActor\tTarget\tDate\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {}
+      ]
+    },
+    {
+      "route": "/admin/users",
+      "width": 834,
+      "url": "/admin/users",
+      "title": "Users",
+      "text": "Overview\n/\nUsers\n\nUsers\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nReview platform accounts by name, email, role and status. Account management depends on server authorization.\n\nSearch name or email\nRole\nAll roles\nUser\nAdministrator\nStatus\nAll statuses\nActive\nInactive\nUsers\nName\tEmail\tRole\tStatus\tLast sign-in\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.\n\nAccount and access management\n\nServer authorization rules must be agreed before changing roles, status or access. Account changes are currently unavailable.\n\nManage role\nManage status\nManage access",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {}
+      ]
+    },
+    {
+      "route": "/admin/settings",
+      "width": 834,
+      "url": "/admin/settings",
+      "title": "Platform Settings",
+      "text": "Overview\n/\nPlatform Settings\n\nPlatform Settings\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nBack\n\nProduct details, registration policy, language and public platform configuration. No secrets are stored here.\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.\n\nRead only. Existing public frontend configuration is shown when service values are absent; unknown values remain blank.\n\nProduct name\nSupport contact\nRegistration policy\nDefault language\nPlatform URL\nAPI base URL\nPlatform base domain\n\nSaving changes and authorizing access require a backend contract. These actions are currently unavailable.\n\nSave settings",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        {},
+        {}
+      ]
+    },
+    {
+      "route": "/admin",
+      "width": 390,
+      "url": "/admin",
+      "title": "Overview",
+      "text": "Overview\n\nOverview\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nPLATFORM ADMINISTRATION\n\nYour platform at a glance\n\nAn overview of platform users, websites and services. Metrics come only from real service data.\n\nView audit\nUsers\nWebsites\nTemplates\nDomains\nPlans & Billing\nSupport\nNotifications\nAudit\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.\n\nTotal users\n—\nData unavailable\nTotal websites\n—\nData unavailable\nPublished sites\n—\nData unavailable\nDrafts\n—\nData unavailable\nSubscriptions\n—\nData unavailable\nDomains\n—\nData unavailable\nSupport requests\n—\nData unavailable\nRecent platform activity\nView audit\nAudit\nAction\tActor\tTarget\tDate\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        "admin-platform-table",
+        "sr-only",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "route": "/admin/users",
+      "width": 390,
+      "url": "/admin/users",
+      "title": "Users",
+      "text": "Overview\n/\nUsers\n\nUsers\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nReview platform accounts by name, email, role and status. Account management depends on server authorization.\n\nSearch name or email\nRole\nAll roles\nUser\nAdministrator\nStatus\nAll statuses\nActive\nInactive\nUsers\nName\tEmail\tRole\tStatus\tLast sign-in\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.\n\nAccount and access management\n\nServer authorization rules must be agreed before changing roles, status or access. Account changes are currently unavailable.\n\nManage role\nManage status\nManage access",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field",
+        "admin-platform-table",
+        "sr-only",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "route": "/admin/settings",
+      "width": 390,
+      "url": "/admin/settings",
+      "title": "Platform Settings",
+      "text": "Overview\n/\nPlatform Settings\n\nPlatform Settings\n\nDemo preview ? Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.\n\nBack\n\nProduct details, registration policy, language and public platform configuration. No secrets are stored here.\n\nPlatform service not connected\n\nReal data will appear once the service is connected. Records and metrics are currently unavailable.\n\nRead only. Existing public frontend configuration is shown when service values are absent; unknown values remain blank.\n\nProduct name\nSupport contact\nRegistration policy\nDefault language\nPlatform URL\nAPI base URL\nPlatform base domain\n\nSaving changes and authorizing access require a backend contract. These actions are currently unavailable.\n\nSave settings",
+      "overflow": false,
+      "offenders": [
+        "ambient-particles__field"
+      ]
+    },
+    {
+      "route": "/",
+      "width": 1920,
+      "url": "/",
+      "title": "A new home\nfor every idea.",
+      "text": "Built with AI\nA new home\nfor every idea.\n\nBuild your website with a clear workflow. Create a project, customize a template, preview your work and get ready to publish.\n\nGet started\nSign in\nWhat’s inside?\nDraft\nPublish\nHeading\nText\nImage\nButton\nSection\nForm\nMore\nWebsite\nYour idea comes to life here.\n\nDiscover new possibilities. Create your own story.\n\nExplore\nTemplate\nYour idea comes to life here.\nSections\nHero section\nGallery\nContact\nServices\nReviews\nEditor\n01\nIdea\n02\nTemplate\n03\nEditor\n04\nWebsite\n05\nPublish\n\nWHAT YOU CAN BUILD\n\nEverything you need to launch your site.\n\nA clean, focused workspace designed for creators.\n\n01\nSTART\nCreate\n\nStart a new website project and pick a starting point that matches what you want to build.\n\nNo website projects yet\nBlank template\nReview\n02\nSHAPE\nCustomize\n\nShape the structure and content of your pages before you commit to a final look.\n\nPage customization\nAppearance\nContent\n03\nLAUNCH\nPublish\n\nPreview your work on real device sizes, keep drafts tidy, and publish when everything is ready.\n\nPreview\nPublishing is being prepared in a later phase. Your projects stay saved in the meantime.\nGet Started\n\nCORE CAPABILITIES\n\nFrom blank page to finished site",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/login",
+      "width": 1920,
+      "url": "/login",
+      "title": "Welcome back",
+      "text": "SiteBuilder\nAZ\nAzərbaycanca\nEN\nEnglish\n\nSECURE SIGN IN\n\nWelcome back\n\nSign in with the email address you registered with.\n\nContinue with Google\n\nGoogle sign-in is not available yet. You can sign in with your email and password.\n\nSign in with QR\nApprove this browser from the mobile app\nor continue with email\nEmail\nPassword\nRemember me\nForgot your password?\nSign In\n\nDon't have an account? Create one\n\nBack to site",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/register",
+      "width": 1920,
+      "url": "/register",
+      "title": "Create your account",
+      "text": "SiteBuilder\nAZ\nAzərbaycanca\nEN\nEnglish\n\nGET STARTED\n\nCreate your account\n\nSet up your access to the website workspace.\n\nContinue with Google\n\nGoogle sign-in is not available yet. You can sign in with your email and password.\n\nor continue with email\n1\nYour details\n2\nSecurity\nFirst name\nLast name\nEmail\n\nWe will use this address for account notifications and verification.\n\nContinue\n\nAlready have an account? Sign in\n\nBack to site",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/",
+      "width": 834,
+      "url": "/",
+      "title": "A new home\nfor every idea.",
+      "text": "Built with AI\nA new home\nfor every idea.\n\nBuild your website with a clear workflow. Create a project, customize a template, preview your work and get ready to publish.\n\nGet started\nSign in\nWhat’s inside?\nDraft\nPublish\nHeading\nText\nImage\nButton\nSection\nForm\nMore\nWebsite\nYour idea comes to life here.\n\nDiscover new possibilities. Create your own story.\n\nExplore\nTemplate\nYour idea comes to life here.\nSections\nHero section\nGallery\nContact\nServices\nReviews\nEditor\n01\nIdea\n02\nTemplate\n03\nEditor\n04\nWebsite\n05\nPublish\n\nWHAT YOU CAN BUILD\n\nEverything you need to launch your site.\n\nA clean, focused workspace designed for creators.\n\n01\nSTART\nCreate\n\nStart a new website project and pick a starting point that matches what you want to build.\n\nNo website projects yet\nBlank template\nReview\n02\nSHAPE\nCustomize\n\nShape the structure and content of your pages before you commit to a final look.\n\nPage customization\nAppearance\nContent\n03\nLAUNCH\nPublish\n\nPreview your work on real device sizes, keep drafts tidy, and publish when everything is ready.\n\nPreview\nPublishing is being prepared in a later phase. Your projects stay saved in the meantime.\nGet Started\n\nCORE CAPABILITIES\n\nFrom blank page to finished site",
+      "overflow": false,
+      "offenders": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "route": "/login",
+      "width": 834,
+      "url": "/login",
+      "title": "Welcome back",
+      "text": "SiteBuilder\nAZ\nAzərbaycanca\nEN\nEnglish\n\nSECURE SIGN IN\n\nWelcome back\n\nSign in with the email address you registered with.\n\nContinue with Google\n\nGoogle sign-in is not available yet. You can sign in with your email and password.\n\nSign in with QR\nApprove this browser from the mobile app\nor continue with email\nEmail\nPassword\nRemember me\nForgot your password?\nSign In\n\nDon't have an account? Create one\n\nBack to site",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/register",
+      "width": 834,
+      "url": "/register",
+      "title": "Create your account",
+      "text": "SiteBuilder\nAZ\nAzərbaycanca\nEN\nEnglish\n\nGET STARTED\n\nCreate your account\n\nSet up your access to the website workspace.\n\nContinue with Google\n\nGoogle sign-in is not available yet. You can sign in with your email and password.\n\nor continue with email\n1\nYour details\n2\nSecurity\nFirst name\nLast name\nEmail\n\nWe will use this address for account notifications and verification.\n\nContinue\n\nAlready have an account? Sign in\n\nBack to site",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/",
+      "width": 390,
+      "url": "/",
+      "title": "A new home\nfor every idea.",
+      "text": "Built with AI\nA new home\nfor every idea.\n\nBuild your website with a clear workflow. Create a project, customize a template, preview your work and get ready to publish.\n\nGet started\nSign in\nWhat’s inside?\nDraft\nPublish\nHeading\nText\nImage\nButton\nSection\nForm\nMore\nWebsite\nYour idea comes to life here.\n\nDiscover new possibilities. Create your own story.\n\nExplore\nTemplate\nYour idea comes to life here.\nSections\nHero section\nGallery\nContact\nServices\nReviews\n01\nIdea\n02\nTemplate\n03\nEditor\n04\nWebsite\n05\nPublish\n\nWHAT YOU CAN BUILD\n\nEverything you need to launch your site.\n\nA clean, focused workspace designed for creators.\n\n01\nSTART\nCreate\n\nStart a new website project and pick a starting point that matches what you want to build.\n\nNo website projects yet\nBlank template\nReview\n02\nSHAPE\nCustomize\n\nShape the structure and content of your pages before you commit to a final look.\n\nPage customization\nAppearance\nContent\n03\nLAUNCH\nPublish\n\nPreview your work on real device sizes, keep drafts tidy, and publish when everything is ready.\n\nPreview\nPublishing is being prepared in a later phase. Your projects stay saved in the meantime.\nGet Started\n\nCORE CAPABILITIES\n\nFrom blank page to finished site.\n\nEver",
+      "overflow": false,
+      "offenders": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "route": "/login",
+      "width": 390,
+      "url": "/login",
+      "title": "Welcome back",
+      "text": "SiteBuilder\nAZ\nAzərbaycanca\nEN\nEnglish\n\nSECURE SIGN IN\n\nWelcome back\n\nSign in with the email address you registered with.\n\nContinue with Google\n\nGoogle sign-in is not available yet. You can sign in with your email and password.\n\nSign in with QR\nApprove this browser from the mobile app\nor continue with email\nEmail\nPassword\nRemember me\nForgot your password?\nSign In\n\nDon't have an account? Create one\n\nBack to site",
+      "overflow": false,
+      "offenders": []
+    },
+    {
+      "route": "/register",
+      "width": 390,
+      "url": "/register",
+      "title": "Create your account",
+      "text": "SiteBuilder\nAZ\nAzərbaycanca\nEN\nEnglish\n\nGET STARTED\n\nCreate your account\n\nSet up your access to the website workspace.\n\nContinue with Google\n\nGoogle sign-in is not available yet. You can sign in with your email and password.\n\nor continue with email\n1\nYour details\n2\nSecurity\nFirst name\nLast name\nEmail\n\nWe will use this address for account notifications and verification.\n\nContinue\n\nAlready have an account? Sign in\n\nBack to site",
+      "overflow": false,
+      "offenders": []
+    }
+  ],
+  "errors": [
+    "%o\n\n%s\n\n%s\n TypeError: WORKSPACE_MODULE_PATHS[capability.modulePath] is not a function\n    at CapabilityCard (http://127.0.0.1:5173/src/components/capabilities/CapabilityCard.jsx:23:68)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:14142:12)\n    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:4400:19)\n    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:5775:16)\n    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:6391:20)\n    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:944:66)\n    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9148:92)\n    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9044:37)\n    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9028:6)\n    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:8715:27) The above error occurred in the <CapabilityCard> component. React will try to recreate this component tree from scratch using the error boundary you provided, RouteErrorBoundary.",
+    "Route error caught by RouteErrorBoundary: TypeError: WORKSPACE_MODULE_PATHS[capability.modulePath] is not a function\n    at CapabilityCard (http://127.0.0.1:5173/src/components/capabilities/CapabilityCard.jsx:23:68)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:14142:12)\n    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:4400:19)\n    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:5775:16)\n    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:6391:20)\n    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:944:66)\n    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9148:92)\n    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9044:37)\n    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9028:6)\n    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:8715:27)",
+    "%o\n\n%s\n\n%s\n TypeError: WORKSPACE_MODULE_PATHS[integration.modulePath] is not a function\n    at IntegrationCard (http://127.0.0.1:5173/src/components/integrations/IntegrationCard.jsx:23:69)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:14142:12)\n    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:4400:19)\n    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:5775:16)\n    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:6391:20)\n    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:944:66)\n    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9148:92)\n    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9044:37)\n    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9028:6)\n    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:8715:27) The above error occurred in the <IntegrationCard> component. React will try to recreate this component tree from scratch using the error boundary you provided, RouteErrorBoundary.",
+    "Route error caught by RouteErrorBoundary: TypeError: WORKSPACE_MODULE_PATHS[integration.modulePath] is not a function\n    at IntegrationCard (http://127.0.0.1:5173/src/components/integrations/IntegrationCard.jsx:23:69)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:14142:12)\n    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:4400:19)\n    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:5775:16)\n    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:6391:20)\n    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:944:66)\n    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9148:92)\n    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9044:37)\n    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9028:6)\n    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:8715:27)",
+    "%o\n\n%s\n\n%s\n ReferenceError: SiteEditorPage is not defined\n    at SiteEditorRoute (http://127.0.0.1:5173/src/pages/SiteEditorPage.jsx:817:33)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:14142:12)\n    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:4400:19)\n    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:5775:16)\n    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:6367:529)\n    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:944:66)\n    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9148:92)\n    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9044:37)\n    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9028:6)\n    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:8715:27) The above error occurred in the <SiteEditorRoute> component. React will try to recreate this component tree from scratch using the error boundary you provided, RouteErrorBoundary.",
+    "Route error caught by RouteErrorBoundary: ReferenceError: SiteEditorPage is not defined\n    at SiteEditorRoute (http://127.0.0.1:5173/src/pages/SiteEditorPage.jsx:817:33)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:14142:12)\n    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:4400:19)\n    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:5775:16)\n    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:6367:529)\n    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:944:66)\n    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9148:92)\n    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9044:37)\n    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9028:6)\n    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:8715:27)",
+    "%o\n\n%s\n\n%s\n ReferenceError: SiteEditorPage is not defined\n    at SiteEditorRoute (http://127.0.0.1:5173/src/pages/SiteEditorPage.jsx:817:33)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:14142:12)\n    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:4400:19)\n    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:5775:16)\n    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:6367:529)\n    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:944:66)\n    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9148:92)\n    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9044:37)\n    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9028:6)\n    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:8715:27) The above error occurred in the <SiteEditorRoute> component. React will try to recreate this component tree from scratch using the error boundary you provided, RouteErrorBoundary.",
+    "Route error caught by RouteErrorBoundary: ReferenceError: SiteEditorPage is not defined\n    at SiteEditorRoute (http://127.0.0.1:5173/src/pages/SiteEditorPage.jsx:817:33)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:14142:12)\n    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:4400:19)\n    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:5775:16)\n    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:6367:529)\n    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:944:66)\n    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9148:92)\n    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9044:37)\n    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9028:6)\n    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:8715:27)",
+    "%o\n\n%s\n\n%s\n ReferenceError: SiteEditorPage is not defined\n    at SiteEditorRoute (http://127.0.0.1:5173/src/pages/SiteEditorPage.jsx:817:33)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:14142:12)\n    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:4400:19)\n    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:5775:16)\n    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:6367:529)\n    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:944:66)\n    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9148:92)\n    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9044:37)\n    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9028:6)\n    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:8715:27) The above error occurred in the <SiteEditorRoute> component. React will try to recreate this component tree from scratch using the error boundary you provided, RouteErrorBoundary.",
+    "Route error caught by RouteErrorBoundary: ReferenceError: SiteEditorPage is not defined\n    at SiteEditorRoute (http://127.0.0.1:5173/src/pages/SiteEditorPage.jsx:817:33)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:14142:12)\n    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:4400:19)\n    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:5775:16)\n    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:6367:529)\n    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:944:66)\n    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9148:92)\n    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9044:37)\n    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9028:6)\n    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:8715:27)",
+    "%o\n\n%s\n\n%s\n ReferenceError: SiteEditorPage is not defined\n    at SiteEditorRoute (http://127.0.0.1:5173/src/pages/SiteEditorPage.jsx:817:33)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:14142:12)\n    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:4400:19)\n    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:5775:16)\n    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:6367:529)\n    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:944:66)\n    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9148:92)\n    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9044:37)\n    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9028:6)\n    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:8715:27) The above error occurred in the <SiteEditorRoute> component. React will try to recreate this component tree from scratch using the error boundary you provided, RouteErrorBoundary.",
+    "Route error caught by RouteErrorBoundary: ReferenceError: SiteEditorPage is not defined\n    at SiteEditorRoute (http://127.0.0.1:5173/src/pages/SiteEditorPage.jsx:817:33)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:14142:12)\n    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:4400:19)\n    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:5775:16)\n    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:6367:529)\n    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:944:66)\n    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9148:92)\n    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9044:37)\n    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9028:6)\n    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:8715:27)",
+    "%o\n\n%s\n\n%s\n ReferenceError: SiteEditorPage is not defined\n    at SiteEditorRoute (http://127.0.0.1:5173/src/pages/SiteEditorPage.jsx:817:33)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:14142:12)\n    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:4400:19)\n    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:5775:16)\n    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:6367:529)\n    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:944:66)\n    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9148:92)\n    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9044:37)\n    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9028:6)\n    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:8715:27) The above error occurred in the <SiteEditorRoute> component. React will try to recreate this component tree from scratch using the error boundary you provided, RouteErrorBoundary.",
+    "Route error caught by RouteErrorBoundary: ReferenceError: SiteEditorPage is not defined\n    at SiteEditorRoute (http://127.0.0.1:5173/src/pages/SiteEditorPage.jsx:817:33)\n    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:14142:12)\n    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:4400:19)\n    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:5775:16)\n    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:6367:529)\n    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:944:66)\n    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9148:92)\n    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9044:37)\n    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:9028:6)\n    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=c4bd32de:8715:27)"
+  ]
+}

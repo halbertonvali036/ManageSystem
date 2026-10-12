@@ -15,7 +15,9 @@
     "Populated editor at desktop, tablet, mobile",
     "All capability detail routes",
     "All integration detail routes",
-    "Six AI prompts remain unsent without provider"
+    "Six AI prompts remain unsent without provider",
+    "Mobile sidebar Escape handler (DOM keyboard event)",
+    "No browser console errors"
   ],
   "errors": []
 }

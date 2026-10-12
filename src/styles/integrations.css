@@ -352,6 +352,10 @@
   .int-page__filter .form__select {
     width: 100%;
   }
+
+  .int-page__toolbar .db-search {
+    flex-basis: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,8 +1,9 @@
-﻿const {launch}=require('./audit-browser.cjs')
+const {launch}=require('./audit-browser.cjs')
 const fs=require('node:fs')
+const assert=require('node:assert/strict')
 ;(async()=>{const b=await launch();const results=[];try{
  await b.viewport(1440,900)
- const inspect=async(route,width)=>{await b.open(route);const info=await b.evaluate(`({url:location.pathname,title:document.querySelector('h1')?.innerText,text:document.querySelector('main')?.innerText.slice(0,1200),overflow:document.documentElement.scrollWidth>innerWidth+1,offenders:[...document.querySelectorAll('main *')].filter(e=>{const r=e.getBoundingClientRect();return r.width>0&&(r.right>innerWidth+2||r.left<-2)&&getComputedStyle(e).position!=='fixed'}).slice(0,6).map(e=>e.className)})`);results.push({route,width,...info});console.log(route,width,info.overflow?'OVERFLOW':'OK',info.title||'')}
+ const inspect=async(route,width)=>{await b.open(route);const info=await b.evaluate(`({crash:Boolean(document.querySelector('.route-error')),url:location.pathname,title:document.querySelector('h1')?.innerText,text:document.querySelector('main')?.innerText.slice(0,1200),overflow:document.documentElement.scrollWidth>innerWidth+1,offenders:[...document.querySelectorAll('main *')].filter(e=>{const r=e.getBoundingClientRect();return r.width>0&&(r.right>innerWidth+2||r.left<-2)&&getComputedStyle(e).position!=='fixed'}).slice(0,6).map(e=>e.className)})`);results.push({route,width,...info});assert.equal(info.crash,false,route+' crashed');assert.equal(info.overflow,false,route+' overflow');console.log(route,width,info.overflow?'OVERFLOW':'OK',info.title||'')}
  for(const route of ['/','/login','/register','/forgot-password','/reset-password','/login/qr','/auth/callback','/session-expired','/not-found'])await inspect(route,1440)
  await b.login()
  const root='/workspaces/demo-workspace'
@@ -18,5 +19,5 @@ const fs=require('node:fs')
  for(const [width,height] of [[1920,1080],[834,1112],[390,844]]){await b.viewport(width,height);for(const route of ['/admin','/admin/users','/admin/settings'])await inspect(route,width)}
  await b.viewport(1440,900);await b.open('/admin');await b.click('.sidebar__link--logout')
  for(const [width,height] of [[1920,1080],[834,1112],[390,844]]){await b.viewport(width,height);for(const route of ['/','/login','/register'])await inspect(route,width);await b.open('/');await b.screenshot('landing-'+width)}
- console.log('ERRORS',b.errors)
+ console.log('ERRORS',b.errors);assert.deepEqual(b.errors,[])
  }finally{fs.mkdirSync('artifacts/frontend-audit',{recursive:true});fs.writeFileSync('artifacts/frontend-audit/routes.json',JSON.stringify({results,errors:b.errors},null,2));b.close()}})().catch(e=>{console.error(e);process.exitCode=1})

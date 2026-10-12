@@ -244,6 +244,10 @@
     align-items: stretch;
   }
 
+  .cap-page__toolbar .db-search {
+    flex-basis: auto;
+  }
+
   .cap-page__filter .form__select {
     width: 100%;
   }

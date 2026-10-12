@@ -1,0 +1,15 @@
+Frontend audit completion — 2026-10-13
+
+- Previous findings verified: the WORKSPACE_MODULE_PATHS capability/integration crashes and SiteEditorPage reference crash no longer reproduce. Their fixes were already present. Prior JSON evidence is retained in previous/.
+- Bugs still present: no confirmed frontend route crashes, page overflow, or raw translation keys in the final tested pages. The singular /workspace/demo-workspace path is a handled 404; /workspaces/demo-workspace is canonical.
+- Bugs fixed: Capabilities status options used the wrong translation namespace; Capabilities and Integrations selects lacked the shared input styling; both catalog toolbars retained a desktop search flex basis on mobile, creating excessive vertical space.
+- Routes retested: the existing 90-check route sweep passed before the small catalog fixes. The final post-fix pass completed 71 route/viewport checks across workspace overview, sites, Capabilities, Integrations, demo site/editor, AI, legacy editor/settings, the singular-path 404, and all ten major Admin routes. Capability and integration detail links also passed the interaction suite.
+- Demo user flow: passed login → Demo Workspace → Demo Website → Editor → back to site → AI Builder using existing UI links. Demo behavior remains gated by VITE_ENABLE_DEMO_AUTH === 'true'.
+- AI Builder: six prompts remain unsent without a provider. Quota, preview/apply/reject, missing context, history, send/retry, failed apply and undo frontend state checks passed with isolated fixtures. No live AI success is claimed.
+- Admin: login and overview, users, websites, templates, billing, domains, notifications, support, audit and settings passed at all four widths. Populated long-content tables and loading/empty/unavailable/error/retry fixtures passed.
+- Responsive: key workspace and Admin pages passed at 1440, 1920, 834 and 390 pixels, with zero document overflow. Refreshed screenshots use the current- prefix. The mobile Escape handler was verified with DOM keyboard events because native CDP key events were not delivered in this Windows headless environment.
+- Final browser audit error count: 0 console errors/warnings, 0 route error boundaries, 0 overflow checks, 0 raw-key matches across 71 post-fix checks (final.json). Interaction suite: 18 checks; state suite: 12 checks; both zero console errors.
+- Lint: npm run lint passed after all application fixes.
+- Build: npm run build passed after all application fixes. Existing chunks over 500 kB still produce a non-fatal size warning.
+- Remaining backend-dependent items: real authentication and authorization, persistent workspace/site/database operations, draft saving, publishing/deployments, domains/DNS/SSL, AI execution and persisted proposals/history/quotas, payments, integrations, notifications and Admin mutations. No backend, database, real AI, payment or publishing implementation was added; save/publish unavailable behavior was verified.
+- Frontend readiness: 95/100 (engineering assessment for the tested demo/frontend scope, not production backend readiness).

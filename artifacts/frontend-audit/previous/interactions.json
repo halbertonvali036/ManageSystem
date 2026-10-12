@@ -1,0 +1,21 @@
+{
+  "checks": [
+    "Demo site loads eight sections and two pages",
+    "Edit hero copy",
+    "Edit page SEO",
+    "Add section from library",
+    "Create Services page",
+    "Reorder a section",
+    "Change theme preset and font",
+    "Open media dialog and dismiss with Escape",
+    "Preview internal link stays inside the draft",
+    "Save reports unavailable, never saved",
+    "Publish integration refuses success",
+    "Draft survives settings navigation",
+    "Populated editor at desktop, tablet, mobile",
+    "All capability detail routes",
+    "All integration detail routes",
+    "Six AI prompts remain unsent without provider"
+  ],
+  "errors": []
+}

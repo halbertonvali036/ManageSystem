@@ -1,0 +1,17 @@
+{
+  "checks": [
+    "Free and Pro plan presentation",
+    "Quota reached disables composer",
+    "Zero quota is exhausted, not unlimited",
+    "Proposal preview gates Apply; Apply and Reject callbacks work",
+    "Missing context blocks Apply",
+    "History loads; new conversation clears current thread",
+    "Send error and retry retain draft; no invented reply",
+    "Failed Apply remains pending",
+    "Undo foundation reports backend dependency",
+    "Every admin table with populated, long-content fixtures at three sizes",
+    "Admin loading, empty, unavailable, error and retry states",
+    "No fixture console errors"
+  ],
+  "errors": []
+}

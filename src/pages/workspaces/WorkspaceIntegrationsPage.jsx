@@ -155,7 +155,7 @@ function WorkspaceIntegrationsPage() {
             </span>
             <select
               id="int-status"
-              className="form__select"
+              className="form__input form__select"
               value={status}
               onChange={(event) => setStatus(event.target.value)}
             >
@@ -176,7 +176,7 @@ function WorkspaceIntegrationsPage() {
             </span>
             <select
               id="int-category"
-              className="form__select"
+              className="form__input form__select"
               value={category}
               onChange={(event) => setCategory(event.target.value)}
             >

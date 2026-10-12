@@ -11,7 +11,7 @@ import ConfirmDialog from '@/components/common/ConfirmDialog'
 import WorkspaceBreadcrumb from '@/components/workspaces/WorkspaceBreadcrumb'
 import WorkspaceSectionNav from '@/components/workspaces/WorkspaceSectionNav'
 import CapabilityCard from '@/components/capabilities/CapabilityCard'
-import { CAPABILITY_FILTER_ALL, CAPABILITY_STATUSES } from '@/models/capability'
+import { CAPABILITY_FILTER_ALL, CAPABILITY_STATUSES, CAPABILITY_STATUS_LABEL_KEYS } from '@/models/capability'
 import { WORKSPACE_CAPABILITIES_PATH } from '@/utils/constants'
 
 /**
@@ -142,14 +142,14 @@ function WorkspaceCapabilitiesPage() {
           <span className="visually-hidden">{t('workspaceCapabilities.filterLabel')}</span>
           <select
             id="cap-status"
-            className="form__select"
+            className="form__input form__select"
             value={status}
             onChange={(event) => setStatus(event.target.value)}
           >
             <option value={CAPABILITY_FILTER_ALL}>{t('workspaceCapabilities.filterAll')}</option>
             {CAPABILITY_STATUSES.map((item) => (
               <option key={item} value={item}>
-                {t(`capabilities.status.${item}`)}
+                {t(CAPABILITY_STATUS_LABEL_KEYS[item])}
               </option>
             ))}
           </select>

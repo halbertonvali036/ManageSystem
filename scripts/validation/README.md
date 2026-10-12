@@ -17,6 +17,16 @@ are the maintained checks and are what CI should run.
 
 ## Running them
 
+The current frontend completion checks are `frontend-audit.cjs` (routes and
+responsive layouts), `frontend-interactions.cjs` (editor and module interactions),
+`frontend-states.cjs` (isolated AI/Admin state fixtures), and `frontend-final.cjs`
+(linked demo flow and four-width key-page/Admin verification). Run these serially
+against the Vite dev server with demo auth enabled. Results and screenshots go to
+`artifacts/frontend-audit/`; the prior JSON reports are preserved in `previous/`.
+The interaction script uses DOM keyboard events for Escape because native CDP
+keyboard events were not delivered in the Windows headless audit environment.
+State fixture successes verify frontend callbacks only, not backend operations.
+
 These scripts are dependency-free: they drive a headless Chromium over the
 DevTools protocol. They are not project dependencies, so point `CHROMIUM_PATH` at
 a Chromium/Chrome binary you already have.

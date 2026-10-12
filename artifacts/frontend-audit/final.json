@@ -1,0 +1,578 @@
+{
+  "checks": [
+    "Login → Demo Workspace → Demo Website → Editor → back to site → AI Builder, using UI links",
+    "Legacy editor/settings work; singular /workspace/demo-workspace handled without crash (canonical route is /workspaces/demo-workspace)",
+    "Admin login and all ten major Admin routes at four widths"
+  ],
+  "results": [
+    {
+      "route": "/workspaces/demo-workspace",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/sites",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/capabilities",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/capabilities",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/integrations",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/integrations",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites/demo-website",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/sites/demo-website",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites/demo-website/editor",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/sites/demo-website/editor",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/ai",
+      "width": 1440,
+      "url": "/workspaces/demo-workspace/ai",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace",
+      "width": 1920,
+      "url": "/workspaces/demo-workspace",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites",
+      "width": 1920,
+      "url": "/workspaces/demo-workspace/sites",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/capabilities",
+      "width": 1920,
+      "url": "/workspaces/demo-workspace/capabilities",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/integrations",
+      "width": 1920,
+      "url": "/workspaces/demo-workspace/integrations",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites/demo-website",
+      "width": 1920,
+      "url": "/workspaces/demo-workspace/sites/demo-website",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites/demo-website/editor",
+      "width": 1920,
+      "url": "/workspaces/demo-workspace/sites/demo-website/editor",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/ai",
+      "width": 1920,
+      "url": "/workspaces/demo-workspace/ai",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace",
+      "width": 834,
+      "url": "/workspaces/demo-workspace",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites",
+      "width": 834,
+      "url": "/workspaces/demo-workspace/sites",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/capabilities",
+      "width": 834,
+      "url": "/workspaces/demo-workspace/capabilities",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/integrations",
+      "width": 834,
+      "url": "/workspaces/demo-workspace/integrations",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites/demo-website",
+      "width": 834,
+      "url": "/workspaces/demo-workspace/sites/demo-website",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites/demo-website/editor",
+      "width": 834,
+      "url": "/workspaces/demo-workspace/sites/demo-website/editor",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/ai",
+      "width": 834,
+      "url": "/workspaces/demo-workspace/ai",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace",
+      "width": 390,
+      "url": "/workspaces/demo-workspace",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites",
+      "width": 390,
+      "url": "/workspaces/demo-workspace/sites",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/capabilities",
+      "width": 390,
+      "url": "/workspaces/demo-workspace/capabilities",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/integrations",
+      "width": 390,
+      "url": "/workspaces/demo-workspace/integrations",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites/demo-website",
+      "width": 390,
+      "url": "/workspaces/demo-workspace/sites/demo-website",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/sites/demo-website/editor",
+      "width": 390,
+      "url": "/workspaces/demo-workspace/sites/demo-website/editor",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspaces/demo-workspace/ai",
+      "width": 390,
+      "url": "/workspaces/demo-workspace/ai",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/sites/demo-website/editor",
+      "width": 1440,
+      "url": "/sites/demo-website/editor",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/sites/demo-website/settings",
+      "width": 1440,
+      "url": "/sites/demo-website/settings",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/workspace/demo-workspace",
+      "width": 1440,
+      "url": "/workspace/demo-workspace",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin",
+      "width": 1440,
+      "url": "/admin",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/users",
+      "width": 1440,
+      "url": "/admin/users",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/websites",
+      "width": 1440,
+      "url": "/admin/websites",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/templates",
+      "width": 1440,
+      "url": "/admin/templates",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/billing",
+      "width": 1440,
+      "url": "/admin/billing",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/domains",
+      "width": 1440,
+      "url": "/admin/domains",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/notifications",
+      "width": 1440,
+      "url": "/admin/notifications",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/support",
+      "width": 1440,
+      "url": "/admin/support",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/audit",
+      "width": 1440,
+      "url": "/admin/audit",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/settings",
+      "width": 1440,
+      "url": "/admin/settings",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin",
+      "width": 1920,
+      "url": "/admin",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/users",
+      "width": 1920,
+      "url": "/admin/users",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/websites",
+      "width": 1920,
+      "url": "/admin/websites",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/templates",
+      "width": 1920,
+      "url": "/admin/templates",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/billing",
+      "width": 1920,
+      "url": "/admin/billing",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/domains",
+      "width": 1920,
+      "url": "/admin/domains",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/notifications",
+      "width": 1920,
+      "url": "/admin/notifications",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/support",
+      "width": 1920,
+      "url": "/admin/support",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/audit",
+      "width": 1920,
+      "url": "/admin/audit",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/settings",
+      "width": 1920,
+      "url": "/admin/settings",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin",
+      "width": 834,
+      "url": "/admin",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/users",
+      "width": 834,
+      "url": "/admin/users",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/websites",
+      "width": 834,
+      "url": "/admin/websites",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/templates",
+      "width": 834,
+      "url": "/admin/templates",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/billing",
+      "width": 834,
+      "url": "/admin/billing",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/domains",
+      "width": 834,
+      "url": "/admin/domains",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/notifications",
+      "width": 834,
+      "url": "/admin/notifications",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/support",
+      "width": 834,
+      "url": "/admin/support",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/audit",
+      "width": 834,
+      "url": "/admin/audit",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/settings",
+      "width": 834,
+      "url": "/admin/settings",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin",
+      "width": 390,
+      "url": "/admin",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/users",
+      "width": 390,
+      "url": "/admin/users",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/websites",
+      "width": 390,
+      "url": "/admin/websites",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/templates",
+      "width": 390,
+      "url": "/admin/templates",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/billing",
+      "width": 390,
+      "url": "/admin/billing",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/domains",
+      "width": 390,
+      "url": "/admin/domains",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/notifications",
+      "width": 390,
+      "url": "/admin/notifications",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/support",
+      "width": 390,
+      "url": "/admin/support",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/audit",
+      "width": 390,
+      "url": "/admin/audit",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    },
+    {
+      "route": "/admin/settings",
+      "width": 390,
+      "url": "/admin/settings",
+      "crash": false,
+      "overflow": false,
+      "rawKeys": []
+    }
+  ],
+  "errors": []
+}
