@@ -290,7 +290,34 @@
 .hero-builder__section--selected { color: #f5ffec; border-color: #b6ffa1; background: #60ae592b; box-shadow: inset 0 0 12px #a0ff6026, 0 0 12px #8aff6033; }
 .hero-builder__cursor { position: absolute; left: 63%; top: 72%; z-index: 2; color: #9aff6e; transform: rotate(-3deg); }
 .hero-builder__cursor > span { display: block; margin-left: 1.6cqw; font-size: 1.2cqw; padding: .4cqw .8cqw; border-radius: .4cqw; background: #75ec50; color: #14391a; }
-.hero-builder__flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .5cqw; margin: 2cqw 0 0 1cqw; transform: rotate(3deg); filter: drop-shadow(0 8px 12px #0008); }
+.hero-builder__flow { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .5cqw; margin: 2cqw 0 0 1cqw; transform: rotate(3deg); filter: drop-shadow(0 8px 12px #0008); }
+/* A single narrow neon-green light travels left → right across the whole
+   01 → 05 chain, then loops. Only transform/opacity move, so the composition
+   stays on the compositor and the dark chevron cards never flash. `screen`
+   blending adds light on top of the surfaces instead of repainting them. */
+.hero-builder__flow::after {
+  content: '';
+  position: absolute;
+  top: -8%;
+  bottom: -8%;
+  left: 0;
+  width: 16%;
+  z-index: 5;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(120, 255, 60, .05) 18%, rgba(150, 255, 110, .55) 46%, rgba(198, 255, 160, .92) 50%, rgba(150, 255, 110, .55) 54%, rgba(120, 255, 60, .05) 82%, transparent);
+  filter: blur(3px);
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+  transform: translateX(-115%);
+  opacity: 0;
+  animation: hero-builder-flow-travel 6.4s linear infinite;
+}
+@keyframes hero-builder-flow-travel {
+  0% { transform: translateX(-115%); opacity: 0; }
+  7% { opacity: .95; }
+  93% { opacity: .95; }
+  100% { transform: translateX(640%); opacity: 0; }
+}
 .hero-builder__stage { position: relative; min-width: 0; padding: 2.1cqw 1.7cqw 2.1cqw 3cqw; background: #b9ffb77d; clip-path: polygon(0 0, 84% 0, 100% 50%, 84% 100%, 0 100%, 13% 50%); }
 .hero-builder__stage::before { content: ''; position: absolute; inset: 1px; background: linear-gradient(125deg, #234b2c, #07190f 60%, #1b4820); clip-path: inherit; }
 .hero-builder__stage:first-child, .hero-builder__stage:first-child::before { clip-path: polygon(0 0, 84% 0, 100% 50%, 84% 100%, 0 100%); }
@@ -318,6 +345,19 @@
   .hero-builder__cursor { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .hero-builder *, .hero-builder *::before { animation: none !important; transition: none !important; } }
+/* Reduced motion: keep a static, soft green highlight instead of the travelling
+   light so the workflow still reads as connected without any movement. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-builder .hero-builder__flow::after {
+    animation: none !important;
+    width: auto !important;
+    inset: 0 !important;
+    opacity: .5 !important;
+    filter: none !important;
+    transform: none !important;
+    background: linear-gradient(90deg, transparent, rgba(140, 255, 90, .14) 30%, rgba(180, 255, 130, .32) 50%, rgba(140, 255, 90, .14) 70%, transparent) !important;
+  }
+}
 @media (min-width: 1024px) {
   .hero-builder { max-width: calc((100svh - 155px) * 1.02); justify-self: center; }
 }

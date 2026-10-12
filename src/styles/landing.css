@@ -2292,6 +2292,15 @@
   .landing-hero__step { gap: 10px; padding-right: 10px; }
   .landing-hero__step p { font-size: 12px; }
 }
+/* Desktop only: nudge the whole left copy group (badge, headline, description,
+   CTAs) upward so it sits in symmetry with the upper half of the editor sketch.
+   A tiny transform keeps it off the header without touching layout; tablets and
+   phones keep their natural centered flow. */
+@media (min-width: 1024px) {
+  .landing-hero__copy {
+    transform: translateY(clamp(-44px, -3.4vh, -18px));
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .landing-hero::before, .landing-hero::after, .landing-hero *, .landing-hero *::before, .landing-hero *::after { animation: none !important; transition: none !important; }
 }
