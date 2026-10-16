@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Sparkles, Wand2 } from 'lucide-react'
 import useTranslation from '@/hooks/useTranslation'
 import { formatAiMessageDate, isAiUserMessage, isAiNoticeMessage } from '@/models/ai'
@@ -79,4 +80,4 @@ function ChatMessage({ message, onSelectChanges }) {
   )
 }
 
-export default ChatMessage
+export default memo(ChatMessage)

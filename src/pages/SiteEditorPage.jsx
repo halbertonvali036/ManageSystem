@@ -335,6 +335,17 @@ function SiteEditorDocument() {
     setSelection(next)
   }, [])
 
+  // Stable wrappers so the memoized canvas does not treat every render as a
+  // prop change: inline arrows here re-rendered every section on every keystroke.
+  const handleSelectSection = useCallback(
+    (sectionId) => handleSelect({ kind: 'section', id: sectionId }),
+    [handleSelect],
+  )
+  const handleSelectBlock = useCallback(
+    (blockId) => handleSelect({ kind: 'block', id: blockId }),
+    [handleSelect],
+  )
+
   const handleSelectPage = useCallback((pageId) => {
     setDocument((current) => setActivePage(current, pageId))
     // A page switch must not leave a selection pointing at the old page.
@@ -591,7 +602,11 @@ function SiteEditorDocument() {
    * safe: the copy keeps the picture alive.
    */
   useEffect(() => {
-    if (!draftLoading && !isDemoSession()) revokeMediaUrlsExcept(listMediaIdsInUse(document))
+    if (draftLoading || isDemoSession()) return undefined
+    // Walking the whole document for media ids on every keystroke was wasted
+    // work: nothing is released until editing pauses.
+    const timer = window.setTimeout(() => revokeMediaUrlsExcept(listMediaIdsInUse(document)), 300)
+    return () => window.clearTimeout(timer)
   }, [document, draftLoading])
 
   // Nothing can keep an Object URL alive past the editor itself.
@@ -751,8 +766,8 @@ function SiteEditorDocument() {
             device={device}
             selection={selection}
             isPreview={isPreview}
-            onSelectSection={(sectionId) => handleSelect({ kind: 'section', id: sectionId })}
-            onSelectBlock={(blockId) => handleSelect({ kind: 'block', id: blockId })}
+            onSelectSection={handleSelectSection}
+            onSelectBlock={handleSelectBlock}
             onInsertBlockAt={handleInsertBlockAt}
             onMoveBlock={handleMoveBlock}
             onMoveSection={handleMoveSection}
@@ -783,7 +798,7 @@ function SiteEditorDocument() {
             onDuplicateSection={handleDuplicateSection}
             onDeleteSection={handleDeleteSection}
             onResetDeviceOverrides={handleResetDeviceOverrides}
-            onOpenMedia={() => openMedia()}
+            onOpenMedia={(target) => openMedia(target)}
             onClearSelection={() => setSelection(null)}
             isMobileOpen={isRightOpen}
             onCloseMobile={() => setIsRightOpen(false)}

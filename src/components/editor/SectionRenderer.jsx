@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { useCanvasDrop } from '@/hooks/useCanvasDrop'
 import { CanvasDragHandle } from '@/components/editor/CanvasDrag'
 import { getMotionProps } from '@/models/siteMotion'
@@ -105,6 +106,8 @@ function CanvasBlock({ siteMotion, index, sectionId, block, isSelected, isPrevie
   )
 }
 
+const MemoCanvasBlock = memo(CanvasBlock)
+
 /**
  * The marker shown in the gap above a block.
  *
@@ -166,6 +169,17 @@ function SectionRenderer({
   const dragItem = { kind: 'section', id: section.id, index }
   const dropProps = useCanvasDrop(dragItem, !isPreview)
   const { section: sectionCss, inner } = getSectionCssStyle(section, device)
+  inner['--section-copy-rows'] = Math.max(1,
+    section.blocks.filter((block) => block.type !== 'image' && (!isPreview || isVisibleAtDevice(block, device))).length + (isPreview ? 0 : 1),
+  )
+  // Full-width headings occupy every auto-fit track, preventing unused tracks
+  // from collapsing. Count the actual cards so two charts fill two columns.
+  inner['--section-grid-columns'] = Math.max(1, Math.min(4,
+    section.blocks.filter((block) =>
+      !['heading', 'text', 'button', 'form', 'table', 'toolbar'].includes(block.type) &&
+      (!isPreview || isVisibleAtDevice(block, device)),
+    ).length,
+  ))
   const overlayCss = getSectionOverlayCssStyle(section.backgroundImage)
   const label = t(SECTION_TYPE_LABELS[section.type] ?? 'editor.section.custom')
 
@@ -235,6 +249,8 @@ function SectionRenderer({
       }`}
       data-section-id={section.id}
       data-selected={isSectionSelected ? 'true' : undefined}
+      data-section-type={section.type}
+      data-layout={section.layout}
       {...getMotionProps(section.animation, siteMotion, device, isPreview)}
       {...dropProps}
       data-focused={isFocused ? 'true' : undefined}
@@ -290,8 +306,8 @@ function SectionRenderer({
           )}
 
           {section.blocks.map((block, index) => (
-            <div key={block.id} className="editor-canvas__block-slot">
-              <CanvasBlock
+            <div key={block.id} className="editor-canvas__block-slot" data-block-type={block.type}>
+              <MemoCanvasBlock
                 block={block}
                 siteMotion={siteMotion}
                 sectionId={section.id}
@@ -318,4 +334,4 @@ function SectionRenderer({
   )
 }
 
-export default SectionRenderer
+export default memo(SectionRenderer)

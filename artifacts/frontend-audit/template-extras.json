@@ -1,0 +1,166 @@
+{
+  "locales": [
+    {
+      "locale": "az",
+      "templates": 13,
+      "status": "all preview pages rendered without raw keys or malformed text"
+    },
+    {
+      "locale": "en",
+      "templates": 13,
+      "status": "all preview pages rendered without raw keys or malformed text"
+    }
+  ],
+  "keyboard": [
+    "Native button/link semantics; focus enters dialog; Tab handler wraps; Escape handler closes and restores trigger focus. Native CDP key delivery unavailable on host."
+  ],
+  "performance": [
+    {
+      "id": "nova-ai",
+      "openWithAutomationWaitMs": 294,
+      "motionNodes": 12
+    },
+    {
+      "id": "atlas-dashboard",
+      "openWithAutomationWaitMs": 314,
+      "motionNodes": 26
+    }
+  ],
+  "slugs": [
+    {
+      "id": "saas-starter",
+      "slugs": [
+        "",
+        "pricing",
+        "contact"
+      ]
+    },
+    {
+      "id": "portfolio-minimal",
+      "slugs": [
+        "",
+        "work",
+        "about",
+        "contact"
+      ]
+    },
+    {
+      "id": "nova-ai",
+      "slugs": [
+        "",
+        "features",
+        "solutions",
+        "pricing",
+        "about",
+        "contact"
+      ]
+    },
+    {
+      "id": "maison",
+      "slugs": [
+        "",
+        "projects",
+        "services",
+        "about",
+        "contact"
+      ]
+    },
+    {
+      "id": "agency-clean",
+      "slugs": [
+        "",
+        "services",
+        "work",
+        "contact"
+      ]
+    },
+    {
+      "id": "restaurant-simple",
+      "slugs": [
+        "",
+        "menu",
+        "about",
+        "contact"
+      ]
+    },
+    {
+      "id": "vertex-studio",
+      "slugs": [
+        "",
+        "work",
+        "services",
+        "studio",
+        "about",
+        "contact"
+      ]
+    },
+    {
+      "id": "noir-portfolio",
+      "slugs": [
+        "",
+        "projects",
+        "project",
+        "about",
+        "contact"
+      ]
+    },
+    {
+      "id": "business-starter",
+      "slugs": [
+        "",
+        "services",
+        "about",
+        "contact"
+      ]
+    },
+    {
+      "id": "forge-construction",
+      "slugs": [
+        "",
+        "projects",
+        "services",
+        "about",
+        "contact"
+      ]
+    },
+    {
+      "id": "aurelia-wellness",
+      "slugs": [
+        "",
+        "treatments",
+        "about",
+        "booking",
+        "contact"
+      ]
+    },
+    {
+      "id": "pulse-finance",
+      "slugs": [
+        "",
+        "product",
+        "solutions",
+        "pricing",
+        "security",
+        "contact"
+      ]
+    },
+    {
+      "id": "atlas-dashboard",
+      "slugs": [
+        "",
+        "analytics",
+        "customers",
+        "transactions",
+        "reports",
+        "settings"
+      ]
+    }
+  ],
+  "longTasks": [
+    109,
+    71,
+    119,
+    57
+  ],
+  "errors": []
+}

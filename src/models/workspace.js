@@ -7,6 +7,8 @@
  * empty states until the API is connected.
  */
 
+import { getDateFormatter } from '@/utils/intl'
+
 /**
  * @typedef {Object} Workspace
  * @property {string}      id        Backend identifier.
@@ -95,7 +97,7 @@ export const formatWorkspaceDate = (value, locale) => {
   if (!value) return null
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return null
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(date)
+  return getDateFormatter(locale, { dateStyle: 'medium' }).format(date)
 }
 
 export default normalizeWorkspace

@@ -1,0 +1,760 @@
+/*
+ * Cards, and the layouts a section's blocks can adopt.
+ *
+ * The builder already had one block per idea — a heading, a paragraph, a button.
+ * A template needed one more: a card. `panel` is that block, and the rules here
+ * give it a surface, a border and a radius. Nothing about the *shape* is baked
+ * into the block itself, so a theme still decides the colours and the corner
+ * radius, and a user can retype the card's copy in the settings panel.
+ *
+ * The layout rules are the other half. A section has a `layout` and the canvas
+ * writes it as `data-layout`, so the same blocks can read as a stack, a grid, a
+ * two-column split, a bento arrangement or a single row — using CSS only. The
+ * editor never re-renders the document to change a layout; it just changes the
+ * attribute and the browser reflows.
+ *
+ * `@container` is what makes the responsive part honest. The device toggle sets
+ * the canvas frame's width, not the window's, so a width media query would be
+ * blind to it. The canvas is the query container, so the layouts collapse exactly
+ * when the frame they are drawn in is narrow — in the editor and in preview
+ * alike, on any screen.
+ */
+
+.editor-canvas {
+  /* The frame that the device toggle resizes is the query container. */
+  container-type: inline-size;
+}
+
+/* ------------------------------------------------------------------ cards */
+
+.editor-canvas__page .editor-block__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--site-space);
+  overflow: hidden;
+  padding: calc(var(--site-space) * 2.4);
+  border: 1px solid var(--site-border);
+  border-radius: calc(var(--site-radius) + 4px);
+  background: var(--site-surface);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 5%), 0 18px 40px -32px rgb(0 0 0 / 45%);
+  box-sizing: border-box;
+}
+
+/*
+ * A card that is exactly the surface colour disappears into a surface-coloured
+ * band, and a card tinted the wrong way disappears into a dark one. Mixing a
+ * little of the theme's text colour into the surface nudges the card *away* from
+ * whatever it sits on in either direction: darker on a light theme, lighter on a
+ * dark one. The plain surface above is the fallback where `color-mix` is not
+ * supported.
+ */
+@supports (background: color-mix(in srgb, red 50%, blue)) {
+  .editor-canvas__page .editor-block__panel {
+    background: color-mix(in srgb, var(--site-surface) 90%, var(--site-text) 10%);
+  }
+}
+
+.editor-canvas__page .editor-block__panel-media {
+  display: block;
+  aspect-ratio: 16 / 10;
+  /* Pulled to the card's edges: the image is the top of the card, not a picture
+     floating inside its padding. */
+  margin: calc(var(--site-space) * -2.4) calc(var(--site-space) * -2.4) 0;
+  background: linear-gradient(135deg, var(--site-accent-soft), var(--site-surface));
+}
+
+.editor-canvas__page .editor-block__panel-media[data-placeholder='true'] {
+  /*
+   * An abstract stand-in rather than a grey box: two soft washes of the theme's
+   * accent over its own quiet surface. It reads as "a picture goes here" without
+   * pretending to be one, and it is made of the site's colours, so it changes
+   * with the theme.
+   */
+  background:
+    radial-gradient(120% 140% at 12% 8%, color-mix(in srgb, var(--site-accent) 45%, transparent), transparent 60%),
+    radial-gradient(130% 120% at 92% 20%, color-mix(in srgb, var(--site-primary) 35%, transparent), transparent 55%),
+    linear-gradient(135deg, var(--site-accent-soft), var(--site-surface));
+}
+
+.editor-canvas__page .editor-block__panel-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.editor-canvas__page .editor-block__panel-inner {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--site-space) * 0.75);
+}
+
+.editor-canvas__page .editor-block__panel-eyebrow {
+  font-family: var(--site-font-body);
+  font-size: calc(var(--site-base-size) * 0.78);
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--site-accent);
+}
+
+.editor-canvas__page .editor-block__panel-title {
+  font-family: var(--site-font-heading);
+  font-size: calc(var(--site-base-size) * 1.35);
+  font-weight: var(--site-heading-weight);
+  line-height: 1.25;
+  color: var(--site-text);
+}
+
+.editor-canvas__page .editor-block__panel-text {
+  font-size: var(--site-base-size);
+  line-height: var(--site-line-height);
+  color: var(--site-muted);
+  /* A footer column of links is typed as newlines; this keeps them on one line
+     each instead of running together. */
+  white-space: pre-line;
+}
+
+.editor-canvas__page .editor-block__panel-action {
+  align-self: flex-start;
+  margin-top: calc(var(--site-space) * 0.5);
+  display: inline-block;
+  padding: calc(var(--site-button-padding) * 0.85) calc(var(--site-button-padding) * 1.5);
+  border-radius: var(--site-button-radius);
+  background: var(--site-primary);
+  color: var(--site-on-primary);
+  font-weight: var(--site-button-weight);
+  text-decoration: none;
+}
+
+.editor-canvas__page .editor-block__panel-action[href]:hover {
+  opacity: 0.9;
+}
+
+/*
+ * Footer link columns are cards in the model — they are built from the same
+ * block — but a bordered box around each column of links is noise. In the footer
+ * sections the card keeps its structure and loses its chrome.
+ */
+.editor-canvas__page .editor-canvas__section:is(
+  [data-section-type='footerColumns'],
+  [data-section-type='footerDetailed']
+) .editor-block__panel {
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* --------------------------------------------------------------- layouts */
+
+/*
+ * Only the library layouts get rules. `stack` is the section-inner's own
+ * column-flex default, which is what the builder has always done, so a section
+ * that never chose a layout keeps behaving exactly as before.
+ *
+ * The direct-child insert marker is placed first in the DOM in edit mode. On a
+ * stacking layout it is just the top of the column; on grid, bento and row it is
+ * told to take a whole line so it can never push the first real block into the
+ * wrong cell. Split is the exception: its second column is reserved for the
+ * picture from row one, so the marker keeps to the first column instead of
+ * overlapping it.
+ */
+.editor-canvas__page
+  .editor-canvas__section:is([data-layout='grid'], [data-layout='bento'], [data-layout='row'])
+  .editor-canvas__section-inner
+  > .editor-canvas__insert-slot {
+  grid-column: 1 / -1;
+  flex-basis: 100%;
+}
+
+.editor-canvas__page .editor-canvas__section[data-layout='split']
+  .editor-canvas__section-inner
+  > .editor-canvas__insert-slot {
+  grid-column: 1;
+}
+
+/* Grid: equal cells that reflow to as many columns as the frame allows. */
+.editor-canvas__page .editor-canvas__section[data-layout='grid'] .editor-canvas__section-inner {
+  display: grid;
+  grid-template-columns: repeat(var(--section-grid-columns, 3), minmax(0, 1fr));
+  gap: calc(var(--site-space) * 3);
+  align-items: stretch;
+}
+
+/* Text-ish blocks lead the section, so they span the full grid width. */
+.editor-canvas__page .editor-canvas__section[data-layout='grid'] .editor-canvas__block-slot:is(
+  [data-block-type='heading'],
+  [data-block-type='text'],
+  [data-block-type='button'],
+  [data-block-type='form'],
+  [data-block-type='table'],
+  [data-block-type='toolbar']
+) {
+  grid-column: 1 / -1;
+}
+
+/* Split: the picture holds one column while the words stack beside it. */
+.editor-canvas__page .editor-canvas__section[data-layout='split'] .editor-canvas__section-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: calc(var(--site-space) * 4);
+  align-items: center;
+}
+
+.editor-canvas__page .editor-canvas__section[data-layout='split']
+  .editor-canvas__block-slot[data-block-type='image'] {
+  grid-column: 2;
+  /* Spans the rows the words create, so the picture stays centred against the
+     whole column rather than the first line of it. */
+  grid-row: 1 / span var(--section-copy-rows, 4);
+}
+
+.editor-canvas__page .editor-canvas__section[data-layout='split']
+  .editor-canvas__block-slot:not([data-block-type='image']) {
+  grid-column: 1;
+}
+
+/* Bento: one hero cell, two small ones and a wide one. */
+.editor-canvas__page .editor-canvas__section[data-layout='bento'] .editor-canvas__section-inner {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: calc(var(--site-space) * 3);
+  align-items: stretch;
+}
+
+.editor-canvas__page .editor-canvas__section[data-layout='bento']
+  .editor-canvas__block-slot:is([data-block-type='heading'], [data-block-type='text']) {
+  grid-column: 1 / -1;
+}
+
+/*
+ * The four cards are always the last four things in the section — in edit mode
+ * the insert marker sits ahead of them, and in preview it is gone — so counting
+ * back from the end targets them the same way in both. The first card takes a
+ * large cell and the last takes the full width.
+ */
+.editor-canvas__page .editor-canvas__section[data-layout='bento']
+  .editor-canvas__block-slot[data-block-type='panel']:nth-last-child(4) {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.editor-canvas__page .editor-canvas__section[data-layout='bento']
+  .editor-canvas__block-slot[data-block-type='panel']:nth-last-child(1) {
+  grid-column: 1 / -1;
+}
+
+/* Row: a single line of small things — logos, statistics. */
+.editor-canvas__page .editor-canvas__section[data-layout='row'] .editor-canvas__section-inner {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--site-space) * 3);
+}
+
+.editor-canvas__page .editor-canvas__section[data-layout='row']
+  .editor-canvas__block-slot[data-block-type='heading'] {
+  flex-basis: 100%;
+}
+
+.editor-canvas__page .editor-canvas__section[data-layout='row']
+  .editor-canvas__block-slot[data-block-type='panel'] {
+  flex: 1 1 180px;
+  max-width: 320px;
+}
+
+/*
+ * Equal-height cards.
+ *
+ * A grid cell stretches its item, but the item is the slot, and inside it the
+ * block and then the card each only take their content height. Giving the slot
+ * and the block a column flex lets the card stretch to fill whatever the tallest
+ * neighbour in the row settled on.
+ */
+.editor-canvas__page
+  .editor-canvas__section:is([data-layout='grid'], [data-layout='bento'])
+  .editor-canvas__block-slot {
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-canvas__page
+  .editor-canvas__section:is([data-layout='grid'], [data-layout='bento'])
+  .editor-canvas__block-slot
+  > .editor-canvas__block {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.editor-canvas__page
+  .editor-canvas__section:is([data-layout='grid'], [data-layout='bento'])
+  .editor-canvas__block-slot
+  > .editor-canvas__block
+  > .editor-block__panel {
+  flex: 1;
+}
+
+.editor-canvas__page
+  .editor-canvas__section:is([data-layout='grid'], [data-layout='bento'])
+  .editor-canvas__block-slot
+  > .editor-canvas__block
+  > .editor-block__panel {
+  flex: 1;
+}
+
+/* The application cards stretch the same way, so a row of them is flush. */
+.editor-canvas__page
+  .editor-canvas__section:is([data-layout='grid'], [data-layout='bento'])
+  .editor-canvas__block-slot
+  > .editor-canvas__block
+  > :is(.editor-block__chart, .editor-block__status) {
+  flex: 1;
+}
+
+/* ------------------------------------------------------------------ stat */
+
+/*
+ * A metric card.
+ *
+ * Its own surface and border, like a card, but with a value on a larger type
+ * scale than a card title. It is deliberately not a `panel`: a KPI number is the
+ * point of the block, not a heading.
+ */
+.editor-canvas__page .editor-block__stat {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--site-space) * 0.7);
+  padding: calc(var(--site-space) * 1.6) calc(var(--site-space) * 1.8);
+  border: 1px solid var(--site-border);
+  border-radius: calc(var(--site-radius) + 4px);
+  background: var(--site-surface);
+  box-sizing: border-box;
+}
+
+@supports (background: color-mix(in srgb, red 50%, blue)) {
+  .editor-canvas__page .editor-block__stat {
+    background: color-mix(in srgb, var(--site-surface) 92%, var(--site-text) 8%);
+  }
+}
+
+.editor-canvas__page .editor-block__stat-label {
+  font-size: calc(var(--site-base-size) * 0.78);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--site-muted);
+}
+
+.editor-canvas__page .editor-block__stat-value {
+  font-size: calc(var(--site-base-size) * 1.9);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--site-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.editor-canvas__page .editor-block__stat-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--site-space) * 0.75);
+  margin-top: auto;
+  padding-top: calc(var(--site-space) * 0.5);
+  font-size: calc(var(--site-base-size) * 0.82);
+}
+
+.editor-canvas__page .editor-block__stat-delta {
+  font-weight: 600;
+  color: var(--site-primary);
+}
+
+/*
+ * The direction is shown with a glyph rather than a fixed red/green, because a
+ * theme owns the palette: "up" is the theme's primary, "down" the accent and
+ * "flat" is quiet, so a user's theme still decides what the change looks like.
+ */
+.editor-canvas__page .editor-block__stat-delta::before {
+  content: '▲';
+  margin-inline-end: 0.35em;
+  font-size: 0.8em;
+}
+
+.editor-canvas__page .editor-block__stat[data-trend='down'] .editor-block__stat-delta {
+  color: var(--site-accent);
+}
+
+.editor-canvas__page .editor-block__stat[data-trend='down'] .editor-block__stat-delta::before {
+  content: '▼';
+}
+
+.editor-canvas__page .editor-block__stat[data-trend='flat'] .editor-block__stat-delta {
+  color: var(--site-muted);
+}
+
+.editor-canvas__page .editor-block__stat[data-trend='flat'] .editor-block__stat-delta::before {
+  content: '—';
+}
+
+.editor-canvas__page .editor-block__stat-caption {
+  color: var(--site-muted);
+}
+
+/* Row layout: KPI cards share a line and stretch to the tallest of them. */
+.editor-canvas__page .editor-canvas__section[data-layout='row']
+  .editor-canvas__block-slot[data-block-type='stat'] {
+  flex: 1 1 200px;
+  max-width: 340px;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-canvas__page .editor-canvas__section[data-layout='row']
+  .editor-canvas__block-slot[data-block-type='stat']
+  > .editor-canvas__block {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.editor-canvas__page .editor-canvas__section[data-layout='row']
+  .editor-canvas__block-slot[data-block-type='stat']
+  > .editor-canvas__block
+  > .editor-block__stat {
+  flex: 1;
+}
+
+/* ------------------------------------------------------------------ chart */
+
+.editor-canvas__page .editor-block__chart {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--site-space) * 1.2);
+  padding: calc(var(--site-space) * 1.8);
+  border: 1px solid var(--site-border);
+  border-radius: calc(var(--site-radius) + 4px);
+  background: var(--site-surface);
+  box-sizing: border-box;
+}
+
+.editor-canvas__page .editor-block__chart-title {
+  font-size: calc(var(--site-base-size) * 1.05);
+  font-weight: 600;
+  color: var(--site-text);
+}
+
+.editor-canvas__page .editor-block__chart-figure {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+}
+
+.editor-canvas__page .editor-block__chart-svg {
+  display: block;
+  width: 100%;
+  height: 160px;
+}
+
+.editor-canvas__page .editor-block__chart-svg--donut {
+  width: auto;
+  height: 150px;
+}
+
+.editor-canvas__page .editor-block__chart-bar {
+  fill: var(--site-accent);
+  opacity: 0.85;
+}
+
+.editor-canvas__page .editor-block__chart-line {
+  fill: none;
+  stroke: var(--site-accent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  /* The svg is stretched to its box, so the stroke must not stretch with it. */
+  vector-effect: non-scaling-stroke;
+}
+
+.editor-canvas__page .editor-block__chart-donut-track {
+  fill: none;
+  stroke: var(--site-border);
+  stroke-width: 12;
+}
+
+.editor-canvas__page .editor-block__chart-donut-value {
+  fill: none;
+  stroke: var(--site-accent);
+  stroke-width: 12;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 60px 60px;
+}
+
+.editor-canvas__page .editor-block__chart-caption {
+  font-size: calc(var(--site-base-size) * 0.85);
+  color: var(--site-muted);
+}
+
+/* ------------------------------------------------------------------ table */
+
+.editor-canvas__page .editor-block__table {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/*
+ * The scroll container is what keeps a wide table from pushing the page sideways
+ * on a narrow frame: the table keeps a readable minimum and scrolls inside the
+ * band instead.
+ */
+.editor-canvas__page .editor-block__table-scroll {
+  display: block;
+  overflow-x: auto;
+  border: 1px solid var(--site-border);
+  border-radius: calc(var(--site-radius) + 4px);
+  background: var(--site-surface);
+}
+
+.editor-canvas__page .editor-block__table-grid {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: calc(var(--site-base-size) * 0.9);
+}
+
+.editor-canvas__page .editor-block__table-caption {
+  caption-side: top;
+  padding: calc(var(--site-space) * 1.2) calc(var(--site-space) * 1.4);
+  text-align: start;
+  font-weight: 600;
+  color: var(--site-text);
+}
+
+.editor-canvas__page .editor-block__table-grid th,
+.editor-canvas__page .editor-block__table-grid td {
+  padding: calc(var(--site-space) * 1) calc(var(--site-space) * 1.4);
+  text-align: start;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--site-border);
+}
+
+.editor-canvas__page .editor-block__table-grid th {
+  font-size: calc(var(--site-base-size) * 0.76);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--site-muted);
+  background: color-mix(in srgb, var(--site-surface) 86%, var(--site-text) 14%);
+}
+
+.editor-canvas__page .editor-block__table-grid td {
+  color: var(--site-text);
+}
+
+.editor-canvas__page .editor-block__table-grid tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ----------------------------------------------------------------- status */
+
+.editor-canvas__page .editor-block__status {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--site-space) * 1.2);
+  padding: calc(var(--site-space) * 1.8);
+  border: 1px solid var(--site-border);
+  border-radius: calc(var(--site-radius) + 4px);
+  background: var(--site-surface);
+  box-sizing: border-box;
+}
+
+.editor-canvas__page .editor-block__status-title {
+  font-size: calc(var(--site-base-size) * 1.05);
+  font-weight: 600;
+  color: var(--site-text);
+}
+
+.editor-canvas__page .editor-block__status-list {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--site-space) * 0.9);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.editor-canvas__page .editor-block__status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--site-space) * 1);
+  padding-bottom: calc(var(--site-space) * 0.9);
+  border-bottom: 1px solid var(--site-border);
+}
+
+.editor-canvas__page .editor-block__status-row:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.editor-canvas__page .editor-block__status-label {
+  font-size: calc(var(--site-base-size) * 0.92);
+  color: var(--site-text);
+}
+
+.editor-canvas__page .editor-block__status-value {
+  flex: none;
+  padding: 0.2em 0.7em;
+  border: 1px solid var(--site-border);
+  border-radius: 999px;
+  font-size: calc(var(--site-base-size) * 0.76);
+  font-weight: 600;
+  color: var(--site-muted);
+  background: color-mix(in srgb, var(--site-surface) 84%, var(--site-text) 16%);
+}
+
+.editor-canvas__page .editor-block__status-value[data-tone='positive'] {
+  color: var(--site-primary);
+  border-color: var(--site-primary);
+}
+
+.editor-canvas__page .editor-block__status-value[data-tone='warning'] {
+  color: var(--site-accent);
+  border-color: var(--site-accent);
+}
+
+.editor-canvas__page .editor-block__status-value[data-tone='critical'] {
+  color: var(--site-text);
+  border-color: var(--site-text);
+}
+
+/* ---------------------------------------------------------------- toolbar */
+
+.editor-canvas__page .editor-block__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--site-space) * 0.9);
+}
+
+.editor-canvas__page .editor-block__toolbar-search {
+  flex: 1 1 200px;
+  min-width: 140px;
+  padding: calc(var(--site-space) * 0.75) calc(var(--site-space) * 1.1);
+  border: 1px solid var(--site-border);
+  border-radius: var(--site-radius);
+  background: var(--site-surface);
+  color: var(--site-muted);
+  font-size: calc(var(--site-base-size) * 0.9);
+}
+
+.editor-canvas__page .editor-block__toolbar-filter {
+  padding: calc(var(--site-space) * 0.6) calc(var(--site-space) * 1.1);
+  border: 1px solid var(--site-border);
+  border-radius: var(--site-radius);
+  color: var(--site-text);
+  font-size: calc(var(--site-base-size) * 0.88);
+  white-space: nowrap;
+}
+
+.editor-canvas__page .editor-block__toolbar-action {
+  padding: calc(var(--site-space) * 0.6) calc(var(--site-space) * 1.2);
+  border-radius: var(--site-button-radius);
+  background: var(--site-primary);
+  color: var(--site-on-primary);
+  font-size: calc(var(--site-base-size) * 0.88);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------- application bands */
+
+/*
+ * The application header and the quick-action row are `row` bands, but they do
+ * not centre like a logo strip: a header reads left to right, with the action
+ * pushed to the far edge, and shortcuts read as a row of equal tiles.
+ */
+.editor-canvas__page
+  .editor-canvas__section[data-section-type='appBar']
+  .editor-canvas__section-inner {
+  justify-content: space-between;
+}
+
+.editor-canvas__page
+  .editor-canvas__section[data-section-type='appBar']
+  .editor-canvas__block-slot[data-block-type='text'] {
+  flex: 1 1 auto;
+}
+
+.editor-canvas__page
+  .editor-canvas__section[data-section-type='quickActions']
+  .editor-canvas__section-inner {
+  justify-content: flex-start;
+}
+
+.editor-canvas__page
+  .editor-canvas__section[data-section-type='quickActions']
+  .editor-canvas__block-slot[data-block-type='button'] {
+  display: flex;
+  flex: 1 1 150px;
+}
+
+.editor-canvas__page
+  .editor-canvas__section[data-section-type='quickActions']
+  .editor-canvas__block-slot[data-block-type='button']
+  > .editor-canvas__block {
+  display: flex;
+  flex: 1;
+}
+
+.editor-canvas__page
+  .editor-canvas__section[data-section-type='quickActions']
+  .editor-canvas__block-slot[data-block-type='button']
+  > .editor-canvas__block
+  > .editor-block__button {
+  display: block;
+  flex: 1;
+  width: 100%;
+}
+
+/* ------------------------------------------------------------ narrow frames */
+
+/* The canvas is the container, so this fires from the device frame's width. */
+@container (max-width: 780px) {
+  .editor-canvas__page .editor-canvas__section[data-layout='grid'] .editor-canvas__section-inner,
+  .editor-canvas__page .editor-canvas__section[data-layout='bento'] .editor-canvas__section-inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The bento cells only make sense with more than one column. */
+  .editor-canvas__page .editor-canvas__section[data-layout='bento']
+    .editor-canvas__block-slot[data-block-type='panel']:nth-last-child(4) {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .editor-canvas__page .editor-canvas__section[data-layout='split'] .editor-canvas__section-inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: calc(var(--site-space) * 3);
+  }
+
+  .editor-canvas__page .editor-canvas__section[data-layout='split']
+    .editor-canvas__block-slot:is([data-block-type='image'], :not([data-block-type='image'])) {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+/* --------------------------------------------------------------- motion */
+
+@media (prefers-reduced-motion: no-preference) {
+  .editor-canvas__page .editor-block__panel-action {
+    transition: opacity 140ms ease;
+  }
+}

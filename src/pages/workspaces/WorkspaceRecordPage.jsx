@@ -12,6 +12,7 @@ import WorkspaceBreadcrumb from '@/components/workspaces/WorkspaceBreadcrumb'
 import WorkspaceSectionNav from '@/components/workspaces/WorkspaceSectionNav'
 import RecordForm from '@/components/records/RecordForm'
 import { formatRecordValue } from '@/models/record'
+import { getDateFormatter } from '@/utils/intl'
 import {
   WORKSPACE_MODEL_PATH,
   WORKSPACE_MODEL_RECORDS_PATH,
@@ -66,7 +67,7 @@ function WorkspaceRecordPage() {
     if (!value) return t('database.records.notSet')
     const date = new Date(value)
     if (Number.isNaN(date.getTime())) return String(value)
-    return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(date)
+    return getDateFormatter(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(date)
   }
 
   const handleSave = async (values) => {

@@ -1,5 +1,5 @@
 /* Product chrome only. Site colors, layout values and preview content remain model-owned. */
-.templates-page, .editor-shell, .create-site-page {
+.templates-page, .template-preview-layer, .editor-shell, .create-site-page {
   --studio-surface: #ffffff;
   --studio-raised: #f3f8f5;
   --studio-canvas: #eaf1ed;
@@ -8,7 +8,7 @@
   --studio-wash: #dceee580;
   --studio-shadow: 0 16px 40px -26px #1a493b50;
 }
-[data-theme='dark'] :is(.templates-page, .editor-shell, .create-site-page) {
+[data-theme='dark'] :is(.templates-page, .template-preview-layer, .editor-shell, .create-site-page) {
   --studio-surface: var(--color-surface);
   --studio-raised: var(--color-surface-3);
   --studio-canvas: var(--color-bg);
@@ -25,38 +25,18 @@
 .templates-page__eyebrow { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; color: var(--studio-quiet); font-size: .72rem; letter-spacing: .06em; font-weight: 700; }
 .templates-page .sites-page__title { font-size: clamp(1.5rem, 2.7vw, 2.15rem); letter-spacing: -.035em; }
 .templates-page .page-description { max-width: 56ch; line-height: 1.75; }
-.templates-page__browse { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
 .templates-page .templates-filter { margin: 0; gap: 6px; }
 .templates-page .templates-filter__item { min-height: 40px; padding: 9px 15px; border-radius: 10px; background: var(--studio-surface); color: var(--color-text-muted); border-color: var(--studio-edge); }
 .templates-page .templates-filter__item[aria-pressed='true'] { color: var(--color-text); background: var(--studio-raised); border-color: var(--color-accent); box-shadow: inset 0 -2px var(--color-accent); }
 .templates-page__count { margin: 0; color: var(--color-text-muted); font-size: .8rem; font-variant-numeric: tabular-nums; }
 .templates-page .templates-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr)); gap: 24px; align-items: start; }
 .templates-page .template-card { min-width: 0; height: 100%; background: var(--studio-surface); border-color: var(--studio-edge); border-radius: var(--radius-lg); box-shadow: var(--studio-shadow); }
-.templates-page .template-card__frame { padding: 24px 20px; border-color: var(--studio-edge); background: radial-gradient(ellipse at 50% 0, var(--studio-wash), transparent 80%), var(--studio-raised); }
-.templates-page .template-card__preview { min-height: 220px; gap: 12px; padding: 14px; border: 0; box-shadow: 0 8px 22px -10px #0004; }
-.templates-page .template-card__page { max-width: none; min-width: 0; gap: 7px; padding: 8px; border-color: color-mix(in srgb, currentColor 15%, transparent); opacity: 1; border-radius: 6px; }
-.template-card__browser { display: flex; gap: 3px; padding: 2px 0 7px; border-bottom: 1px solid color-mix(in srgb, currentColor 15%, transparent); }
-.template-card__browser i { width: 3px; height: 3px; border-radius: 50%; background: currentColor; opacity: .35; }
-.templates-page .template-card__band { padding: 8px; opacity: 1; border-color: color-mix(in srgb, currentColor 10%, transparent); display: flex; flex-direction: column; justify-content: center; gap: 5px; }
-.template-card__skeleton-heading { display: block; width: 65%; height: 4px; border-radius: 2px; background: currentColor; opacity: .55; }
-.template-card__skeleton-line { display: block; width: 85%; height: 2px; background: currentColor; opacity: .18; }
-.template-card__skeleton-button { width: 30%; height: 8px; margin-top: 3px; border-radius: 2px; background: var(--template-accent, currentColor); }
-.templates-page .template-card__band--empty { min-height: 160px; border-style: dashed; opacity: .4; }
 .templates-page .template-card__body { padding: 24px 24px 18px; gap: 9px; }
 .templates-page .template-card__category { color: var(--studio-quiet); font-size: .68rem; letter-spacing: .08em; }
 .templates-page .template-card__title { font-size: 1.25rem; letter-spacing: -.025em; }
 .templates-page .template-card__text { font-size: .84rem; line-height: 1.7; }
 .templates-page .template-card__meta { gap: 8px; margin-top: 8px; }
 .templates-page .template-card__meta li { padding: 4px 8px; border-radius: 6px; background: var(--studio-raised); font-size: .73rem; }
-.template-card__inspect { margin: 0 24px 18px; border-top: 1px solid var(--studio-edge); }
-.template-card__inspect summary { display: flex; align-items: center; gap: 8px; padding: 14px 0 6px; cursor: pointer; color: var(--studio-quiet); font-size: .82rem; font-weight: 600; list-style: none; }
-.template-card__inspect summary::-webkit-details-marker { display: none; }
-.template-card__inspect summary::after { content: '+'; margin-left: auto; }
-.template-card__inspect[open] summary::after { content: '−'; }
-.template-card__inspect ul { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 14px; }
-.template-card__inspect strong, .template-card__inspect span { display: block; font-size: .78rem; line-height: 1.7; }
-.template-card__inspect span { margin-top: 4px; color: var(--color-text-muted); }
-.templates-page .template-card:has(.template-card__inspect[open]) { border-color: var(--studio-quiet); }
 .templates-page .template-card__actions { padding: 0 24px 24px; }
 .templates-page .template-card__actions .btn { white-space: normal; min-height: 42px; }
 .templates-page .templates-empty { display: grid; justify-items: center; gap: 20px; background: var(--studio-surface); border-color: var(--studio-edge); color: var(--studio-quiet); }
@@ -64,6 +44,24 @@
 .create-site-page .template-option { border-color: var(--studio-edge); background: var(--studio-surface); border-radius: 14px; }
 .create-site-page .template-option[data-checked='true'] { background: var(--studio-raised); border-color: var(--color-accent); box-shadow: inset 3px 0 var(--color-accent); }
 .templates-page :is(a, button, summary):focus-visible, .create-site-page .template-option:has(input:focus-visible) { outline: 2px solid var(--color-accent); outline-offset: 4px; }
+
+/* Tier, tags and features on a template card. */
+.templates-page .template-card__frame { position: relative; }
+.template-card__tier { position: absolute; top: 14px; right: 14px; z-index: 1; padding: 4px 10px; border-radius: 999px; font-size: .64rem; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; color: var(--color-text); background: var(--studio-raised); border: 1px solid var(--studio-edge); }
+.template-card__tier[data-tier='pro'] { color: var(--color-accent-text, #fff); background: var(--color-accent); border-color: transparent; box-shadow: 0 8px 18px -10px color-mix(in srgb, var(--color-accent) 75%, transparent); }
+.templates-page .template-card[data-tier='pro'] { border-color: color-mix(in srgb, var(--color-accent) 45%, var(--studio-edge)); }
+
+.templates-page .template-card__tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; padding: 0; list-style: none; }
+.templates-page .template-card__tags li { padding: 3px 9px; border-radius: 999px; font-size: .68rem; font-weight: 600; color: var(--color-text-muted); background: var(--studio-raised); border: 1px solid var(--studio-edge); }
+
+.template-card__features { display: grid; gap: 7px; margin: 12px 0 0; padding: 0; list-style: none; }
+.template-card__features li { display: flex; align-items: flex-start; gap: 8px; font-size: .78rem; line-height: 1.5; color: var(--color-text); }
+.template-card__features svg { flex-shrink: 0; margin-top: 2px; color: var(--color-accent); }
+
+/* The same tier statement on the create wizard's template choice. */
+.template-option__title { display: flex; align-items: center; gap: 8px; }
+.template-option__tier { padding: 2px 7px; border-radius: 999px; font-size: .6rem; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; color: var(--color-text-muted); background: var(--studio-raised); border: 1px solid var(--studio-edge); }
+.template-option__tier[data-tier='pro'] { color: var(--color-accent-text, #fff); background: var(--color-accent); border-color: transparent; }
 
 .editor-shell .editor { background: var(--studio-surface); }
 .editor-shell :is(.editor-topbar, .editor-panel, .editor__note, .editor__mobile-tools) { background: var(--studio-surface); border-color: var(--studio-edge); }

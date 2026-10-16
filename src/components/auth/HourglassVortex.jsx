@@ -240,15 +240,36 @@ function HourglassVortex() {
         renderer.domElement.remove()
       }
     }
-    const start = () => { initialize().catch(() => { if (!disposed) setUnavailable(true) }) }
-    mobile.addEventListener('change', start)
-    tablet.addEventListener('change', start)
-    start()
+    // Deferring the first start to an idle slot lets the form paint before the
+    // (heavy) three.js module is parsed and evaluated on the main thread. This
+    // panel is decoration, so arriving a frame or two later costs nothing, while
+    // loading and evaluating ~700 kB of renderer during the first paint is felt.
+    let cancelScheduled = () => {}
+    const scheduleStart = () => {
+      cancelScheduled()
+      let cancelled = false
+      let cancel
+      const run = () => {
+        if (!cancelled) initialize().catch(() => { if (!disposed) setUnavailable(true) })
+      }
+      if (typeof window.requestIdleCallback === 'function') {
+        const id = window.requestIdleCallback(run, { timeout: 900 })
+        cancel = () => window.cancelIdleCallback(id)
+      } else {
+        const id = window.setTimeout(run, 180)
+        cancel = () => window.clearTimeout(id)
+      }
+      cancelScheduled = () => { cancelled = true; cancel() }
+    }
+    mobile.addEventListener('change', scheduleStart)
+    tablet.addEventListener('change', scheduleStart)
+    scheduleStart()
     return () => {
       disposed = true
       generation++
-      mobile.removeEventListener('change', start)
-      tablet.removeEventListener('change', start)
+      cancelScheduled()
+      mobile.removeEventListener('change', scheduleStart)
+      tablet.removeEventListener('change', scheduleStart)
       teardown()
     }
   }, [theme])

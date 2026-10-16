@@ -1,13 +1,14 @@
 import MotionSettings from '@/components/editor/MotionSettings'
 import SiteDesignPanel from '@/components/editor/SiteDesignPanel'
 import FormSettings from '@/components/editor/FormSettings'
-import { Copy, Image as ImageIcon, Trash2 } from 'lucide-react'
+import { Copy, Image as ImageIcon, Plus, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import useTranslation from '@/hooks/useTranslation'
 import EditorPanelGroup from '@/components/editor/EditorPanelGroup'
 import {
   BLOCK_TYPE,
   BLOCK_TYPE_LABELS,
+  CHART_VARIANTS,
   FONT_SIZE_OPTIONS,
   FONT_WEIGHTS,
   getResolvedEditorStyle,
@@ -15,7 +16,13 @@ import {
   isVisibleAtDevice,
   isValidEditorColor,
   listOverriddenDevices,
+  MAX_STATUS_ITEMS,
+  MAX_TABLE_COLUMNS,
+  MAX_TABLE_ROWS,
+  MAX_TOOLBAR_FILTERS,
   SECTION_STYLE_BOUNDS,
+  STAT_TRENDS,
+  STATUS_TONES,
   STYLE_BOUNDS,
   TEXT_ALIGNMENTS,
   WIDTH_BOUNDS,
@@ -26,7 +33,7 @@ import {
   OVERLAY_BOUNDS,
   getMediaPreviewUrl,
 } from '@/models/siteMedia'
-import { SECTION_TYPE_LABELS } from '@/models/siteSection'
+import { SECTION_TYPE_LABELS, SECTION_LAYOUTS } from '@/models/siteSection'
 
 /**
  * A colour the canvas accepts. `HEX_COLOR` narrows it to the subset a native
@@ -53,7 +60,7 @@ const expandHex = (hex) => {
  * device looks identical to a real image on the canvas, so the one honest signal
  * that it will disappear when the tab closes is written next to it.
  */
-function ImageSettings({ block, onUpdate, onOpenMedia }) {
+function ImageSettings({ block, onUpdate, onOpenMedia, showLink = true }) {
   const { t } = useTranslation()
   const { alt, src, media, href } = block.content
   const previewUrl = getMediaPreviewUrl(media)
@@ -90,7 +97,7 @@ function ImageSettings({ block, onUpdate, onOpenMedia }) {
             <button
               type="button"
               className="btn btn--outline btn--sm"
-              onClick={onOpenMedia}
+              onClick={() => onOpenMedia()}
             >
               {t('editor.image.choose')}
             </button>
@@ -103,7 +110,7 @@ function ImageSettings({ block, onUpdate, onOpenMedia }) {
             </button>
           </div>
         ) : (
-          <button type="button" className="btn btn--outline btn--sm" onClick={onOpenMedia}>
+          <button type="button" className="btn btn--outline btn--sm" onClick={() => onOpenMedia()}>
             <ImageIcon size={16} aria-hidden="true" />
             {t('editor.image.choose')}
           </button>
@@ -144,19 +151,490 @@ function ImageSettings({ block, onUpdate, onOpenMedia }) {
         </select>
       </div>
 
+      {showLink ? (
+        <div className="editor-field">
+          <label className="editor-field__label" htmlFor="editor-image-href">
+            {t('editor.image.link')}
+          </label>
+          <input
+            id="editor-image-href"
+            className="editor-input"
+            type="text"
+            placeholder="https://"
+            value={href}
+            onChange={(event) => setField({ href: event.target.value })}
+          />
+          <p className="editor-field__hint">{t('editor.image.linkHint')}</p>
+        </div>
+      ) : null}
+    </>
+  )
+}
+
+/**
+ * Card settings.
+ *
+ * The text fields are the card's own. The image controls reuse the image
+ * settings with the link field hidden, because on a card the link belongs to the
+ * action button rather than to the picture. `imageSlot` keeps the media area
+ * reserved, so a portfolio or property card still reads as a card before a
+ * picture is chosen.
+ */
+function PanelSettings({ block, onUpdate, onOpenMedia }) {
+  const { t } = useTranslation()
+  const { content } = block
+  const setField = (patch) => onUpdate({ content: { ...patch } })
+
+  const textField = (id, labelKey, name, rows) => (
+    <div className="editor-field">
+      <label className="editor-field__label" htmlFor={id}>
+        {t(labelKey)}
+      </label>
+      {rows ? (
+        <textarea
+          id={id}
+          className="editor-textarea"
+          rows={rows}
+          value={content[name]}
+          onChange={(event) => setField({ [name]: event.target.value })}
+        />
+      ) : (
+        <input
+          id={id}
+          className="editor-input"
+          value={content[name]}
+          onChange={(event) => setField({ [name]: event.target.value })}
+        />
+      )}
+    </div>
+  )
+
+  return (
+    <>
+      {textField('editor-panel-eyebrow', 'editor.panel.eyebrow', 'eyebrow')}
+      {textField('editor-panel-title', 'editor.panel.title', 'title')}
+      {textField('editor-panel-body', 'editor.panel.body', 'body', 4)}
+      {textField('editor-panel-action', 'editor.panel.action', 'action')}
       <div className="editor-field">
-        <label className="editor-field__label" htmlFor="editor-image-href">
-          {t('editor.image.link')}
+        <label className="editor-field__label" htmlFor="editor-panel-href">
+          {t('editor.panel.link')}
         </label>
         <input
-          id="editor-image-href"
+          id="editor-panel-href"
           className="editor-input"
           type="text"
           placeholder="https://"
-          value={href}
+          value={content.href}
           onChange={(event) => setField({ href: event.target.value })}
         />
-        <p className="editor-field__hint">{t('editor.image.linkHint')}</p>
+        <p className="editor-field__hint">{t('editor.panel.linkHint')}</p>
+      </div>
+      <ImageSettings block={block} onUpdate={onUpdate} onOpenMedia={onOpenMedia} showLink={false} />
+      <label className="editor-field editor-field--inline">
+        <input
+          type="checkbox"
+          checked={content.imageSlot === true}
+          onChange={(event) => setField({ imageSlot: event.target.checked })}
+        />
+        {t('editor.panel.image')}
+      </label>
+    </>
+  )
+}
+
+/**
+ * A metric card's content.
+ *
+ * The value and the change are plain text: the editor never parses a number, so
+ * a user can write "1.2M", "€48,300" or "99.98%" and it stays exactly as typed.
+ */
+function StatSettings({ block, onUpdate }) {
+  const { t } = useTranslation()
+  const { content } = block
+  const setField = (patch) => onUpdate({ content: { ...patch } })
+
+  const textField = (id, labelKey, name) => (
+    <div className="editor-field">
+      <label className="editor-field__label" htmlFor={id}>
+        {t(labelKey)}
+      </label>
+      <input
+        id={id}
+        className="editor-input"
+        value={content[name]}
+        onChange={(event) => setField({ [name]: event.target.value })}
+      />
+    </div>
+  )
+
+  return (
+    <>
+      {textField('editor-stat-label', 'editor.stat.label', 'label')}
+      {textField('editor-stat-value', 'editor.stat.value', 'value')}
+      {textField('editor-stat-delta', 'editor.stat.delta', 'delta')}
+      <div className="editor-field">
+        <label className="editor-field__label" htmlFor="editor-stat-trend">
+          {t('editor.stat.trend')}
+        </label>
+        <select
+          id="editor-stat-trend"
+          className="editor-input"
+          value={content.trend}
+          onChange={(event) => setField({ trend: event.target.value })}
+        >
+          {STAT_TRENDS.map((trend) => (
+            <option key={trend} value={trend}>
+              {t(`editor.stat.trend_${trend}`)}
+            </option>
+          ))}
+        </select>
+      </div>
+      {textField('editor-stat-caption', 'editor.stat.caption', 'caption')}
+    </>
+  )
+}
+
+/** A chart placeholder: a title, a shape and a caption. There is no data to edit. */
+function ChartSettings({ block, onUpdate }) {
+  const { t } = useTranslation()
+  const { content } = block
+  const setField = (patch) => onUpdate({ content: { ...patch } })
+
+  return (
+    <>
+      <div className="editor-field">
+        <label className="editor-field__label" htmlFor="editor-chart-title">
+          {t('editor.chart.title')}
+        </label>
+        <input
+          id="editor-chart-title"
+          className="editor-input"
+          value={content.title}
+          onChange={(event) => setField({ title: event.target.value })}
+        />
+      </div>
+      <div className="editor-field">
+        <label className="editor-field__label" htmlFor="editor-chart-variant">
+          {t('editor.chart.variant')}
+        </label>
+        <select
+          id="editor-chart-variant"
+          className="editor-input"
+          value={content.variant}
+          onChange={(event) => setField({ variant: event.target.value })}
+        >
+          {CHART_VARIANTS.map((variant) => (
+            <option key={variant} value={variant}>
+              {t(`editor.chart.variant_${variant}`)}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="editor-field">
+        <label className="editor-field__label" htmlFor="editor-chart-caption">
+          {t('editor.chart.caption')}
+        </label>
+        <input
+          id="editor-chart-caption"
+          className="editor-input"
+          value={content.caption}
+          onChange={(event) => setField({ caption: event.target.value })}
+        />
+      </div>
+    </>
+  )
+}
+
+/**
+ * A data table's content.
+ *
+ * Columns and rows are edited independently: the model pads or trims a row to the
+ * header width on save, so adding or removing a column never needs a separate
+ * pass over every row here.
+ */
+function TableSettings({ block, onUpdate }) {
+  const { t } = useTranslation()
+  const { content } = block
+  const setField = (patch) => onUpdate({ content: { ...patch } })
+
+  const setColumn = (index, value) =>
+    setField({ columns: content.columns.map((column, i) => (i === index ? value : column)) })
+
+  const setCell = (rowIndex, columnIndex, value) =>
+    setField({
+      rows: content.rows.map((row, index) =>
+        index === rowIndex ? row.map((cell, cellIndex) => (cellIndex === columnIndex ? value : cell)) : row,
+      ),
+    })
+
+  const addColumn = () => {
+    if (content.columns.length >= MAX_TABLE_COLUMNS) return
+    setField({ columns: [...content.columns, ''] })
+  }
+
+  const removeColumn = (index) => {
+    if (content.columns.length <= 1) return
+    setField({ columns: content.columns.filter((_, column) => column !== index) })
+  }
+
+  const addRow = () => {
+    if (content.rows.length >= MAX_TABLE_ROWS) return
+    setField({ rows: [...content.rows, content.columns.map(() => '')] })
+  }
+
+  const removeRow = (index) => setField({ rows: content.rows.filter((_, row) => row !== index) })
+
+  return (
+    <>
+      <div className="editor-field">
+        <label className="editor-field__label" htmlFor="editor-table-caption">
+          {t('editor.table.caption')}
+        </label>
+        <input
+          id="editor-table-caption"
+          className="editor-input"
+          value={content.caption}
+          onChange={(event) => setField({ caption: event.target.value })}
+        />
+      </div>
+
+      <div className="editor-field">
+        <span className="editor-field__label">{t('editor.table.columns')}</span>
+        {content.columns.map((column, index) => (
+          <div className="editor-repeat-row" key={index}>
+            <input
+              className="editor-input"
+              value={column}
+              aria-label={t('editor.table.column')}
+              onChange={(event) => setColumn(index, event.target.value)}
+            />
+            <button
+              type="button"
+              className="editor-icon-button"
+              aria-label={t('editor.table.removeColumn')}
+              disabled={content.columns.length <= 1}
+              onClick={() => removeColumn(index)}
+            >
+              <Trash2 size={14} aria-hidden="true" />
+            </button>
+          </div>
+        ))}
+        <button
+          type="button"
+          className="btn btn--outline btn--sm"
+          disabled={content.columns.length >= MAX_TABLE_COLUMNS}
+          onClick={addColumn}
+        >
+          <Plus size={14} aria-hidden="true" />
+          {t('editor.table.addColumn')}
+        </button>
+      </div>
+
+      <div className="editor-field">
+        <span className="editor-field__label">{t('editor.table.rows')}</span>
+        {content.rows.map((row, rowIndex) => (
+          <div className="editor-table-row" key={rowIndex}>
+            <span className="editor-table-row__index">{rowIndex + 1}</span>
+            <div className="editor-table-row__cells">
+              {row.map((cell, columnIndex) => (
+                <input
+                  key={columnIndex}
+                  className="editor-input"
+                  value={cell}
+                  aria-label={t('editor.table.cell', { row: rowIndex + 1, column: columnIndex + 1 })}
+                  onChange={(event) => setCell(rowIndex, columnIndex, event.target.value)}
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              className="editor-icon-button"
+              aria-label={t('editor.table.removeRow')}
+              onClick={() => removeRow(rowIndex)}
+            >
+              <Trash2 size={14} aria-hidden="true" />
+            </button>
+          </div>
+        ))}
+        <button
+          type="button"
+          className="btn btn--outline btn--sm"
+          disabled={content.rows.length >= MAX_TABLE_ROWS}
+          onClick={addRow}
+        >
+          <Plus size={14} aria-hidden="true" />
+          {t('editor.table.addRow')}
+        </button>
+      </div>
+    </>
+  )
+}
+
+/** A status list: a heading and rows of a label, a value and a tone. */
+function StatusListSettings({ block, onUpdate }) {
+  const { t } = useTranslation()
+  const { content } = block
+  const setField = (patch) => onUpdate({ content: { ...patch } })
+  const setItem = (index, patch) =>
+    setField({
+      items: content.items.map((item, itemIndex) => (itemIndex === index ? { ...item, ...patch } : item)),
+    })
+
+  const addItem = () => {
+    if (content.items.length >= MAX_STATUS_ITEMS) return
+    setField({ items: [...content.items, { label: '', value: '', tone: 'neutral' }] })
+  }
+
+  const removeItem = (index) =>
+    setField({ items: content.items.filter((_, itemIndex) => itemIndex !== index) })
+
+  return (
+    <>
+      <div className="editor-field">
+        <label className="editor-field__label" htmlFor="editor-status-title">
+          {t('editor.status.title')}
+        </label>
+        <input
+          id="editor-status-title"
+          className="editor-input"
+          value={content.title}
+          onChange={(event) => setField({ title: event.target.value })}
+        />
+      </div>
+      <div className="editor-field">
+        <span className="editor-field__label">{t('editor.status.items')}</span>
+        {content.items.map((item, index) => (
+          <div className="editor-status-item" key={index}>
+            <div className="editor-status-item__fields">
+              <input
+                className="editor-input"
+                value={item.label}
+                aria-label={t('editor.status.label')}
+                onChange={(event) => setItem(index, { label: event.target.value })}
+              />
+              <input
+                className="editor-input"
+                value={item.value}
+                aria-label={t('editor.status.value')}
+                onChange={(event) => setItem(index, { value: event.target.value })}
+              />
+            </div>
+            <div className="editor-status-item__row">
+              <select
+                className="editor-input"
+                value={item.tone}
+                aria-label={t('editor.status.tone')}
+                onChange={(event) => setItem(index, { tone: event.target.value })}
+              >
+                {STATUS_TONES.map((tone) => (
+                  <option key={tone} value={tone}>
+                    {t(`editor.status.tone_${tone}`)}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                className="editor-icon-button"
+                aria-label={t('editor.status.removeItem')}
+                onClick={() => removeItem(index)}
+              >
+                <Trash2 size={14} aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+        ))}
+        <button
+          type="button"
+          className="btn btn--outline btn--sm"
+          disabled={content.items.length >= MAX_STATUS_ITEMS}
+          onClick={addItem}
+        >
+          <Plus size={14} aria-hidden="true" />
+          {t('editor.status.addItem')}
+        </button>
+      </div>
+    </>
+  )
+}
+
+/**
+ * A filter/action bar.
+ *
+ * The fields are labels, not live controls: on the page the bar is drawn inert,
+ * so what a user edits here is the text a later integration would wire up.
+ */
+function ToolbarSettings({ block, onUpdate }) {
+  const { t } = useTranslation()
+  const { content } = block
+  const setField = (patch) => onUpdate({ content: { ...patch } })
+
+  const addFilter = () => {
+    if (content.filters.length >= MAX_TOOLBAR_FILTERS) return
+    setField({ filters: [...content.filters, ''] })
+  }
+
+  const removeFilter = (index) =>
+    setField({ filters: content.filters.filter((_, filterIndex) => filterIndex !== index) })
+
+  return (
+    <>
+      <div className="editor-field">
+        <label className="editor-field__label" htmlFor="editor-toolbar-search">
+          {t('editor.toolbar.search')}
+        </label>
+        <input
+          id="editor-toolbar-search"
+          className="editor-input"
+          value={content.search}
+          onChange={(event) => setField({ search: event.target.value })}
+        />
+      </div>
+      <div className="editor-field">
+        <span className="editor-field__label">{t('editor.toolbar.filters')}</span>
+        {content.filters.map((filter, index) => (
+          <div className="editor-repeat-row" key={index}>
+            <input
+              className="editor-input"
+              value={filter}
+              aria-label={t('editor.toolbar.filter')}
+              onChange={(event) =>
+                setField({
+                  filters: content.filters.map((item, itemIndex) =>
+                    itemIndex === index ? event.target.value : item,
+                  ),
+                })
+              }
+            />
+            <button
+              type="button"
+              className="editor-icon-button"
+              aria-label={t('editor.toolbar.removeFilter')}
+              onClick={() => removeFilter(index)}
+            >
+              <Trash2 size={14} aria-hidden="true" />
+            </button>
+          </div>
+        ))}
+        <button
+          type="button"
+          className="btn btn--outline btn--sm"
+          disabled={content.filters.length >= MAX_TOOLBAR_FILTERS}
+          onClick={addFilter}
+        >
+          <Plus size={14} aria-hidden="true" />
+          {t('editor.toolbar.addFilter')}
+        </button>
+      </div>
+      <div className="editor-field">
+        <label className="editor-field__label" htmlFor="editor-toolbar-action">
+          {t('editor.toolbar.action')}
+        </label>
+        <input
+          id="editor-toolbar-action"
+          className="editor-input"
+          value={content.action}
+          onChange={(event) => setField({ action: event.target.value })}
+        />
       </div>
     </>
   )
@@ -178,7 +656,7 @@ function BackgroundImageSettings({ section, onUpdate, onOpenMedia }) {
     return (
       <div className="editor-field">
         <span className="editor-field__label">{t('editor.background.image')}</span>
-        <button type="button" className="btn btn--outline btn--sm" onClick={onOpenMedia}>
+        <button type="button" className="btn btn--outline btn--sm" onClick={() => onOpenMedia()}>
           <ImageIcon size={16} aria-hidden="true" />
           {t('editor.background.choose')}
         </button>
@@ -207,7 +685,7 @@ function BackgroundImageSettings({ section, onUpdate, onOpenMedia }) {
               </span>
             ) : null}
           </span>
-          <button type="button" className="btn btn--outline btn--sm" onClick={onOpenMedia}>
+          <button type="button" className="btn btn--outline btn--sm" onClick={() => onOpenMedia()}>
             {t('editor.image.choose')}
           </button>
           <button
@@ -622,6 +1100,23 @@ function EditorSettingsPanel({
           ),
         )}
 
+        {/*
+         * Layout is how the blocks inside the band are arranged, not what they
+         * look like, so it sits with the structural settings rather than the
+         * paint ones. It is offered for every section: a user who wants a grid
+         * of their own blocks can choose one here.
+        */}
+        {field(
+          t('editor.layout.label'),
+          select(
+            'editor-section-layout',
+            section.layout,
+            (value) => onUpdateSection(section.id, { layout: value }),
+            SECTION_LAYOUTS.map((value) => ({ value })),
+            (option) => t(`editor.layout.${option.value}`),
+          ),
+        )}
+
         <ColorField
           id="editor-section-background"
           value={sectionEdit.effective.background}
@@ -721,6 +1216,14 @@ function EditorSettingsPanel({
           )
         ) : null}
 
+        {block.type === BLOCK_TYPE.PANEL ? (
+          <PanelSettings
+            block={block}
+            onUpdate={(patch) => onUpdateBlock(block.id, patch)}
+            onOpenMedia={() => onOpenMedia({ kind: 'block', id: block.id })}
+          />
+        ) : null}
+
         {block.type === BLOCK_TYPE.BUTTON ? (
           <>
             <label className="editor-field">{t('siteDesign.variant')}<select className="editor-input" value={block.content.variant} onChange={(event) => onUpdateBlock(block.id, { content: { variant: event.target.value } })}><option value="primary">{t('siteDesign.primaryButton')}</option><option value="secondary">{t('siteDesign.secondaryButton')}</option></select></label>
@@ -768,6 +1271,26 @@ function EditorSettingsPanel({
             onUpdate={(patch) => onUpdateBlock(block.id, patch)}
             onOpenMedia={onOpenMedia}
           />
+        ) : null}
+
+        {block.type === BLOCK_TYPE.STAT ? (
+          <StatSettings block={block} onUpdate={(patch) => onUpdateBlock(block.id, patch)} />
+        ) : null}
+
+        {block.type === BLOCK_TYPE.CHART ? (
+          <ChartSettings block={block} onUpdate={(patch) => onUpdateBlock(block.id, patch)} />
+        ) : null}
+
+        {block.type === BLOCK_TYPE.TABLE ? (
+          <TableSettings block={block} onUpdate={(patch) => onUpdateBlock(block.id, patch)} />
+        ) : null}
+
+        {block.type === BLOCK_TYPE.STATUS_LIST ? (
+          <StatusListSettings block={block} onUpdate={(patch) => onUpdateBlock(block.id, patch)} />
+        ) : null}
+
+        {block.type === BLOCK_TYPE.TOOLBAR ? (
+          <ToolbarSettings block={block} onUpdate={(patch) => onUpdateBlock(block.id, patch)} />
         ) : null}
       </EditorPanelGroup>
 

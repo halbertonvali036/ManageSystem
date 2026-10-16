@@ -177,6 +177,340 @@ export const SITE_THEME_PRESETS = Object.freeze([
       radiusScale: 10,
     }),
   },
+  {
+    id: 'saas',
+    nameKey: 'siteTheme.saas.name',
+    descriptionKey: 'siteTheme.saas.description',
+    tokens: Object.freeze({
+      fontHeading: SITE_FONT_STACKS.sans,
+      fontBody: SITE_FONT_STACKS.sans,
+      primary: '#4338ca',
+      accent: '#6366f1',
+      accentSoft: '#eef2ff',
+      background: '#ffffff',
+      surface: '#f8fafc',
+      text: '#0f172a',
+      muted: '#64748b',
+      border: '#e2e8f0',
+      radiusScale: 12,
+      headingScale: 2.35,
+      headingWeight: 800,
+      buttonRadius: 10,
+      spacingScale: 1.25,
+    }),
+  },
+  {
+    id: 'atelier',
+    nameKey: 'siteTheme.atelier.name',
+    descriptionKey: 'siteTheme.atelier.description',
+    tokens: Object.freeze({
+      fontHeading: SITE_FONT_STACKS.serif,
+      fontBody: SITE_FONT_STACKS.sans,
+      primary: '#1a1a1a',
+      accent: '#8a5a2b',
+      accentSoft: '#f1ede6',
+      background: '#faf9f7',
+      surface: '#f2f0ec',
+      text: '#1a1a1a',
+      muted: '#6b6b6b',
+      border: '#dedbd4',
+      radiusScale: 2,
+      headingScale: 2.9,
+      headingWeight: 500,
+      lineHeight: 1.7,
+    }),
+  },
+  {
+    id: 'nova',
+    nameKey: 'siteTheme.nova.name',
+    descriptionKey: 'siteTheme.nova.description',
+    tokens: Object.freeze({
+      fontHeading: SITE_FONT_STACKS.sans,
+      fontBody: SITE_FONT_STACKS.sans,
+      primary: '#3b82f6',
+      accent: '#7c5cff',
+      accentSoft: '#141c33',
+      background: '#070b14',
+      surface: '#0e1626',
+      text: '#e8eefc',
+      muted: '#93a2c4',
+      border: '#1c2740',
+      radiusScale: 14,
+      headingScale: 2.6,
+      headingWeight: 800,
+    }),
+  },
+  {
+    id: 'maison',
+    nameKey: 'siteTheme.maison.name',
+    descriptionKey: 'siteTheme.maison.description',
+    tokens: Object.freeze({
+      fontHeading: SITE_FONT_STACKS.serif,
+      fontBody: SITE_FONT_STACKS.sans,
+      primary: '#2f2a24',
+      accent: '#8a6a3b',
+      accentSoft: '#f0e9dd',
+      background: '#f7f4ee',
+      surface: '#ffffff',
+      text: '#1f1b16',
+      muted: '#6f665a',
+      radiusScale: 0,
+      headingScale: 2.8,
+      headingWeight: 500,
+      lineHeight: 1.7,
+      spacingScale: 1.25,
+    }),
+  },
+  {
+    /*
+     * Agency.
+     *
+     * A clean, professional studio palette: achromatic surfaces and type, with a
+     * single bold signal colour. Bold sans headings and a modest radius keep it
+     * contemporary without drifting into the futuristic end of the library.
+     */
+    id: 'agency',
+    nameKey: 'siteTheme.agency.name',
+    descriptionKey: 'siteTheme.agency.description',
+    tokens: Object.freeze({
+      fontHeading: SITE_FONT_STACKS.sans,
+      fontBody: SITE_FONT_STACKS.sans,
+      primary: '#111319',
+      accent: '#f4511e',
+      accentSoft: '#fff0e8',
+      background: '#ffffff',
+      surface: '#f4f5f7',
+      text: '#101114',
+      muted: '#5b6069',
+      border: '#dcdfe4',
+      radiusScale: 10,
+      headingScale: 2.5,
+      headingWeight: 800,
+      buttonRadius: 8,
+      spacingScale: 1.25,
+    }),
+  },
+  {
+    id: 'bistro',
+    nameKey: 'siteTheme.bistro.name',
+    descriptionKey: 'siteTheme.bistro.description',
+    tokens: Object.freeze({
+      fontHeading: SITE_FONT_STACKS.serif,
+      fontBody: SITE_FONT_STACKS.sans,
+      primary: '#5a2f18',
+      accent: '#a85423',
+      accentSoft: '#f5e7d8',
+      background: '#fbf6ef',
+      surface: '#ffffff',
+      text: '#2a211b',
+      muted: '#71655a',
+      border: '#e6dccf',
+      radiusScale: 6,
+      headingScale: 2.6,
+      headingWeight: 600,
+      lineHeight: 1.7,
+      spacingScale: 1.25,
+    }),
+  },
+  {
+    id: 'vertex',
+    nameKey: 'siteTheme.vertex.name',
+    descriptionKey: 'siteTheme.vertex.description',
+    tokens: Object.freeze({
+      fontHeading: SITE_FONT_STACKS.sans,
+      fontBody: SITE_FONT_STACKS.sans,
+      primary: '#111111',
+      accent: '#2f3cff',
+      accentSoft: '#eceafe',
+      background: '#f2f1ee',
+      surface: '#ffffff',
+      text: '#0d0d0d',
+      muted: '#6d6d6a',
+      border: '#dcdcd6',
+      radiusScale: 0,
+      headingScale: 3,
+      headingWeight: 700,
+      lineHeight: 1.65,
+      contentWidth: 1280,
+      spacingScale: 1.5,
+    }),
+  },
+  {
+    id: 'noir',
+    nameKey: 'siteTheme.noir.name',
+    descriptionKey: 'siteTheme.noir.description',
+    tokens: Object.freeze({
+      fontHeading: SITE_FONT_STACKS.sans,
+      fontBody: SITE_FONT_STACKS.sans,
+      primary: '#c9a227',
+      accent: '#d8b26a',
+      accentSoft: '#241f15',
+      background: '#0a0a0b',
+      surface: '#141416',
+      text: '#f2f1ee',
+      muted: '#9c9a95',
+      border: '#232326',
+      radiusScale: 2,
+      headingScale: 2.9,
+      headingWeight: 700,
+      lineHeight: 1.65,
+      spacingScale: 1.25,
+    }),
+  },
+  {
+    /*
+     * Corporate.
+     *
+     * A trustworthy business palette: deep navy type, a single restrained teal
+     * accent and cool grey surfaces. Sans headings, firm corners and an ordinary
+     * scale keep it professional rather than fashionable.
+     */
+    id: 'corporate',
+    nameKey: 'siteTheme.corporate.name',
+    descriptionKey: 'siteTheme.corporate.description',
+    tokens: Object.freeze({
+      fontHeading: SITE_FONT_STACKS.sans,
+      fontBody: SITE_FONT_STACKS.sans,
+      primary: '#16283d',
+      accent: '#0f766e',
+      accentSoft: '#e4f1ef',
+      background: '#ffffff',
+      surface: '#f4f7f9',
+      text: '#101828',
+      muted: '#5a6472',
+      border: '#dbe2e8',
+      radiusScale: 8,
+      headingScale: 2.25,
+      headingWeight: 700,
+      buttonRadius: 6,
+    }),
+  },
+  {
+    /*
+     * Forge.
+     *
+     * Industrial and structural: a concrete-grey page, near-black type, a single
+     * safety-amber accent and almost no corner radius. Heavy headings and tight
+     * line height give it the weight a construction or engineering firm wants,
+     * and it shares none of the softness of the agency or corporate themes.
+     */
+    id: 'forge',
+    nameKey: 'siteTheme.forge.name',
+    descriptionKey: 'siteTheme.forge.description',
+    tokens: Object.freeze({
+      fontHeading: SITE_FONT_STACKS.sans,
+      fontBody: SITE_FONT_STACKS.sans,
+      primary: '#1a1f24',
+      accent: '#f59e0b',
+      accentSoft: '#fdf3e0',
+      background: '#eef0f1',
+      surface: '#ffffff',
+      text: '#14181d',
+      muted: '#5c656d',
+      border: '#d7dbdd',
+      radiusScale: 2,
+      headingScale: 2.75,
+      headingWeight: 800,
+      lineHeight: 1.55,
+      contentWidth: 1200,
+      spacingScale: 1.25,
+    }),
+  },
+  {
+    /*
+     * Aurelia.
+     *
+     * A warm wellness palette: soft ivory, a muted clay accent and serif
+     * headings, with very generous spacing and round corners. It is deliberately
+     * quieter than Maison's brass-and-ivory formality and warmer than Bistro's
+     * terracotta, so a spa does not read as a restaurant or an architecture firm.
+     */
+    id: 'aurelia',
+    nameKey: 'siteTheme.aurelia.name',
+    descriptionKey: 'siteTheme.aurelia.description',
+    tokens: Object.freeze({
+      fontHeading: SITE_FONT_STACKS.serif,
+      fontBody: SITE_FONT_STACKS.sans,
+      primary: '#3a2f29',
+      accent: '#b07d62',
+      accentSoft: '#f3e7de',
+      background: '#faf6f1',
+      surface: '#ffffff',
+      text: '#2c2724',
+      muted: '#796c64',
+      border: '#e9ded4',
+      radiusScale: 20,
+      headingScale: 2.7,
+      headingWeight: 500,
+      lineHeight: 1.8,
+      spacingScale: 1.5,
+      buttonRadius: 24,
+      buttonWeight: 500,
+    }),
+  },
+  {
+    /*
+     * Ledger.
+     *
+     * A modern finance palette: a bright, cool page with a deep-ink counterpoint
+     * and a single restrained cyan accent. Precise, medium-scale headings and
+     * moderate corners keep it product-led without borrowing Nova's dark violet
+     * world — the two templates should never read as the same site.
+     */
+    id: 'ledger',
+    nameKey: 'siteTheme.ledger.name',
+    descriptionKey: 'siteTheme.ledger.description',
+    tokens: Object.freeze({
+      fontHeading: SITE_FONT_STACKS.sans,
+      fontBody: SITE_FONT_STACKS.sans,
+      primary: '#0b1f2a',
+      accent: '#0e7490',
+      accentSoft: '#e0f2fe',
+      background: '#f7fafb',
+      surface: '#ffffff',
+      text: '#0b1f2a',
+      muted: '#5b717a',
+      border: '#dbe7ec',
+      radiusScale: 14,
+      headingScale: 2.35,
+      headingWeight: 700,
+      buttonRadius: 10,
+    }),
+  },
+  {
+    /*
+     * Atlas.
+     *
+     * A dark slate application world: a deep slate page, a raised slate surface,
+     * an emerald primary for actions and a sky-blue accent for labels and data.
+     * Compact corners and a smaller heading scale keep it reading as a product
+     * screen rather than a marketing page. It shares the dark family with Nova and
+     * Noir but neither the navy/violet nor the near-black/gold palette, so the
+     * three never read as the same site.
+     */
+    id: 'atlas',
+    nameKey: 'siteTheme.atlas.name',
+    descriptionKey: 'siteTheme.atlas.description',
+    tokens: Object.freeze({
+      fontHeading: SITE_FONT_STACKS.sans,
+      fontBody: SITE_FONT_STACKS.sans,
+      primary: '#10b981',
+      accent: '#38bdf8',
+      accentSoft: '#0c2536',
+      background: '#0b1120',
+      surface: '#141d30',
+      text: '#e2e8f0',
+      muted: '#94a3b8',
+      border: '#26314a',
+      radiusScale: 10,
+      headingScale: 2.1,
+      headingWeight: 700,
+      lineHeight: 1.5,
+      spacingScale: 0.9,
+      buttonRadius: 8,
+      buttonWeight: 600,
+    }),
+  },
 ])
 
 export const SITE_THEME_IDS = Object.freeze(

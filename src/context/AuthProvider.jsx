@@ -39,6 +39,26 @@ function AuthProvider({ children }) {
     setSession(null)
   }, [])
 
+  /**
+   * Adopts values the backend confirmed when the account was updated.
+   *
+   * This never stores anything by itself: it is called only after a real write
+   * succeeds, so a value here is one the backend has already accepted. Writing
+   * to the stored session is left alone — the backend stays the authority, and
+   * a reload re-reads whatever session it hands back.
+   */
+  const updateUser = useCallback((partial) => {
+    if (!partial) {
+      return
+    }
+    setSession((current) => {
+      if (!current?.user) {
+        return current
+      }
+      return { ...current, user: { ...current.user, ...partial } }
+    })
+  }, [])
+
   const value = useMemo(
     () => ({
       user: session?.user ?? null,
@@ -47,8 +67,9 @@ function AuthProvider({ children }) {
       login,
       logout,
       adoptExternalSession,
+      updateUser,
     }),
-    [session, login, logout, adoptExternalSession],
+    [session, login, logout, adoptExternalSession, updateUser],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

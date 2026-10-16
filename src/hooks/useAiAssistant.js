@@ -433,14 +433,18 @@ function useAiAssistant(workspaceId, { context } = {}) {
     [conversations, activeConversationId],
   )
 
+  /** Open proposals, derived once per proposal-list change rather than per render. */
+  const pendingProposals = useMemo(
+    () => proposals.filter((proposal) => proposal.status === AI_PROPOSAL_STATUS.PENDING),
+    [proposals],
+  )
+
   return {
     messages,
     suggestions: availableSuggestions,
     isUsingExamples,
     proposals,
-    pendingProposals: proposals.filter(
-      (proposal) => proposal.status === AI_PROPOSAL_STATUS.PENDING,
-    ),
+    pendingProposals,
     conversationList,
     activeConversationId,
     selectConversation,

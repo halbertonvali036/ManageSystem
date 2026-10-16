@@ -8,6 +8,8 @@
  * API is connected, and every write is refused by the service layer.
  */
 
+import { getDateFormatter } from '@/utils/intl'
+
 /**
  * @typedef {Object} DatabaseRelation
  * @property {'one_to_one'|'one_to_many'|'many_to_many'} type      Relation kind.
@@ -374,7 +376,7 @@ export const formatDatabaseDate = (value, locale) => {
   if (!value) return null
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return null
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(date)
+  return getDateFormatter(locale, { dateStyle: 'medium' }).format(date)
 }
 
 export default normalizeDatabaseModel

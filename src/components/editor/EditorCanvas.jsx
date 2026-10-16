@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { CanvasDragProvider } from '@/components/editor/CanvasDrag'
 import useSiteMotion from '@/hooks/useSiteMotion'
 import useTranslation from '@/hooks/useTranslation'
@@ -39,16 +40,30 @@ function EditorCanvas({
 
   // The section being worked on owns the focusable insertion markers. Without
   // this, a page with several sections would put every marker in the tab order.
-  const focusedSectionId =
-    selection?.kind === 'section'
-      ? selection.id
-      : selection?.kind === 'block'
-        ? activePage?.sections.find((section) =>
-            section.blocks.some((block) => block.id === selection.id),
-          )?.id
-        : null
+  const focusedSectionId = useMemo(
+    () =>
+      selection?.kind === 'section'
+        ? selection.id
+        : selection?.kind === 'block'
+          ? activePage?.sections.find((section) =>
+              section.blocks.some((block) => block.id === selection.id),
+            )?.id
+          : null,
+    [selection, activePage],
+  )
 
   const hasSections = (activePage?.sections?.length ?? 0) > 0
+
+  // `getCanvasCssStyle` derives only from the document's design — its theme and
+  // its legacy global styles. Keying the memo on exactly those two slices, which
+  // keep their identity across block and section edits, avoids rebuilding the
+  // theme variables on every keystroke while still updating when design changes.
+  const theme = document?.theme
+  const globalStyles = document?.globalStyles
+  const canvasStyle = useMemo(
+    () => getCanvasCssStyle({ theme, globalStyles }),
+    [theme, globalStyles],
+  )
 
   const handlePreviewLink = (event) => {
     if (!isPreview) return
@@ -80,7 +95,7 @@ function EditorCanvas({
             <span className="editor-canvas__frame-dots"><i /><i /><i /></span>
             <span>{activePage?.name}</span>
           </div>}
-          <article ref={motionRef} className="editor-canvas__page" style={getCanvasCssStyle(document)} onClick={handlePreviewLink}>
+          <article ref={motionRef} className="editor-canvas__page" style={canvasStyle} onClick={handlePreviewLink}>
             <SiteHeaderPreview
               siteDocument={document}
               device={device}

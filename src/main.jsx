@@ -35,12 +35,15 @@ import './styles/editor.css'
 import './styles/publishing.css'
 import './styles/site-forms.css'
 import './styles/site-design.css'
+import './styles/site-blocks.css'
 import './styles/language-switcher.css'
 import './styles/site-motion.css'
 import './styles/builder-motion.css'
 import './styles/dashboard-polish.css'
 import './styles/account-polish.css'
+import './styles/profile.css'
 import './styles/builder-polish.css'
+import './styles/template-gallery.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

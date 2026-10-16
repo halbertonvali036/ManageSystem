@@ -1,0 +1,1263 @@
+{
+  "templates": [
+    {
+      "id": "saas-starter",
+      "tier": "free",
+      "category": "saas",
+      "theme": "saas",
+      "counts": [
+        {
+          "locale": "en",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Home",
+              "sections": 9,
+              "blocks": 43
+            },
+            {
+              "name": "Pricing",
+              "sections": 4,
+              "blocks": 18
+            },
+            {
+              "name": "Contact",
+              "sections": 2,
+              "blocks": 11
+            }
+          ],
+          "empty": []
+        },
+        {
+          "locale": "az",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Ana səhifə",
+              "sections": 9,
+              "blocks": 43
+            },
+            {
+              "name": "Qiymətlər",
+              "sections": 4,
+              "blocks": 18
+            },
+            {
+              "name": "Əlaqə",
+              "sections": 2,
+              "blocks": 11
+            }
+          ],
+          "empty": []
+        }
+      ],
+      "pages": [
+        {
+          "sections": 9,
+          "blocks": 43,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nYour heading goes here\n+\n\nExplain in a sentence or two what you offer.\n\n+\nPrimary button\n+\n+\nTrusted by\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n+\nBuilt for the way you work\n+\n\nIntroduce the points below in one or two sentences.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\nFourth point\nDescribe this point in a sentence or two.\n+\nFifth point\nDescribe this point in a sentence or two.\n+\nSixth point\nDescribe this point in a sentence or two.\n+\n+\nSee the product in action\n+\n\nShow a screenshot of the product with a short explanation.\n\n+\nPrimary button\n+\nProduct screenshot\n+\n+\nSimple, honest pricing\n+\n\nExplain how the plans differ.\n\n+\nSTARTER\nPrice\nWhat this plan includes, one line at a time.\nChoose plan\n+\nPOPULAR\nPrice\nWhat this plan includes, one line at a time.\nChoose plan\n+\nSCALE\nPrice\nWhat this plan includes, one line at a time.\nChoose plan\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\nFrequently asked questions\n+\nA common question?\nThe answer to it.\n+\nAnother common question?\nThe answer to it.\n+\nA third common question?\nThe answer to it.\n+\nA fourth common question?\nThe answer to it.\n+\n+\nMove to the next step\n+\n\nWrite what this call to action is for.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 4,
+          "blocks": 18,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nYour heading goes here\n+\n\nExplain in a sentence or two what you offer.\n\n+\nPrimary button\n+\n+\nSimple, honest pricing\n+\n\nExplain how the plans differ.\n\n+\nSTARTER\nPrice\nWhat this plan includes, one line at a time.\nChoose plan\n+\nPOPULAR\nPrice\nWhat this plan includes, one line at a time.\nChoose plan\n+\nSCALE\nPrice\nWhat this plan includes, one line at a time.\nChoose plan\n+\n+\nFrequently asked questions\n+\nA common question?\nThe answer to it.\n+\nAnother common question?\nThe answer to it.\n+\nA third common question?\nThe answer to it.\n+\nA fourth common question?\nThe answer to it.\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 2,
+          "blocks": 11,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nContact\n+\n\nHow to reach this business.\n\n+\n\nAddress\n\n+\n\nPhone\n\n+\n\nEmail\n\n+\nName *\nEmail *\nMessage *\nSend\n\nForm preview only. Data is not sent or stored.\n\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        }
+      ]
+    },
+    {
+      "id": "portfolio-minimal",
+      "tier": "free",
+      "category": "portfolio",
+      "theme": "atelier",
+      "counts": [
+        {
+          "locale": "en",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Home",
+              "sections": 7,
+              "blocks": 30
+            },
+            {
+              "name": "Work",
+              "sections": 4,
+              "blocks": 20
+            },
+            {
+              "name": "About",
+              "sections": 4,
+              "blocks": 17
+            },
+            {
+              "name": "Contact",
+              "sections": 3,
+              "blocks": 14
+            }
+          ],
+          "empty": []
+        },
+        {
+          "locale": "az",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Ana səhifə",
+              "sections": 7,
+              "blocks": 30
+            },
+            {
+              "name": "İşlər",
+              "sections": 4,
+              "blocks": 20
+            },
+            {
+              "name": "Haqqımızda",
+              "sections": 4,
+              "blocks": 17
+            },
+            {
+              "name": "Əlaqə",
+              "sections": 3,
+              "blocks": 14
+            }
+          ],
+          "empty": []
+        }
+      ],
+      "pages": [
+        {
+          "sections": 7,
+          "blocks": 30,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large editorial headline\n+\n\nOpen with one clear, unhurried sentence.\n\n+\nPrimary button\n+\nFeatured image\n+\n+\nSelected work\n+\n\nIntroduce the work below.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nWhat we do\n+\n\nDescribe the services in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nAbout us\n+\n\nTell the story in a calm paragraph or two.\n\n+\nPortrait or studio image\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 4,
+          "blocks": 20,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large editorial headline\n+\n\nOpen with one clear, unhurried sentence.\n\n+\nPrimary button\n+\nFeatured image\n+\n+\nSelected work\n+\n\nIntroduce the work below.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nWhat we do\n+\n\nDescribe the services in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 4,
+          "blocks": 17,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nAbout us\n+\n\nTell the story in a calm paragraph or two.\n\n+\nPortrait or studio image\n+\n+\nWhat we do\n+\n\nDescribe the services in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 3,
+          "blocks": 14,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\nContact\n+\n\nHow to reach this business.\n\n+\n\nAddress\n\n+\n\nPhone\n\n+\n\nEmail\n\n+\nName *\nEmail *\nMessage *\nSend\n\nForm preview only. Data is not sent or stored.\n\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        }
+      ]
+    },
+    {
+      "id": "nova-ai",
+      "tier": "pro",
+      "category": "ai",
+      "theme": "nova",
+      "counts": [
+        {
+          "locale": "en",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Home",
+              "sections": 12,
+              "blocks": 60
+            },
+            {
+              "name": "Features",
+              "sections": 7,
+              "blocks": 37
+            },
+            {
+              "name": "Solutions",
+              "sections": 6,
+              "blocks": 26
+            },
+            {
+              "name": "Pricing",
+              "sections": 6,
+              "blocks": 25
+            },
+            {
+              "name": "About",
+              "sections": 5,
+              "blocks": 23
+            },
+            {
+              "name": "Contact",
+              "sections": 3,
+              "blocks": 13
+            }
+          ],
+          "empty": []
+        },
+        {
+          "locale": "az",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Ana səhifə",
+              "sections": 12,
+              "blocks": 60
+            },
+            {
+              "name": "Xüsusiyyətlər",
+              "sections": 7,
+              "blocks": 37
+            },
+            {
+              "name": "Həllər",
+              "sections": 6,
+              "blocks": 26
+            },
+            {
+              "name": "Qiymətlər",
+              "sections": 6,
+              "blocks": 25
+            },
+            {
+              "name": "Haqqımızda",
+              "sections": 5,
+              "blocks": 23
+            },
+            {
+              "name": "Əlaqə",
+              "sections": 3,
+              "blocks": 13
+            }
+          ],
+          "empty": []
+        }
+      ],
+      "pages": [
+        {
+          "sections": 12,
+          "blocks": 60,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA headline that states the idea\n+\n\nTwo short sentences that set up the product below.\n\n+\nPrimary button\n+\nProduct interface preview\n+\n+\nTrusted by\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n+\nEverything in one place\n+\n\nIntroduce the grid in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\nFourth point\nDescribe this point in a sentence or two.\n+\n+\nSee the product in action\n+\n\nShow a screenshot of the product with a short explanation.\n\n+\nPrimary button\n+\nProduct screenshot\n+\n+\nBuilt for the way you work\n+\n\nIntroduce the points below in one or two sentences.\n\n+\nSTEP 01\nFirst point\nDescribe this point in a sentence or two.\n+\nSTEP 02\nSecond point\nDescribe this point in a sentence or two.\n+\nSTEP 03\nThird point\nDescribe this point in a sentence or two.\n+\n+\nWorks with the tools you already use\n+\n\nA line that introduces the list of connections.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\nFourth point\nDescribe this point in a sentence or two.\n+\nFifth point\nDescribe this point in a sentence or two.\n+\nSixth point\nDescribe this point in a sentence or two.\n+\n+\nResults that speak for themselves\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nSimple, honest pricing\n+\n\nExplain how the plans differ.\n\n+\nSTARTER\nPrice\nWhat this plan includes, one line at a time.\nChoose plan\n+\nPOPULAR\nPrice\nWhat this plan includes, one line at a time.\nChoose plan\n+\nSCALE\nPrice\nWhat this plan includes, one line at a time.\nChoose plan\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\nFrequently asked questions\n+\nA common question?\nThe answer to it.\n+\nAnother common question?\nThe answer to it.\n+\nA third common question?\nThe answer to it.\n+\nA fourth common question?\nThe answer to it.\n+\n+\nMove to the next step\n+\n\nWrite what this call to action is for.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+"
+        },
+        {
+          "sections": 7,
+          "blocks": 37,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nYour heading goes here\n+\n\nExplain in a sentence or two what you offer.\n\n+\nPrimary button\n+\n+\nEverything in one place\n+\n\nIntroduce the grid in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\nFourth point\nDescribe this point in a sentence or two.\n+\n+\nBuilt for the way you work\n+\n\nIntroduce the points below in one or two sentences.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\nFourth point\nDescribe this point in a sentence or two.\n+\nFifth point\nDescribe this point in a sentence or two.\n+\nSixth point\nDescribe this point in a sentence or two.\n+\n+\nBuilt for the way you work\n+\n\nIntroduce the points below in one or two sentences.\n\n+\nSTEP 01\nFirst point\nDescribe this point in a sentence or two.\n+\nSTEP 02\nSecond point\nDescribe this point in a sentence or two.\n+\nSTEP 03\nThird point\nDescribe this point in a sentence or two.\n+\n+\nWorks with the tools you already use\n+\n\nA line that introduces the list of connections.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\nFourth point\nDescribe this point in a sentence or two.\n+\nFifth point\nDescribe this point in a sentence or two.\n+\nSixth point\nDescribe this point in a sentence or two.\n+\n+\nMove to the next step\n+\n\nWrite what this call to action is for.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+"
+        },
+        {
+          "sections": 6,
+          "blocks": 26,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nYour heading goes here\n+\n\nExplain in a sentence or two what you offer.\n\n+\nPrimary button\n+\n+\nResults that speak for themselves\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nEverything in one place\n+\n\nIntroduce the grid in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\nFourth point\nDescribe this point in a sentence or two.\n+\n+\nBuilt for the way you work\n+\n\nIntroduce the points below in one or two sentences.\n\n+\nSTEP 01\nFirst point\nDescribe this point in a sentence or two.\n+\nSTEP 02\nSecond point\nDescribe this point in a sentence or two.\n+\nSTEP 03\nThird point\nDescribe this point in a sentence or two.\n+\n+\nMove to the next step\n+\n\nWrite what this call to action is for.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+"
+        },
+        {
+          "sections": 6,
+          "blocks": 25,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nYour heading goes here\n+\n\nExplain in a sentence or two what you offer.\n\n+\nPrimary button\n+\n+\nSimple, honest pricing\n+\n\nExplain how the plans differ.\n\n+\nSTARTER\nPrice\nWhat this plan includes, one line at a time.\nChoose plan\n+\nPOPULAR\nPrice\nWhat this plan includes, one line at a time.\nChoose plan\n+\nSCALE\nPrice\nWhat this plan includes, one line at a time.\nChoose plan\n+\n+\nResults that speak for themselves\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nFrequently asked questions\n+\nA common question?\nThe answer to it.\n+\nAnother common question?\nThe answer to it.\n+\nA third common question?\nThe answer to it.\n+\nA fourth common question?\nThe answer to it.\n+\n+\nMove to the next step\n+\n\nWrite what this call to action is for.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+"
+        },
+        {
+          "sections": 5,
+          "blocks": 23,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large editorial headline\n+\n\nOpen with one clear, unhurried sentence.\n\n+\nPrimary button\n+\nFeatured image\n+\n+\nResults that speak for themselves\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nBuilt for the way you work\n+\n\nIntroduce the points below in one or two sentences.\n\n+\nSTEP 01\nFirst point\nDescribe this point in a sentence or two.\n+\nSTEP 02\nSecond point\nDescribe this point in a sentence or two.\n+\nSTEP 03\nThird point\nDescribe this point in a sentence or two.\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+"
+        },
+        {
+          "sections": 3,
+          "blocks": 13,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\nContact\n+\n\nHow to reach this business.\n\n+\n\nAddress\n\n+\n\nPhone\n\n+\n\nEmail\n\n+\nName *\nEmail *\nMessage *\nSend\n\nForm preview only. Data is not sent or stored.\n\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+"
+        }
+      ]
+    },
+    {
+      "id": "maison",
+      "tier": "pro",
+      "category": "realEstate",
+      "theme": "maison",
+      "counts": [
+        {
+          "locale": "en",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Home",
+              "sections": 8,
+              "blocks": 35
+            },
+            {
+              "name": "Projects",
+              "sections": 4,
+              "blocks": 18
+            },
+            {
+              "name": "Services",
+              "sections": 5,
+              "blocks": 23
+            },
+            {
+              "name": "About",
+              "sections": 5,
+              "blocks": 22
+            },
+            {
+              "name": "Contact",
+              "sections": 3,
+              "blocks": 14
+            }
+          ],
+          "empty": []
+        },
+        {
+          "locale": "az",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Ana səhifə",
+              "sections": 8,
+              "blocks": 35
+            },
+            {
+              "name": "Layihələr",
+              "sections": 4,
+              "blocks": 18
+            },
+            {
+              "name": "Xidmətlər",
+              "sections": 5,
+              "blocks": 23
+            },
+            {
+              "name": "Haqqımızda",
+              "sections": 5,
+              "blocks": 22
+            },
+            {
+              "name": "Əlaqə",
+              "sections": 3,
+              "blocks": 14
+            }
+          ],
+          "empty": []
+        }
+      ],
+      "pages": [
+        {
+          "sections": 8,
+          "blocks": 35,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large statement goes here\n+\n\nTwo short sentences that say what you do and who it is for.\n\n+\nPrimary button\n+\nStudio or project photograph\n+\n+\nBy the numbers\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nSelected work\n+\n\nIntroduce the work below.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nThe story\n+\n\nDescribe the project, place or process.\n\n+\nNarrative image\n+\n+\nWhat we do\n+\n\nDescribe the services in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 4,
+          "blocks": 18,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large editorial headline\n+\n\nOpen with one clear, unhurried sentence.\n\n+\nPrimary button\n+\nFeatured image\n+\n+\nSelected work\n+\n\nIntroduce the work below.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nThe story\n+\n\nDescribe the project, place or process.\n\n+\nNarrative image\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 5,
+          "blocks": 23,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large editorial headline\n+\n\nOpen with one clear, unhurried sentence.\n\n+\nPrimary button\n+\nFeatured image\n+\n+\nWhat we do\n+\n\nDescribe the services in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nBy the numbers\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 5,
+          "blocks": 22,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large editorial headline\n+\n\nOpen with one clear, unhurried sentence.\n\n+\nPrimary button\n+\nFeatured image\n+\n+\nThe story\n+\n\nDescribe the project, place or process.\n\n+\nNarrative image\n+\n+\nBy the numbers\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 3,
+          "blocks": 14,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\nContact\n+\n\nHow to reach this business.\n\n+\n\nAddress\n\n+\n\nPhone\n\n+\n\nEmail\n\n+\nName *\nEmail *\nMessage *\nSend\n\nForm preview only. Data is not sent or stored.\n\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        }
+      ]
+    },
+    {
+      "id": "agency-clean",
+      "tier": "free",
+      "category": "agency",
+      "theme": "agency",
+      "counts": [
+        {
+          "locale": "en",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Home",
+              "sections": 8,
+              "blocks": 38
+            },
+            {
+              "name": "Services",
+              "sections": 5,
+              "blocks": 23
+            },
+            {
+              "name": "Work",
+              "sections": 4,
+              "blocks": 19
+            },
+            {
+              "name": "Contact",
+              "sections": 3,
+              "blocks": 14
+            }
+          ],
+          "empty": []
+        },
+        {
+          "locale": "az",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Ana səhifə",
+              "sections": 8,
+              "blocks": 38
+            },
+            {
+              "name": "Xidmətlər",
+              "sections": 5,
+              "blocks": 23
+            },
+            {
+              "name": "İşlər",
+              "sections": 4,
+              "blocks": 19
+            },
+            {
+              "name": "Əlaqə",
+              "sections": 3,
+              "blocks": 14
+            }
+          ],
+          "empty": []
+        }
+      ],
+      "pages": [
+        {
+          "sections": 8,
+          "blocks": 38,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large statement goes here\n+\n\nTwo short sentences that say what you do and who it is for.\n\n+\nPrimary button\n+\nStudio or project photograph\n+\n+\nTrusted by\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n+\nWhat we do\n+\n\nDescribe the services in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nSelected work\n+\n\nIntroduce the work below.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nBuilt for the way you work\n+\n\nIntroduce the points below in one or two sentences.\n\n+\nSTEP 01\nFirst point\nDescribe this point in a sentence or two.\n+\nSTEP 02\nSecond point\nDescribe this point in a sentence or two.\n+\nSTEP 03\nThird point\nDescribe this point in a sentence or two.\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\nMove to the next step\n+\n\nWrite what this call to action is for.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 5,
+          "blocks": 23,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large statement goes here\n+\n\nTwo short sentences that say what you do and who it is for.\n\n+\nPrimary button\n+\nStudio or project photograph\n+\n+\nWhat we do\n+\n\nDescribe the services in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nBuilt for the way you work\n+\n\nIntroduce the points below in one or two sentences.\n\n+\nSTEP 01\nFirst point\nDescribe this point in a sentence or two.\n+\nSTEP 02\nSecond point\nDescribe this point in a sentence or two.\n+\nSTEP 03\nThird point\nDescribe this point in a sentence or two.\n+\n+\nMove to the next step\n+\n\nWrite what this call to action is for.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 4,
+          "blocks": 19,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large statement goes here\n+\n\nTwo short sentences that say what you do and who it is for.\n\n+\nPrimary button\n+\nStudio or project photograph\n+\n+\nSelected work\n+\n\nIntroduce the work below.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 3,
+          "blocks": 14,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\nContact\n+\n\nHow to reach this business.\n\n+\n\nAddress\n\n+\n\nPhone\n\n+\n\nEmail\n\n+\nName *\nEmail *\nMessage *\nSend\n\nForm preview only. Data is not sent or stored.\n\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        }
+      ]
+    },
+    {
+      "id": "restaurant-simple",
+      "tier": "free",
+      "category": "restaurant",
+      "theme": "bistro",
+      "counts": [
+        {
+          "locale": "en",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Home",
+              "sections": 8,
+              "blocks": 34
+            },
+            {
+              "name": "Menu",
+              "sections": 5,
+              "blocks": 22
+            },
+            {
+              "name": "About",
+              "sections": 5,
+              "blocks": 20
+            },
+            {
+              "name": "Contact",
+              "sections": 3,
+              "blocks": 14
+            }
+          ],
+          "empty": []
+        },
+        {
+          "locale": "az",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Ana səhifə",
+              "sections": 8,
+              "blocks": 34
+            },
+            {
+              "name": "Menyu",
+              "sections": 5,
+              "blocks": 22
+            },
+            {
+              "name": "Haqqımızda",
+              "sections": 5,
+              "blocks": 20
+            },
+            {
+              "name": "Əlaqə",
+              "sections": 3,
+              "blocks": 14
+            }
+          ],
+          "empty": []
+        }
+      ],
+      "pages": [
+        {
+          "sections": 8,
+          "blocks": 34,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nWide opening photograph\n+\n\nEyebrow label\n\n+\nA headline that sits under the picture\n+\n\nOne or two sentences that set the scene.\n\n+\nPrimary button\n+\n+\nAbout us\n+\n\nTell the story in a calm paragraph or two.\n\n+\nPortrait or studio image\n+\n+\nFrom the kitchen\n+\n\nA line that introduces the menu.\n\n+\nCATEGORY\nCategory name\nA short description of what is in this category.\n+\nCATEGORY\nCategory name\nA short description of what is in this category.\n+\nCATEGORY\nCategory name\nA short description of what is in this category.\n+\nCATEGORY\nCategory name\nA short description of what is in this category.\n+\n+\nThe story\n+\n\nDescribe the project, place or process.\n\n+\nNarrative image\n+\n+\nOpening hours\n+\nWeekdays\nSet the time\n+\nSaturday\nSet the time\n+\nSunday\nSet the time\n+\nHolidays\nSet the time\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 5,
+          "blocks": 22,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nYour heading goes here\n+\n\nExplain in a sentence or two what you offer.\n\n+\nPrimary button\n+\n+\nFrom the kitchen\n+\n\nA line that introduces the menu.\n\n+\nCATEGORY\nCategory name\nA short description of what is in this category.\n+\nCATEGORY\nCategory name\nA short description of what is in this category.\n+\nCATEGORY\nCategory name\nA short description of what is in this category.\n+\nCATEGORY\nCategory name\nA short description of what is in this category.\n+\n+\nOpening hours\n+\nWeekdays\nSet the time\n+\nSaturday\nSet the time\n+\nSunday\nSet the time\n+\nHolidays\nSet the time\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 5,
+          "blocks": 20,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nYour heading goes here\n+\n\nExplain in a sentence or two what you offer.\n\n+\nPrimary button\n+\n+\nThe story\n+\n\nDescribe the project, place or process.\n\n+\nNarrative image\n+\n+\nOpening hours\n+\nWeekdays\nSet the time\n+\nSaturday\nSet the time\n+\nSunday\nSet the time\n+\nHolidays\nSet the time\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 3,
+          "blocks": 14,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\nContact\n+\n\nHow to reach this business.\n\n+\n\nAddress\n\n+\n\nPhone\n\n+\n\nEmail\n\n+\nName *\nEmail *\nMessage *\nSend\n\nForm preview only. Data is not sent or stored.\n\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        }
+      ]
+    },
+    {
+      "id": "vertex-studio",
+      "tier": "pro",
+      "category": "studio",
+      "theme": "vertex",
+      "counts": [
+        {
+          "locale": "en",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Home",
+              "sections": 10,
+              "blocks": 43
+            },
+            {
+              "name": "Work",
+              "sections": 4,
+              "blocks": 21
+            },
+            {
+              "name": "Services",
+              "sections": 6,
+              "blocks": 29
+            },
+            {
+              "name": "Studio",
+              "sections": 5,
+              "blocks": 21
+            },
+            {
+              "name": "About",
+              "sections": 5,
+              "blocks": 22
+            },
+            {
+              "name": "Contact",
+              "sections": 3,
+              "blocks": 14
+            }
+          ],
+          "empty": []
+        },
+        {
+          "locale": "az",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Ana səhifə",
+              "sections": 10,
+              "blocks": 43
+            },
+            {
+              "name": "İşlər",
+              "sections": 4,
+              "blocks": 21
+            },
+            {
+              "name": "Xidmətlər",
+              "sections": 6,
+              "blocks": 29
+            },
+            {
+              "name": "Studiya",
+              "sections": 5,
+              "blocks": 21
+            },
+            {
+              "name": "Haqqımızda",
+              "sections": 5,
+              "blocks": 22
+            },
+            {
+              "name": "Əlaqə",
+              "sections": 3,
+              "blocks": 14
+            }
+          ],
+          "empty": []
+        }
+      ],
+      "pages": [
+        {
+          "sections": 10,
+          "blocks": 43,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA very large statement, set in type alone\n+\n\nA short paragraph that follows the heading.\n\n+\nPrimary button\n+\n+\nSelected work\n+\n\nIntroduce the work below.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nMore work\n+\n\nA line that introduces these projects.\n\n+\nProject name\nA sentence about this project.\n+\nProject name\nA sentence about this project.\n+\nProject name\nA sentence about this project.\n+\nProject name\nA sentence about this project.\n+\n+\nWhat we do\n+\n\nDescribe the services in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nA statement set in large type\n+\n\nA supporting sentence or two.\n\n+\n+\nAwards and recognition\n+\n\nA line that introduces the list.\n\n+\nYEAR\nAward or recognition\n+\nYEAR\nAward or recognition\n+\nYEAR\nAward or recognition\n+\nYEAR\nAward or recognition\n+\n+\nThe story\n+\n\nDescribe the project, place or process.\n\n+\nNarrative image\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 4,
+          "blocks": 21,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large statement goes here\n+\n\nTwo short sentences that say what you do and who it is for.\n\n+\nPrimary button\n+\nStudio or project photograph\n+\n+\nSelected work\n+\n\nIntroduce the work below.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nMore work\n+\n\nA line that introduces these projects.\n\n+\nProject name\nA sentence about this project.\n+\nProject name\nA sentence about this project.\n+\nProject name\nA sentence about this project.\n+\nProject name\nA sentence about this project.\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 6,
+          "blocks": 29,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large statement goes here\n+\n\nTwo short sentences that say what you do and who it is for.\n\n+\nPrimary button\n+\nStudio or project photograph\n+\n+\nWhat we do\n+\n\nDescribe the services in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nBuilt for the way you work\n+\n\nIntroduce the points below in one or two sentences.\n\n+\nSTEP 01\nFirst point\nDescribe this point in a sentence or two.\n+\nSTEP 02\nSecond point\nDescribe this point in a sentence or two.\n+\nSTEP 03\nThird point\nDescribe this point in a sentence or two.\n+\n+\nAwards and recognition\n+\n\nA line that introduces the list.\n\n+\nYEAR\nAward or recognition\n+\nYEAR\nAward or recognition\n+\nYEAR\nAward or recognition\n+\nYEAR\nAward or recognition\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 5,
+          "blocks": 21,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large statement goes here\n+\n\nTwo short sentences that say what you do and who it is for.\n\n+\nPrimary button\n+\nStudio or project photograph\n+\n+\nA statement set in large type\n+\n\nA supporting sentence or two.\n\n+\n+\nThe story\n+\n\nDescribe the project, place or process.\n\n+\nNarrative image\n+\n+\nAwards and recognition\n+\n\nA line that introduces the list.\n\n+\nYEAR\nAward or recognition\n+\nYEAR\nAward or recognition\n+\nYEAR\nAward or recognition\n+\nYEAR\nAward or recognition\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 5,
+          "blocks": 22,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large statement goes here\n+\n\nTwo short sentences that say what you do and who it is for.\n\n+\nPrimary button\n+\nStudio or project photograph\n+\n+\nThe story\n+\n\nDescribe the project, place or process.\n\n+\nNarrative image\n+\n+\nBy the numbers\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 3,
+          "blocks": 14,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\nContact\n+\n\nHow to reach this business.\n\n+\n\nAddress\n\n+\n\nPhone\n\n+\n\nEmail\n\n+\nName *\nEmail *\nMessage *\nSend\n\nForm preview only. Data is not sent or stored.\n\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        }
+      ]
+    },
+    {
+      "id": "noir-portfolio",
+      "tier": "pro",
+      "category": "portfolio",
+      "theme": "noir",
+      "counts": [
+        {
+          "locale": "en",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Home",
+              "sections": 9,
+              "blocks": 40
+            },
+            {
+              "name": "Projects",
+              "sections": 4,
+              "blocks": 21
+            },
+            {
+              "name": "Project",
+              "sections": 4,
+              "blocks": 18
+            },
+            {
+              "name": "About",
+              "sections": 5,
+              "blocks": 19
+            },
+            {
+              "name": "Contact",
+              "sections": 3,
+              "blocks": 14
+            }
+          ],
+          "empty": []
+        },
+        {
+          "locale": "az",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Ana səhifə",
+              "sections": 9,
+              "blocks": 40
+            },
+            {
+              "name": "Layihələr",
+              "sections": 4,
+              "blocks": 21
+            },
+            {
+              "name": "Layihə",
+              "sections": 4,
+              "blocks": 18
+            },
+            {
+              "name": "Haqqımızda",
+              "sections": 5,
+              "blocks": 19
+            },
+            {
+              "name": "Əlaqə",
+              "sections": 3,
+              "blocks": 14
+            }
+          ],
+          "empty": []
+        }
+      ],
+      "pages": [
+        {
+          "sections": 9,
+          "blocks": 40,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nWide opening photograph\n+\n\nEyebrow label\n\n+\nA headline that sits under the picture\n+\n\nOne or two sentences that set the scene.\n\n+\nPrimary button\n+\n+\nSelected work\n+\n\nIntroduce the work below.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nMore work\n+\n\nA line that introduces these projects.\n\n+\nProject name\nA sentence about this project.\n+\nProject name\nA sentence about this project.\n+\nProject name\nA sentence about this project.\n+\nProject name\nA sentence about this project.\n+\n+\nThe story\n+\n\nDescribe the project, place or process.\n\n+\nNarrative image\n+\n+\nWhat we do\n+\n\nDescribe the services in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nTrusted by\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n+\nA statement set in large type\n+\n\nA supporting sentence or two.\n\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 4,
+          "blocks": 21,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nWide opening photograph\n+\n\nEyebrow label\n\n+\nA headline that sits under the picture\n+\n\nOne or two sentences that set the scene.\n\n+\nPrimary button\n+\n+\nSelected work\n+\n\nIntroduce the work below.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nMore work\n+\n\nA line that introduces these projects.\n\n+\nProject name\nA sentence about this project.\n+\nProject name\nA sentence about this project.\n+\nProject name\nA sentence about this project.\n+\nProject name\nA sentence about this project.\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 4,
+          "blocks": 18,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nWide opening photograph\n+\n\nEyebrow label\n\n+\nA headline that sits under the picture\n+\n\nOne or two sentences that set the scene.\n\n+\nPrimary button\n+\n+\nThe story\n+\n\nDescribe the project, place or process.\n\n+\nNarrative image\n+\n+\nSelected work\n+\n\nIntroduce the work below.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 5,
+          "blocks": 19,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nWide opening photograph\n+\n\nEyebrow label\n\n+\nA headline that sits under the picture\n+\n\nOne or two sentences that set the scene.\n\n+\nPrimary button\n+\n+\nA statement set in large type\n+\n\nA supporting sentence or two.\n\n+\n+\nAbout us\n+\n\nTell the story in a calm paragraph or two.\n\n+\nPortrait or studio image\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 3,
+          "blocks": 14,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\nContact\n+\n\nHow to reach this business.\n\n+\n\nAddress\n\n+\n\nPhone\n\n+\n\nEmail\n\n+\nName *\nEmail *\nMessage *\nSend\n\nForm preview only. Data is not sent or stored.\n\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        }
+      ]
+    },
+    {
+      "id": "business-starter",
+      "tier": "free",
+      "category": "business",
+      "theme": "corporate",
+      "counts": [
+        {
+          "locale": "en",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Home",
+              "sections": 8,
+              "blocks": 38
+            },
+            {
+              "name": "Services",
+              "sections": 6,
+              "blocks": 28
+            },
+            {
+              "name": "About",
+              "sections": 5,
+              "blocks": 20
+            },
+            {
+              "name": "Contact",
+              "sections": 3,
+              "blocks": 14
+            }
+          ],
+          "empty": []
+        },
+        {
+          "locale": "az",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Ana səhifə",
+              "sections": 8,
+              "blocks": 38
+            },
+            {
+              "name": "Xidmətlər",
+              "sections": 6,
+              "blocks": 28
+            },
+            {
+              "name": "Haqqımızda",
+              "sections": 5,
+              "blocks": 20
+            },
+            {
+              "name": "Əlaqə",
+              "sections": 3,
+              "blocks": 14
+            }
+          ],
+          "empty": []
+        }
+      ],
+      "pages": [
+        {
+          "sections": 8,
+          "blocks": 38,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large statement goes here\n+\n\nTwo short sentences that say what you do and who it is for.\n\n+\nPrimary button\n+\nStudio or project photograph\n+\n+\nTrusted by\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n+\nWhat we do\n+\n\nDescribe the services in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nBuilt for the way you work\n+\n\nIntroduce the points below in one or two sentences.\n\n+\nSTEP 01\nFirst point\nDescribe this point in a sentence or two.\n+\nSTEP 02\nSecond point\nDescribe this point in a sentence or two.\n+\nSTEP 03\nThird point\nDescribe this point in a sentence or two.\n+\n+\nBy the numbers\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 6,
+          "blocks": 28,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large statement goes here\n+\n\nTwo short sentences that say what you do and who it is for.\n\n+\nPrimary button\n+\nStudio or project photograph\n+\n+\nWhat we do\n+\n\nDescribe the services in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nBuilt for the way you work\n+\n\nIntroduce the points below in one or two sentences.\n\n+\nSTEP 01\nFirst point\nDescribe this point in a sentence or two.\n+\nSTEP 02\nSecond point\nDescribe this point in a sentence or two.\n+\nSTEP 03\nThird point\nDescribe this point in a sentence or two.\n+\n+\nBy the numbers\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 5,
+          "blocks": 20,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nYour heading goes here\n+\n\nExplain in a sentence or two what you offer.\n\n+\nPrimary button\n+\n+\nBy the numbers\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nThe story\n+\n\nDescribe the project, place or process.\n\n+\nNarrative image\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 3,
+          "blocks": 14,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\nContact\n+\n\nHow to reach this business.\n\n+\n\nAddress\n\n+\n\nPhone\n\n+\n\nEmail\n\n+\nName *\nEmail *\nMessage *\nSend\n\nForm preview only. Data is not sent or stored.\n\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        }
+      ]
+    },
+    {
+      "id": "forge-construction",
+      "tier": "pro",
+      "category": "construction",
+      "theme": "forge",
+      "counts": [
+        {
+          "locale": "en",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Home",
+              "sections": 10,
+              "blocks": 48
+            },
+            {
+              "name": "Projects",
+              "sections": 6,
+              "blocks": 29
+            },
+            {
+              "name": "Services",
+              "sections": 6,
+              "blocks": 28
+            },
+            {
+              "name": "About",
+              "sections": 5,
+              "blocks": 22
+            },
+            {
+              "name": "Contact",
+              "sections": 3,
+              "blocks": 14
+            }
+          ],
+          "empty": []
+        },
+        {
+          "locale": "az",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Ana səhifə",
+              "sections": 10,
+              "blocks": 48
+            },
+            {
+              "name": "Layihələr",
+              "sections": 6,
+              "blocks": 29
+            },
+            {
+              "name": "Xidmətlər",
+              "sections": 6,
+              "blocks": 28
+            },
+            {
+              "name": "Haqqımızda",
+              "sections": 5,
+              "blocks": 22
+            },
+            {
+              "name": "Əlaqə",
+              "sections": 3,
+              "blocks": 14
+            }
+          ],
+          "empty": []
+        }
+      ],
+      "pages": [
+        {
+          "sections": 10,
+          "blocks": 48,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nWide opening photograph\n+\n\nEyebrow label\n\n+\nA headline that sits under the picture\n+\n\nOne or two sentences that set the scene.\n\n+\nPrimary button\n+\n+\nTrusted by\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n+\nSelected work\n+\n\nIntroduce the work below.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nWhat we do\n+\n\nDescribe the services in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nBy the numbers\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nBuilt for the way you work\n+\n\nIntroduce the points below in one or two sentences.\n\n+\nSTEP 01\nFirst point\nDescribe this point in a sentence or two.\n+\nSTEP 02\nSecond point\nDescribe this point in a sentence or two.\n+\nSTEP 03\nThird point\nDescribe this point in a sentence or two.\n+\n+\nWhy people trust us\n+\nCertified and compliant\nSay how you meet the standards your industry expects.\n+\nSupport when you need it\nDescribe the support or response time people can rely on.\n+\nCareful with your data\nExplain how data, privacy or safety is handled.\n+\nProven at scale\nA sentence about your experience, uptime or track record.\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 6,
+          "blocks": 29,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large statement goes here\n+\n\nTwo short sentences that say what you do and who it is for.\n\n+\nPrimary button\n+\nStudio or project photograph\n+\n+\nSelected work\n+\n\nIntroduce the work below.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nMore work\n+\n\nA line that introduces these projects.\n\n+\nProject name\nA sentence about this project.\n+\nProject name\nA sentence about this project.\n+\nProject name\nA sentence about this project.\n+\nProject name\nA sentence about this project.\n+\n+\nBy the numbers\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 6,
+          "blocks": 28,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large statement goes here\n+\n\nTwo short sentences that say what you do and who it is for.\n\n+\nPrimary button\n+\nStudio or project photograph\n+\n+\nWhat we do\n+\n\nDescribe the services in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nBuilt for the way you work\n+\n\nIntroduce the points below in one or two sentences.\n\n+\nSTEP 01\nFirst point\nDescribe this point in a sentence or two.\n+\nSTEP 02\nSecond point\nDescribe this point in a sentence or two.\n+\nSTEP 03\nThird point\nDescribe this point in a sentence or two.\n+\n+\nWhy people trust us\n+\nCertified and compliant\nSay how you meet the standards your industry expects.\n+\nSupport when you need it\nDescribe the support or response time people can rely on.\n+\nCareful with your data\nExplain how data, privacy or safety is handled.\n+\nProven at scale\nA sentence about your experience, uptime or track record.\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 5,
+          "blocks": 22,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large statement goes here\n+\n\nTwo short sentences that say what you do and who it is for.\n\n+\nPrimary button\n+\nStudio or project photograph\n+\n+\nThe story\n+\n\nDescribe the project, place or process.\n\n+\nNarrative image\n+\n+\nBy the numbers\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 3,
+          "blocks": 14,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\nContact\n+\n\nHow to reach this business.\n\n+\n\nAddress\n\n+\n\nPhone\n\n+\n\nEmail\n\n+\nName *\nEmail *\nMessage *\nSend\n\nForm preview only. Data is not sent or stored.\n\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        }
+      ]
+    },
+    {
+      "id": "aurelia-wellness",
+      "tier": "pro",
+      "category": "wellness",
+      "theme": "aurelia",
+      "counts": [
+        {
+          "locale": "en",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Home",
+              "sections": 9,
+              "blocks": 41
+            },
+            {
+              "name": "Treatments",
+              "sections": 6,
+              "blocks": 27
+            },
+            {
+              "name": "About",
+              "sections": 5,
+              "blocks": 20
+            },
+            {
+              "name": "Booking",
+              "sections": 4,
+              "blocks": 19
+            },
+            {
+              "name": "Contact",
+              "sections": 3,
+              "blocks": 14
+            }
+          ],
+          "empty": []
+        },
+        {
+          "locale": "az",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Ana səhifə",
+              "sections": 9,
+              "blocks": 41
+            },
+            {
+              "name": "Müalicələr",
+              "sections": 6,
+              "blocks": 27
+            },
+            {
+              "name": "Haqqımızda",
+              "sections": 5,
+              "blocks": 20
+            },
+            {
+              "name": "Rezervasiya",
+              "sections": 4,
+              "blocks": 19
+            },
+            {
+              "name": "Əlaqə",
+              "sections": 3,
+              "blocks": 14
+            }
+          ],
+          "empty": []
+        }
+      ],
+      "pages": [
+        {
+          "sections": 9,
+          "blocks": 41,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large editorial headline\n+\n\nOpen with one clear, unhurried sentence.\n\n+\nPrimary button\n+\nFeatured image\n+\n+\nThe story\n+\n\nDescribe the project, place or process.\n\n+\nNarrative image\n+\n+\nWhat we offer\n+\n\nA line that introduces the list below.\n\n+\nDURATION\nOffering name\nA short description of this offering.\n+\nDURATION\nOffering name\nA short description of this offering.\n+\nDURATION\nOffering name\nA short description of this offering.\n+\nDURATION\nOffering name\nA short description of this offering.\n+\n+\nWhat we do\n+\n\nDescribe the services in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nSelected work\n+\n\nIntroduce the work below.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\nOpening hours\n+\nWeekdays\nSet the time\n+\nSaturday\nSet the time\n+\nSunday\nSet the time\n+\nHolidays\nSet the time\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 6,
+          "blocks": 27,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nYour heading goes here\n+\n\nExplain in a sentence or two what you offer.\n\n+\nPrimary button\n+\n+\nWhat we offer\n+\n\nA line that introduces the list below.\n\n+\nDURATION\nOffering name\nA short description of this offering.\n+\nDURATION\nOffering name\nA short description of this offering.\n+\nDURATION\nOffering name\nA short description of this offering.\n+\nDURATION\nOffering name\nA short description of this offering.\n+\n+\nWhat we do\n+\n\nDescribe the services in a sentence.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\n+\nFrequently asked questions\n+\nA common question?\nThe answer to it.\n+\nAnother common question?\nThe answer to it.\n+\nA third common question?\nThe answer to it.\n+\nA fourth common question?\nThe answer to it.\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 5,
+          "blocks": 20,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nYour heading goes here\n+\n\nExplain in a sentence or two what you offer.\n\n+\nPrimary button\n+\n+\nThe story\n+\n\nDescribe the project, place or process.\n\n+\nNarrative image\n+\n+\nBy the numbers\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 4,
+          "blocks": 19,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nYour heading goes here\n+\n\nExplain in a sentence or two what you offer.\n\n+\nPrimary button\n+\n+\nOpening hours\n+\nWeekdays\nSet the time\n+\nSaturday\nSet the time\n+\nSunday\nSet the time\n+\nHolidays\nSet the time\n+\n+\nContact\n+\n\nHow to reach this business.\n\n+\n\nAddress\n\n+\n\nPhone\n\n+\n\nEmail\n\n+\nName *\nEmail *\nMessage *\nSend\n\nForm preview only. Data is not sent or stored.\n\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 3,
+          "blocks": 14,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\nContact\n+\n\nHow to reach this business.\n\n+\n\nAddress\n\n+\n\nPhone\n\n+\n\nEmail\n\n+\nName *\nEmail *\nMessage *\nSend\n\nForm preview only. Data is not sent or stored.\n\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+\n\n© Your website. All rights reserved.\n\n+"
+        }
+      ]
+    },
+    {
+      "id": "pulse-finance",
+      "tier": "pro",
+      "category": "finance",
+      "theme": "ledger",
+      "counts": [
+        {
+          "locale": "en",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Home",
+              "sections": 12,
+              "blocks": 62
+            },
+            {
+              "name": "Product",
+              "sections": 7,
+              "blocks": 32
+            },
+            {
+              "name": "Solutions",
+              "sections": 7,
+              "blocks": 35
+            },
+            {
+              "name": "Pricing",
+              "sections": 6,
+              "blocks": 25
+            },
+            {
+              "name": "Security",
+              "sections": 7,
+              "blocks": 33
+            },
+            {
+              "name": "Contact",
+              "sections": 3,
+              "blocks": 13
+            }
+          ],
+          "empty": []
+        },
+        {
+          "locale": "az",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Ana səhifə",
+              "sections": 12,
+              "blocks": 62
+            },
+            {
+              "name": "Məhsul",
+              "sections": 7,
+              "blocks": 32
+            },
+            {
+              "name": "Həllər",
+              "sections": 7,
+              "blocks": 35
+            },
+            {
+              "name": "Qiymətlər",
+              "sections": 6,
+              "blocks": 25
+            },
+            {
+              "name": "Təhlükəsizlik",
+              "sections": 7,
+              "blocks": 33
+            },
+            {
+              "name": "Əlaqə",
+              "sections": 3,
+              "blocks": 13
+            }
+          ],
+          "empty": []
+        }
+      ],
+      "pages": [
+        {
+          "sections": 12,
+          "blocks": 62,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\n\nEyebrow label\n\n+\nA large statement goes here\n+\n\nTwo short sentences that say what you do and who it is for.\n\n+\nPrimary button\n+\nStudio or project photograph\n+\n+\nTrusted by\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n\nBrand\n\n+\n+\nSee the product in action\n+\n\nShow a screenshot of the product with a short explanation.\n\n+\nPrimary button\n+\nProduct screenshot\n+\n+\nResults that speak for themselves\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nBuilt for the way you work\n+\n\nIntroduce the points below in one or two sentences.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\nFourth point\nDescribe this point in a sentence or two.\n+\nFifth point\nDescribe this point in a sentence or two.\n+\nSixth point\nDescribe this point in a sentence or two.\n+\n+\nWhy people trust us\n+\nCertified and compliant\nSay how you meet the standards your industry expects.\n+\nSupport when you need it\nDescribe the support or response time people can rely on.\n+\nCareful with your data\nExplain how data, privacy or safety is handled.\n+\nProven at scale\nA sentence about your experience, uptime or track record.\n+\n+\nWorks with the tools you already use\n+\n\nA line that introduces the list of connections.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\nFourth point\nDescribe this point in a sentence or two.\n+\nFifth point\nDescribe this point in a sentence or two.\n+\nSixth point\nDescribe this point in a sentence or two.\n+\n+\nSimple, honest pricing\n+\n\nExplain how the plans differ.\n\n+\nSTARTER\nPrice\nWhat this plan includes, one line at a time.\nChoose plan\n+\nPOPULAR\nPrice\nWhat this plan includes, one line at a time.\nChoose plan\n+\nSCALE\nPrice\nWhat this plan includes, one line at a time.\nChoose plan\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\nFrequently asked questions\n+\nA common question?\nThe answer to it.\n+\nAnother common question?\nThe answer to it.\n+\nA third common question?\nThe answer to it.\n+\nA fourth common question?\nThe answer to it.\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+"
+        },
+        {
+          "sections": 7,
+          "blocks": 32,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nYour heading goes here\n+\n\nExplain in a sentence or two what you offer.\n\n+\nPrimary button\n+\n+\nSee the product in action\n+\n\nShow a screenshot of the product with a short explanation.\n\n+\nPrimary button\n+\nProduct screenshot\n+\n+\nBuilt for the way you work\n+\n\nIntroduce the points below in one or two sentences.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\nFourth point\nDescribe this point in a sentence or two.\n+\nFifth point\nDescribe this point in a sentence or two.\n+\nSixth point\nDescribe this point in a sentence or two.\n+\n+\nResults that speak for themselves\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nWhy people trust us\n+\nCertified and compliant\nSay how you meet the standards your industry expects.\n+\nSupport when you need it\nDescribe the support or response time people can rely on.\n+\nCareful with your data\nExplain how data, privacy or safety is handled.\n+\nProven at scale\nA sentence about your experience, uptime or track record.\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+"
+        },
+        {
+          "sections": 7,
+          "blocks": 35,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nYour heading goes here\n+\n\nExplain in a sentence or two what you offer.\n\n+\nPrimary button\n+\n+\nBuilt for the way you work\n+\n\nIntroduce the points below in one or two sentences.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\nFourth point\nDescribe this point in a sentence or two.\n+\nFifth point\nDescribe this point in a sentence or two.\n+\nSixth point\nDescribe this point in a sentence or two.\n+\n+\nWorks with the tools you already use\n+\n\nA line that introduces the list of connections.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\nFourth point\nDescribe this point in a sentence or two.\n+\nFifth point\nDescribe this point in a sentence or two.\n+\nSixth point\nDescribe this point in a sentence or two.\n+\n+\nResults that speak for themselves\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nWhat people say\n+\nCustomer name\nA short quote goes here.\n+\nCustomer name\nAnother short quote goes here.\n+\nCustomer name\nA third short quote goes here.\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+"
+        },
+        {
+          "sections": 6,
+          "blocks": 25,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nYour heading goes here\n+\n\nExplain in a sentence or two what you offer.\n\n+\nPrimary button\n+\n+\nSimple, honest pricing\n+\n\nExplain how the plans differ.\n\n+\nSTARTER\nPrice\nWhat this plan includes, one line at a time.\nChoose plan\n+\nPOPULAR\nPrice\nWhat this plan includes, one line at a time.\nChoose plan\n+\nSCALE\nPrice\nWhat this plan includes, one line at a time.\nChoose plan\n+\n+\nResults that speak for themselves\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nFrequently asked questions\n+\nA common question?\nThe answer to it.\n+\nAnother common question?\nThe answer to it.\n+\nA third common question?\nThe answer to it.\n+\nA fourth common question?\nThe answer to it.\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+"
+        },
+        {
+          "sections": 7,
+          "blocks": 33,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nYour heading goes here\n+\n\nExplain in a sentence or two what you offer.\n\n+\nPrimary button\n+\n+\nWhy people trust us\n+\nCertified and compliant\nSay how you meet the standards your industry expects.\n+\nSupport when you need it\nDescribe the support or response time people can rely on.\n+\nCareful with your data\nExplain how data, privacy or safety is handled.\n+\nProven at scale\nA sentence about your experience, uptime or track record.\n+\n+\nBuilt for the way you work\n+\n\nIntroduce the points below in one or two sentences.\n\n+\nFirst point\nDescribe this point in a sentence or two.\n+\nSecond point\nDescribe this point in a sentence or two.\n+\nThird point\nDescribe this point in a sentence or two.\n+\nFourth point\nDescribe this point in a sentence or two.\n+\nFifth point\nDescribe this point in a sentence or two.\n+\nSixth point\nDescribe this point in a sentence or two.\n+\n+\nResults that speak for themselves\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\nValue\nWhat it measures\n+\n+\nFrequently asked questions\n+\nA common question?\nThe answer to it.\n+\nAnother common question?\nThe answer to it.\n+\nA third common question?\nThe answer to it.\n+\nA fourth common question?\nThe answer to it.\n+\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+"
+        },
+        {
+          "sections": 3,
+          "blocks": 13,
+          "text": "Home\n\nThe menu is empty, so the header has no links to show.\n\n+\nStart a conversation\n+\n\nInvite the visitor to get in touch.\n\n+\nPrimary button\n+\n+\nContact\n+\n\nHow to reach this business.\n\n+\n\nAddress\n\n+\n\nPhone\n\n+\n\nEmail\n\n+\nName *\nEmail *\nMessage *\nSend\n\nForm preview only. Data is not sent or stored.\n\n+\n+\n\nA short note about your website.\n\n+\nProduct\nLink\nLink\nLink\n+\nCompany\nLink\nLink\nLink\n+\nResources\nLink\nLink\nLink\n+"
+        }
+      ]
+    },
+    {
+      "id": "atlas-dashboard",
+      "tier": "pro",
+      "category": "dashboard",
+      "theme": "atlas",
+      "counts": [
+        {
+          "locale": "en",
+          "missing": [],
+          "pages": [
+            {
+              "name": "Dashboard",
+              "sections": 9,
+              "blocks": 40
+            },
+            {
+              "name": "Analytics",
+              "sections": 7,
+              "blocks": 29
+            },
+            {
+              "name": "Customers",
+              "sections": 5,
+              "blocks": 22
+            },
+            {
+              "name": "Transactions",
+              "sections": 5,
+              "blocks": 20
+            },
+            {
+              "name": "Reports",
+              "sections": 6,
+              "blocks": 27
+            },
+            {
+              "name": "Settings",
+              "sections": 4,
+              "blocks": 16
+            }
+          ],
+          "empty": []
+        },
+        {
+          "locale": "az",
+          "missing": [],
+          "pages": [
+            {
+              "name": "İdarə paneli",
+              "sections": 9,
+              "blocks": 40
+            },
+            {
+              "name": "Analitika",
+              "sections": 7,
+              "blocks": 29
+            },
+            {
+              "name": "Müştərilər",
+              "sections": 5,
+              "blocks": 22
+            },
+            {
+              "name": "Əməliyyatlar",
+              "sections": 5,
+              "blocks": 20
+            },
+            {
+              "name": "Hesabatlar",
+              "sections": 6,
+              "blocks": 27
+            },
+            {
+              "name": "Tənzimləmələr",
+              "sections": 4,
+              "blocks": 16
+            }
+          ],
+          "empty": []
+        }
+      ],
+      "pages": [
+        {
+          "sections": 9,
+          "blocks": 40,
+          "text": "Dashboard\n\nThe menu is empty, so the header has no links to show.\n\n+\nDashboard\n+\n\nSigned in as the workspace owner · synced a moment ago\n\n+\nNew project\n+\n+\nACTIVE CUSTOMERS\n8,412\n12.4%\nvs. last month\n+\nMONTHLY RECURRING REVENUE\n$96,400\n6.1%\nvs. last month\n+\nCHURN RATE\n1.8%\n0.3%\nvs. last month\n+\nAVERAGE RESPONSE TIME\n420 ms\nno change\nthis week\n+\n+\nRevenue overview\n+\n\nPlaceholder charts show where a series will render once data is connected.\n\n+\nRecurring revenue by month\nPlaceholder — no data connected yet.\n+\nUsage over the last 30 days\nPlaceholder — no data connected yet.\n+\n+\nRecent transactions\n+\n\nA table of records with a filter bar above it.\n\n+\nSearch transactions\nAll statuses\nLast 30 days\nAll amounts\nExport\n+\nFour most recent transactions\nREFERENCE\tCUSTOMER\tAMOUNT\tSTATUS\nTX-2481\tNorthwind Labs\t$1,240.00\tPaid\nTX-2480\tHarbour & Co\t$860.00\tPending\nTX-2479\tFieldstone Group\t$2,150.00\tPaid\nTX-2478\tCedar Studio\t$430.00\tRefunded\n+\n+\nRecent activity\n+\nA FEW MINUTES AGO\nPayment received\nNorthwind Labs paid invoice INV-1042.\n+\nAN HOUR AGO\nNew workspace\nA workspace was created in the EU region.\n+\nYESTERDAY\nPlan changed\nHarbour & Co moved from Starter to Growth.\n+\nTWO DAYS AGO\nAccess reviewed\nThe workspace access list was reviewed.\n+\n+\nCustomers\n+\n\nThe accounts with the most recent activity.\n\n+\nGROWTH\nNorthwind Labs\n48 seats · EU region · active today\n+\nSTARTER\nHarbour & Co\n6 seats · US region · active yesterday\n+\nENTERPRISE\nFieldstone Group\n320 seats · US region · active today\n+\nSTARTER\nCedar Studio\n3 seats · APAC region · active last week\n+\n+\nSystem health\n+\n\nThe current status of the core services.\n\n+\nServices\nAPI\nOperational\nWebhooks\nOperational\nEmail delivery\nDegraded\n+\nChecks\nBackups\nScheduled\nResponse target\nMet\nOpen incidents\nOne\n+\n+\nQuick actions\n+\nNew report\n+\nInvite teammate\n+\nImport data\n+\nView logs\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 7,
+          "blocks": 29,
+          "text": "Dashboard\n\nThe menu is empty, so the header has no links to show.\n\n+\nDashboard\n+\n\nSigned in as the workspace owner · synced a moment ago\n\n+\nNew project\n+\n+\nACTIVE CUSTOMERS\n8,412\n12.4%\nvs. last month\n+\nMONTHLY RECURRING REVENUE\n$96,400\n6.1%\nvs. last month\n+\nCHURN RATE\n1.8%\n0.3%\nvs. last month\n+\nAVERAGE RESPONSE TIME\n420 ms\nno change\nthis week\n+\n+\nRevenue overview\n+\n\nPlaceholder charts show where a series will render once data is connected.\n\n+\nRecurring revenue by month\nPlaceholder — no data connected yet.\n+\nUsage over the last 30 days\nPlaceholder — no data connected yet.\n+\n+\nRecent transactions\n+\n\nA table of records with a filter bar above it.\n\n+\nSearch transactions\nAll statuses\nLast 30 days\nAll amounts\nExport\n+\nFour most recent transactions\nREFERENCE\tCUSTOMER\tAMOUNT\tSTATUS\nTX-2481\tNorthwind Labs\t$1,240.00\tPaid\nTX-2480\tHarbour & Co\t$860.00\tPending\nTX-2479\tFieldstone Group\t$2,150.00\tPaid\nTX-2478\tCedar Studio\t$430.00\tRefunded\n+\n+\nSystem health\n+\n\nThe current status of the core services.\n\n+\nServices\nAPI\nOperational\nWebhooks\nOperational\nEmail delivery\nDegraded\n+\nChecks\nBackups\nScheduled\nResponse target\nMet\nOpen incidents\nOne\n+\n+\nQuick actions\n+\nNew report\n+\nInvite teammate\n+\nImport data\n+\nView logs\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 5,
+          "blocks": 22,
+          "text": "Dashboard\n\nThe menu is empty, so the header has no links to show.\n\n+\nDashboard\n+\n\nSigned in as the workspace owner · synced a moment ago\n\n+\nNew project\n+\n+\nACTIVE CUSTOMERS\n8,412\n12.4%\nvs. last month\n+\nMONTHLY RECURRING REVENUE\n$96,400\n6.1%\nvs. last month\n+\nCHURN RATE\n1.8%\n0.3%\nvs. last month\n+\nAVERAGE RESPONSE TIME\n420 ms\nno change\nthis week\n+\n+\nRecent transactions\n+\n\nA table of records with a filter bar above it.\n\n+\nSearch transactions\nAll statuses\nLast 30 days\nAll amounts\nExport\n+\nFour most recent transactions\nREFERENCE\tCUSTOMER\tAMOUNT\tSTATUS\nTX-2481\tNorthwind Labs\t$1,240.00\tPaid\nTX-2480\tHarbour & Co\t$860.00\tPending\nTX-2479\tFieldstone Group\t$2,150.00\tPaid\nTX-2478\tCedar Studio\t$430.00\tRefunded\n+\n+\nCustomers\n+\n\nThe accounts with the most recent activity.\n\n+\nGROWTH\nNorthwind Labs\n48 seats · EU region · active today\n+\nSTARTER\nHarbour & Co\n6 seats · US region · active yesterday\n+\nENTERPRISE\nFieldstone Group\n320 seats · US region · active today\n+\nSTARTER\nCedar Studio\n3 seats · APAC region · active last week\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 5,
+          "blocks": 20,
+          "text": "Dashboard\n\nThe menu is empty, so the header has no links to show.\n\n+\nDashboard\n+\n\nSigned in as the workspace owner · synced a moment ago\n\n+\nNew project\n+\n+\nACTIVE CUSTOMERS\n8,412\n12.4%\nvs. last month\n+\nMONTHLY RECURRING REVENUE\n$96,400\n6.1%\nvs. last month\n+\nCHURN RATE\n1.8%\n0.3%\nvs. last month\n+\nAVERAGE RESPONSE TIME\n420 ms\nno change\nthis week\n+\n+\nRecent transactions\n+\n\nA table of records with a filter bar above it.\n\n+\nSearch transactions\nAll statuses\nLast 30 days\nAll amounts\nExport\n+\nFour most recent transactions\nREFERENCE\tCUSTOMER\tAMOUNT\tSTATUS\nTX-2481\tNorthwind Labs\t$1,240.00\tPaid\nTX-2480\tHarbour & Co\t$860.00\tPending\nTX-2479\tFieldstone Group\t$2,150.00\tPaid\nTX-2478\tCedar Studio\t$430.00\tRefunded\n+\n+\nSystem health\n+\n\nThe current status of the core services.\n\n+\nServices\nAPI\nOperational\nWebhooks\nOperational\nEmail delivery\nDegraded\n+\nChecks\nBackups\nScheduled\nResponse target\nMet\nOpen incidents\nOne\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 6,
+          "blocks": 27,
+          "text": "Dashboard\n\nThe menu is empty, so the header has no links to show.\n\n+\nDashboard\n+\n\nSigned in as the workspace owner · synced a moment ago\n\n+\nNew project\n+\n+\nACTIVE CUSTOMERS\n8,412\n12.4%\nvs. last month\n+\nMONTHLY RECURRING REVENUE\n$96,400\n6.1%\nvs. last month\n+\nCHURN RATE\n1.8%\n0.3%\nvs. last month\n+\nAVERAGE RESPONSE TIME\n420 ms\nno change\nthis week\n+\n+\nRevenue overview\n+\n\nPlaceholder charts show where a series will render once data is connected.\n\n+\nRecurring revenue by month\nPlaceholder — no data connected yet.\n+\nUsage over the last 30 days\nPlaceholder — no data connected yet.\n+\n+\nReports\n+\n\nSaved reports and the periods they cover.\n\n+\nFINANCE\nMonthly revenue\nRevenue, refunds and net change for the selected month.\nOpen report\n+\nPRODUCT\nUsage by feature\nWhich features were used, and how often, by workspace.\nOpen report\n+\nCUSTOMERS\nCohort retention\nRetention by signup cohort over the last twelve months.\nOpen report\n+\nOPERATIONS\nService levels\nUptime and response times for the core services.\nOpen report\n+\n+\nQuick actions\n+\nNew report\n+\nInvite teammate\n+\nImport data\n+\nView logs\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        },
+        {
+          "sections": 4,
+          "blocks": 16,
+          "text": "Dashboard\n\nThe menu is empty, so the header has no links to show.\n\n+\nDashboard\n+\n\nSigned in as the workspace owner · synced a moment ago\n\n+\nNew project\n+\n+\nWorkspace settings\n+\n\nManage the workspace, its members and how it behaves.\n\n+\nWorkspace profile\nThe name, region and details shown across the application.\n+\nMembers and roles\nWho can access the workspace and what they can change.\n+\nBilling\nThe plan, seats and invoices for the current period.\n+\n+\nNotifications\n+\n\nChoose what the workspace sends and who receives it.\n\n+\nEmail me a daily summary\nNotify me about failed payments\nShare anonymous usage data\nSave preferences\n\nForm preview only. Data is not sent or stored.\n\n+\n+\n\nA short note about your website.\n\n+\n\nLink\n\n+\n\nLink\n\n+\n+\n\n© Your website. All rights reserved.\n\n+"
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "gallery": "All, Free, Pro, every category, search, combined, reset, no results passed"
+}

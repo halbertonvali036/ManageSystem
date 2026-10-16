@@ -33,6 +33,8 @@ import { createStarterForm, duplicateForm, normalizeSiteForm } from '@/models/si
 import {
   buildSectionSpec,
   getSiteSection,
+  SECTION_LAYOUT,
+  SECTION_LAYOUTS,
   SECTION_TYPE,
 } from '@/models/siteSection'
 import {
@@ -96,6 +98,22 @@ export const BLOCK_TYPE = Object.freeze({
   BUTTON: 'button',
   IMAGE: 'image',
   SPACER: 'spacer',
+  PANEL: 'panel',
+  /*
+   * Application primitives.
+   *
+   * A dashboard is not a page of marketing cards. These five are the smallest
+   * set of shapes that a data-driven screen needs and a marketing page does not
+   * already have: a numeric metric, a small data table, a chart placeholder, a
+   * status list and a filter/action bar. Each is generic enough to be reused by
+   * any future app or analytics template, so none of them carries the Atlas
+   * name or a fixed look — a theme and the block's own style still decide.
+   */
+  STAT: 'stat',
+  CHART: 'chart',
+  TABLE: 'table',
+  STATUS_LIST: 'statusList',
+  TOOLBAR: 'toolbar',
 })
 
 /** The block types this phase supports, in the order the palette shows them. */
@@ -105,6 +123,12 @@ export const BLOCK_TYPES = Object.freeze([
   BLOCK_TYPE.TEXT,
   BLOCK_TYPE.BUTTON,
   BLOCK_TYPE.IMAGE,
+  BLOCK_TYPE.PANEL,
+  BLOCK_TYPE.STAT,
+  BLOCK_TYPE.TABLE,
+  BLOCK_TYPE.CHART,
+  BLOCK_TYPE.STATUS_LIST,
+  BLOCK_TYPE.TOOLBAR,
   BLOCK_TYPE.SPACER,
 ])
 
@@ -115,8 +139,24 @@ export const BLOCK_TYPE_LABELS = Object.freeze({
   [BLOCK_TYPE.TEXT]: 'editor.block.text',
   [BLOCK_TYPE.BUTTON]: 'editor.block.button',
   [BLOCK_TYPE.IMAGE]: 'editor.block.image',
+  [BLOCK_TYPE.PANEL]: 'editor.block.panel',
+  [BLOCK_TYPE.STAT]: 'editor.block.stat',
+  [BLOCK_TYPE.CHART]: 'editor.block.chart',
+  [BLOCK_TYPE.TABLE]: 'editor.block.table',
+  [BLOCK_TYPE.STATUS_LIST]: 'editor.block.statusList',
+  [BLOCK_TYPE.TOOLBAR]: 'editor.block.toolbar',
   [BLOCK_TYPE.SPACER]: 'editor.block.spacer',
 })
+
+/** The variants the application primitives offer, kept here so both the
+ *  renderer and the settings panel read the same list. */
+export const STAT_TRENDS = Object.freeze(['up', 'down', 'flat'])
+export const CHART_VARIANTS = Object.freeze(['bars', 'line', 'donut'])
+export const STATUS_TONES = Object.freeze(['neutral', 'positive', 'warning', 'critical'])
+export const MAX_TABLE_COLUMNS = 8
+export const MAX_TABLE_ROWS = 40
+export const MAX_STATUS_ITEMS = 12
+export const MAX_TOOLBAR_FILTERS = 6
 
 /**
  * A section either came from the library or is a plain band.
@@ -547,6 +587,51 @@ const BLOCK_PRESETS = Object.freeze({
      */
     content: Object.freeze({ alt: '', src: '', media: null, fit: IMAGE_FIT.COVER, href: '' }),
   }),
+  [BLOCK_TYPE.PANEL]: Object.freeze({
+    /*
+     * A card: a short label, a title, body copy, an optional action button and an
+     * optional image at the top. It is one generic primitive rather than six, so
+     * a feature tile, a pricing column, a statistic and a testimonial are all the
+     * same editable block. `imageSlot` marks a panel that should keep a visual
+     * placeholder even before a picture is chosen.
+     */
+    content: Object.freeze({
+      eyebrow: '',
+      title: '',
+      body: '',
+      action: '',
+      href: '',
+      alt: '',
+      src: '',
+      media: null,
+      fit: IMAGE_FIT.COVER,
+      imageSlot: false,
+    }),
+  }),
+  [BLOCK_TYPE.STAT]: Object.freeze({
+    /*
+     * A metric card: a short label, a value, an optional change and a caption.
+     * It is not a `panel` because the value needs its own type scale — a card
+     * title is a card title, a KPI number is a KPI number.
+     */
+    content: Object.freeze({ label: '', value: '', delta: '', caption: '', trend: 'up' }),
+  }),
+  [BLOCK_TYPE.CHART]: Object.freeze({
+    /* A chart placeholder: a title, a variant and a caption. No library, no data. */
+    content: Object.freeze({ title: '', caption: '', variant: 'bars' }),
+  }),
+  [BLOCK_TYPE.TABLE]: Object.freeze({
+    /* A data table: a caption, header columns and rows of string cells. */
+    content: Object.freeze({ caption: '', columns: Object.freeze([]), rows: Object.freeze([]) }),
+  }),
+  [BLOCK_TYPE.STATUS_LIST]: Object.freeze({
+    /* A list of labelled states, e.g. a service health list. */
+    content: Object.freeze({ title: '', items: Object.freeze([]) }),
+  }),
+  [BLOCK_TYPE.TOOLBAR]: Object.freeze({
+    /* A filter/action bar: a search placeholder, filter labels and an action. */
+    content: Object.freeze({ search: '', filters: Object.freeze([]), action: '' }),
+  }),
   [BLOCK_TYPE.SPACER]: Object.freeze({
     content: Object.freeze({}),
   }),
@@ -581,6 +666,82 @@ const normalizeImageContent = (rawContent) => {
 }
 
 /**
+ * Normalises a panel's content.
+ *
+ * A panel is a card, so its content is the image fields (through the same
+ * normaliser an image block uses, so a picture behaves identically wherever it
+ * sits) plus its own text fields and an `imageSlot` flag. The text fields are
+ * length-bounded like every other block's copy.
+ */
+const normalizePanelContent = (rawContent) => {
+  const image = normalizeImageContent(rawContent)
+  const text = (value, limit) => (typeof value === 'string' ? value.slice(0, limit) : '')
+  return {
+    eyebrow: text(rawContent?.eyebrow, 80),
+    title: text(rawContent?.title, 160),
+    body: text(rawContent?.body, 800),
+    action: text(rawContent?.action, 80),
+    imageSlot: rawContent?.imageSlot === true,
+    ...image,
+  }
+}
+
+/** A string field with its own ceiling; anything not a string becomes ''. */
+const blockText = (value, limit) => (typeof value === 'string' ? value.slice(0, limit) : '')
+/** An array field with a ceiling; anything that is not an array becomes []. */
+const blockList = (value, max) => (Array.isArray(value) ? value.slice(0, max) : [])
+
+/**
+ * Normalizers for the application primitives.
+ *
+ * These are separate from the panel normalizer because their content is
+ * structured — arrays of columns, rows, list items and filters — rather than a
+ * flat set of text fields. Keeping the shape here means the renderer, the
+ * settings panel and a future backend all agree on it.
+ */
+export const normalizeStatContent = (raw) => ({
+  label: blockText(raw?.label, 80),
+  value: blockText(raw?.value, 40),
+  delta: blockText(raw?.delta, 24),
+  caption: blockText(raw?.caption, 120),
+  trend: STAT_TRENDS.includes(raw?.trend) ? raw.trend : 'up',
+})
+
+export const normalizeChartContent = (raw) => ({
+  title: blockText(raw?.title, 120),
+  caption: blockText(raw?.caption, 200),
+  variant: CHART_VARIANTS.includes(raw?.variant) ? raw.variant : 'bars',
+})
+
+export const normalizeTableContent = (raw) => {
+  const columns = blockList(raw?.columns, MAX_TABLE_COLUMNS).map((column) => blockText(column, 60))
+  /*
+   * Every row is padded or trimmed to the header width, so a table can never
+   * render a cell with no column above it or drop one that has a header.
+   */
+  const rows = blockList(raw?.rows, MAX_TABLE_ROWS).map((row) => {
+    const cells = Array.isArray(row) ? row : []
+    return columns.map((_, index) => blockText(cells[index], 120))
+  })
+  return { caption: blockText(raw?.caption, 120), columns, rows }
+}
+
+export const normalizeStatusListContent = (raw) => ({
+  title: blockText(raw?.title, 120),
+  items: blockList(raw?.items, MAX_STATUS_ITEMS).map((item) => ({
+    label: blockText(item?.label, 80),
+    value: blockText(item?.value, 40),
+    tone: STATUS_TONES.includes(item?.tone) ? item.tone : 'neutral',
+  })),
+})
+
+export const normalizeToolbarContent = (raw) => ({
+  search: blockText(raw?.search, 60),
+  filters: blockList(raw?.filters, MAX_TOOLBAR_FILTERS).map((filter) => blockText(filter, 40)),
+  action: blockText(raw?.action, 60),
+})
+
+/**
  * Coerces any incoming block into a valid editor block.
  *
  * This is the single place that trusts the outside world, so both a locally
@@ -597,6 +758,18 @@ export const normalizeBlock = (raw) => {
       ? { form: rawContent.form ? normalizeSiteForm(rawContent.form) : createStarterForm() }
       : type === BLOCK_TYPE.IMAGE
       ? normalizeImageContent(rawContent)
+      : type === BLOCK_TYPE.PANEL
+      ? normalizePanelContent(rawContent)
+      : type === BLOCK_TYPE.STAT
+      ? normalizeStatContent(rawContent)
+      : type === BLOCK_TYPE.CHART
+      ? normalizeChartContent(rawContent)
+      : type === BLOCK_TYPE.TABLE
+      ? normalizeTableContent(rawContent)
+      : type === BLOCK_TYPE.STATUS_LIST
+      ? normalizeStatusListContent(rawContent)
+      : type === BLOCK_TYPE.TOOLBAR
+      ? normalizeToolbarContent(rawContent)
       : (() => {
           const base = { ...preset.content }
           for (const key of Object.keys(base)) {
@@ -655,11 +828,13 @@ export const normalizeBlock = (raw) => {
 }
 
 /** Creates a new block of `type`, optionally overriding parts of the preset. */
-export const createBlock = (type, { content, style } = {}) =>
+export const createBlock = (type, { content, style, animation, overrides } = {}) =>
   normalizeBlock({
     type,
     content: { ...getBlockPreset(type).content, ...(content ?? {}) },
     style: style ?? {},
+    animation,
+    overrides,
   })
 
 // All duplication paths must regenerate form and field identifiers as well.
@@ -748,6 +923,7 @@ export const normalizeSection = (raw) => {
   return {
     id: typeof raw?.id === 'string' && raw.id ? raw.id : createSectionId(),
     type: SECTION_KINDS.includes(raw?.type) ? raw.type : SECTION_KIND.CUSTOM,
+    layout: SECTION_LAYOUTS.includes(raw?.layout) ? raw.layout : SECTION_LAYOUT.STACK,
     isVisible: raw?.isVisible !== false,
     style,
     backgroundImage: normalizeBackgroundImage(raw?.backgroundImage),
@@ -758,16 +934,18 @@ export const normalizeSection = (raw) => {
 }
 
 /** Creates an empty section of `type`. */
-export const createSection = (type, { style, blocks = [] } = {}) =>
-  normalizeSection({ type, style, blocks })
+export const createSection = (type, { style, blocks = [], layout } = {}) =>
+  normalizeSection({ type, style, blocks, layout })
 
 /**
  * Builds a section from the library.
  *
  * `t` is required: a section must never fall back to a hard-coded string that
- * would ignore the visitor's language. The preset contributes its style and its
- * placeholder copy, and the blocks are ordinary editor blocks the user can then
- * select, reorder and delete.
+ * would ignore the visitor's language. The preset contributes its layout, its
+ * style and its placeholder copy, and the blocks are ordinary editor blocks the
+ * user can then select, reorder and delete. Preset styles travel through, so a
+ * designed section keeps its type scale and band styling instead of collapsing to
+ * block defaults.
  */
 export const createSectionFromLibrary = (type, t) => {
   const preset = getSiteSection(type)
@@ -777,8 +955,17 @@ export const createSectionFromLibrary = (type, t) => {
   const spec = buildSectionSpec(preset, t)
   return normalizeSection({
     type: spec.type,
-    style: {},
-    blocks: spec.blocks.map((block) => createBlock(block.type, { content: block.content })),
+    layout: spec.layout,
+    style: spec.style,
+    animation: spec.animation,
+    blocks: spec.blocks.map((block) =>
+      createBlock(block.type, {
+        content: block.content,
+        style: block.style,
+        animation: block.animation,
+        overrides: block.overrides,
+      }),
+    ),
   })
 }
 
@@ -945,6 +1132,7 @@ export const createLocalDraftDocument = ({ name = DEFAULT_PAGE_NAME, copy, t, pa
     ? skeletons.map((skeleton, index) =>
         createPage({
           name: skeleton?.name ? skeleton.name : index === 0 ? name : DEFAULT_PAGE_NAME,
+          slug: index === 0 ? '' : skeleton.slug ?? skeleton.id,
           sections: (skeleton?.sections ?? [])
             .map((type) => createSectionFromLibrary(type, t))
             .filter(Boolean),
@@ -1798,6 +1986,11 @@ export const getBlockCssStyle = (block, device) => {
   const background = resolveSiteColor(style.background)
   if (background) {
     css.background = background
+  }
+  if (block.type === BLOCK_TYPE.BUTTON && !textColor) {
+    if (style.background === 'accent') css.color = 'var(--site-on-accent)'
+    else if (style.background === 'primary') css.color = 'var(--site-on-primary)'
+    else if (['background', 'surface', 'accent-soft'].includes(style.background)) css.color = 'var(--site-text)'
   }
   if (Number.isFinite(style.padding)) {
     css.padding = px(style.padding)

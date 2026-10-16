@@ -1095,6 +1095,70 @@
   background: var(--color-surface-3);
 }
 
+/*
+ * Repeatable rows in a settings group.
+ *
+ * Used by the data-table, status-list and toolbar blocks, where a block owns an
+ * open-ended list of columns, items or filters. The row keeps the input wide and
+ * the remove button out of the way.
+ */
+.editor-repeat-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.editor-repeat-row .editor-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.editor-table-row,
+.editor-status-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-3);
+}
+
+.editor-table-row__index {
+  flex-shrink: 0;
+  min-width: 20px;
+  padding-top: 8px;
+  font-size: var(--text-meta);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--color-text-soft);
+}
+
+.editor-table-row__cells {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  gap: var(--space-1);
+  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+}
+
+.editor-status-item {
+  flex-direction: column;
+}
+
+.editor-status-item__fields,
+.editor-status-item__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  width: 100%;
+}
+
+.editor-status-item__row .editor-input {
+  flex: 1;
+  min-width: 0;
+}
+
 /* ── Canvas ───────────────────────────────────────────────────── */
 
 .editor-canvas-area {

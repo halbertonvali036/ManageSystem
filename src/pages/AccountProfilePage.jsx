@@ -1,10 +1,15 @@
+import { useCallback } from 'react'
 import { ArrowUpRight, Bell, CreditCard, LifeBuoy, Shield } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import Card from '@/components/common/Card'
+import AvatarUploader from '@/components/profile/AvatarUploader'
+import ProfileFormCard from '@/components/profile/ProfileFormCard'
 import useAuth from '@/hooks/useAuth'
+import useProfile from '@/hooks/useProfile'
 import useTranslation from '@/hooks/useTranslation'
 import { ROLES } from '@/utils/roles'
 import { LOCALE_LABELS } from '@/models/locale'
+import { getOptionalProfileFields, getProfileInitials, readProfileText } from '@/models/profile'
 import {
   ADMIN_NAV_ITEMS,
   ADMIN_PLATFORM_VIEWS,
@@ -18,20 +23,6 @@ import {
     platform-wide Support and Notifications views the overview links to. */
 const ADMIN_CONSOLE_AREAS = [...ADMIN_NAV_ITEMS, ...ADMIN_PLATFORM_VIEWS]
 
-/** Reads a session field as trimmed text, or '' when the backend sent nothing
-    usable. Session payloads are not guaranteed to be strings. */
-const readText = (value) => (typeof value === 'string' ? value.trim() : '')
-
-/** Initials for the identity block. Falls back to a neutral glyph. */
-const getInitials = (name) =>
-  readText(name)
-    .split(/\s+/)
-    .map((part) => part[0])
-    .filter(Boolean)
-    .slice(0, 2)
-    .join('')
-    .toUpperCase()
-
 /**
  * The person's own account.
  *
@@ -39,19 +30,26 @@ const getInitials = (name) =>
  * fact about the signed-in session, not about the product, so admins reach their
  * account here too rather than through a second copy of it in the platform rail.
  *
- * Everything rendered is read from the session the backend established or from
- * the frontend's own navigation model — there is no invented value on this page.
- * Editing is not offered: profile writes need the account API, and this page does
- * not claim a change it cannot persist. The destinations below are the ones that
- * act on this account — each one already lives in the sidebar, so they are offered
- * here as context, not as a second navigation.
- *
- * There is no back action. The page is reached from the profile entry pinned
- * above Logout, and the sidebar stays on screen beside it.
+ * The page splits cleanly into what the person may edit and what only the
+ * backend owns. The display name and the profile photo are editable; the email,
+ * role, status, identifiers and dates are read-only because the session is their
+ * only source. Every value rendered is read from the session the backend
+ * established — nothing here is invented, and no write is reported as done
+ * unless the account service accepted it.
  */
 function AccountProfilePage() {
-  const { user } = useAuth()
+  const { user, updateUser } = useAuth()
   const { t, locale } = useTranslation()
+
+  const handleSaved = useCallback(
+    (confirmed) => {
+      updateUser(confirmed)
+    },
+    [updateUser],
+  )
+
+  const profile = useProfile(user, { onSaved: handleSaved })
+  const optionalFields = getOptionalProfileFields(user)
 
   const isAdmin = user?.role === ROLES.ADMIN
 
@@ -83,13 +81,12 @@ function AccountProfilePage() {
   const dateTimeOptions = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }
 
   const notSet = t('accountProfile.notSet')
-  const displayName = readText(user?.name) || notSet
-  const email = readText(user?.email) || notSet
+  const displayName = readProfileText(user?.name) || notSet
+  const email = readProfileText(user?.email) || notSet
   const accountId = user?.id ?? user?.userId ?? notSet
 
-  /** Personal facts about this person. Absent values read as "Not set". */
+  /** Server-owned facts about this person. Absent values read as "Not set". */
   const personalDetails = [
-    { key: 'name', labelKey: 'accountProfile.nameLabel', value: displayName },
     { key: 'email', labelKey: 'accountProfile.emailLabel', value: email },
     { key: 'accountId', labelKey: 'accountProfile.accountIdLabel', value: accountId },
     { key: 'memberSince', labelKey: 'accountProfile.memberSinceLabel', value: formatDate(user?.createdAt, dayOptions) },
@@ -111,36 +108,65 @@ function AccountProfilePage() {
   ]
 
   return (
-    <div className="account-page premium-account">
+    <div className="account-page premium-account profile-page">
       <p className="page-description">{t('accountProfile.pageDescription')}</p>
 
-      {/* Identity first: who the session belongs to, before any detail about it. */}
+      {/* Identity and the one visual field the person owns, together at the
+          top so the account reads as a person before it reads as a form. */}
       <Card className="profile-identity">
-        <span className="account-profile__avatar" aria-hidden="true">
-          {getInitials(user?.name)}
-        </span>
+        <AvatarUploader
+          url={profile.avatarUrl}
+          initials={getProfileInitials(user?.name)}
+          name={displayName}
+          fileName={profile.avatarFileName}
+          isLocalPreview={profile.isAvatarLocalPreview}
+          errorKey={profile.avatarErrorKey}
+          canRemove={Boolean(profile.avatarUrl) || profile.hasAvatarChange}
+          disabled={profile.isSaving}
+          persistenceAvailable={profile.persistenceAvailable}
+          onSelect={profile.selectAvatarFile}
+          onRemove={profile.removePhoto}
+        />
+
         <div className="profile-identity__text">
           <p className="profile-identity__name">{displayName}</p>
           <p className="profile-identity__email">{email}</p>
+          <span className="profile-identity__badges">
+            <span className="profile-identity__role">{t(roleKey)}</span>
+            {statusKey ? (
+              <span className={`status-badge status-badge--${user.status}`}>
+                {t(statusKey)}
+              </span>
+            ) : (
+              <span className="status-badge status-badge--unknown">
+                {t('accountPolish.statusUnavailable')}
+              </span>
+            )}
+          </span>
         </div>
-        <span className="profile-identity__badges">
-          <span className="profile-identity__role">{t(roleKey)}</span>
-          {statusKey ? (
-            <span className={`status-badge status-badge--${user.status}`}>
-              {t(statusKey)}
-            </span>
-          ) : (
-            <span className="status-badge status-badge--unknown">
-              {t('accountPolish.statusUnavailable')}
-            </span>
-          )}
-        </span>
       </Card>
+
+      <ProfileFormCard
+        draft={profile.draft}
+        optionalFields={optionalFields}
+        displayNameErrorKey={profile.displayNameErrorKey}
+        dirty={profile.dirty}
+        canSave={profile.canSave}
+        isSaving={profile.isSaving}
+        isSaved={profile.isSaved}
+        saveError={profile.saveError}
+        isSaveUnavailable={profile.isSaveUnavailable}
+        persistenceAvailable={profile.persistenceAvailable}
+        onChange={profile.setField}
+        onSave={profile.save}
+        onReset={profile.reset}
+      />
 
       <div className="profile-detail-grid">
         <Card className="profile-detail">
           <header className="profile-summary__heading">
             <h2>{t('accountPolish.personalInformation')}</h2>
+            <span className="status-badge status-badge--unknown">{t('accountPolish.readOnly')}</span>
           </header>
           <dl className="account-profile__details">
             {personalDetails.map(({ key, labelKey, value }) => (

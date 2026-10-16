@@ -19,6 +19,19 @@
   from { opacity: 0; transform: translate(var(--motion-x), var(--motion-y)) scale(var(--motion-scale)); }
   to { opacity: 1; transform: none; }
 }
+/*
+ * A masked reveal opens the element's own box from the bottom edge. It is the
+ * one entrance that touches a property other than transform or opacity, and it
+ * exists for photography: a fade alone reads as a flat cross-dissolve, while a
+ * clip reads as the picture actually arriving. It is finite, never repeating.
+ */
+[data-motion-state='running'][data-site-motion='reveal'] {
+  animation: site-masked-reveal var(--motion-time) var(--site-motion-easing, ease-out) var(--motion-wait) both;
+}
+@keyframes site-masked-reveal {
+  from { opacity: 0; clip-path: inset(0 0 100% 0); }
+  to { opacity: 1; clip-path: inset(0 0 0 0); }
+}
 /* Both real narrow screens and the builder's mobile frame use shorter motion. */
 @media (max-width: 600px) {
   [data-site-motion] {
@@ -31,6 +44,7 @@
   animation: none !important;
   opacity: 1 !important;
   transform: none !important;
+  clip-path: none !important;
 }
 
 /* Reusable decorative layer: finite, quiet entrance; no perpetual repaint. */
@@ -43,6 +57,6 @@
 .auth-visual > .ambient-visual { --ambient-color: #fff; }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-motion-state] { animation: none !important; opacity: 1 !important; transform: none !important; }
+  [data-motion-state] { animation: none !important; opacity: 1 !important; transform: none !important; clip-path: none !important; }
   .ambient-visual *, .ambient-visual { animation: none !important; }
 }

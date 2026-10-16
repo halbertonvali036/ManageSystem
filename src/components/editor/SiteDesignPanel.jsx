@@ -40,7 +40,7 @@ export default function SiteDesignPanel({ document, onChange, onPreset }) {
     <summary>{t('siteDesign.title')}</summary>
     <p className="editor-panel__hint">{t('siteDesign.local')}</p>
     <p className="editor-panel__hint">{t('siteDesign.presetHint')}</p>
-    <div className="editor-theme-list">{SITE_THEME_PRESETS.filter((preset) => ['minimal', 'modern', 'bold', 'elegant'].includes(preset.id)).map((preset) => <button key={preset.id} className="editor-theme-list__item" type="button" aria-pressed={theme.themePresetId === preset.id} onClick={() => onPreset(preset.id)}><span className="editor-theme-list__swatch" style={{ background: preset.tokens.background, borderColor: preset.tokens.primary }} aria-hidden="true" />{t(preset.nameKey)}</button>)}</div>
+    <div className="editor-theme-list">{SITE_THEME_PRESETS.map((preset) => <button key={preset.id} className="editor-theme-list__item" type="button" aria-pressed={theme.themePresetId === preset.id} onClick={() => onPreset(preset.id)}><span className="editor-theme-list__swatch" style={{ background: preset.tokens.background, borderColor: preset.tokens.primary }} aria-hidden="true" />{t(preset.nameKey)}</button>)}</div>
     <button type="button" className="btn btn--outline btn--sm" onClick={() => onPreset(theme.themePresetId)}>{t('siteDesign.reset')}</button>
     <fieldset><legend>{t('siteDesign.colors')}</legend>
       {SITE_DESIGN_COLORS.map((key) => <DesignColorControl key={key} label={t(`siteDesign.${key}`)} value={tokens[key]} onChange={(value) => onChange({ [key]: value })} />)}

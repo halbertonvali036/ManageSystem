@@ -1,0 +1,317 @@
+/* ============================================================
+   Profile page — Account ▸ Profile.
+   ------------------------------------------------------------
+   Builds on the account surface tokens (`--account-*`) defined in
+   `account-polish.css`, so the photo picker, the editable form and the
+   read-only detail cards all read as one family: dark emerald surfaces,
+   hairline edges and one restrained accent.
+   ============================================================ */
+
+.profile-page {
+  min-width: 0;
+}
+
+/* ── Identity + profile photo ─────────────────────────────────── */
+
+/* `Card` wraps its children in `.card__body`, so the two-column identity
+   layout is applied there rather than to the card root. */
+.profile-page .profile-identity {
+  display: block;
+}
+
+.profile-page .profile-identity > .card__body {
+  display: grid;
+  grid-template-columns: minmax(0, 232px) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(20px, 3vw, 36px);
+}
+
+.profile-photo {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  border-radius: var(--radius-lg);
+}
+
+.profile-photo__frame-wrap {
+  position: relative;
+  width: fit-content;
+}
+
+.profile-photo__frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 116px;
+  height: 116px;
+  padding: 0;
+  overflow: hidden;
+  color: var(--account-accent);
+  background:
+    radial-gradient(circle at 50% 18%, var(--account-raised), var(--account-surface));
+  border: 1px solid var(--account-edge);
+  border-radius: 28px;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base),
+    transform var(--transition-base);
+}
+
+.profile-photo__frame:hover:not(:disabled) {
+  border-color: var(--account-accent);
+  box-shadow: 0 0 0 4px var(--account-wash);
+}
+
+.profile-photo__frame:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.profile-photo__frame:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.profile-photo__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-photo__initials {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--account-accent);
+}
+
+.profile-photo__overlay {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  padding: 6px 0;
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--color-bg) 74%, transparent);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.profile-photo__frame:hover .profile-photo__overlay,
+.profile-photo__frame:focus-visible .profile-photo__overlay {
+  opacity: 1;
+}
+
+.profile-photo__preview-badge {
+  position: absolute;
+  top: -10px;
+  left: -6px;
+  padding: 3px 10px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--account-accent);
+  background: var(--account-surface);
+  border: 1px solid var(--account-edge);
+  border-radius: var(--radius-full);
+}
+
+.profile-photo__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.profile-photo__title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.profile-photo__hint,
+.profile-photo__drop,
+.profile-photo__notice {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.profile-photo__file {
+  margin: 0;
+  overflow: hidden;
+  font-size: 0.8rem;
+  color: var(--color-text-soft);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-photo__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.profile-photo__notice {
+  color: var(--account-pending);
+  line-height: 1.65;
+}
+
+.profile-photo__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.profile-photo--dragging {
+  border-radius: var(--radius-lg);
+}
+
+.profile-photo--dragging .profile-photo__frame {
+  border-color: var(--account-accent);
+  box-shadow: 0 0 0 5px var(--account-wash);
+}
+
+.profile-identity__badges {
+  margin-top: 14px;
+}
+
+/* ── Editable details ─────────────────────────────────────────── */
+
+.profile-page .profile-editor {
+  background:
+    radial-gradient(ellipse at 100% 0%, var(--account-wash), transparent 65%),
+    var(--account-surface);
+}
+
+.profile-page .profile-editor > .card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: clamp(22px, 3vw, 36px);
+}
+
+.profile-editor__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.profile-editor__heading h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+.profile-editor__description {
+  max-width: 62ch;
+  margin: 8px 0 0;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--color-text-muted);
+}
+
+.profile-editor__dirty {
+  flex-shrink: 0;
+  padding: 4px 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--account-pending);
+  background: var(--account-pending-bg);
+  border: 1px solid color-mix(in srgb, var(--account-pending) 30%, transparent);
+  border-radius: var(--radius-full);
+}
+
+.profile-editor__fields {
+  display: grid;
+  gap: 18px;
+  max-width: 640px;
+}
+
+.profile-editor__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.profile-saved {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-success);
+  background: var(--color-success-bg);
+  border: 1px solid color-mix(in srgb, var(--color-success) 28%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+/* ── Read-only details ────────────────────────────────────────── */
+
+.profile-page .profile-detail .profile-summary__heading {
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Responsive ───────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .profile-page .profile-identity > .card__body {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+    gap: 22px;
+  }
+
+  .profile-photo {
+    width: 100%;
+  }
+
+  .profile-photo__body {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-photo__frame {
+    width: 96px;
+    height: 96px;
+    border-radius: 24px;
+  }
+
+  .profile-photo__initials {
+    font-size: 1.6rem;
+  }
+
+  .profile-editor__actions .btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-photo__frame,
+  .profile-photo__overlay {
+    transition: none;
+  }
+}

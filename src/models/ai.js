@@ -36,6 +36,7 @@
  */
 
 import { isValidSiteThemeId } from '@/models/siteTheme'
+import { getDateFormatter } from '@/utils/intl'
 
 /* ── Roles and message state ──────────────────────────────────────────────────── */
 
@@ -871,13 +872,13 @@ export const getAiConversationDate = (summary) => {
 export const formatAiMessageDate = (message, locale) => {
   const date = getAiMessageDate(message)
   if (!date) return null
-  return date.toLocaleString(locale, {
+  return getDateFormatter(locale, {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-  })
+  }).format(date)
 }
 
 /**
@@ -889,13 +890,13 @@ export const formatAiMessageDate = (message, locale) => {
 export const formatAiConversationDate = (summary, locale) => {
   const date = getAiConversationDate(summary)
   if (!date) return null
-  return date.toLocaleString(locale, {
+  return getDateFormatter(locale, {
     day: '2-digit',
     month: '2-digit',
     year: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
-  })
+  }).format(date)
 }
 
 /**

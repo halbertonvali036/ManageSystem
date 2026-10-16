@@ -15,6 +15,7 @@ import {
   DEFAULT_SITE_THEME_ID,
   isValidSiteThemeId,
 } from '@/models/siteTheme'
+import { getDateFormatter } from '@/utils/intl'
 
 export const SITE_STATUS = Object.freeze({
   DRAFT: 'draft',
@@ -58,9 +59,11 @@ export const ALL_SITES_FILTER = 'all'
  */
 export {
   ALL_TEMPLATE_CATEGORIES,
+  ALL_TEMPLATE_TIERS,
   BLANK_SITE_TEMPLATE_ID,
   countTemplateSections,
   DEFAULT_SITE_TEMPLATE_ID,
+  filterTemplates,
   filterTemplatesByCategory,
   getSiteTemplate,
   getTemplatePageSkeletons,
@@ -73,6 +76,10 @@ export {
   TEMPLATE_CATEGORIES,
   TEMPLATE_CATEGORY,
   TEMPLATE_CATEGORY_LABELS,
+  TEMPLATE_TIER,
+  TEMPLATE_TIER_LABELS,
+  TEMPLATE_TIERS,
+  templateSearchText,
 } from '@/models/siteTemplate'
 
 export {
@@ -240,7 +247,7 @@ export const formatSiteDate = (value, locale) => {
   if (Number.isNaN(date.getTime())) {
     return null
   }
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(date)
+  return getDateFormatter(locale, { dateStyle: 'medium' }).format(date)
 }
 
 /**

@@ -16,7 +16,7 @@ export const getDemoSession = () => {
   if (!isDemoSession()) return null
   state ??= {
     workspaces: [{ id: 'demo-workspace', name: 'Demo Workspace', slug: 'demo-workspace', ownerId: 'demo-member' }],
-    sites: [{ id: 'demo-website', workspaceId: 'demo-workspace', name: 'Demo Website · Orbit', slug: 'orbit-demo', status: 'draft', templateId: 'business', themePresetId: 'emerald' }],
+    sites: [{ id: 'demo-website', workspaceId: 'demo-workspace', name: 'Demo Website · Orbit', slug: 'orbit-demo', status: 'draft', templateId: 'saas-starter', themePresetId: 'saas' }],
     documents: {},
     settings: {},
   }

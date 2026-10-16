@@ -1,4 +1,6 @@
 import {
+  Activity,
+  BarChart3,
   ChevronDown,
   ChevronRight,
   ChevronUp,
@@ -8,12 +10,16 @@ import {
   Heading,
   Image as ImageIcon,
   Layers,
+  LayoutGrid,
   LayoutPanelTop,
   MousePointerClick,
   Plus,
+  SlidersHorizontal,
   Square,
   ListChecks,
+  Table,
   Trash2,
+  TrendingUp,
   Type,
 } from 'lucide-react'
 import useTranslation from '@/hooks/useTranslation'
@@ -28,6 +34,12 @@ const BLOCK_ICONS = {
   [BLOCK_TYPE.TEXT]: Type,
   [BLOCK_TYPE.BUTTON]: MousePointerClick,
   [BLOCK_TYPE.IMAGE]: ImageIcon,
+  [BLOCK_TYPE.PANEL]: LayoutGrid,
+  [BLOCK_TYPE.STAT]: TrendingUp,
+  [BLOCK_TYPE.CHART]: BarChart3,
+  [BLOCK_TYPE.TABLE]: Table,
+  [BLOCK_TYPE.STATUS_LIST]: Activity,
+  [BLOCK_TYPE.TOOLBAR]: SlidersHorizontal,
   [BLOCK_TYPE.SPACER]: Square,
 }
 

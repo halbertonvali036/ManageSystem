@@ -2,7 +2,7 @@
  * null timing values inherit the site preset; explicit values survive preset changes.
  * Existing sites remain static until an effect is chosen.
  */
-export const MOTION_TYPES = Object.freeze(['none', 'fade', 'slide-up', 'slide-left', 'slide-right', 'scale'])
+export const MOTION_TYPES = Object.freeze(['none', 'fade', 'slide-up', 'slide-left', 'slide-right', 'scale', 'reveal'])
 export const MOTION_PRESETS = Object.freeze({
   minimal: { duration: 180, delay: 0, distance: 6 },
   balanced: { duration: 380, delay: 0, distance: 18 },

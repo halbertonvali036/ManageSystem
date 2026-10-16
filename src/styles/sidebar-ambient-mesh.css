@@ -25,6 +25,25 @@
      arriving at a destination. */
   --mesh-ease: cubic-bezier(0.42, 0.08, 0.58, 0.92);
 
+  /* Layer durations, grouped by weight. Every layer runs on its own clock so
+     the field never pulses as one synchronised block: the background mesh is
+     the slowest, the ribbon/lattice travel sits between, and the ribbon flow,
+     node drift and bloom pulse are the fastest. All are transform/opacity (plus
+     dashoffset on the flow lines), so a shorter duration only changes how often
+     a promoted layer moves — it does not add layout or paint-heavy work. */
+  --mesh-dur-columns: 12s;
+  --mesh-dur-rows: 15s;
+  --mesh-dur-ribbon-back: 12s;
+  --mesh-dur-flow-back: 8s;
+  --mesh-dur-ribbon-a: 9.5s;
+  --mesh-dur-flow-a: 5.5s;
+  --mesh-dur-ribbon-b: 11s;
+  --mesh-dur-flow-b: 6.5s;
+  --mesh-dur-ribbon-front: 8s;
+  --mesh-dur-flow-front: 4.5s;
+  --mesh-dur-bloom: 3.6s;
+  --mesh-dur-orbit: 22s;
+
   position: absolute;
   inset: 0;
   z-index: 0;
@@ -69,20 +88,27 @@
 .sidebar-ambient-mesh__lattice--columns {
   opacity: 0.72;
   stroke: var(--mesh-bright);
-  animation: mesh-drift-columns 74s var(--mesh-ease) infinite alternate;
+  animation: mesh-drift-columns var(--mesh-dur-columns) var(--mesh-ease) infinite alternate;
   will-change: transform;
 }
 
 .sidebar-ambient-mesh__lattice--rows {
   opacity: 0.5;
   stroke: var(--mesh-emerald);
-  animation: mesh-drift-rows 92s var(--mesh-ease) infinite alternate;
+  animation: mesh-drift-rows var(--mesh-dur-rows) var(--mesh-ease) infinite alternate;
   will-change: transform;
 }
 
 /* ── Ribbons ──────────────────────────────────────────────────── */
 /* Each layer gets its own weight, hue and drift so they separate into
    foreground, middle and back rather than reading as one thick stroke. */
+.sidebar-ambient-mesh__ribbons {
+  /* A single slow orbit across the whole ribbon set adds a clear directional
+     travel on top of each ribbon's own drift. Closed loop, so it never jumps. */
+  animation: mesh-orbit var(--mesh-dur-orbit) var(--mesh-ease) infinite;
+  will-change: transform;
+}
+
 .sidebar-ambient-mesh__ribbon-body {
   fill: none;
   stroke-linecap: round;
@@ -102,7 +128,7 @@
   stroke-width: 34;
   opacity: 0.55;
   filter: blur(7px);
-  animation: ribbon-drift-back 82s var(--mesh-ease) infinite alternate;
+  animation: ribbon-drift-back var(--mesh-dur-ribbon-back) var(--mesh-ease) infinite alternate;
 }
 
 .sidebar-ambient-mesh__ribbon--back .sidebar-ambient-mesh__ribbon-flow {
@@ -110,8 +136,8 @@
   stroke-width: 2.6;
   opacity: 0.5;
   animation:
-    ribbon-drift-back 82s var(--mesh-ease) infinite alternate,
-    ribbon-flow 26s linear infinite;
+    ribbon-drift-back var(--mesh-dur-ribbon-back) var(--mesh-ease) infinite alternate,
+    ribbon-flow var(--mesh-dur-flow-back) linear infinite;
 }
 
 /* Mid A: the primary readable ribbon. */
@@ -120,7 +146,7 @@
   stroke-width: 15;
   opacity: 0.82;
   filter: blur(2px);
-  animation: ribbon-drift-a 64s var(--mesh-ease) infinite alternate;
+  animation: ribbon-drift-a var(--mesh-dur-ribbon-a) var(--mesh-ease) infinite alternate;
 }
 
 .sidebar-ambient-mesh__ribbon--mid-a .sidebar-ambient-mesh__ribbon-flow {
@@ -128,8 +154,8 @@
   stroke-width: 3.2;
   opacity: 0.92;
   animation:
-    ribbon-drift-a 64s var(--mesh-ease) infinite alternate,
-    ribbon-flow 19s linear infinite;
+    ribbon-drift-a var(--mesh-dur-ribbon-a) var(--mesh-ease) infinite alternate,
+    ribbon-flow var(--mesh-dur-flow-a) linear infinite;
 }
 
 /* Mid B: crosses the first at a different rate, which is what sells the
@@ -139,7 +165,7 @@
   stroke-width: 9;
   opacity: 0.6;
   filter: blur(1.5px);
-  animation: ribbon-drift-b 71s var(--mesh-ease) infinite alternate;
+  animation: ribbon-drift-b var(--mesh-dur-ribbon-b) var(--mesh-ease) infinite alternate;
 }
 
 .sidebar-ambient-mesh__ribbon--mid-b .sidebar-ambient-mesh__ribbon-flow {
@@ -147,8 +173,8 @@
   stroke-width: 2.4;
   opacity: 0.82;
   animation:
-    ribbon-drift-b 71s var(--mesh-ease) infinite alternate,
-    ribbon-flow 23s linear infinite;
+    ribbon-drift-b var(--mesh-dur-ribbon-b) var(--mesh-ease) infinite alternate,
+    ribbon-flow var(--mesh-dur-flow-b) linear infinite;
 }
 
 /* Front: thin, brightest, sharpest. The neon note the eye lands on. */
@@ -156,7 +182,7 @@
   stroke: var(--mesh-mint);
   stroke-width: 3.4;
   opacity: 0.82;
-  animation: ribbon-drift-front 47s var(--mesh-ease) infinite alternate;
+  animation: ribbon-drift-front var(--mesh-dur-ribbon-front) var(--mesh-ease) infinite alternate;
 }
 
 .sidebar-ambient-mesh__ribbon--front .sidebar-ambient-mesh__ribbon-flow {
@@ -164,8 +190,8 @@
   stroke-width: 3.4;
   opacity: 1;
   animation:
-    ribbon-drift-front 47s var(--mesh-ease) infinite alternate,
-    ribbon-flow 15s linear infinite;
+    ribbon-drift-front var(--mesh-dur-ribbon-front) var(--mesh-ease) infinite alternate,
+    ribbon-flow var(--mesh-dur-flow-front) linear infinite;
 }
 
 /* ── Nodes ────────────────────────────────────────────────────── */
@@ -192,7 +218,7 @@
   background:
     radial-gradient(58% 62% at 38% 78%, rgba(31, 143, 95, 0.34), transparent 70%),
     radial-gradient(42% 48% at 68% 92%, rgba(57, 255, 20, 0.16), transparent 72%);
-  animation: bloom-breathe 58s var(--mesh-ease) infinite alternate;
+  animation: bloom-breathe var(--mesh-dur-bloom) var(--mesh-ease) infinite alternate;
 }
 
 /* Readability floor. Deliberately not opaque: the mesh has to survive it. The
@@ -254,53 +280,66 @@
 }
 
 /* ── Motion ───────────────────────────────────────────────────── */
-/* Very slow, small amplitude, and never reversing hard: the panel should feel
-   like it is breathing, not like an alert. */
+/* Faster than the original wallpaper pace, but still small-amplitude and never
+   reversing hard: the panel should read as alive and drifting, never as an
+   alert. Amplitudes were nudged up so the extra speed is legible; every value
+   stays well inside the layer's bleed area, so nothing clips at the rail edge. */
 @keyframes mesh-drift-columns {
-  from { transform: translate3d(-9px, -14px, 0) scaleY(1.03) scaleX(1.01); }
-  to { transform: translate3d(11px, 16px, 0) scaleY(0.97) scaleX(0.99); }
+  from { transform: translate3d(-13px, -20px, 0) scaleY(1.05) scaleX(1.02); }
+  to { transform: translate3d(15px, 22px, 0) scaleY(0.96) scaleX(0.98); }
 }
 
 @keyframes mesh-drift-rows {
-  from { transform: translate3d(7px, 10px, 0) scaleX(1.02); }
-  to { transform: translate3d(-10px, -12px, 0) scaleX(0.98); }
+  from { transform: translate3d(10px, 14px, 0) scaleX(1.03); }
+  to { transform: translate3d(-14px, -16px, 0) scaleX(0.97); }
+}
+
+/* A single slow orbit across the whole ribbon set. Closed loop (start === end)
+   so the directional travel never snaps back, and linear-in-ease so the
+   change of direction at each vertex is what the eye reads as drift. */
+@keyframes mesh-orbit {
+  0% { transform: translate3d(0, 0, 0); }
+  25% { transform: translate3d(7px, -9px, 0); }
+  50% { transform: translate3d(11px, 4px, 0); }
+  75% { transform: translate3d(-6px, 10px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
 }
 
 @keyframes ribbon-drift-back {
-  from { transform: translate3d(-6px, 0, 0) rotate(-1.2deg) scale(1.05); }
-  to { transform: translate3d(9px, 0, 0) rotate(1.4deg) scale(0.96); }
+  from { transform: translate3d(-9px, 0, 0) rotate(-1.8deg) scale(1.07); }
+  to { transform: translate3d(12px, 0, 0) rotate(2deg) scale(0.94); }
 }
 
 @keyframes ribbon-drift-a {
-  from { transform: translate3d(-8px, 4px, 0) rotate(-1.6deg) scale(1.06); }
-  to { transform: translate3d(10px, -5px, 0) rotate(1.8deg) scale(0.95); }
+  from { transform: translate3d(-11px, 6px, 0) rotate(-2.2deg) scale(1.08); }
+  to { transform: translate3d(13px, -7px, 0) rotate(2.4deg) scale(0.93); }
 }
 
 @keyframes ribbon-drift-b {
-  from { transform: translate3d(9px, -6px, 0) rotate(1.5deg) scale(0.95); }
-  to { transform: translate3d(-11px, 5px, 0) rotate(-1.7deg) scale(1.07); }
+  from { transform: translate3d(12px, -8px, 0) rotate(2deg) scale(0.93); }
+  to { transform: translate3d(-14px, 7px, 0) rotate(-2.3deg) scale(1.09); }
 }
 
 @keyframes ribbon-drift-front {
-  from { transform: translate3d(-5px, 6px, 0) rotate(-0.9deg) scale(1.04); }
-  to { transform: translate3d(7px, -7px, 0) rotate(1deg) scale(0.97); }
+  from { transform: translate3d(-7px, 8px, 0) rotate(-1.2deg) scale(1.06); }
+  to { transform: translate3d(9px, -9px, 0) rotate(1.4deg) scale(0.95); }
 }
 
-/* Dash offset is what makes a ribbon read as flowing rather than drawn. Linear
-   and slow enough to track without effort. */
+/* Dash offset is what makes a ribbon read as flowing rather than drawn. Linear,
+   and now quick enough that the flow is obvious at a glance. */
 @keyframes ribbon-flow {
   from { stroke-dashoffset: 0; }
   to { stroke-dashoffset: -224; }
 }
 
 @keyframes node-drift {
-  from { transform: translate3d(-4px, 8px, 0) scale(calc(var(--node-scale) * 0.82)); opacity: calc(0.36 - var(--node-depth) * 0.07); }
-  to { transform: translate3d(5px, -9px, 0) scale(calc(var(--node-scale) * 1.18)); opacity: calc(0.68 - var(--node-depth) * 0.08); }
+  from { transform: translate3d(-6px, 11px, 0) scale(calc(var(--node-scale) * 0.78)); opacity: calc(0.34 - var(--node-depth) * 0.06); }
+  to { transform: translate3d(7px, -12px, 0) scale(calc(var(--node-scale) * 1.22)); opacity: calc(0.72 - var(--node-depth) * 0.08); }
 }
 
 @keyframes bloom-breathe {
-  from { transform: translate3d(-2%, 2%, 0) scale(0.97); opacity: 0.72; }
-  to { transform: translate3d(3%, -2%, 0) scale(1.06); opacity: 1; }
+  from { transform: translate3d(-3%, 3%, 0) scale(0.96); opacity: 0.62; }
+  to { transform: translate3d(4%, -3%, 0) scale(1.08); opacity: 1; }
 }
 
 /* ── Variant: Admin ───────────────────────────────────────────── */
@@ -309,26 +348,22 @@
    implementation. */
 .sidebar-ambient-mesh--admin {
   --mesh-ease: cubic-bezier(0.45, 0.05, 0.55, 0.95);
-}
-
-.sidebar-ambient-mesh--admin .sidebar-ambient-mesh__lattice--columns {
-  animation-duration: 88s;
-}
-
-.sidebar-ambient-mesh--admin .sidebar-ambient-mesh__lattice--rows {
-  animation-duration: 104s;
-}
-
-.sidebar-ambient-mesh--admin .sidebar-ambient-mesh__ribbon--mid-a {
-  animation-duration: 76s;
-}
-
-.sidebar-ambient-mesh--admin .sidebar-ambient-mesh__ribbon--mid-b {
-  animation-duration: 81s;
-}
-
-.sidebar-ambient-mesh--admin .sidebar-ambient-mesh__ribbon--front {
-  animation-duration: 55s;
+  /* Same field, its own clock: the console drifts a little slower and wider so
+     it does not read as the user shell wearing a borrowed background. Overriding
+     the tokens (rather than animation-duration) keeps the drift and flow of each
+     ribbon on separate, still-staggered durations. */
+  --mesh-dur-columns: 14s;
+  --mesh-dur-rows: 17s;
+  --mesh-dur-ribbon-back: 14s;
+  --mesh-dur-flow-back: 9s;
+  --mesh-dur-ribbon-a: 11s;
+  --mesh-dur-flow-a: 6.5s;
+  --mesh-dur-ribbon-b: 12.5s;
+  --mesh-dur-flow-b: 7.5s;
+  --mesh-dur-ribbon-front: 9.5s;
+  --mesh-dur-flow-front: 5.5s;
+  --mesh-dur-bloom: 4.2s;
+  --mesh-dur-orbit: 26s;
 }
 
 .sidebar-ambient-mesh--admin .sidebar-ambient-mesh__bloom {
@@ -465,6 +500,16 @@
 @media (prefers-reduced-motion: no-preference) {
   html[data-sidebar-mesh='idle'] .sidebar-ambient-mesh,
   html[data-sidebar-mesh='idle'] .sidebar-ambient-mesh * {
+    animation-play-state: paused !important;
+  }
+}
+
+/* The rail is inert only when it is a closed mobile drawer (desktop never sets
+   it), so a hidden, translated-off rail does no compositing. Reopening resumes
+   the loops exactly where they paused. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 1023px) {
+  .app-sidebar[inert] .sidebar-ambient-mesh,
+  .app-sidebar[inert] .sidebar-ambient-mesh * {
     animation-play-state: paused !important;
   }
 }

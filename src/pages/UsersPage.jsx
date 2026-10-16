@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import useTranslation from '@/hooks/useTranslation'
 import useAdminResource from '@/hooks/useAdminResource'
+import useDebouncedValue from '@/hooks/useDebouncedValue'
 import AdminDataTable from '@/components/admin/AdminDataTable'
 import { ADMIN_COLLECTIONS } from '@/models/adminPlatform'
 import { USER_STATUS } from '@/models/user'
@@ -12,7 +13,10 @@ export default function UsersPage() {
   const [search, setSearch] = useState('')
   const [role, setRole] = useState('')
   const [status, setStatus] = useState('')
-  const { data, state, retry } = useAdminResource('users', { search, role, status })
+  // The field keeps every keystroke; only the settled value reaches the request,
+  // so typing does not fire a backend call per character.
+  const debouncedSearch = useDebouncedValue(search, 300)
+  const { data, state, retry } = useAdminResource('users', { search: debouncedSearch, role, status })
   return <section className="admin-platform" aria-label={t('admin.nav.users')}>
     <p className="admin-intro">{t('admin.description.users')}</p>
     <div className="admin-filters">

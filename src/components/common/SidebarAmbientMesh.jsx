@@ -137,8 +137,8 @@ export default function SidebarAmbientMesh({ collapsed = false, variant = 'user'
               style={{
                 '--node-scale': node.size,
                 '--node-depth': node.depth,
-                '--node-duration': `${26 + node.depth * 9}s`,
-                '--node-delay': `${-index * 3.4}s`,
+                '--node-duration': `${5.5 + node.depth * 1.1}s`,
+                '--node-delay': `${-index * 2.3}s`,
               }}
             />
           ))}

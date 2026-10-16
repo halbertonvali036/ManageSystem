@@ -31,6 +31,8 @@
  * - Nothing here writes. Recording an event is the backend's job.
  */
 
+import { getDateFormatter } from '@/utils/intl'
+
 /* ── Scopes ──────────────────────────────────────────────────────────────────── */
 
 /**
@@ -324,7 +326,7 @@ export const getActivityDateTime = (event) => getActivityDate(event)?.toISOStrin
 export const formatActivityDate = (event, locale) => {
   const date = getActivityDate(event)
   if (!date) return null
-  return new Intl.DateTimeFormat(locale, {
+  return getDateFormatter(locale, {
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(date)

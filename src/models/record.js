@@ -2,6 +2,7 @@ import {
   FIELD_TYPE,
   normalizeFieldType,
 } from '@/models/database'
+import { getDateFormatter } from '@/utils/intl'
 import { isValidDate, isValidEmail, isValidUrl } from '@/utils/validation'
 
 /**
@@ -241,7 +242,7 @@ export const formatRecordValue = (
     if (Number.isNaN(date.getTime())) {
       return String(value)
     }
-    return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(date)
+    return getDateFormatter(locale, { dateStyle: 'medium' }).format(date)
   }
 
   return String(value)

@@ -64,11 +64,15 @@ function useWorkspaceSites(workspaceId, { enabled = true } = {}) {
 
   const visibleSites = useMemo(() => {
     const matched = filterSites(sites, { query, status })
-    return [...matched].sort((a, b) => {
-      if (!a.updatedAt) return b.updatedAt ? 1 : 0
-      if (!b.updatedAt) return -1
-      return new Date(b.updatedAt) - new Date(a.updatedAt)
-    })
+    // Parse each date once instead of once per comparison in the sort.
+    return matched
+      .map((site) => ({ site, time: site.updatedAt ? new Date(site.updatedAt).getTime() : NaN }))
+      .sort((a, b) => {
+        if (!a.site.updatedAt) return b.site.updatedAt ? 1 : 0
+        if (!b.site.updatedAt) return -1
+        return b.time - a.time
+      })
+      .map((entry) => entry.site)
   }, [sites, query, status])
 
   const counts = useMemo(() => countSitesByStatus(sites), [sites])

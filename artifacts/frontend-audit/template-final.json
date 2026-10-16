@@ -1,0 +1,209 @@
+{
+  "results": [
+    {
+      "id": "saas-starter",
+      "title": "SaaS Starter",
+      "buttons": [
+        4.7012529808810015,
+        4.7012529808810015,
+        4.7012529808810015
+      ],
+      "rows": [
+        "row"
+      ],
+      "splitHeights": [
+        506
+      ],
+      "studioEdge": "#91bca32b"
+    },
+    {
+      "id": "portfolio-minimal",
+      "title": "Portfolio Minimal",
+      "buttons": [
+        5.869193983948604,
+        5.869193983948604
+      ],
+      "rows": [],
+      "splitHeights": [
+        506
+      ],
+      "studioEdge": "#91bca32b"
+    },
+    {
+      "id": "nova-ai",
+      "title": "Nova AI",
+      "buttons": [
+        4.831875656134916,
+        4.831875656134916,
+        4.831875656134916
+      ],
+      "rows": [
+        "row",
+        "row"
+      ],
+      "splitHeights": [
+        506
+      ],
+      "studioEdge": "#91bca32b"
+    },
+    {
+      "id": "maison",
+      "title": "Maison",
+      "buttons": [
+        4.9935538754045385,
+        4.9935538754045385
+      ],
+      "rows": [
+        "row"
+      ],
+      "splitHeights": [
+        624.46875,
+        506
+      ],
+      "studioEdge": "#91bca32b"
+    },
+    {
+      "id": "agency-clean",
+      "title": "Agency Clean",
+      "buttons": [
+        6.042338654998136,
+        6.042338654998136
+      ],
+      "rows": [
+        "row"
+      ],
+      "splitHeights": [
+        617.984375
+      ],
+      "studioEdge": "#91bca32b"
+    },
+    {
+      "id": "restaurant-simple",
+      "title": "Restaurant Simple",
+      "buttons": [
+        5.306560596708095,
+        5.306560596708095
+      ],
+      "rows": [
+        "row"
+      ],
+      "splitHeights": [
+        506,
+        506
+      ],
+      "studioEdge": "#91bca32b"
+    },
+    {
+      "id": "vertex-studio",
+      "title": "Vertex Studio",
+      "buttons": [
+        6.539588984252013,
+        6.539588984252013
+      ],
+      "rows": [],
+      "splitHeights": [
+        506
+      ],
+      "studioEdge": "#91bca32b"
+    },
+    {
+      "id": "noir-portfolio",
+      "title": "Noir Portfolio",
+      "buttons": [
+        10.49606534675411,
+        10.49606534675411
+      ],
+      "rows": [
+        "row"
+      ],
+      "splitHeights": [
+        506
+      ],
+      "studioEdge": "#91bca32b"
+    },
+    {
+      "id": "business-starter",
+      "title": "Business Starter",
+      "buttons": [
+        5.473250081210842,
+        5.473250081210842
+      ],
+      "rows": [
+        "row",
+        "row"
+      ],
+      "splitHeights": [
+        593.984375
+      ],
+      "studioEdge": "#91bca32b"
+    },
+    {
+      "id": "forge-construction",
+      "title": "Forge Construction",
+      "buttons": [
+        9.778071798962173,
+        9.778071798962173
+      ],
+      "rows": [
+        "row",
+        "row",
+        "row"
+      ],
+      "splitHeights": [],
+      "studioEdge": "#91bca32b"
+    },
+    {
+      "id": "aurelia-wellness",
+      "title": "Aurelia Wellness",
+      "buttons": [
+        5.95583589344167,
+        5.95583589344167
+      ],
+      "rows": [
+        "row"
+      ],
+      "splitHeights": [
+        506
+      ],
+      "studioEdge": "#91bca32b"
+    },
+    {
+      "id": "pulse-finance",
+      "title": "Pulse Finance",
+      "buttons": [
+        5.3577549124490425,
+        5.3577549124490425,
+        5.3577549124490425
+      ],
+      "rows": [
+        "row",
+        "row",
+        "row"
+      ],
+      "splitHeights": [
+        593.984375,
+        506
+      ],
+      "studioEdge": "#91bca32b"
+    },
+    {
+      "id": "atlas-dashboard",
+      "title": "Atlas Dashboard",
+      "buttons": [
+        9.802651197798829,
+        9.802651197798829,
+        15.274069956724906,
+        15.274069956724906,
+        15.274069956724906
+      ],
+      "rows": [
+        "row",
+        "row",
+        "row"
+      ],
+      "splitHeights": [],
+      "studioEdge": "#91bca32b"
+    }
+  ],
+  "errors": []
+}

@@ -7,7 +7,7 @@ export const azMotion = {
   previewHint: 'Effektləri önizləmədə yoxlayın. Kiçik ekranlarda hərəkət qısalır; azaldılmış hərəkət seçiminə hörmət edilir.',
   dragKeys: 'Daşımaq üçün yuxarı/aşağı ox düymələri',
   dragSection: 'Bölməni daşı', dragBlock: 'Bloku daşı',
-  effects: { none: 'Animasiya yoxdur', fade: 'Tədricən görünmə', 'slide-up': 'Yuxarı sürüşmə', 'slide-left': 'Sola sürüşmə', 'slide-right': 'Sağa sürüşmə', scale: 'Yüngül böyümə' },
+  effects: { none: 'Animasiya yoxdur', fade: 'Tədricən görünmə', 'slide-up': 'Yuxarı sürüşmə', 'slide-left': 'Sola sürüşmə', 'slide-right': 'Sağa sürüşmə', scale: 'Yüngül böyümə', reveal: 'Masklı açılma' },
 }
 export const enMotion = {
   title: 'Animation', effect: 'Effect', duration: 'Duration', delay: 'Delay', ms: 'ms',
@@ -18,5 +18,5 @@ export const enMotion = {
   previewHint: 'Check effects in Preview. Movement is shorter on small screens and respects reduced motion preferences.',
   dragKeys: 'Use up/down arrow keys to move',
   dragSection: 'Drag section', dragBlock: 'Drag block',
-  effects: { none: 'No animation', fade: 'Fade', 'slide-up': 'Slide up', 'slide-left': 'Slide left', 'slide-right': 'Slide right', scale: 'Scale' },
+  effects: { none: 'No animation', fade: 'Fade', 'slide-up': 'Slide up', 'slide-left': 'Slide left', 'slide-right': 'Slide right', scale: 'Scale', reveal: 'Masked reveal' },
 }

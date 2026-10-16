@@ -1,16 +1,98 @@
-import { Columns2, Handshake, LayoutPanelTop, Megaphone, MessageSquareQuote, PanelBottom, Sparkles } from 'lucide-react'
+import {
+  Activity,
+  AppWindow,
+  Award,
+  BarChart3,
+  Blocks,
+  BookOpen,
+  Briefcase,
+  Building2,
+  CircleCheck,
+  Clock,
+  Columns2,
+  Cpu,
+  FileText,
+  FolderKanban,
+  GitBranch,
+  Handshake,
+  HelpCircle,
+  Image,
+  Info,
+  LayoutDashboard,
+  LayoutGrid,
+  LayoutPanelTop,
+  ListChecks,
+  Megaphone,
+  MessageSquareQuote,
+  MonitorPlay,
+  Newspaper,
+  PanelBottom,
+  Quote,
+  Send,
+  Settings,
+  ShieldCheck,
+  SlidersHorizontal,
+  Sparkles,
+  Table,
+  Tags,
+  TrendingUp,
+  Type,
+  Users,
+  UtensilsCrossed,
+  Zap,
+} from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import useTranslation from '@/hooks/useTranslation'
 import { SITE_SECTIONS } from '@/models/siteSection'
 
 const SECTION_ICONS = {
   hero: Sparkles,
+  aiHero: Cpu,
   features: Columns2,
   cta: Megaphone,
   split: LayoutPanelTop,
   testimonials: MessageSquareQuote,
   contact: Handshake,
   footer: PanelBottom,
+  logoCloud: Building2,
+  featureGrid: LayoutGrid,
+  productPreview: MonitorPlay,
+  pricing: Tags,
+  faq: HelpCircle,
+  bento: LayoutDashboard,
+  workflow: GitBranch,
+  integrations: Blocks,
+  metrics: BarChart3,
+  projects: FolderKanban,
+  editorialHero: Newspaper,
+  services: Briefcase,
+  about: Info,
+  story: BookOpen,
+  stats: TrendingUp,
+  contactCta: Send,
+  footerColumns: PanelBottom,
+  footerDetailed: PanelBottom,
+  heroSplit: LayoutPanelTop,
+  heroImage: Image,
+  heroType: Type,
+  projectGrid: LayoutDashboard,
+  statement: Quote,
+  recognition: Award,
+  menu: UtensilsCrossed,
+  hours: Clock,
+  trust: ShieldCheck,
+  offering: ListChecks,
+  appBar: AppWindow,
+  kpiRow: TrendingUp,
+  chartGrid: BarChart3,
+  dataTable: Table,
+  activityFeed: Activity,
+  statusGrid: CircleCheck,
+  quickActions: Zap,
+  customerGrid: Users,
+  reportGrid: FileText,
+  settingsGroups: Settings,
+  settingsForm: SlidersHorizontal,
 }
 
 /**
@@ -20,7 +102,7 @@ const SECTION_ICONS = {
  * with a name and a short description, and a dropdown would hide exactly the
  * information someone needs to choose.
  *
- * The list shows only the seven library sections. A band with no library type can
+ * The list shows only the library sections. A band with no library type can
  * be reached from the canvas as a side effect of deleting every section, so it
  * is never offered here as if it were a designed section.
  *

@@ -26,6 +26,8 @@
  * silently become a workspace grant.
  */
 
+import { getDateFormatter } from '@/utils/intl'
+
 // ── Workspace roles ───────────────────────────────────────────────────────────
 
 /**
@@ -248,7 +250,7 @@ export const formatMemberDate = (value, locale) => {
   if (!value) return null
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return null
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(date)
+  return getDateFormatter(locale, { dateStyle: 'medium' }).format(date)
 }
 
 // ── Ordering ──────────────────────────────────────────────────────────────────

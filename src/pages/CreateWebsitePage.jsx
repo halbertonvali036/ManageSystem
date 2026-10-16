@@ -17,6 +17,7 @@ import {
   SITE_NAME_MAX_LENGTH,
   SITE_TEMPLATES,
   SLUG_MAX_LENGTH,
+  TEMPLATE_TIER_LABELS,
 } from '@/models/site'
 import { SITE_THEME_PRESETS } from '@/models/siteTheme'
 import siteService from '@/services/siteService'
@@ -49,8 +50,8 @@ const STEPS = Object.freeze([
  * step honest instead of showing a fake success.
  *
  * The wizard opens on the template step when it is reached from a template card
- * (`?template=business`), so "start from this template" does not drop the visitor
- * back into an empty wizard with their choice forgotten.
+ * (`?template=saas-starter`), so "start from this template" does not drop the
+ * visitor back into an empty wizard with their choice forgotten.
  */
 function CreateWebsitePage({ workspaceId = null }) {
   const { t } = useTranslation()
@@ -330,7 +331,12 @@ function CreateWebsitePage({ workspaceId = null }) {
                         <LayoutTemplate size={18} />
                       </span>
                       <span className="template-option__copy">
-                        <span className="template-option__title">{t(item.nameKey)}</span>
+                        <span className="template-option__title">
+                          {t(item.nameKey)}
+                          <span className="template-option__tier" data-tier={item.tier}>
+                            {t(TEMPLATE_TIER_LABELS[item.tier])}
+                          </span>
+                        </span>
                         <span className="template-option__text">{t(item.descriptionKey)}</span>
                         <span className="template-option__meta">
                           {t('templates.pageCount', { count: item.pages.length })}
