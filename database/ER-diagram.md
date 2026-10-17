@@ -1,183 +1,125 @@
-# ER diagram (academic part)
-
-> GitHub renders this diagram automatically. In VS Code, install the
-> "Markdown Preview Mermaid Support" extension and press Ctrl+Shift+V.
+# SiteBuilder Database Entity Relationship Diagram (ERD)
 
 ```mermaid
 erDiagram
-    users ||--o| students : "has account"
-    users ||--o| teachers : "has account"
-    departments ||--o{ subjects : "contains"
-    subjects ||--o{ courses : "contains"
-    teachers ||--o{ courses : "teaches"
-    courses ||--o{ classes : "opened as"
-    teachers ||--o{ classes : "leads"
-    students ||--o{ enrollments : "enrolls in"
-    classes ||--o{ enrollments : "has students"
-    academic_years ||--o{ semesters : "divided into"
-    classes ||--o{ schedules : "scheduled in"
-    academic_years ||--o{ schedules : ""
-    semesters ||--o{ schedules : ""
-    classes ||--o{ attendance : "attendance"
-    students ||--o{ attendance : ""
-    courses ||--o{ assessments : "assessed by"
-    classes ||--o{ assessments : ""
-    students ||--o{ grades : "receives"
-    courses ||--o{ grades : ""
-    assessments ||--o{ grades : ""
+    USERS ||--o{ SUBSCRIPTIONS : "has"
+    USERS ||--o{ SITES : "owns"
+    USERS ||--o{ AI_CONVERSATIONS : "initiates"
+    USERS ||--o{ AI_USAGE : "tracks"
+    
+    PLANS ||--o{ SUBSCRIPTIONS : "defines"
+    
+    TEMPLATES ||--o{ TEMPLATE_PAGES : "contains"
+    TEMPLATES ||--o{ SITES : "used_by"
+    TEMPLATE_PAGES ||--o{ TEMPLATE_SECTIONS : "contains"
+    
+    SITES ||--o{ PAGES : "contains"
+    SITES ||--o{ AI_CONVERSATIONS : "context_for"
+    PAGES ||--o{ SECTIONS : "contains"
+    
+    AI_CONVERSATIONS ||--o{ AI_MESSAGES : "contains"
+    AI_MESSAGES ||--o{ AI_PROPOSALS : "generates"
+    SECTIONS ||--o{ AI_PROPOSALS : "targeted_by"
 
-    users {
-        bigint id PK
-        string name
-        string email UK
+    USERS {
+        uuid id PK
+        string email
         string password_hash
-        enum role
+        string full_name
+        role_enum role
     }
-    students {
-        bigint id PK
-        bigint user_id FK
-        enum status
-    }
-    teachers {
-        bigint id PK
-        bigint user_id FK
-    }
-    departments {
-        bigint id PK
-        string name UK
-    }
-    subjects {
-        bigint id PK
-        bigint department_id FK
+
+    PLANS {
+        uuid id PK
         string name
+        boolean is_premium
+        int max_sites
+        int ai_monthly_token_limit
     }
-    courses {
-        bigint id PK
-        bigint subject_id FK
-        bigint teacher_id FK
+
+    SUBSCRIPTIONS {
+        uuid id PK
+        uuid user_id FK
+        uuid plan_id FK
+        string status
+    }
+
+    TEMPLATES {
+        uuid id PK
         string name
-        string code UK
+        string category
+        boolean is_premium
+        boolean is_published
+        jsonb theme_config
     }
-    classes {
-        bigint id PK
-        bigint course_id FK
-        bigint teacher_id FK
-        string academic_year "text"
-        string semester "text"
-        int capacity
-        enum status
-    }
-    enrollments {
-        bigint student_id PK
-        bigint class_id PK
-    }
-    academic_years {
-        bigint id PK
-        string name UK
-        date start_date
-        date end_date
-    }
-    semesters {
-        bigint id PK
-        bigint academic_year_id FK
-        string name
-    }
-    schedules {
-        bigint id PK
-        bigint class_id FK
-        smallint day_of_week
-        time start_time
-        time end_time
-    }
-    attendance {
-        bigint id PK
-        bigint class_id FK
-        bigint student_id FK
-        date date
-        enum status
-    }
-    assessments {
-        bigint id PK
-        bigint course_id FK
-        bigint class_id FK
-        enum status
-    }
-    grades {
-        bigint id PK
-        bigint student_id FK
-        bigint course_id FK
-        bigint assessment_id FK
-        numeric score
-    }
-```
 
-## How to read it
-- `||--o{` means one-to-many (e.g. one department has many subjects).
-- `PK` = primary key, `FK` = foreign key, `UK` = unique value.
-- `enrollments` links students and classes (many-to-many).
-- `classes.academic_year` and `classes.semester` are plain text by design.
+    TEMPLATE_PAGES {
+        uuid id PK
+        uuid template_id FK
+        string title
+        string slug
+        boolean is_home
+    }
 
-# ER diagram (website builder part)
+    TEMPLATE_SECTIONS {
+        uuid id PK
+        uuid template_page_id FK
+        string section_type
+        jsonb content
+        jsonb styles
+    }
 
-Run `schema-website-builder.sql` after `schema.sql`. The editor document
-(sections, blocks, form definitions, motion, theme) is stored as JSON in
-`site_drafts.document`.
+    SITES {
+        uuid id PK
+        uuid user_id FK
+        uuid template_id FK
+        string title
+        string subdomain
+        string custom_domain
+        site_status_enum status
+    }
 
-```mermaid
-erDiagram
-    users ||--o{ websites : "owns"
-    site_templates ||--o{ websites : "starts from"
-    websites ||--|| site_drafts : "current draft"
-    websites ||--o{ site_publications : "published as"
-    websites ||--o{ site_media : "has"
-    websites ||--o{ site_domains : "served at"
-    site_domains ||--o{ domain_dns_records : "requires"
-    websites ||--o{ form_submissions : "receives"
-    websites ||--o{ site_form_settings : "configures"
+    PAGES {
+        uuid id PK
+        uuid site_id FK
+        string title
+        string slug
+        boolean is_home
+    }
 
-    websites {
-        bigint id PK
-        bigint owner_id FK
-        bigint template_id FK
-        string name
-        string slug UK
-        enum publication_status
-        string published_url
+    SECTIONS {
+        uuid id PK
+        uuid page_id FK
+        string section_type
+        jsonb content
+        jsonb styles
     }
-    site_drafts {
-        bigint website_id PK
-        jsonb document
-        int version
+
+    AI_CONVERSATIONS {
+        uuid id PK
+        uuid user_id FK
+        uuid site_id FK
+        string title
     }
-    site_publications {
-        bigint id PK
-        bigint website_id FK
-        jsonb snapshot
-        timestamp published_at
+
+    AI_MESSAGES {
+        uuid id PK
+        uuid conversation_id FK
+        ai_role_enum role
+        text content
     }
-    site_media {
-        bigint id PK
-        bigint website_id FK
-        string file_name
-        string storage_key UK
+
+    AI_PROPOSALS {
+        uuid id PK
+        uuid message_id FK
+        uuid target_section_id FK
+        jsonb proposed_changes
+        proposal_status_enum status
     }
-    site_domains {
-        bigint id PK
-        bigint website_id FK
-        string hostname UK
-        enum status
-        enum ssl_status
+
+    AI_USAGE {
+        uuid id PK
+        uuid user_id FK
+        int tokens_used
+        string action_type
     }
-    domain_dns_records {
-        bigint id PK
-        bigint domain_id FK
-        enum record_type
-        string value
-    }
-    form_submissions {
-        bigint id PK
-        bigint website_id FK
-        string form_id
-        jsonb payload
-    }
-```
