@@ -35,3 +35,4 @@ This part is a draft proposal and must be confirmed with the backend developer.
 psql -U <user> -d <database> -f database/schema.sql
 psql -U <user> -d <database> -f database/schema-website-builder.sql
 ```
+<!-- Updated by DB Engineer --

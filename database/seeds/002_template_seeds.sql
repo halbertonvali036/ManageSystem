@@ -11,6 +11,6 @@ INSERT INTO template_sections (template_page_id, section_type, content, "order")
 VALUES (
     'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', 
     'hero', 
-    '{"title": "Xoş gəlmisiniz!", "subtitle": "Bu mənim portfolio saytımdır", "button_text": "Əlaqə"}'::jsonb, 
+    '{"title": "Xos gelmisiniz!", "subtitle": "Bu menim portfolio saytimdir", "button_text": "Elaqe"}'::jsonb, 
     1
 );
