@@ -23,7 +23,6 @@ const COLUMNS = [
     links: [
       { key: 'signIn', to: '/login' },
       { key: 'createAccount', to: '/register' },
-      { key: 'qrSignIn', to: '/login/qr' },
     ],
   },
   {
@@ -47,7 +46,6 @@ const LINK_LABEL_KEYS = {
   pricing: 'nav.pricing',
   signIn: 'nav.signIn',
   createAccount: 'nav.createAccount',
-  qrSignIn: 'footer.qrSignIn',
   passwordRecovery: 'footer.passwordRecovery',
   accountSecurity: 'footer.accountSecurity',
 }

@@ -1,6 +1,6 @@
 /** Proposed platform read models. No seeded platform records or totals. */
 export const ADMIN_COLLECTIONS = Object.freeze({
-  users: ['name', 'email', 'role', 'status', 'lastLogin'],
+  users: ['name', 'email', 'role', 'status', 'plan', 'lastLogin'],
   websites: ['name', 'owner', 'status', 'updatedAt', 'publishedAt', 'domain'],
   templates: ['name', 'category', 'status', 'updatedAt'],
   billing: ['owner', 'plan', 'status', 'cycle', 'updatedAt'],

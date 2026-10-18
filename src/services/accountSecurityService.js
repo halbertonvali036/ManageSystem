@@ -13,20 +13,16 @@ import httpClient, { BackendNotConnectedError } from '@/services/httpClient'
  *   convention used by the other services in this project, so the UI renders
  *   real empty and unavailable states instead of demo data;
  * - mutations throw `BackendNotConnectedError`. Nothing here simulates a
- *   successful password change, verification email, session revocation,
- *   two-factor change or QR pairing.
+ *   successful password change, verification email or session revocation.
  *
- * No cryptography, token, secret, recovery-code or QR generation exists in
- * this file. Password hashing, session issuance, email delivery, TOTP
- * validation and QR pairing are all backend responsibilities.
+ * No cryptography, token or secret generation exists in this file. Password
+ * hashing, session issuance and email delivery are backend responsibilities.
  */
 
 const SECURITY_PATH = '/account/security'
 const PASSWORD_PATH = `${SECURITY_PATH}/password`
 const VERIFICATION_PATH = `${SECURITY_PATH}/verification-email`
 const SESSIONS_PATH = `${SECURITY_PATH}/sessions`
-const TWO_FACTOR_PATH = `${SECURITY_PATH}/two-factor`
-const QR_LOGIN_PATH = `${SECURITY_PATH}/qr-login`
 const ACTIVITY_PATH = `${SECURITY_PATH}/activity`
 
 const isBackendConnected = () => Boolean(config.api.baseUrl)
@@ -110,69 +106,6 @@ const revokeOtherSessions = async () => {
   await httpClient.post(`${SESSIONS_PATH}/revoke-others`, {})
 }
 
-/**
- * Starts two-factor setup.
- * The backend must generate the shared secret, build the provisioning URI and
- * return the QR payload plus the pending setup reference. No secret, URI or QR
- * image is generated in the browser.
- */
-const beginTwoFactorSetup = async () => {
-  ensureBackendConnection()
-  return unwrap(await httpClient.post(`${TWO_FACTOR_PATH}/setup`, {}))
-}
-
-/** Confirms two-factor setup with a code the backend issued. */
-const confirmTwoFactorSetup = async (code) => {
-  ensureBackendConnection()
-  return unwrap(await httpClient.post(`${TWO_FACTOR_PATH}/setup/confirm`, { code }))
-}
-
-/**
- * Disables two-factor for the signed-in account.
- * The backend owns verification, recovery-code invalidation and session policy.
- */
-const disableTwoFactor = async (code) => {
-  ensureBackendConnection()
-  return unwrap(await httpClient.post(`${TWO_FACTOR_PATH}/disable`, { code }))
-}
-
-/* ── QR sign-in (public pairing flow) ──────────────────────── */
-/*
- * The web page only asks for a pairing session and reads its status. The
- * backend issues the opaque session id and the scannable payload, the mobile
- * app confirms the request, and the backend alone decides whether a sign-in
- * happened. Nothing below creates a token, signs anything, trusts a local
- * approval or starts a session in the browser.
- */
-
-/**
- * Requests a new single-use QR pairing session.
- * Requires the backend: without it this throws instead of returning a
- * placeholder that would look like a real, scannable code.
- */
-const createQrLoginSession = async () => {
-  ensureBackendConnection()
-  return unwrap(await httpClient.post(QR_LOGIN_PATH, {}))
-}
-
-/** Reads the backend status of one pairing session. `null` while disconnected. */
-const getQrLoginStatus = async (sessionId) => {
-  if (!isBackendConnected() || !sessionId) {
-    return null
-  }
-  return unwrap(await httpClient.get(`${QR_LOGIN_PATH}/${encodeURIComponent(sessionId)}`))
-}
-
-/** Cancels a pairing session. The backend decides whether it is already spent. */
-const cancelQrLoginSession = async (sessionId) => {
-  ensureBackendConnection()
-  if (!sessionId) {
-    return null
-  }
-  await httpClient.delete(`${QR_LOGIN_PATH}/${encodeURIComponent(sessionId)}`)
-  return true
-}
-
 const accountSecurityService = {
   isBackendConnected,
   getSecurityOverview,
@@ -182,12 +115,6 @@ const accountSecurityService = {
   resendVerificationEmail,
   revokeSession,
   revokeOtherSessions,
-  beginTwoFactorSetup,
-  confirmTwoFactorSetup,
-  disableTwoFactor,
-  createQrLoginSession,
-  getQrLoginStatus,
-  cancelQrLoginSession,
 }
 
 export default accountSecurityService

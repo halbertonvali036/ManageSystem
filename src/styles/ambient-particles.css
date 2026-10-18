@@ -115,14 +115,6 @@
 /* Only the main content receives decoration; header/sidebar structure is unchanged. */
 .app-layout__main.ambient-particles-host { position: relative; isolation: isolate; }
 
-/* Auth's illustration panel used fixed dark colors; follow platform theme here. */
-.auth-visual.ambient-particles-host { color: var(--color-text); background: var(--color-bg); }
-.auth-visual.ambient-particles-host::before { display: none; }
-.ambient-particles-host .auth-visual__title { color: var(--color-text); }
-.ambient-particles-host .auth-visual__eyebrow { color: var(--color-accent); }
-.ambient-particles-host .auth-visual__subtitle { color: var(--color-text-muted); }
-.ambient-particles-host .auth-visual__foot p { color: var(--color-text-soft); }
-
 @media (max-width: 768px) {
   .ambient-particles__point:nth-child(n + 11),
   .ambient-particles__point--soft,

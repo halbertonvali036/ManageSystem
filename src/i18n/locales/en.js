@@ -117,6 +117,7 @@ const en = {
     loading: 'Loading…',
     retry: 'Try again',
     cancel: 'Cancel',
+    confirm: 'Confirm',
     back: 'Back',
     continue: 'Continue',
     save: 'Save',
@@ -149,7 +150,6 @@ const en = {
     productColumn: 'Product',
     accountColumn: 'Account',
     supportColumn: 'Support',
-    qrSignIn: 'QR sign-in',
     passwordRecovery: 'Password recovery',
     accountSecurity: 'Account & security',
     previewNotice:
@@ -331,8 +331,6 @@ const en = {
       submitting: 'Signing in…',
       rememberMe: 'Remember me',
       forgotPassword: 'Forgot your password?',
-      qrTitle: 'Sign in with QR',
-      qrHint: 'Approve this browser from the mobile app',
       noAccount: "Don't have an account?",
       createOne: 'Create one',
       adminTitle: 'Administration sign in',
@@ -671,6 +669,8 @@ const en = {
     actionFailed: 'Something went wrong during the action.',
     failedNotice: 'The backend recorded this deployment as failed.',
     deployCta: 'Deploy',
+    deployHint:
+      'Sending this starts a deployment; it does not finish one. The outcome is stated by the backend alone.',
     deploy: {
       siteLabel: 'Site',
       sitePlaceholder: 'Choose a site',
@@ -1818,6 +1818,27 @@ const en = {
     blank: {
       name: 'Blank',
       description: 'An empty project to start from scratch.',
+      pageHome: 'Home',
+    },
+    business: {
+      name: 'Business',
+      description:
+        'For service projects: a hero block, features, a call to action and a contact page.',
+      pageHome: 'Home',
+      pageContact: 'Contact',
+    },
+    portfolio: {
+      name: 'Portfolio',
+      description:
+        'For presenting work through sections that show an image and text side by side.',
+      pageHome: 'Home',
+      pageAbout: 'About',
+    },
+    landing: {
+      name: 'Landing page',
+      description:
+        'A single-page introduction: hero, features, distribution and contact sections.',
+      pageHome: 'Home',
     },
     pageHome: 'Home',
     pageWork: 'Work',
@@ -2351,6 +2372,7 @@ const en = {
       address: 'Address',
       phone: 'Phone',
       email: 'Email',
+      action: 'Send button',
     },
     footer: {
       name: 'Footer',

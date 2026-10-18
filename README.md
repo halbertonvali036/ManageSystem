@@ -22,7 +22,7 @@ first:
 - live publishing, domains and hosting
 - form delivery and submission storage
 - payments and plan purchase
-- QR pairing and Google sign-in completion
+- Google sign-in completion
 - the mobile app
 
 Where a feature is missing the UI says so instead of faking it. Nothing in the
@@ -35,8 +35,8 @@ app invents a website project, price, discount or successful request.
 - **Workspace** — dashboard, site list, Create Website (`/sites/new`), editor,
   site settings, Templates and per-workspace applications.
 - **Account** — Profile, Security, Plan & Billing, Notifications, Support. Google
-  and QR sign-in are frontend-ready entry points that stay disabled until the
-  backend is connected.
+  sign-in is a frontend-ready entry point that stays disabled until the backend
+  is connected.
 
 ## Roles
 

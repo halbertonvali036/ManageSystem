@@ -13,8 +13,8 @@ const TONES = {
 
 /**
  * Compact, honest state note used wherever account security data or actions
- * are not available yet. Never claims a verification, revocation, two-factor
- * change or successful sign-in that has not been confirmed by the backend.
+ * are not available yet. Never claims a verification, revocation or successful
+ * sign-in that has not been confirmed by the backend.
  */
 function SecurityNotice({ tone = 'pending', title, children, className }) {
   const config = TONES[tone] ?? TONES.pending

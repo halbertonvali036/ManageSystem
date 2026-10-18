@@ -176,9 +176,7 @@ honour it as a filter and echo it back in the response shape the client expects.
 `POST /account/security/verification-email` ·
 `GET /account/security/sessions` · `DELETE /account/security/sessions/:sessionId`
 · `POST /account/security/sessions/revoke-others` ·
-`GET /account/security/activity` ·
-`POST /account/security/two-factor/setup` · `/setup/confirm` · `/disable` ·
-`POST /account/security/qr-login` · `GET|DELETE /account/security/qr-login/:sessionId`
+`GET /account/security/activity`
 
 ### Billing — `billingService.js`
 
@@ -234,5 +232,5 @@ routes through `usersService` instead.
 
 Server persistence for sites/editor drafts/media · publishing and hosting ·
 form submission delivery and storage (see `src/services/siteFormService.js`,
-which deliberately always refuses) · payments · QR pairing completion ·
+which deliberately always refuses) · payments ·
 Google sign-in completion.

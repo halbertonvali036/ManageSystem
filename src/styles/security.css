@@ -2,8 +2,7 @@
    Account & Security — account-level security surfaces
    ------------------------------------------------------------
    Presentation layer only: account summary, password change,
-   email verification, sessions/devices, two-factor foundation,
-   QR sign-in readiness and security activity.
+   email verification, sessions/devices and security activity.
    Token-driven (no new palette), light + dark safe, and responsive
    from 1440px down to 375px. Loaded last so these rules refine the
    shared portal/form system instead of rebuilding it.
@@ -321,8 +320,7 @@
 }
 
 /* ── Email verification ──────────────────────────────────── */
-.verification-section__row,
-.twofactor-section__row {
+.verification-section__row {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -330,13 +328,11 @@
   gap: var(--space-4);
 }
 
-.verification-section__address,
-.twofactor-section__state {
+.verification-section__address {
   min-width: 0;
 }
 
-.verification-section__label,
-.twofactor-section__label {
+.verification-section__label {
   margin: 0;
   font-size: 0.7rem;
   font-weight: 700;
@@ -346,8 +342,7 @@
   color: var(--color-text-soft);
 }
 
-.verification-section__value,
-.twofactor-section__value {
+.verification-section__value {
   margin: 5px 0 0;
   font-size: 0.95rem;
   font-weight: 650;
@@ -356,27 +351,18 @@
   overflow-wrap: break-word;
 }
 
-.verification-section__note,
-.twofactor-section__note {
+.verification-section__note {
   margin: 4px 0 0;
   font-size: 0.76rem;
   line-height: 1.45;
   color: var(--color-text-soft);
 }
 
-.verification-section__resend,
-.twofactor-section__actions {
+.verification-section__resend {
   flex: 0 0 auto;
 }
 
-.twofactor-section__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-
 .verification-section__resend:disabled,
-.twofactor-section__actions .btn:disabled,
 .sessions-section__signout:disabled,
 .session-item__action:disabled {
   opacity: 1;
@@ -385,81 +371,6 @@
   border-style: dashed;
   border-color: var(--color-border-strong);
   box-shadow: none;
-}
-
-/* ── Two-factor setup ────────────────────────────────────── */
-.twofactor-section__setup {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-4);
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-}
-
-.twofactor-section__setup-label {
-  margin: 0;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  line-height: 1.2;
-  text-transform: uppercase;
-  color: var(--color-text-soft);
-}
-
-.twofactor-steps {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
-  gap: var(--space-3);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: none;
-}
-
-.twofactor-step {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-2);
-  min-width: 0;
-  padding: var(--space-3);
-  background: var(--color-surface);
-  border: 1px dashed var(--color-border-strong);
-  border-radius: var(--radius-sm);
-}
-
-.twofactor-step__index {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-  font-size: 0.72rem;
-  font-weight: 750;
-  color: var(--color-text-soft);
-  background: var(--color-surface-3);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-full);
-}
-
-.twofactor-step__title {
-  margin: 0;
-  font-size: 0.84rem;
-  font-weight: 700;
-  color: var(--color-text);
-}
-
-.twofactor-step__text {
-  margin: 3px 0 0;
-  font-size: 0.78rem;
-  line-height: 1.5;
-  color: var(--color-text-muted);
-}
-
-.twofactor-section__verify {
-  max-width: 340px;
 }
 
 /* ── Sessions / devices ──────────────────────────────────── */
@@ -547,50 +458,6 @@
   font-size: 0.82rem;
 }
 
-/* ── QR sign-in readiness ────────────────────────────────── */
-.qr-login-section__points {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.qr-login-point {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
-  min-width: 0;
-}
-
-.qr-login-point__icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  flex-shrink: 0;
-  color: var(--color-accent-2);
-  background: color-mix(in srgb, var(--color-accent-2) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-accent-2) 26%, transparent);
-  border-radius: var(--radius-sm);
-}
-
-.qr-login-point__title {
-  margin: 0;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--color-text);
-}
-
-.qr-login-point__text {
-  margin: 3px 0 0;
-  font-size: 0.78rem;
-  line-height: 1.5;
-  color: var(--color-text-muted);
-}
-
 /* ── Security activity ───────────────────────────────────── */
 .activity-list {
   display: flex;
@@ -661,12 +528,6 @@
   }
 }
 
-@media (max-width: 1023px) {
-  .twofactor-steps {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
-  }
-}
-
 @media (max-width: 767px) {
   .account-security-section__header,
   .account-security-section__body {
@@ -686,13 +547,8 @@
   }
 
   .verification-section__resend,
-  .twofactor-section__actions .btn,
   .password-form__actions .btn {
     width: 100%;
-  }
-
-  .twofactor-section__verify {
-    max-width: none;
   }
 
   .session-item,
@@ -721,14 +577,6 @@
 
   .account-summary__fields {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .twofactor-steps {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .twofactor-step {
-    padding: var(--space-3) var(--space-2);
   }
 }
 

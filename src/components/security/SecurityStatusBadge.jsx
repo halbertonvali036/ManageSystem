@@ -3,13 +3,10 @@ import StatusBadge from '@/components/common/StatusBadge'
 import {
   ACCOUNT_STATUS_UNAVAILABLE_LABEL,
   EMAIL_VERIFICATION_UNAVAILABLE_LABEL,
-  TWO_FACTOR_STATUS_UNAVAILABLE_LABEL,
   getAccountStatusLabel,
   getAccountStatusVariant,
   getEmailVerificationLabel,
   getEmailVerificationVariant,
-  getTwoFactorStatusLabel,
-  getTwoFactorStatusVariant,
 } from '@/models/accountSecurity'
 
 const SUBJECTS = {
@@ -22,11 +19,6 @@ const SUBJECTS = {
     label: getEmailVerificationLabel,
     variant: getEmailVerificationVariant,
     unavailable: EMAIL_VERIFICATION_UNAVAILABLE_LABEL,
-  },
-  twoFactor: {
-    label: getTwoFactorStatusLabel,
-    variant: getTwoFactorStatusVariant,
-    unavailable: TWO_FACTOR_STATUS_UNAVAILABLE_LABEL,
   },
 }
 

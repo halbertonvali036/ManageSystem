@@ -118,6 +118,7 @@ const az = {
     loading: 'Yüklənir…',
     retry: 'Yenidən cəhd et',
     cancel: 'Ləğv et',
+    confirm: 'Təsdiqlə',
     back: 'Geri',
     continue: 'Davam et',
     save: 'Saxla',
@@ -150,7 +151,6 @@ language: {
     productColumn: 'Məhsul',
     accountColumn: 'Hesab',
     supportColumn: 'Dəstək',
-    qrSignIn: 'QR ilə daxil ol',
     passwordRecovery: 'Şifrənin bərpası',
     accountSecurity: 'Hesab və təhlükəsizlik',
     previewNotice:
@@ -330,8 +330,6 @@ language: {
       submitting: 'Daxil olunur…',
       rememberMe: 'Məni xatırla',
       forgotPassword: 'Şifrəni unutmusunuz?',
-      qrTitle: 'QR ilə daxil ol',
-      qrHint: 'Mobil tətbiqdən bu brauzeri təsdiqləyin',
       noAccount: 'Hesabınız yoxdur?',
       createOne: 'Hesab yaradın',
       adminTitle: 'İdarəetmə üçün giriş',
@@ -667,6 +665,8 @@ language: {
     actionFailed: 'Əməliyyat zamanı xəta baş verdi.',
     failedNotice: 'Bu yayım backend tərəfindən uğursuz qeyd olunub.',
     deployCta: 'Yayımla',
+    deployHint:
+      'Sorğu göndərmək yayımlamağa başlayır, onu tamamlamır. Nəticəni yalnız backend müəyyən edir.',
     deploy: {
       siteLabel: 'Sayt',
       sitePlaceholder: 'Sayt seçin',

@@ -9,7 +9,7 @@
  * - A status is only ever returned when the backend actually sent a known one.
  * - Missing values format to `null` so the UI can show an honest
  *   "unavailable" state instead of inventing account or security data.
- * - No secret, QR payload, token or recovery code is ever created here.
+ * - No secret, token or recovery code is ever created here.
  */
 
 import { toConnectedAccountList } from '@/models/externalAuth'
@@ -62,35 +62,6 @@ const EMAIL_VERIFICATION_VARIANTS = Object.freeze({
 
 export const EMAIL_VERIFICATION_UNAVAILABLE_LABEL = 'Verification status unavailable'
 
-/* ── Two-factor authentication ─────────────────────────────── */
-
-export const TWO_FACTOR_STATUS = Object.freeze({
-  ENABLED: 'enabled',
-  DISABLED: 'disabled',
-  PENDING: 'pending',
-})
-
-const TWO_FACTOR_STATUS_LABELS = Object.freeze({
-  [TWO_FACTOR_STATUS.ENABLED]: 'Enabled',
-  [TWO_FACTOR_STATUS.DISABLED]: 'Disabled',
-  [TWO_FACTOR_STATUS.PENDING]: 'Setup incomplete',
-})
-
-const TWO_FACTOR_STATUS_VARIANTS = Object.freeze({
-  [TWO_FACTOR_STATUS.ENABLED]: 'active',
-  [TWO_FACTOR_STATUS.DISABLED]: 'inactive',
-  [TWO_FACTOR_STATUS.PENDING]: 'incomplete',
-})
-
-export const TWO_FACTOR_METHOD_LABELS = Object.freeze({
-  authenticator_app: 'Authenticator app',
-  totp: 'Authenticator app',
-  sms: 'SMS',
-  email: 'Email code',
-})
-
-export const TWO_FACTOR_STATUS_UNAVAILABLE_LABEL = 'Status unavailable'
-
 /* ── Security activity ─────────────────────────────────────── */
 
 export const SECURITY_EVENT = Object.freeze({
@@ -101,8 +72,6 @@ export const SECURITY_EVENT = Object.freeze({
   EMAIL_VERIFIED: 'email_verified',
   VERIFICATION_EMAIL_SENT: 'verification_email_sent',
   SESSION_REVOKED: 'session_revoked',
-  TWO_FACTOR_ENABLED: 'two_factor_enabled',
-  TWO_FACTOR_DISABLED: 'two_factor_disabled',
   RECOVERY_REQUESTED: 'recovery_requested',
 })
 
@@ -114,8 +83,6 @@ const SECURITY_EVENT_LABELS = Object.freeze({
   [SECURITY_EVENT.EMAIL_VERIFIED]: 'Email verified',
   [SECURITY_EVENT.VERIFICATION_EMAIL_SENT]: 'Verification email sent',
   [SECURITY_EVENT.SESSION_REVOKED]: 'Session revoked',
-  [SECURITY_EVENT.TWO_FACTOR_ENABLED]: 'Two-factor enabled',
-  [SECURITY_EVENT.TWO_FACTOR_DISABLED]: 'Two-factor disabled',
   [SECURITY_EVENT.RECOVERY_REQUESTED]: 'Password recovery requested',
 })
 
@@ -128,17 +95,6 @@ const pickFirstDefined = (...values) => values.find((value) => !isBlank(value))
 
 /** `true`/`false` only when the backend sent a real boolean. */
 const asBoolean = (value) => (typeof value === 'boolean' ? value : null)
-
-const asNumber = (value) => {
-  if (typeof value === 'number' && Number.isFinite(value)) {
-    return value
-  }
-  if (typeof value === 'string' && value.trim() !== '') {
-    const parsed = Number(value)
-    return Number.isFinite(parsed) ? parsed : null
-  }
-  return null
-}
 
 /* ── Formatters ────────────────────────────────────────────── */
 
@@ -240,17 +196,6 @@ export const getEmailVerificationLabel = (value) => {
 export const getEmailVerificationVariant = (value) =>
   EMAIL_VERIFICATION_VARIANTS[getEmailVerificationStatus(value)] ?? 'unknown'
 
-export const getTwoFactorStatus = (value) =>
-  Object.hasOwn(TWO_FACTOR_STATUS_LABELS, value) ? value : null
-
-export const getTwoFactorStatusLabel = (value) =>
-  TWO_FACTOR_STATUS_LABELS[getTwoFactorStatus(value)] ?? TWO_FACTOR_STATUS_UNAVAILABLE_LABEL
-
-export const getTwoFactorStatusVariant = (value) =>
-  TWO_FACTOR_STATUS_VARIANTS[getTwoFactorStatus(value)] ?? 'unknown'
-
-export const getTwoFactorMethodLabel = (value) => TWO_FACTOR_METHOD_LABELS[value] ?? null
-
 export const getSecurityEventType = (value) =>
   Object.hasOwn(SECURITY_EVENT_LABELS, value) ? value : null
 
@@ -267,10 +212,6 @@ export const getSecurityEventLabel = (value) => SECURITY_EVENT_LABELS[value] ?? 
  * @property {string|null} emailVerifiedAt
  * @property {string|null} lastSignInAt
  * @property {string|null} lastSignInDevice
- * @property {boolean|null} twoFactorEnabled
- * @property {string|null} twoFactorMethod
- * @property {string|null} twoFactorEnabledAt
- * @property {number|null} recoveryCodesRemaining
  * @property {Array<{provider: string, status: string, email: string|null, connectedAt: string|null}>} connectedAccounts
  */
 
@@ -280,7 +221,6 @@ export const toSecurityOverview = (data) => {
     return null
   }
   const source = data.account ?? data
-  const twoFactor = data.twoFactor ?? data.mfa ?? {}
   const emailVerification = data.emailVerification ?? data.verification ?? {}
 
   return {
@@ -303,15 +243,6 @@ export const toSecurityOverview = (data) => {
     lastSignInAt:
       pickFirstDefined(source.lastSignInAt, source.lastLoginAt, source.last_login_at) ?? null,
     lastSignInDevice: pickFirstDefined(source.lastSignInDevice, source.lastLoginDevice) ?? null,
-    twoFactorEnabled: asBoolean(
-      pickFirstDefined(twoFactor.enabled, data.twoFactorEnabled, data.mfaEnabled),
-    ),
-    twoFactorMethod: pickFirstDefined(twoFactor.method, data.twoFactorMethod) ?? null,
-    twoFactorEnabledAt:
-      pickFirstDefined(twoFactor.enabledAt, data.twoFactorEnabledAt) ?? null,
-    recoveryCodesRemaining: asNumber(
-      pickFirstDefined(twoFactor.recoveryCodesRemaining, data.recoveryCodesRemaining),
-    ),
     connectedAccounts: toConnectedAccountList(
       pickFirstDefined(
         data.connectedAccounts,

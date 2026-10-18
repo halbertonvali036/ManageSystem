@@ -27,8 +27,8 @@ const normalizeEvents = (records) => records.map(toSecurityEvent).filter(Boolean
  * Until the account/security backend exists the service resolves safe empty
  * values, so this hook reports `backendUnavailable` and the page renders honest
  * unavailable / empty states. Actions are exposed for the future integration
- * but never simulate a successful password change, verification email, session
- * revocation, two-factor change or QR pairing.
+ * but never simulate a successful password change, verification email or
+ * session revocation.
  */
 function useAccountSecurity() {
   const [overview, setOverview] = useState(null)
@@ -147,27 +147,6 @@ function useAccountSecurity() {
     [runAction],
   )
 
-  const beginTwoFactorSetup = useCallback(
-    () =>
-      runAction(
-        'two-factor-setup',
-        () => accountSecurityService.beginTwoFactorSetup(),
-        { refresh: false },
-      ),
-    [runAction],
-  )
-
-  const confirmTwoFactorSetup = useCallback(
-    (code) =>
-      runAction('two-factor-confirm', () => accountSecurityService.confirmTwoFactorSetup(code)),
-    [runAction],
-  )
-
-  const disableTwoFactor = useCallback(
-    (code) => runAction('two-factor-disable', () => accountSecurityService.disableTwoFactor(code)),
-    [runAction],
-  )
-
   const canManageSecurity = Boolean(overview) && !backendUnavailable
   const hasOtherSessions = sessions.some((session) => !session.isCurrent)
 
@@ -188,9 +167,6 @@ function useAccountSecurity() {
     resendVerification,
     revokeSession,
     revokeOtherSessions,
-    beginTwoFactorSetup,
-    confirmTwoFactorSetup,
-    disableTwoFactor,
   }
 }
 

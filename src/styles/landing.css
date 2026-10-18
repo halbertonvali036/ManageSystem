@@ -1472,8 +1472,7 @@
   width: 72%;
 }
 
-.landing-phone__card--alert,
-.landing-phone__card--qr {
+.landing-phone__card--alert {
   flex-direction: row;
   align-items: center;
   gap: 9px;

@@ -77,7 +77,6 @@ const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 const NotificationsPage = lazy(() => import('@/pages/NotificationsPage'))
 const OAuthCallbackPage = lazy(() => import('@/pages/OAuthCallbackPage'))
 const RegisterPage = lazy(() => import('@/pages/RegisterPage'))
-const QrLoginPage = lazy(() => import('@/pages/QrLoginPage'))
 const SecurityPage = lazy(() => import('@/pages/SecurityPage'))
 const ResetPasswordPage = lazy(() => import('@/pages/ResetPasswordPage'))
 const SessionExpiredPage = lazy(() => import('@/pages/SessionExpiredPage'))
@@ -106,9 +105,6 @@ function AppRoutes() {
           <Route index element={<LandingPage />} />
           <Route path="login" element={<AuthLayout />}>
             <Route index element={<LoginPage />} />
-            {/* Secondary QR sign-in. It reuses the same auth shell and never
-                starts a session on its own — the backend decides that. */}
-            <Route path="qr" element={<QrLoginPage />} />
           </Route>
           {/* Administration entry point. Unlisted on purpose: the landing page,
               the public login and registration never link here. */}

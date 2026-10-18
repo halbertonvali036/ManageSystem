@@ -12,6 +12,7 @@ function ConfirmDialog({
   // Optional so existing callers keep the English default; callers with their own
   // i18n pass the translated string.
   closeLabel = 'Close dialog',
+  confirmVariant = 'danger',
   isConfirming = false,
   error = null,
   onConfirm,
@@ -121,7 +122,7 @@ function ConfirmDialog({
           </button>
           <button
             type="button"
-            className="btn btn--danger btn--icon-left"
+            className={`btn btn--${confirmVariant} btn--icon-left`}
             onClick={onConfirm}
             disabled={isConfirming}
           >

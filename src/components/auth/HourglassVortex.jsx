@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import useTheme from '@/hooks/useTheme'
 import '@/styles/hourglass-vortex.css'
 
 // Adapted from Hourglass Vortex.html: hyperbolic waist, opposing spiral
@@ -19,7 +18,6 @@ function addCurve(positions, curve, segments) {
 
 function HourglassVortex() {
   const hostRef = useRef(null)
-  const { theme } = useTheme()
   const [unavailable, setUnavailable] = useState(false)
 
   useEffect(() => {
@@ -48,10 +46,11 @@ function HourglassVortex() {
         return
       }
       setUnavailable(false)
-      const light = theme === 'light'
+      // The auth stage is a permanent dark-emerald panel, so the vortex always
+      // renders its dark palette and never follows the application light theme.
       const compact = tablet.matches
       const scene = new THREE.Scene()
-      scene.fog = new THREE.FogExp2(light ? '#e7f3e9' : '#07110b', light ? 0.025 : 0.021)
+      scene.fog = new THREE.FogExp2('#07110b', 0.021)
       const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 150)
       const composition = new THREE.Group()
       const lines = new THREE.Group()
@@ -67,7 +66,7 @@ function HourglassVortex() {
         const geometry = new THREE.BufferGeometry()
         geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
         const material = new THREE.LineBasicMaterial({
-          color, transparent: true, opacity: opacity * (light ? 0.65 : 1),
+          color, transparent: true, opacity,
           depthWrite: false, blending: THREE.NormalBlending,
         })
         parent.add(new THREE.LineSegments(geometry, material))
@@ -88,7 +87,7 @@ function HourglassVortex() {
             }, compact ? 72 : 120)
           }
         }
-        makeLines(positions, light ? '#398c60' : ['#48e58b', '#7cff9b', '#48e58b'][layer], [0.2, 0.075, 0.04][layer], lines)
+        makeLines(positions, ['#48e58b', '#7cff9b', '#48e58b'][layer], [0.2, 0.075, 0.04][layer], lines)
       }
       const highlights = []
       for (let i = 0; i < 6; i++) {
@@ -99,7 +98,7 @@ function HourglassVortex() {
           return [Math.cos(theta) * r, y, Math.sin(theta) * r]
         }, compact ? 72 : 120)
       }
-      makeLines(highlights, light ? '#5baa76' : '#39ff14', 0.24, lines)
+      makeLines(highlights, '#39ff14', 0.24, lines)
 
       const rings = []
       const arms = []
@@ -115,8 +114,8 @@ function HourglassVortex() {
           return [Math.cos(theta) * r, BOTTOM + 0.003 * r * r, Math.sin(theta) * r]
         }, compact ? 72 : 110)
       }
-      makeLines(rings, light ? '#398c60' : '#48e58b', 0.09, disk)
-      makeLines(arms, light ? '#5baa76' : '#7cff9b', 0.075, disk)
+      makeLines(rings, '#48e58b', 0.09, disk)
+      makeLines(arms, '#7cff9b', 0.075, disk)
 
       // Separate point layers provide size/brightness variation; perspective
       // attenuation and scene fog also dim particles further from the camera.
@@ -136,8 +135,8 @@ function HourglassVortex() {
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
         geometry.attributes.position.setUsage(THREE.DynamicDrawUsage)
         const material = new THREE.PointsMaterial({
-          color: light ? '#398c60' : ['#48e58b', '#7cff9b', '#39ff14'][layer],
-          size: [0.026, 0.042, 0.065][layer], opacity: [0.25, 0.48, 0.75][layer] * (light ? 0.5 : 1),
+          color: ['#48e58b', '#7cff9b', '#39ff14'][layer],
+          size: [0.026, 0.042, 0.065][layer], opacity: [0.25, 0.48, 0.75][layer],
           transparent: true, depthWrite: false, sizeAttenuation: true,
         })
         dust.add(new THREE.Points(geometry, material))
@@ -272,7 +271,7 @@ function HourglassVortex() {
       tablet.removeEventListener('change', scheduleStart)
       teardown()
     }
-  }, [theme])
+  }, [])
 
   return <div ref={hostRef} className={`hourglass-vortex${unavailable ? ' hourglass-vortex--fallback' : ''}`} aria-hidden="true" />
 }

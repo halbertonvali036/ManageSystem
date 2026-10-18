@@ -42,7 +42,7 @@
 .premium-account :is(.billing-section__body, .account-security-section__body) { padding: 26px; gap: 20px; }
 .premium-account :is(.billing-section__description, .account-security-section__description) { margin-top: 8px; line-height: 1.7; }
 .premium-account :is(.billing-section__eyebrow, .account-security-section__eyebrow, .plan-card__eyebrow) { color: var(--account-accent); line-height: 1.5; }
-.premium-account :is(.billing-section__icon, .account-security-section__icon, .security-item__icon, .qr-login-point__icon, .activity-item__icon, .session-item__icon, .payment-item__icon) {
+.premium-account :is(.billing-section__icon, .account-security-section__icon, .security-item__icon, .activity-item__icon, .session-item__icon, .payment-item__icon) {
   background: var(--account-raised); color: var(--account-accent); border-color: var(--account-edge); box-shadow: none;
 }
 .premium-account :is(.plan-summary, .account-summary, .profile-summary) {
@@ -80,7 +80,7 @@
 .premium-account :is(.billing-notice--pending, .account-security-notice--pending) { border-left: 3px solid var(--account-pending); }
 .premium-account :is(.payment-section__empty, .invoices-section__empty, .security-empty) { padding: 30px 22px; background: var(--account-raised); border: 1px dashed var(--account-edge); border-radius: 12px; }
 .premium-account :is(.table-state__text, .security-empty__text) { line-height: 1.75; }
-.premium-account :is(.session-item, .payment-item, .connected-account, .twofactor-step, .security-item) { background: var(--account-raised); border-color: var(--account-edge); box-shadow: none; }
+.premium-account :is(.session-item, .payment-item, .connected-account, .security-item) { background: var(--account-raised); border-color: var(--account-edge); box-shadow: none; }
 .premium-account :is(.account-summary__avatar, .account-profile__avatar) { color: var(--account-accent); background: var(--account-raised); border: 1px solid var(--account-edge); box-shadow: none; }
 .premium-account :is(.account-summary__name, .account-summary__email, .verification-section__value, .session-item__meta, .payment-item__meta, .connected-account__meta) { overflow-wrap: anywhere; }
 .premium-account :is(.session-item__identity, .payment-item__identity, .activity-item__body) { min-width: 0; }

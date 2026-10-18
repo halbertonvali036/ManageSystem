@@ -6,7 +6,6 @@ import {
   EyeOff,
   KeyRound,
   LogIn,
-  QrCode,
 } from 'lucide-react'
 import useAuth from '@/hooks/useAuth'
 import useExternalAuth from '@/hooks/useExternalAuth'
@@ -44,9 +43,9 @@ function LoginPage({ restrictedRole = null, initialCredentials = null }) {
   const externalAuth = useExternalAuth()
   const navigate = useNavigate()
 
-  // Google and QR sign-in are offered on the public sign-in only. Admin access
-  // stays email/password only, so no admin identity can ever be requested
-  // through an external provider or a paired device.
+  // Google sign-in is offered on the public sign-in only. Admin access stays
+  // email/password only, so no admin identity can ever be requested through an
+  // external provider.
   const allowsProviderSignIn = !isAdminEntry
 
   const values = { email, password }
@@ -128,13 +127,7 @@ function LoginPage({ restrictedRole = null, initialCredentials = null }) {
           isPending={externalAuth.isPending}
           error={externalAuth.error}
           onStart={handleGoogleSignIn}
-        >
-          <Link to="/login/qr" className="auth-qr-entry">
-            <QrCode size={16} aria-hidden="true" />
-            <span className="auth-qr-entry__label">{t('auth.login.qrTitle')}</span>
-            <span className="auth-qr-entry__hint">{t('auth.login.qrHint')}</span>
-          </Link>
-        </ExternalAuthPanel>
+        />
       ) : null}
 
       <form className="form" onSubmit={handleSubmit} noValidate>

@@ -605,7 +605,6 @@
 .auth-visual__content { max-width: 600px; gap: 28px; }
 .auth-visual__diagram { animation: none; }
 .auth-visual::after { display: none; }
-.auth-visual > .ambient-visual { --ambient-color: #8eae87; }
 .auth-card__head { gap: 7px; }
 .auth-card:focus-within { animation: none; }
 .auth-form__brand .brand-logo {
@@ -614,7 +613,6 @@
   border: 1px solid #39ff142e;
   box-shadow: 0 4px 14px #39ff140a;
 }
-.auth-visual > .ambient-visual { opacity: .42; }
 @media (min-width: 1024px) {
   .auth-visual { padding: clamp(28px, 3.5vw, 56px); border-left: 1px solid #b2d7ac14; }
 }

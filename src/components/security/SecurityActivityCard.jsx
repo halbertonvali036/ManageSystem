@@ -7,7 +7,6 @@ import {
   LogOut,
   MailCheck,
   MonitorSmartphone,
-  ShieldOff,
   ShieldQuestion,
 } from 'lucide-react'
 import SecuritySection from '@/components/security/SecuritySection'
@@ -26,17 +25,15 @@ const EVENT_ICONS = {
   [SECURITY_EVENT.EMAIL_VERIFIED]: MailCheck,
   [SECURITY_EVENT.VERIFICATION_EMAIL_SENT]: MailCheck,
   [SECURITY_EVENT.SESSION_REVOKED]: MonitorSmartphone,
-  [SECURITY_EVENT.TWO_FACTOR_ENABLED]: ShieldQuestion,
-  [SECURITY_EVENT.TWO_FACTOR_DISABLED]: ShieldOff,
   [SECURITY_EVENT.RECOVERY_REQUESTED]: KeyRound,
 }
 
 /**
  * Security activity for the signed-in account.
  *
- * Read-only history reported by the backend — sign-ins, password changes,
- * session revocations and two-factor changes. No event is ever created, seeded
- * or inferred in the browser.
+ * Read-only history reported by the backend — sign-ins, password changes and
+ * session revocations. No event is ever created, seeded or inferred in the
+ * browser.
  */
 function SecurityActivityCard({ events }) {
   const copy = useAccountCopy()
@@ -83,7 +80,7 @@ function SecurityActivityCard({ events }) {
       ) : (
         <div className="security-empty">
           <h3 className="security-empty__title">{t('accountPolish.noSecurityActivityReported')}</h3>
-          <p className="security-empty__text">{t('accountPolish.signInsPasswordChangesSessionRevocationsAndTwoFactor')}</p>
+          <p className="security-empty__text">{t('accountPolish.signInsPasswordChangesAndSessionRevocations')}</p>
         </div>
       )}
     </SecuritySection>

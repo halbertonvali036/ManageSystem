@@ -146,18 +146,8 @@
 .builder-visual--hero .builder-visual__stage:last-child svg { color: var(--visual-accent); }
 /* Auth composition. Reuses the product sketch and its motion primitives;
    AmbientParticles remains the only animated background system. */
+/* Auth variant always renders on the permanent dark emerald stage. */
 .builder-visual--auth {
-  --visual-edge: #d5e6dd;
-  --visual-panel: #ffffff;
-  --visual-panel-back: #e6f0e9;
-  --visual-ink: #173b2b;
-  --visual-muted: #638171;
-  --visual-accent: #168453;
-  --visual-tint: #edf6f0;
-  --visual-shadow: 0 22px 45px -20px #214e3938, 0 3px 10px #214e390a;
-  color: var(--visual-ink);
-}
-[data-theme='dark'] .builder-visual--auth {
   --visual-edge: #b5e4c525;
   --visual-panel: #0e2119;
   --visual-panel-back: #0a1912;
@@ -166,6 +156,7 @@
   --visual-accent: #87db9c;
   --visual-tint: #172e22;
   --visual-shadow: 0 24px 48px -16px #0008, 0 1px 0 #d5ffe50a inset;
+  color: var(--visual-ink);
 }
 .builder-visual--auth .builder-visual__scene { aspect-ratio: 600 / 490; perspective: 1400px; }
 .builder-visual--auth .builder-visual__backplate {

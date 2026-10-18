@@ -19,7 +19,13 @@ export function AdminDataState({ state, onRetry }) {
 const valueFor = (record, column, section, t, locale) => {
   const value = record[column]
   if (column === 'name' && section === 'users') return record.name || record.fullName || record.firstName ? formatUserName(record) : t('admin.notSet')
-  if (['owner', 'actor', 'site', 'plan', 'target'].includes(column)) return readAdminIdentity(value) || t('admin.notSet')
+  if (column === 'plan') {
+    if (typeof value === 'string' && (value === 'free' || value === 'pro')) {
+      return t(value === 'pro' ? 'admin.plans.pro.name' : 'admin.plans.free.name')
+    }
+    return readAdminIdentity(value) || t('admin.notSet')
+  }
+  if (['owner', 'actor', 'site', 'target'].includes(column)) return readAdminIdentity(value) || t('admin.notSet')
   if (column === 'role') return t(`admin.roles.${['user', 'admin'].includes(value) ? value : 'unknown'}`)
   if (['status', 'verification', 'ssl'].includes(column)) return ADMIN_STATES.includes(value) ? t(`admin.status.${value}`) : t('admin.notSet')
   if (['updatedAt', 'createdAt', 'publishedAt', 'lastLogin'].includes(column)) {
