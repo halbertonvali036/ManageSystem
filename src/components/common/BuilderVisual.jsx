@@ -35,7 +35,9 @@ function HeroLandscape() {
   </svg>
 }
 
-function HeroBuilderVisual() {
+/** The landing hero illustration: an editor mockup, floating cards and the
+    five-stage workflow ribbon. Decorative only, no interactive controls. */
+export default function BuilderVisual() {
   const { t } = useTranslation()
   const copy = key => t(`landingHero.visual.${key}`)
   return <div className="hero-builder" aria-hidden="true">
@@ -74,43 +76,4 @@ function HeroBuilderVisual() {
     </div>
     <div className="hero-builder__flow">{stages.map(([key, Icon], index) => <div className={`hero-builder__stage hero-builder__stage--edge${index === 4 ? ' hero-builder__stage--active' : ''}`} key={key}><div><Icon /><span>{String(index + 1).padStart(2, '0')}</span></div><strong>{copy(key)}</strong></div>)}</div>
   </div>
-}
-
-/** Decorative product sketch, shared by auth and landing. No interactive controls.
- *  The auth panel keeps only the ambient backdrop (connections + backplate) and
- *  the workflow ribbon: the editor mockup and the floating Template/Idea/
- *  Sections/Style/Publish cards were removed there. The landing hero variant is
- *  unaffected and still renders the full sketch. */
-export default function BuilderVisual({ variant = 'hero' }) {
-  const { t } = useTranslation()
-  const copy = key => t(`builderVisual.${key}`)
-  const isAuth = variant === 'auth'
-  const visibleStages = isAuth ? stages.filter(([key]) => key !== 'website') : stages
-
-  if (variant === 'hero') return <HeroBuilderVisual />
-
-  return (
-    <div className={`builder-visual builder-visual--${variant}`} aria-hidden="true">
-      <div className="builder-visual__scene">
-        <svg className="builder-visual__connections" viewBox="0 0 600 440" fill="none" focusable="false">
-          <g stroke="currentColor" strokeOpacity=".24">
-            <path d="M92 104H175L220 149M430 160H520V315H444M116 312H176L215 269" />
-            <circle cx="92" cy="104" r="4" /><circle cx="520" cy="160" r="4" />
-            <circle cx="116" cy="312" r="4" /><circle cx="444" cy="315" r="4" />
-          </g>
-          <path className="builder-visual__signal" d="M98 104h34" stroke="currentColor" strokeWidth="2" />
-          <path className="builder-visual__signal builder-visual__signal--later" d="M474 315h34" stroke="currentColor" strokeWidth="2" />
-        </svg>
-        <div className="builder-visual__backplate" />
-      </div>
-      <div className="builder-visual__flow">
-        {visibleStages.map(([key, Icon], index) => (
-          <div className="builder-visual__stage" key={key}>
-            <span><Icon size={14} /><small>{String(index + 1).padStart(2, '0')}</small></span>
-            <span>{copy(key)}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
 }

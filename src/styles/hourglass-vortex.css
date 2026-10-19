@@ -4,9 +4,9 @@
    One permanent dark-emerald composition shared by every auth
    route. It deliberately ignores `data-theme`: the stage is part
    of the product identity, so the light application theme must
-   not repaint it. Only the decorative vortex below it is WebGL;
-   the copy and product illustration are ordinary DOM so they stay
-   crisp, selectable-free and cheap to composite.
+   not repaint it. The panel is purely ambient: the decorative
+   vortex is the only thing on the stage, so nothing has to sit in
+   front of it.
    ============================================================ */
 
 .auth-visual.auth-visual--vortex {
@@ -26,8 +26,7 @@
     linear-gradient(160deg, #10271b, #0a1c12 65%);
 }
 
-/* Scrim between the vortex and the foreground keeps the copy and the
-   illustration legible without dimming the whole stage. */
+/* Scrim over the vortex keeps the stage deep and even. */
 .auth-visual.auth-visual--vortex::after {
   display: block;
   z-index: 2;
@@ -49,26 +48,6 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-}
-
-/* Foreground above the vortex and its scrim. */
-.auth-visual--vortex .auth-visual__content,
-.auth-visual--vortex .auth-visual__foot {
-  z-index: 3;
-  position: relative;
-}
-
-/* The illustration is authored for a dark surface here, so it always
-   uses the dark token set regardless of the application theme. */
-.auth-visual--vortex .builder-visual--auth {
-  --visual-edge: #b5e4c525;
-  --visual-panel: #0e2119;
-  --visual-panel-back: #0a1912;
-  --visual-ink: #e1f2e7;
-  --visual-muted: #92b3a1;
-  --visual-accent: #87db9c;
-  --visual-tint: #172e22;
-  --visual-shadow: 0 24px 48px -16px #0008, 0 1px 0 #d5ffe50a inset;
 }
 
 /* A quiet atmospheric silhouette remains when WebGL is unavailable. */
