@@ -324,7 +324,7 @@
 }
 
 /* Bold and premium, but not shouting. The heading sets the tone without
-   competing with the ambient glow beside it, so the measure and leading are
+   competing with the product sketch beside it, so the measure and leading are
    sized for reading two short lines rather than filling the viewport. */
 .landing-hero h1 {
   max-width: 16ch;
@@ -2292,12 +2292,12 @@
   .landing-hero__step p { font-size: 12px; }
 }
 /* Desktop only: nudge the whole left copy group (badge, headline, description,
-   CTAs) upward so the headline band sits level with the glow stage on the
-   right. A tiny transform keeps it off the header without touching layout;
-   tablets and phones keep their natural centered flow. */
+   CTAs) upward so it sits in symmetry with the upper half of the editor sketch.
+   A tiny transform keeps it off the header without touching layout; tablets and
+   phones keep their natural centered flow. */
 @media (min-width: 1024px) {
   .landing-hero__copy {
-    transform: translateY(clamp(-24px, -2vh, -10px));
+    transform: translateY(clamp(-44px, -3.4vh, -18px));
   }
 }
 @media (prefers-reduced-motion: reduce) {
