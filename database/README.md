@@ -1,38 +1,27 @@
-# Database
+# Database Architecture (SiteBuilder)
 
-This folder contains the database schema for the ManageSystem project.
+This folder contains the PostgreSQL database schema, migrations, seed data, and entity-relationship diagrams for the SiteBuilder platform.
 
-| File | Content |
+## Directory Structure
+
+| Path | Description |
 |---|---|
-| `schema.sql` | PostgreSQL tables, relations, indexes and triggers |
-| `schema-website-builder.sql` | Website builder tables (run after `schema.sql`) |
-| `ER-diagram.md` | Entity-relationship diagrams of both parts |
+| `schema.sql` | Consolidated Master Schema (Users, Workspaces, Sites, Templates, AI) |
+| `migrations/` | Modular SQL migrations for database setup and schema updates |
+| `seeds/` | Initial seed data for plans, categories, and site templates |
+| `ER-diagram.md` | Visual Entity-Relationship Diagram (Mermaid.js) |
 
-## Source
-`docs/frontend-api-handoff.md` (academic management part).
+## Key Architectural Decisions
+- **Workspace-Centric Ownership:** Sites, subscriptions, and team members belong to Workspaces rather than individual users to support multi-tenant SaaS features.
+- **JSONB for Dynamic Layouts:** Page sections, component configurations, and theme settings are stored in flexible `JSONB` format inside the `sections` table.
+- **AI Assistant Integration:** Chat history and message contexts are linked directly to `workspaces` and `sites` for context-aware site generation.
+- **Security & Integrity:** Passwords are stored exclusively as secure hashes (`password_hash`), and primary keys utilize UUIDs (`gen_random_uuid()`).
 
-## Key decisions
-- `classes.academic_year` and `classes.semester` are stored as plain text,
-  as required by the handoff document.
-- `enrollments` has a unique (student_id, class_id) pair; class capacity is
-  enforced by a trigger.
-- GPA / averages are not stored; they are computed with queries.
-- Passwords are stored only as hashes.
+## Usage & Execution
 
-## Website builder part
-Based on `docs/phase-9-publishing.md`, `phase-10-forms.md` and `phase12-motion.md`.
-The editor document (sections, blocks, form definitions, motion, theme) is
-stored as JSONB in `site_drafts.document`; domains, DNS records, media,
-publications and form submissions have their own tables.
-This part is a draft proposal and must be confirmed with the backend developer.
+To initialize the database locally, execute the master schema followed by the seeds:
 
-## Not included yet
-- Plan & billing and notifications (no data contract in the docs yet).
-- Teacher schedule overlap check (currently expected in the backend layer).
-
-## Usage
 ```bash
-psql -U <user> -d <database> -f database/schema.sql
-psql -U <user> -d <database> -f database/schema-website-builder.sql
-```
-<!-- Updated by DB Engineer --
+psql -U postgres -d sitebuilder_db -f database/schema.sql
+psql -U postgres -d sitebuilder_db -f database/seeds/001_initial_plans_and_templates.sql
+psql -U postgres -d sitebuilder_db -f database/seeds/002_template_seeds.sql
