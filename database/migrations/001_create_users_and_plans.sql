@@ -1,34 +1,33 @@
--- 1. 
-CREATE TYPE role_enum AS ENUM ('user', 'admin');
-
--- 2. 
+-- 1. Users and Subscription Plans Module
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     full_name VARCHAR(100),
-    role role_enum DEFAULT 'user',
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- 3.
 CREATE TABLE plans (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name VARCHAR(50) NOT NULL UNIQUE,
-    is_premium BOOLEAN DEFAULT FALSE,
-    max_sites INT DEFAULT 1,
-    ai_monthly_token_limit INT DEFAULT 10000,
+    name VARCHAR(50) NOT NULL, -- Free, Pro, Enterprise
+    max_sites INT NOT NULL,
+    max_members INT NOT NULL,
+    price_monthly DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE workspaces (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(100) NOT NULL,
+    owner_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    plan_id UUID REFERENCES plans(id),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- 4.
-CREATE TABLE subscriptions (
+CREATE TABLE workspace_members (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    plan_id UUID NOT NULL REFERENCES plans(id) ON DELETE RESTRICT,
-    status VARCHAR(50) NOT NULL,
-    current_period_start TIMESTAMP WITH TIME ZONE NOT NULL,
-    current_period_end TIMESTAMP WITH TIME ZONE NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    workspace_id UUID REFERENCES workspaces(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    role VARCHAR(20) DEFAULT 'member', -- owner, admin, editor, viewer
+    joined_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(workspace_id, user_id)
 );
