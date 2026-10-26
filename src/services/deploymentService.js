@@ -5,8 +5,7 @@ import { isKnownDeploymentStatus, normalizeDeployment, normalizeDeploymentList }
 /**
  * Deployment service.
  *
- * Follows the same contract as workspaceService, capabilityService and
- * integrationService:
+ * Follows the same contract as the rest of the app:
  *  - Read operations return a safe empty value ([] / null) when the backend is not
  *    connected, so the page shows an honest state instead of a seeded history.
  *  - Every write calls requireBackend() first and throws BackendNotConnectedError,
@@ -26,17 +25,16 @@ const requireBackend = (message) => {
   }
 }
 
-const DEPLOYMENTS_API_PATH = (workspaceId) => `/workspaces/${workspaceId}/deployments`
+const DEPLOYMENTS_API_PATH = '/deployments'
 
-const DEPLOYMENT_API_PATH = (workspaceId, deploymentId) =>
-  `${DEPLOYMENTS_API_PATH(workspaceId)}/${deploymentId}`
+const DEPLOYMENT_API_PATH = (deploymentId) => `${DEPLOYMENTS_API_PATH}/${deploymentId}`
 
 /** The backend's site list, used to resolve a site name to its id. */
-const WORKSPACE_SITES_PATH = (workspaceId) => `/workspaces/${workspaceId}/sites`
+const SITES_API_PATH = '/sites'
 
-/** Every deployment the backend reports for a workspace. Empty while the API is absent. */
-const getDeployments = async (workspaceId, { siteId = null, status = null } = {}) => {
-  if (!isBackendConnected() || !workspaceId) {
+/** Every deployment the backend reports for the account. Empty while the API is absent. */
+const getDeployments = async ({ siteId = null, status = null } = {}) => {
+  if (!isBackendConnected()) {
     return []
   }
 
@@ -47,19 +45,17 @@ const getDeployments = async (workspaceId, { siteId = null, status = null } = {}
   if (status && isKnownDeploymentStatus(status)) params.set('status', status)
 
   const query = params.toString()
-  const path = query ? `${DEPLOYMENTS_API_PATH(workspaceId)}?${query}` : DEPLOYMENTS_API_PATH(workspaceId)
+  const path = query ? `${DEPLOYMENTS_API_PATH}?${query}` : DEPLOYMENTS_API_PATH
 
   return normalizeDeploymentList(await httpClient.get(path))
 }
 
 /** One deployment, or null when absent or the API is not connected. */
-const getDeployment = async (deploymentId, workspaceId) => {
-  if (!isBackendConnected() || !workspaceId || !deploymentId) {
+const getDeployment = async (deploymentId) => {
+  if (!isBackendConnected() || !deploymentId) {
     return null
   }
-  return normalizeDeployment(
-    await httpClient.get(DEPLOYMENT_API_PATH(workspaceId, deploymentId))
-  )
+  return normalizeDeployment(await httpClient.get(DEPLOYMENT_API_PATH(deploymentId)))
 }
 
 /**
@@ -69,7 +65,7 @@ const getDeployment = async (deploymentId, workspaceId) => {
  * naming what to publish. The returned deployment is whatever the backend replied
  * with — usually `queued` — not a promise that the build succeeded.
  */
-const deploySite = async (siteId, workspaceId, { version = null } = {}) => {
+const deploySite = async (siteId, { version = null } = {}) => {
   requireBackend('Deploying is unavailable until the backend is connected.')
 
   if (!siteId) {
@@ -77,7 +73,7 @@ const deploySite = async (siteId, workspaceId, { version = null } = {}) => {
   }
 
   return normalizeDeployment(
-    await httpClient.post(DEPLOYMENTS_API_PATH(workspaceId), {
+    await httpClient.post(DEPLOYMENTS_API_PATH, {
       siteId,
       ...(version ? { version } : {}),
     })
@@ -85,20 +81,20 @@ const deploySite = async (siteId, workspaceId, { version = null } = {}) => {
 }
 
 /** Requests a fresh build of an existing deployment. Refused until a backend is available. */
-const redeploy = async (deploymentId, workspaceId) => {
+const redeploy = async (deploymentId) => {
   requireBackend('Redeploying is unavailable until the backend is connected.')
 
   return normalizeDeployment(
-    await httpClient.post(`${DEPLOYMENT_API_PATH(workspaceId, deploymentId)}/redeploy`)
+    await httpClient.post(`${DEPLOYMENT_API_PATH(deploymentId)}/redeploy`)
   )
 }
 
 /** Asks the backend to stop a build that is still moving. Refused until one is available. */
-const stopDeployment = async (deploymentId, workspaceId) => {
+const stopDeployment = async (deploymentId) => {
   requireBackend('Stopping a deployment is unavailable until the backend is connected.')
 
   return normalizeDeployment(
-    await httpClient.post(`${DEPLOYMENT_API_PATH(workspaceId, deploymentId)}/stop`)
+    await httpClient.post(`${DEPLOYMENT_API_PATH(deploymentId)}/stop`)
   )
 }
 
@@ -109,25 +105,25 @@ const stopDeployment = async (deploymentId, workspaceId) => {
  * The backend owns which version serves traffic, so this does not touch any local
  * state: the list only changes once the backend reports a new live deployment.
  */
-const rollbackDeployment = async (deploymentId, workspaceId) => {
+const rollbackDeployment = async (deploymentId) => {
   requireBackend('Rolling back is unavailable until the backend is connected.')
 
   return normalizeDeployment(
-    await httpClient.post(`${DEPLOYMENT_API_PATH(workspaceId, deploymentId)}/rollback`)
+    await httpClient.post(`${DEPLOYMENT_API_PATH(deploymentId)}/rollback`)
   )
 }
 
 /**
  * The sites available to deploy, or an empty list while the API is absent.
  *
- * Separate from the deployments list on purpose: a workspace with no deployment
+ * Separate from the deployments list on purpose: an account with no deployment
  * history may still have sites, and the deploy form should not invent either one.
  */
-const getDeployableSites = async (workspaceId) => {
-  if (!isBackendConnected() || !workspaceId) {
+const getDeployableSites = async () => {
+  if (!isBackendConnected()) {
     return []
   }
-  return httpClient.get(WORKSPACE_SITES_PATH(workspaceId))
+  return httpClient.get(SITES_API_PATH)
 }
 
 const deploymentService = {

@@ -10,14 +10,22 @@ import '@/styles/admin-platform.css'
 export default function AdminCollectionPage({ section }) {
   const { t } = useTranslation()
   const { data, state, retry } = useAdminResource(section)
-  return <section className="admin-platform premium-admin" aria-label={t(`admin.nav.${section}`)}>
-    <p className="admin-intro">{t(`admin.description.${section}`)}</p>
-    <AdminDataTable section={section} columns={ADMIN_COLLECTIONS[section]} rows={data ?? []} state={state} onRetry={retry} />
-    {section === 'templates' && <AdminTemplateManager />}
-    {section === 'billing' && (
-      <>
-        <AdminBillingPanel />
-      </>
-    )}
-  </section>
+  return (
+    <section className="admin-platform premium-admin" aria-label={t(`admin.nav.${section}`)}>
+      <p className="admin-intro">{t(`admin.description.${section}`)}</p>
+      <AdminDataTable
+        section={section}
+        columns={ADMIN_COLLECTIONS[section]}
+        rows={data ?? []}
+        state={state}
+        onRetry={retry}
+      />
+      {section === 'templates' && <AdminTemplateManager />}
+      {section === 'billing' && (
+        <>
+          <AdminBillingPanel />
+        </>
+      )}
+    </section>
+  )
 }

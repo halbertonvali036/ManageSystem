@@ -11,14 +11,14 @@ export const ADMIN_PLANS = Object.freeze([
     rank: 1,
     nameKey: 'admin.plans.free.name',
     descriptionKey: 'admin.plans.free.description',
-    limits: Object.freeze({ sites: null, workspaces: null, aiQuota: null }),
+    limits: Object.freeze({ sites: null }),
   },
   {
     id: ADMIN_PLAN.PRO,
     rank: 2,
     nameKey: 'admin.plans.pro.name',   // "Pro / Premium"
     descriptionKey: 'admin.plans.pro.description',
-    limits: Object.freeze({ sites: null, workspaces: null, aiQuota: null }),
+    limits: Object.freeze({ sites: null }),
   },
 ])
 

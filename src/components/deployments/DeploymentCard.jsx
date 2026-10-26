@@ -7,7 +7,7 @@ import {
   getDeploymentActions,
   isPendingDeployment,
 } from '@/models/deployment'
-import { WORKSPACE_DEPLOYMENT_PATH } from '@/utils/constants'
+import { DEPLOYMENT_PATH } from '@/utils/constants'
 
 /**
  * One deployment in the history list.
@@ -18,7 +18,6 @@ import { WORKSPACE_DEPLOYMENT_PATH } from '@/utils/constants'
  */
 function DeploymentCard({
   deployment,
-  workspaceId,
   latestLive,
   isBusy,
   onStop,
@@ -36,7 +35,7 @@ function DeploymentCard({
         <h3 className="dep-card__title">
           <Link
             className="dep-card__link"
-            to={WORKSPACE_DEPLOYMENT_PATH(workspaceId, deployment.id)}
+            to={DEPLOYMENT_PATH(deployment.id)}
           >
             {deployment.version ?? t('workspaceDeployments.card.unversioned')}
           </Link>

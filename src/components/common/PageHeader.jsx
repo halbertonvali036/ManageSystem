@@ -17,11 +17,9 @@ function PageHeader() {
   const titleKey = findPageTitleKey(pathname)
   const title = titleKey ? t(titleKey) : pathname
   const inAdmin = pathname === '/admin' || pathname.startsWith('/admin/')
-  const homePath = inAdmin ? '/admin' : '/workspaces'
+  const homePath = inAdmin ? '/admin' : '/sites'
   const isHome = pathname === homePath
   const ownsHeading = routeOwnsHeading(pathname)
-
-  if (pathname.startsWith('/workspaces/') && ownsHeading) return null
 
   return (
     <div className="page-header">

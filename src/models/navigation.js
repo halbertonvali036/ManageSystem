@@ -1,13 +1,13 @@
 import {
   ACCOUNT_PATH,
   ADMIN_NAV_ITEMS,
+  ACTIVITY_PATH,
+  DEPLOYMENTS_PATH,
   NEW_SITE_PATH,
   PROFILE_PATH,
   SIDEBAR_ITEMS,
   SITES_PATH,
   TEMPLATES_PATH,
-  WORKSPACE_PATH,
-  WORKSPACES_PATH,
 } from '@/utils/constants'
 
 /**
@@ -37,27 +37,6 @@ const EXTRA_TITLE_KEYS = [
 ]
 
 /**
- * Workspace sections named by the segment that follows the workspace id.
- *
- * The sidebar's workspace-scoped links change with whichever workspace is open,
- * so they cannot be a static path list. Matching on the segment instead keeps the
- * topbar saying "Saytlar" while you are on Sites, and reuses the very same label
- * keys the sidebar and the in-workspace breadcrumb use, so the three cannot drift.
- */
-const WORKSPACE_SECTION_KEYS = [
-  { segment: 'sites', key: 'workspaces.nav.sites' },
-  { segment: 'database', key: 'workspaces.nav.database' },
-  { segment: 'capabilities', key: 'workspaces.nav.capabilities' },
-  { segment: 'integrations', key: 'workspaces.nav.integrations' },
-  { segment: 'domains', key: 'workspaces.nav.domains' },
-  { segment: 'deployments', key: 'workspaces.nav.deployments' },
-  { segment: 'members', key: 'workspaces.nav.members' },
-  { segment: 'activity', key: 'workspaces.nav.activity' },
-  { segment: 'ai', key: 'workspaces.nav.ai' },
-  { segment: 'settings', key: 'workspaces.nav.settings' },
-]
-
-/**
  * Titles for routes whose path only resolves at runtime. Checked before the
  * static lists because a parameterized route would otherwise be swallowed by its
  * shorter prefix ("/sites/:siteId" matching the "My Websites" item).
@@ -68,13 +47,6 @@ const PATTERN_TITLE_KEYS = [
     matches: (pathname) =>
       pathname.startsWith(`${SITES_PATH}/`) && pathname !== NEW_SITE_PATH,
     key: 'siteDetails.overviewTitle',
-  },
-  {
-    // /workspaces/new is the create form, not a workspace.
-    matches: (pathname) =>
-      pathname === `${WORKSPACES_PATH}/new` ||
-      pathname.startsWith(`${WORKSPACES_PATH}/`),
-    key: null,
   },
 ]
 
@@ -88,42 +60,17 @@ const matchesPath = (item, pathname) =>
   pathname === item.path || pathname.startsWith(`${item.path}/`)
 
 /**
- * The workspace section a path belongs to, if any.
- *
- * Returns the id and the segment list of `/workspaces/:id/<section>/…` so the
- * caller can tell "a workspace we have a name for" apart from "a workspace" whose
- * own overview page should own the title.
- */
-const readWorkspaceSection = (pathname) => {
-  const segments = pathname.split('/').filter(Boolean)
-  // ["workspaces", "<id>", "<section>", ...]
-  if (segments[0] !== 'workspaces' || !segments[1] || segments[1] === 'new') {
-    return null
-  }
-  return { workspaceId: segments[1], section: segments[2] ?? null }
-}
-
-/**
  * Resolves the translation key naming `pathname`.
  *
  * Matching prefers the most specific route, so `/sites/new` resolves to
- * "Create Website" rather than to the "Websites" item that also prefixes it.
+ * "Create Website" rather than to the "My Websites" item that also prefixes it.
  * Returns null when nothing names the route, which lets the caller decide
  * whether to show the path or nothing at all.
  */
 export const findPageTitleKey = (pathname) => {
   const pattern = PATTERN_TITLE_KEYS.find((entry) => entry.matches(pathname))
   if (pattern) {
-    if (pattern.key) {
-      return pattern.key
-    }
-
-    // A workspace path: name the section the person is actually in, so the
-    // topbar keeps saying where they are rather than repeating "Workspaces" for
-    // every page inside it.
-    const { section } = readWorkspaceSection(pathname) ?? {}
-    const workspaceSection = WORKSPACE_SECTION_KEYS.find((entry) => entry.segment === section)
-    return workspaceSection?.key ?? 'workspaces.nav.workspaces'
+    return pattern.key
   }
 
   const extra = EXTRA_TITLE_KEYS.find((entry) =>
@@ -131,6 +78,10 @@ export const findPageTitleKey = (pathname) => {
   )
   if (extra) {
     return extra.key
+  }
+
+  if (pathname === NEW_SITE_PATH) {
+    return 'createSite.title'
   }
 
   const matches = ALL_TITLE_ITEMS.filter((item) => matchesPath(item, pathname))
@@ -147,27 +98,21 @@ export const routeOwnsHeading = (pathname) =>
   pathname === SITES_PATH ||
   pathname === NEW_SITE_PATH ||
   pathname === TEMPLATES_PATH ||
-  pathname === WORKSPACES_PATH ||
-  (pathname.startsWith(`${WORKSPACES_PATH}/`) && !/\/sites\/(?!new$)[^/]+$/.test(pathname))
+  pathname === ACTIVITY_PATH ||
+  pathname === DEPLOYMENTS_PATH
 
 /**
  * Where a "back" action should return to.
  *
  * Account and secondary pages are leaves of the navigation, so a person who
  * arrived there by clicking a sidebar item is already one move from where they
- * started. Returning them to the portal they belong to — their workspace list
- * for a user, the admin console for an admin — is the destination that is
- * always correct regardless of how they got here.
- *
- * Inside a workspace, the workspace itself is the correct parent: backing out
- * of Billing while editing a site should not also throw away the site.
+ * started. Returning them to the portal they belong to — their site list for a
+ * user, the admin console for an admin — is the destination that is always
+ * correct regardless of how they got here.
  */
-export const findBackPath = (pathname, { role, workspaceId } = {}) => {
+export const findBackPath = (pathname, { role } = {}) => {
   if (pathname.startsWith('/admin')) {
     return '/admin'
   }
-  if (workspaceId && pathname.startsWith(`/workspaces/${workspaceId}`)) {
-    return WORKSPACE_PATH(workspaceId)
-  }
-  return role === 'admin' ? '/admin' : '/workspaces'
+  return role === 'admin' ? '/admin' : SITES_PATH
 }

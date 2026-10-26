@@ -4,7 +4,6 @@ export const ADMIN_COLLECTIONS = Object.freeze({
   websites: ['name', 'owner', 'status', 'updatedAt', 'publishedAt', 'domain'],
   templates: ['name', 'category', 'status', 'updatedAt'],
   billing: ['owner', 'plan', 'status', 'cycle', 'updatedAt'],
-  domains: ['domain', 'owner', 'site', 'status', 'verification', 'ssl'],
   notifications: ['title', 'type', 'audience', 'status', 'createdAt'],
   support: ['subject', 'owner', 'status', 'updatedAt'],
   audit: ['action', 'actor', 'target', 'createdAt'],
@@ -12,7 +11,7 @@ export const ADMIN_COLLECTIONS = Object.freeze({
 
 export const ADMIN_METRICS = Object.freeze([
   'totalUsers', 'totalWebsites', 'publishedSites', 'drafts',
-  'subscriptions', 'domains', 'supportRequests',
+  'subscriptions', 'supportRequests',
 ])
 
 export const ADMIN_SETTINGS_FIELDS = Object.freeze([

@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 import {
   ArrowUpRight,
   CreditCard,
-  Globe2,
   LayoutTemplate,
   PanelsTopLeft,
   ScrollText,
@@ -15,7 +14,6 @@ import { ADMIN_METRICS, ADMIN_COLLECTIONS } from '@/models/adminPlatform'
 import AdminDataTable, { AdminDataState } from '@/components/admin/AdminDataTable'
 import { ADMIN_PLATFORM_VIEWS } from '@/utils/constants'
 import '@/styles/admin-platform.css'
-import '@/styles/dashboard-polish.css'
 
 /**
  * The console sections reachable from the overview, in rail order.
@@ -30,7 +28,6 @@ const overviewAreas = [
   ['users', Users],
   ['websites', PanelsTopLeft],
   ['templates', LayoutTemplate],
-  ['domains', Globe2],
   ['billing', CreditCard],
   ...ADMIN_PLATFORM_VIEWS.map(({ key, icon: Icon }) => [key, Icon]),
   ['audit', ScrollText],

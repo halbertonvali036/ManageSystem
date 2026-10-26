@@ -13,7 +13,7 @@ function SiteEditorLayout() {
   return (
     <main className="editor-shell">
       <DemoNotice />
-              <Outlet />
+      <Outlet />
     </main>
   )
 }

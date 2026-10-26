@@ -18,8 +18,6 @@ function AdminBillingPanel() {
             <p><strong>{t('admin.limitsAndQuotas')}</strong></p>
             <ul className="admin-list">
               <li>{t('admin.limitSites')}: {plan.limits.sites ?? t('admin.limitUnknown')}</li>
-              <li>{t('admin.limitWorkspaces')}: {plan.limits.workspaces ?? t('admin.limitUnknown')}</li>
-              <li>{t('admin.limitAiQuota')}: {plan.limits.aiQuota ?? t('admin.aiQuotaPlaceholder')}</li>
             </ul>
             <span className="admin-source-label">{t('admin.frontendConfiguration')}</span>
           </article>

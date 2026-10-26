@@ -16,7 +16,7 @@ import {
  * Site project service.
  *
  * Read operations degrade to a safe empty value when the backend is not
- * connected, which is what makes the workspace render honest empty states
+ * connected, which is what makes the site list render honest empty states
  * instead of placeholder projects. Every write operation refuses to run and
  * throws BackendNotConnectedError, so no action can report a change that was
  * never persisted.
@@ -76,7 +76,7 @@ const getSite = async (id) => {
 const createSite = async (payload) => {
   const demo = getDemoSession()
   if (demo) {
-    const site = { ...buildSiteDraft(payload), id: crypto.randomUUID(), workspaceId: 'demo-workspace', status: 'draft' }
+    const site = { ...buildSiteDraft(payload), id: crypto.randomUUID(), status: 'draft' }
     demo.sites.push(site)
     return normalizeSite(site)
   }

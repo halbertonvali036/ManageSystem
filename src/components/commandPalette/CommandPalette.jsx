@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
   ArrowDown,
   ArrowUp,
@@ -20,7 +20,6 @@ import {
 } from '@/components/commandPalette/recentCommands'
 import useAuth from '@/hooks/useAuth'
 import useTranslation from '@/hooks/useTranslation'
-import { readActiveWorkspaceId } from '@/utils/activeWorkspace'
 
 const LISTBOX_ID = 'command-palette-listbox'
 const FIRST_INDEX = 0
@@ -29,7 +28,6 @@ function CommandPalette() {
   const { isAuthenticated, user } = useAuth()
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { pathname } = useLocation()
 
   const [isOpen, setIsOpen] = useState(false)
   const [query, setQuery] = useState('')
@@ -39,12 +37,8 @@ function CommandPalette() {
   const listRef = useRef(null)
   const previousFocusRef = useRef(null)
 
-  // Commands mirror the sidebar, so they follow the same role and the same
-  // open workspace the rail is showing.
-  const commands = useMemo(
-    () => getCommandsForRole(user?.role, readActiveWorkspaceId(pathname)),
-    [user?.role, pathname],
-  )
+  // Commands mirror the sidebar, so they follow the same role the rail is showing.
+  const commands = useMemo(() => getCommandsForRole(user?.role), [user?.role])
 
   // Commands follow the active locale.
   const getLabel = useCallback(

@@ -1,61 +1,117 @@
 import { useEffect, useId, useRef } from 'react'
 import { X } from 'lucide-react'
+import useTranslation from '@/hooks/useTranslation'
 
+/**
+ * Confirmation dialog shared by the app and the editor.
+ *
+ * The default `modal` appearance is the app-wide confirmation built on the
+ * `modal` classes. `appearance="editor"` uses the editor's dialog surface and
+ * its translated close/cancel labels. Both keep the same focus handling: the
+ * close control is focused on open, Tab stays inside the dialog, and Escape
+ * closes it (except while a modal confirmation is in progress).
+ *
+ * The two prop dialects are accepted so callers do not need to change their
+ * state shape: `open`/`onCancel` for the modal usage and `isOpen`/`onClose` for
+ * the editor usage. `message` and `description` likewise map to the modal
+ * message and the editor description respectively.
+ */
 function ConfirmDialog({
   open,
+  isOpen,
+  appearance = 'modal',
   title,
   message,
+  description,
   children,
+  detail,
   confirmLabel = 'Delete',
   confirmingLabel = 'Deleting…',
-  cancelLabel = 'Cancel',
-  // Optional so existing callers keep the English default; callers with their own
-  // i18n pass the translated string.
-  closeLabel = 'Close dialog',
+  cancelLabel,
+  // Optional so modal callers keep the English default; callers with their own
+  // i18n pass the translated string. The editor appearance falls back to the
+  // shared translated labels.
+  closeLabel,
   confirmVariant = 'danger',
   isConfirming = false,
   error = null,
   onConfirm,
   onCancel,
+  onClose,
 }) {
+  const { t } = useTranslation()
   const titleId = useId()
   const closeButtonRef = useRef(null)
   const dialogRef = useRef(null)
 
-  useEffect(() => {
-    if (!open) return undefined
-    const previousFocus = document.activeElement
-    return () => { if (previousFocus?.isConnected) previousFocus.focus() }
-  }, [open])
+  const isEditor = appearance === 'editor'
+  const isDialogOpen = open ?? isOpen ?? false
+  const handleClose = onClose ?? onCancel
+  const resolvedCloseLabel = closeLabel ?? (isEditor ? t('common.close') : 'Close dialog')
+  const resolvedCancelLabel = cancelLabel ?? (isEditor ? t('common.cancel') : 'Cancel')
 
   useEffect(() => {
-    if (!open) {
+    if (!isDialogOpen) return undefined
+    const previousFocus = document.activeElement
+    if (isEditor) {
+      closeButtonRef.current?.focus()
+    }
+    return () => { if (previousFocus?.isConnected) previousFocus.focus() }
+  }, [isDialogOpen, isEditor])
+
+  useEffect(() => {
+    if (!isDialogOpen) {
       return undefined
     }
     const handleKeyDown = (event) => {
       if (event.key === 'Tab') {
-        const targets = [...dialogRef.current.querySelectorAll(
-          'button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])',
-        )].filter(element => element.getClientRects().length)
-        const first = targets[0]
-        const last = targets[targets.length - 1]
-        if (!first) {
-          event.preventDefault()
-          dialogRef.current.focus()
-        } else if (event.shiftKey && (document.activeElement === first || !targets.includes(document.activeElement))) {
-          event.preventDefault()
-          last.focus()
-        } else if (!event.shiftKey && (document.activeElement === last || !targets.includes(document.activeElement))) {
-          event.preventDefault()
-          first.focus()
+        if (!dialogRef.current) {
+          return
+        }
+        const targets = isEditor
+          ? [...dialogRef.current.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+          )]
+          : [...dialogRef.current.querySelectorAll(
+            'button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])',
+          )].filter(element => element.getClientRects().length)
+        if (isEditor) {
+          if (targets.length === 0) {
+            return
+          }
+          const first = targets[0]
+          const last = targets[targets.length - 1]
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault()
+            last.focus()
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault()
+            first.focus()
+          }
+        } else {
+          const first = targets[0]
+          const last = targets[targets.length - 1]
+          if (!first) {
+            event.preventDefault()
+            dialogRef.current.focus()
+          } else if (event.shiftKey && (document.activeElement === first || !targets.includes(document.activeElement))) {
+            event.preventDefault()
+            last.focus()
+          } else if (!event.shiftKey && (document.activeElement === last || !targets.includes(document.activeElement))) {
+            event.preventDefault()
+            first.focus()
+          }
         }
       }
-      if (event.key === 'Escape' && !isConfirming) {
+      if (event.key === 'Escape' && (isEditor || !isConfirming)) {
         event.preventDefault()
-        onCancel?.()
+        handleClose?.()
       }
     }
     document.addEventListener('keydown', handleKeyDown)
+    if (isEditor) {
+      return () => document.removeEventListener('keydown', handleKeyDown)
+    }
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     closeButtonRef.current?.focus()
@@ -63,16 +119,76 @@ function ConfirmDialog({
       document.removeEventListener('keydown', handleKeyDown)
       document.body.style.overflow = previousOverflow
     }
-  }, [open, isConfirming, onCancel])
+  }, [isDialogOpen, isEditor, isConfirming, handleClose])
 
-  if (!open) {
+  if (!isDialogOpen) {
     return null
   }
 
   const handleOverlayClick = (event) => {
     if (event.target === event.currentTarget && !isConfirming) {
-      onCancel?.()
+      handleClose?.()
     }
+  }
+
+  if (isEditor) {
+    return (
+      <div className="editor-dialog-layer">
+        <button
+          type="button"
+          className="editor-dialog__backdrop"
+          onClick={handleClose}
+          aria-label={resolvedCloseLabel}
+        />
+
+        <div
+          className="editor-dialog editor-dialog--confirm"
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="editor-confirm-dialog-title"
+          aria-describedby="editor-confirm-dialog-description"
+          ref={dialogRef}
+        >
+          <div className="editor-dialog__head">
+            <div>
+              <h2 className="editor-dialog__title" id="editor-confirm-dialog-title">
+                {title}
+              </h2>
+              <p className="editor-dialog__hint" id="editor-confirm-dialog-description">
+                {description}
+              </p>
+            </div>
+            <button
+              type="button"
+              className="editor-icon-button"
+              onClick={handleClose}
+              ref={closeButtonRef}
+              aria-label={resolvedCloseLabel}
+            >
+              {resolvedCloseLabel}
+            </button>
+          </div>
+
+          {detail ? <p className="editor-dialog__detail">{detail}</p> : null}
+
+          <div className="editor-dialog__actions">
+            <button type="button" className="btn btn--outline btn--sm" onClick={handleClose}>
+              {resolvedCancelLabel}
+            </button>
+            <button
+              type="button"
+              className="btn btn--danger btn--sm"
+              onClick={() => {
+                onConfirm()
+                handleClose()
+              }}
+            >
+              {confirmLabel}
+            </button>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -93,8 +209,8 @@ function ConfirmDialog({
             ref={closeButtonRef}
             type="button"
             className="modal__close"
-            aria-label={closeLabel}
-            onClick={onCancel}
+            aria-label={resolvedCloseLabel}
+            onClick={handleClose}
             disabled={isConfirming}
           >
             <X size={18} aria-hidden="true" />
@@ -115,10 +231,10 @@ function ConfirmDialog({
           <button
             type="button"
             className="btn"
-            onClick={onCancel}
+            onClick={handleClose}
             disabled={isConfirming}
           >
-            {cancelLabel}
+            {resolvedCancelLabel}
           </button>
           <button
             type="button"

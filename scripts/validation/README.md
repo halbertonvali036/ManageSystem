@@ -21,8 +21,10 @@ The current frontend completion checks are `frontend-audit.cjs` (routes and
 responsive layouts), `frontend-interactions.cjs` (editor and module interactions),
 `frontend-states.cjs` (isolated AI/Admin state fixtures), and `frontend-final.cjs`
 (linked demo flow and four-width key-page/Admin verification). Run these serially
-against the Vite dev server with demo auth enabled. Results and screenshots go to
-`artifacts/frontend-audit/`; the prior JSON reports are preserved in `previous/`.
+against the Vite dev server with demo auth enabled. Results go to
+`artifacts/frontend-audit/`; screenshots are written alongside them when the
+scripts run and are not kept in the repository. The prior JSON reports are
+preserved in `previous/`.
 The interaction script uses DOM keyboard events for Escape because native CDP
 keyboard events were not delivered in the Windows headless audit environment.
 State fixture successes verify frontend callbacks only, not backend operations.

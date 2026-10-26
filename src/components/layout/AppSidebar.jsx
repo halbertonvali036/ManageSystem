@@ -12,11 +12,6 @@ import {
   APP_NAME,
   getUserSidebarGroups,
 } from '@/utils/constants'
-import {
-  persistActiveWorkspaceId,
-  readActiveWorkspaceId,
-  readWorkspaceIdFromPath,
-} from '@/utils/activeWorkspace'
 
 /** Initials for the sidebar identity block. Falls back to a neutral glyph. */
 const getInitials = (name) =>
@@ -39,8 +34,7 @@ const getInitials = (name) =>
  * destination — profile included — has exactly one home.
  *
  * The groups come from `utils/constants` rather than from JSX so the product
- * navigation and the labels the topbar and breadcrumbs use are one model, and the
- * workspace-scoped links follow whichever workspace is currently open.
+ * navigation and the labels the topbar and breadcrumbs use are one model.
  */
 function AppSidebar({ collapsed, mobileOpen, onToggleCollapsed, onCloseMobile }) {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
@@ -52,17 +46,7 @@ function AppSidebar({ collapsed, mobileOpen, onToggleCollapsed, onCloseMobile })
 
   const isAdmin = user?.role === ROLES.ADMIN
   const inAdmin = isAdmin && (pathname === '/admin' || pathname.startsWith('/admin/'))
-  const workspaceId = readActiveWorkspaceId(pathname)
-  const groups = isAdmin ? ADMIN_SIDEBAR_GROUPS : getUserSidebarGroups(workspaceId)
-
-  // Remember the workspace the person opened so the workspace-scoped product
-  // links keep pointing at it after they step back out to the workspace list.
-  useEffect(() => {
-    const fromPath = readWorkspaceIdFromPath(pathname)
-    if (fromPath) {
-      persistActiveWorkspaceId(fromPath)
-    }
-  }, [pathname])
+  const groups = isAdmin ? ADMIN_SIDEBAR_GROUPS : getUserSidebarGroups()
 
   // A decorative field this large should not keep compositing behind a
   // minimised tab. Pausing is pure CSS reacting to one attribute, so there is no

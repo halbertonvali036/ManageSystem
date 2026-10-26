@@ -2,7 +2,7 @@ import { ROLES } from '@/utils/roles'
 import {
   ACCOUNT_NAV_ITEMS,
   ADMIN_NAV_ITEMS,
-  getWorkspaceNavItems,
+  PRODUCT_NAV_ITEMS,
 } from '@/utils/constants'
 
 /**
@@ -22,11 +22,10 @@ const ACCOUNT_COMMANDS = Object.freeze(
  *
  * Built from the same groups rather than from a hand-kept second list, so a
  * destination cannot be searchable in the palette and missing from the rail, or
- * the other way round. Workspace-scoped commands follow the workspace currently
- * open, which is why the palette takes a workspace id rather than a flat list.
+ * the other way round.
  */
-export const getCommandsForRole = (role, workspaceId) => {
-  const product = role === ROLES.ADMIN ? ADMIN_NAV_ITEMS : getWorkspaceNavItems(workspaceId)
+export const getCommandsForRole = (role) => {
+  const product = role === ROLES.ADMIN ? ADMIN_NAV_ITEMS : PRODUCT_NAV_ITEMS
   return [...product, ...ACCOUNT_COMMANDS]
 }
 
