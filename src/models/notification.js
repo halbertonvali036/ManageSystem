@@ -1,5 +1,5 @@
 import { roleMatchesPortal } from '@/utils/roles'
-import { BILLING_PATH, SECURITY_PATH, WORKSPACES_PATH } from '@/utils/constants'
+import { BILLING_PATH, SECURITY_PATH, SITES_PATH } from '@/utils/constants'
 
 /**
  * Severity reported by the backend. Purely presentational: it drives the icon
@@ -45,7 +45,7 @@ const CATEGORY_META = Object.freeze({
   billing: { label: 'Billing', icon: 'card' },
 })
 const CATEGORY_TARGET = Object.freeze({
-  website: WORKSPACES_PATH, publishing: WORKSPACES_PATH, domain: WORKSPACES_PATH, system: '/notifications',
+  website: SITES_PATH, publishing: SITES_PATH, domain: SITES_PATH, system: '/notifications',
   account: SECURITY_PATH, billing: BILLING_PATH,
 })
 

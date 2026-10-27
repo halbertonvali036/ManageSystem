@@ -1,4 +1,4 @@
-# SiteBuilder (Frontend)
+﻿# SiteBuilder (Frontend)
 
 Responsive React frontend for a website-builder product: create a website
 project, customize pages in the visual editor, preview a local draft, and review
@@ -10,7 +10,7 @@ updating when a final brand is decided.
 
 ## Current phase
 
-The frontend includes the public product surface, authenticated workspace,
+The frontend includes the public product surface, authenticated site workspace,
 template wizard, visual page editor, navigation, local media, forms, site themes,
 settings, preview, and publishing readiness UI. Local drafts are session-scoped;
 empty states remain honest when project data is unavailable.
@@ -30,11 +30,11 @@ app invents a website project, price, discount or successful request.
 
 ## Product areas
 
-- **Public** — landing page, pricing, sign-in, registration, language and
+- **Public** â€” landing page, pricing, sign-in, registration, language and
   theme controls.
-- **Workspace** — dashboard, site list, Create Website (`/sites/new`), editor,
+- **Workspace** â€” dashboard, site list, Create Website (`/sites/new`), editor,
   site settings, Templates and per-workspace applications.
-- **Account** — Profile, Security, Plan & Billing, Notifications, Support. Google
+- **Account** â€” Profile, Security, Plan & Billing, Notifications, Support. Google
   sign-in is a frontend-ready entry point that stays disabled until the backend
   is connected.
 
@@ -183,7 +183,7 @@ unit-test runner. The archived per-phase browser harnesses live in
 matches today's UI is:
 
 ```bash
-npm run dev                                          # terminal 1 — serves on 5173
+npm run dev                                          # terminal 1 â€” serves on 5173
 node scripts/validation/phase16-runtime-check.cjs     # passes
 ```
 

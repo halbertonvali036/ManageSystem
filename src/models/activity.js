@@ -42,6 +42,7 @@ import { getDateFormatter } from '@/utils/intl'
  * portal sees everything. The scope chooses the endpoint, never the shape.
  */
 export const ACTIVITY_SCOPE = Object.freeze({
+  ACCOUNT: 'account',
   WORKSPACE: 'workspace',
   PLATFORM: 'platform',
 })

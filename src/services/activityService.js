@@ -42,6 +42,10 @@ const WORKSPACE_ACTIVITY_PATH = (workspaceId) => `/workspaces/${workspaceId}/act
 const WORKSPACE_USAGE_PATH = (workspaceId) => `/workspaces/${workspaceId}/usage`
 const WORKSPACE_USAGE_LIMITS_PATH = (workspaceId) => `${WORKSPACE_USAGE_PATH(workspaceId)}/limits`
 
+const ACCOUNT_ACTIVITY_PATH = '/activity'
+const ACCOUNT_USAGE_PATH = '/usage'
+const ACCOUNT_USAGE_LIMITS_PATH = '/usage/limits'
+
 /**
  * The platform-wide stream, on the `/admin/audit` route the notification model
  * already reserves for exactly this. Declared once so a future admin page does not
@@ -52,6 +56,7 @@ const PLATFORM_ACTIVITY_PATH = '/admin/audit'
 /** Resolves the scope to an endpoint. An unknown scope is refused, not guessed. */
 const activityPath = (scope, workspaceId) => {
   if (scope === ACTIVITY_SCOPE.PLATFORM) return PLATFORM_ACTIVITY_PATH
+  if (scope === ACTIVITY_SCOPE.ACCOUNT) return ACCOUNT_ACTIVITY_PATH
   if (scope === ACTIVITY_SCOPE.WORKSPACE && workspaceId) {
     return WORKSPACE_ACTIVITY_PATH(workspaceId)
   }
@@ -96,11 +101,17 @@ const getActivity = async ({ workspaceId, scope, query } = {}) => {
  * become "0 websites" on a billing-shaped screen. `normalizeUsage` returns one entry
  * per declared metric, with `value: null` for the ones the backend did not send.
  */
-const getUsage = async (workspaceId) => {
-  if (!isBackendConnected() || !workspaceId) {
+const getUsage = async (workspaceId, scope) => {
+  if (!isBackendConnected()) {
     return null
   }
-  return normalizeUsage(await httpClient.get(WORKSPACE_USAGE_PATH(workspaceId)))
+  if (scope === ACTIVITY_SCOPE.ACCOUNT) {
+    return normalizeUsage(await httpClient.get(ACCOUNT_USAGE_PATH))
+  }
+  if (scope === ACTIVITY_SCOPE.WORKSPACE && workspaceId) {
+    return normalizeUsage(await httpClient.get(WORKSPACE_USAGE_PATH(workspaceId)))
+  }
+  return null
 }
 
 /**
@@ -110,11 +121,17 @@ const getUsage = async (workspaceId) => {
  * different times: usage is a measurement, a limit is a contract. Joining them here
  * would mean inventing one when the backend has only the other.
  */
-const getUsageLimits = async (workspaceId) => {
-  if (!isBackendConnected() || !workspaceId) {
+const getUsageLimits = async (workspaceId, scope) => {
+  if (!isBackendConnected()) {
     return null
   }
-  return normalizeUsageLimits(await httpClient.get(WORKSPACE_USAGE_LIMITS_PATH(workspaceId)))
+  if (scope === ACTIVITY_SCOPE.ACCOUNT) {
+    return normalizeUsageLimits(await httpClient.get(ACCOUNT_USAGE_LIMITS_PATH))
+  }
+  if (scope === ACTIVITY_SCOPE.WORKSPACE && workspaceId) {
+    return normalizeUsageLimits(await httpClient.get(WORKSPACE_USAGE_LIMITS_PATH(workspaceId)))
+  }
+  return null
 }
 
 const activityService = {

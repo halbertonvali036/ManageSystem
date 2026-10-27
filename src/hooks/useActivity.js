@@ -53,8 +53,12 @@ function useActivity(workspaceId, { scope, enabled = true } = {}) {
     // primary content.
     Promise.allSettled([
       activityService.getActivity({ workspaceId, scope: resolvedScope }),
-      workspaceId ? activityService.getUsage(workspaceId) : Promise.resolve(null),
-      workspaceId ? activityService.getUsageLimits(workspaceId) : Promise.resolve(null),
+      resolvedScope === ACTIVITY_SCOPE.ACCOUNT || workspaceId
+        ? activityService.getUsage(workspaceId, resolvedScope)
+        : Promise.resolve(null),
+      resolvedScope === ACTIVITY_SCOPE.ACCOUNT || workspaceId
+        ? activityService.getUsageLimits(workspaceId, resolvedScope)
+        : Promise.resolve(null),
     ]).then(([activityResult, usageResult, limitsResult]) => {
       if (!isActive) return
 

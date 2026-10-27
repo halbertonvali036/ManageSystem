@@ -1,11 +1,11 @@
-# SiteBuilder — Frontend → Backend API Handoff
+﻿# SiteBuilder â€” Frontend â†’ Backend API Handoff
 
 Reference for the backend developer connecting the existing frontend.
 
 The product is a **website builder**: people create a site project, edit pages in
 a visual editor, manage domains and deployments inside a workspace, and are
 billed per plan. The frontend service layer is complete and does **not** require
-any particular backend framework — these are the contracts it already
+any particular backend framework â€” these are the contracts it already
 understands.
 
 Every path below is relative to `VITE_API_BASE_URL`. Nothing is hardcoded in
@@ -33,22 +33,22 @@ components; every service reads `config.api.baseUrl`.
 
 ## Conventions (already implemented client-side)
 
-- **Single HTTP client** — `src/services/httpClient.js`. Exports
+- **Single HTTP client** â€” `src/services/httpClient.js`. Exports
   `httpClient.get/post/put/patch/delete/upload`. `upload` drops the JSON
   content type so the browser sets the multipart boundary.
-- **Error taxonomy** — `RequestError` carries `{ status, code, data, message }`.
-  `codeForStatus` maps 400→`UNKNOWN`, 401→`UNAUTHORIZED`, 403→`FORBIDDEN`,
-  404→`NOT_FOUND`, 422→`VALIDATION`, 5xx→`SERVER`; a network failure produces
+- **Error taxonomy** â€” `RequestError` carries `{ status, code, data, message }`.
+  `codeForStatus` maps 400â†’`UNKNOWN`, 401â†’`UNAUTHORIZED`, 403â†’`FORBIDDEN`,
+  404â†’`NOT_FOUND`, 422â†’`VALIDATION`, 5xxâ†’`SERVER`; a network failure produces
   `NETWORK`. Helpers `getRequestErrorCode` and `getRequestErrorMessage` give a
-  stable code plus a localised-safe default message. Reuse — do not duplicate.
-- **Error body** — the client reads `data.message` for the thrown message and
+  stable code plus a localised-safe default message. Reuse â€” do not duplicate.
+- **Error body** â€” the client reads `data.message` for the thrown message and
   keeps the whole parsed body on `error.data`. **Return `{ message, errors? }`**
-  where `errors` maps field→message or field→string[].
-- **Response unwrapping** — services accept a bare array/object *or* an
+  where `errors` maps fieldâ†’message or fieldâ†’string[].
+- **Response unwrapping** â€” services accept a bare array/object *or* an
   enveloped `{ data }` / `{ items }` response (`response?.data ?? response`).
   Either shape works.
-- **204 / empty body** — handled and returned as `null`.
-- **Not connected** — with an empty `VITE_API_BASE_URL`, `httpClient` throws
+- **204 / empty body** â€” handled and returned as `null`.
+- **Not connected** â€” with an empty `VITE_API_BASE_URL`, `httpClient` throws
   `BackendNotConnectedError` before any fetch. Reads render honest empty states
   and writes render an explicit "integration unavailable" state.
 - **No fake data anywhere.** No seeded projects, prices, invoices, users,
@@ -60,46 +60,46 @@ components; every service reads `config.api.baseUrl`.
 
 ## Per-resource contract
 
-### Auth — `src/services/authService.js`
+### Auth â€” `src/services/authService.js`
 
 | Method | Request |
 | --- | --- |
-| `login` | `POST /auth/login` `{ email, password }` → `{ token, user: { id, name, email, role } }` |
+| `login` | `POST /auth/login` `{ email, password }` â†’ `{ token, user: { id, name, email, role } }` |
 | `logout` | client-side only (clears storage); add an endpoint if you need server revocation |
-| `register` | **not implemented** — always refuses |
+| `register` | **not implemented** â€” always refuses |
 | `forgotPassword` | `POST /auth/forgot-password` `{ email }` |
 | `resetPassword` | `POST /auth/reset-password` `{ token, newPassword }` |
 | `resendVerification` | `POST /auth/resend-verification` `{ email }` |
-| `beginGoogleLogin` | `POST /auth/oauth/google/start` `{ intent, returnTo }` → `{ authorizationUrl }` |
+| `beginGoogleLogin` | `POST /auth/oauth/google/start` `{ intent, returnTo }` â†’ `{ authorizationUrl }` |
 | `handleOAuthCallback` | `POST /auth/oauth/google/callback` `{ code, state }` |
-| `linkGoogleAccount` | `POST /auth/oauth/google/link` `{ intent, returnTo }` → `{ authorizationUrl }` |
+| `linkGoogleAccount` | `POST /auth/oauth/google/link` `{ intent, returnTo }` â†’ `{ authorizationUrl }` |
 
 `role` must be one of the values in `src/utils/roles.js`; an unknown role causes
-the client to discard the session. `intent` is a routing hint only — the backend
+the client to discard the session. `intent` is a routing hint only â€” the backend
 still decides which account and role the caller ends up with. The returned
 `authorizationUrl` is host-validated against Google's domains before redirect.
 
-### Workspaces — `workspaceService.js`
+### Workspaces â€” `workspaceService.js`
 
-`GET /workspaces` · `POST /workspaces` · `GET /workspaces/:id` ·
-`PUT /workspaces/:id` · `DELETE /workspaces/:id` ·
-`POST /workspaces/:workspaceId/sites`
+`GET /workspaces` Â· `POST /workspaces` Â· `GET /sites or /activity or /deployments` Â·
+`PUT /sites or /activity or /deployments` Â· `DELETE /sites or /activity or /deployments` Â·
+`POST /sites or /activity or /deployments`
 
-### Sites — `siteService.js`
+### Sites â€” `siteService.js`
 
-`GET /sites` (filters `search`, `status`, …) · `GET /sites/:id` ·
-`POST /sites` · `PUT /sites/:id` · `DELETE /sites/:id` ·
+`GET /sites` (filters `search`, `status`, â€¦) Â· `GET /sites/:id` Â·
+`POST /sites` Â· `PUT /sites/:id` Â· `DELETE /sites/:id` Â·
 `POST /sites/:id/duplicate`
 
 ### Editor draft & site settings
 
-- `GET|PUT /sites/:siteId/draft` — `siteEditorService.js`. Round-trips the whole
+- `GET|PUT /sites/:siteId/draft` â€” `siteEditorService.js`. Round-trips the whole
   normalized editor document, including theme tokens, motion metadata and form
   blocks.
-- `GET|PUT /sites/:siteId/settings` — `siteSettingsService.js`. Publication
+- `GET|PUT /sites/:siteId/settings` â€” `siteSettingsService.js`. Publication
   status is **read-only** and is deliberately omitted from the mutation payload.
 
-### Publishing — `src/services/sitePublishService.js`
+### Publishing â€” `src/services/sitePublishService.js`
 
 **Intentionally has no endpoints.** `publishSite`, `unpublishSite`,
 `getPublishStatus` and `getPublishedUrl` always refuse
@@ -107,109 +107,109 @@ still decides which account and role the caller ends up with. The returned
 unknown status and a `null` published URL. Real deployment work goes through
 `deploymentService` below; do not invent publishing endpoints.
 
-### Deployments — `deploymentService.js`
+### Deployments â€” `deploymentService.js`
 
-`GET /workspaces/:workspaceId/deployments` (filters `siteId`, `status`) ·
-`GET /workspaces/:workspaceId/deployments/:deploymentId` ·
-`POST /workspaces/:workspaceId/deployments` ·
-`POST .../deployments/:deploymentId/redeploy` · `/rollback` · `/stop` ·
-`GET /workspaces/:workspaceId/sites` (deployable sites)
+`GET /sites or /activity or /deployments` (filters `siteId`, `status`) Â·
+`GET /sites or /activity or /deployments` Â·
+`POST /sites or /activity or /deployments` Â·
+`POST .../deployments/:deploymentId/redeploy` Â· `/rollback` Â· `/stop` Â·
+`GET /sites or /activity or /deployments` (deployable sites)
 
-### Domains — `domainService.js`
+### Domains â€” `domainService.js`
 
-`GET /workspaces/:workspaceId/domains` ·
-`POST /workspaces/:workspaceId/domains` ·
-`GET|DELETE /workspaces/:workspaceId/domains/:domainId` ·
-`POST .../domains/:domainId/verify` · `POST .../domains/:domainId/primary`
+`GET /sites or /activity or /deployments` Â·
+`POST /sites or /activity or /deployments` Â·
+`GET|DELETE /sites or /activity or /deployments` Â·
+`POST .../domains/:domainId/verify` Â· `POST .../domains/:domainId/primary`
 
 DNS record values are supplied by the backend; the UI never invents them.
 Statuses: `unconfigured | pending | connected | error` (SSL: `unconfigured |
 pending | active | error`).
 
-### Database / schema builder — `databaseService.js`
+### Database / schema builder â€” `databaseService.js`
 
-`GET|POST /workspaces/:workspaceId/database/models` ·
-`GET|PUT|DELETE .../models/:modelId` ·
-`GET|POST .../models/:modelId/records` ·
+`GET|POST /sites or /activity or /deployments` Â·
+`GET|PUT|DELETE .../models/:modelId` Â·
+`GET|POST .../models/:modelId/records` Â·
 `GET|PUT|DELETE .../models/:modelId/records/:recordId`
 
-### Members — `memberService.js`
+### Members â€” `memberService.js`
 
-`GET|POST /workspaces/:workspaceId/members` ·
-`GET|PATCH|DELETE .../members/:memberId` ·
+`GET|POST /sites or /activity or /deployments` Â·
+`GET|PATCH|DELETE .../members/:memberId` Â·
 `POST .../members/:memberId/invite/resend`
 
 Invite is a `POST` to the collection. Role updates use `PATCH` with `{ role }`.
 
-### Capabilities — `capabilityService.js`
+### Capabilities â€” `capabilityService.js`
 
-`GET /workspaces/:workspaceId/capabilities` ·
-`GET /workspaces/:workspaceId/capabilities/:capabilityId` ·
-`POST .../capabilities/:capabilityId/enable` · `/disable` ·
+`GET /sites or /activity or /deployments` Â·
+`GET /sites or /activity or /deployments` Â·
+`POST .../capabilities/:capabilityId/enable` Â· `/disable` Â·
 `PUT .../capabilities/:capabilityId` (config, body `{ config }`)
 
-### Integrations — `integrationService.js`
+### Integrations â€” `integrationService.js`
 
-`GET /workspaces/:workspaceId/integrations` ·
-`GET /workspaces/:workspaceId/integrations/:integrationId` ·
-`POST .../integrations/:integrationId/connect` · `/disconnect` ·
+`GET /sites or /activity or /deployments` Â·
+`GET /sites or /activity or /deployments` Â·
+`POST .../integrations/:integrationId/connect` Â· `/disconnect` Â·
 `PUT .../integrations/:integrationId` (config)
 
-### Activity & usage — `activityService.js`
+### Activity & usage â€” `activityService.js`
 
-`GET /workspaces/:workspaceId/activity` · `GET .../usage` · `GET .../usage/limits`
-· `GET /admin/audit` (platform-wide, admin scope)
+`GET /sites or /activity or /deployments` Â· `GET .../usage` Â· `GET .../usage/limits`
+Â· `GET /admin/audit` (platform-wide, admin scope)
 
-### AI assistant — `aiService.js`
+### AI assistant â€” `aiService.js`
 
-`GET /workspaces/:workspaceId/ai/conversations` ·
-`GET .../conversations/current` · `.../conversations/:conversationId` ·
-`GET .../ai/suggestions` · `POST .../conversations/messages` ·
+`GET /sites or /activity or /deployments` Â·
+`GET .../conversations/current` Â· `.../conversations/:conversationId` Â·
+`GET .../ai/suggestions` Â· `POST .../conversations/messages` Â·
 `POST .../ai/actions`
 
 Reads append a context query string (site/domain scope) via `buildAiContext`;
 honour it as a filter and echo it back in the response shape the client expects.
 
-### Account security — `accountSecurityService.js`
+### Account security â€” `accountSecurityService.js`
 
-`GET /account/security` · `POST /account/security/password` ·
-`POST /account/security/verification-email` ·
-`GET /account/security/sessions` · `DELETE /account/security/sessions/:sessionId`
-· `POST /account/security/sessions/revoke-others` ·
+`GET /account/security` Â· `POST /account/security/password` Â·
+`POST /account/security/verification-email` Â·
+`GET /account/security/sessions` Â· `DELETE /account/security/sessions/:sessionId`
+Â· `POST /account/security/sessions/revoke-others` Â·
 `GET /account/security/activity`
 
-### Billing — `billingService.js`
+### Billing â€” `billingService.js`
 
-`GET /billing` · `GET /billing/plans` · `GET /billing/payment-methods` ·
-`GET /billing/invoices` · `GET /billing/invoices/:invoiceId/receipt` ·
-`POST /billing/checkout-session` · `POST /billing/portal-session` ·
-`POST /billing/subscription` · `POST /billing/subscription/resume` ·
-`POST /billing/payment-methods` ·
-`POST /billing/payment-methods/:paymentMethodId/default` ·
+`GET /billing` Â· `GET /billing/plans` Â· `GET /billing/payment-methods` Â·
+`GET /billing/invoices` Â· `GET /billing/invoices/:invoiceId/receipt` Â·
+`POST /billing/checkout-session` Â· `POST /billing/portal-session` Â·
+`POST /billing/subscription` Â· `POST /billing/subscription/resume` Â·
+`POST /billing/payment-methods` Â·
+`POST /billing/payment-methods/:paymentMethodId/default` Â·
 `DELETE /billing/payment-methods/:paymentMethodId`
 
 Checkout/portal sessions are expected to return a provider URL to redirect to,
 the same shape as the OAuth authorization URL.
 
-### Notifications — `notificationsService.js`
+### Notifications â€” `notificationsService.js`
 
-`GET /notifications` (filters `category`) · `GET /notifications/unread-count` ·
-`PATCH /notifications/:id/read` · `POST /notifications/read-all` ·
+`GET /notifications` (filters `category`) Â· `GET /notifications/unread-count` Â·
+`PATCH /notifications/:id/read` Â· `POST /notifications/read-all` Â·
 `GET|PATCH /notifications/preferences`
 
-### Support — `supportService.js`
+### Support â€” `supportService.js`
 
 `POST /support/requests`
 
-### Users (admin) — `usersService.js`
+### Users (admin) â€” `usersService.js`
 
-`GET /users` (filters `search`, `status`, …) · `GET /users/:id` ·
-`POST /users` · `PUT /users/:id` · `DELETE /users/:id` ·
-`POST /users/:id/activate` · `POST /users/:id/deactivate`
+`GET /users` (filters `search`, `status`, â€¦) Â· `GET /users/:id` Â·
+`POST /users` Â· `PUT /users/:id` Â· `DELETE /users/:id` Â·
+`POST /users/:id/activate` Â· `POST /users/:id/deactivate`
 
-### Admin collections — `adminPlatformService.js`
+### Admin collections â€” `adminPlatformService.js`
 
-`GET /admin/:section` where `section` ∈ `users | websites | templates | billing |
+`GET /admin/:section` where `section` âˆˆ `users | websites | templates | billing |
 domains | notifications | support | audit` (see `ADMIN_COLLECTIONS` in
 `src/models/adminPlatform.js`, which also defines each table's columns). `users`
 routes through `usersService` instead.
@@ -217,7 +217,7 @@ routes through `usersService` instead.
 ## Backend-side requirements
 
 - **Return errors as** 401/403/404/409/422 with `{ message, errors? }` where
-  `errors` maps field→message or field→string[] (e.g. `email`, `hostname`,
+  `errors` maps fieldâ†’message or fieldâ†’string[] (e.g. `email`, `hostname`,
   `name`, `role`). The client surfaces these verbatim.
 - **Enforce authorization server-side.** `role` on the session drives UI only.
   Workspace membership and per-capability permission checks must be enforced on
@@ -230,7 +230,7 @@ routes through `usersService` instead.
 
 ## Backend work still outstanding
 
-Server persistence for sites/editor drafts/media · publishing and hosting ·
+Server persistence for sites/editor drafts/media Â· publishing and hosting Â·
 form submission delivery and storage (see `src/services/siteFormService.js`,
-which deliberately always refuses) · payments ·
+which deliberately always refuses) Â· payments Â·
 Google sign-in completion.

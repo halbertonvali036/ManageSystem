@@ -50,7 +50,7 @@ function ActivityPage() {
     isFiltered,
     clearFilters,
     refetch,
-  } = useActivity(null, { scope: ACTIVITY_SCOPE.PLATFORM })
+  } = useActivity(null, { scope: ACTIVITY_SCOPE.ACCOUNT })
 
   const filters = { type, actorId, query, from, to }
 
