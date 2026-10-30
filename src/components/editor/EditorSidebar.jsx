@@ -25,6 +25,8 @@ import {
 import useTranslation from '@/hooks/useTranslation'
 import EditorNavigationPanel from '@/components/editor/EditorNavigationPanel'
 import EditorPagesPanel from '@/components/editor/EditorPagesPanel'
+import EditorPageTextsPanel from '@/components/editor/EditorPageTextsPanel'
+import EditorFindReplacePanel from '@/components/editor/EditorFindReplacePanel'
 import { BLOCK_TYPE, BLOCK_TYPE_LABELS, BLOCK_TYPES } from '@/models/siteEditor'
 import { SECTION_TYPE_LABELS } from '@/models/siteSection'
 
@@ -128,6 +130,8 @@ function EditorSidebar({
   selection,
   onAddBlock,
   onSelect,
+  onUpdateBlock,
+  onReplaceText,
   onSelectPage,
   onOpenPageCreate,
   onRenamePage,
@@ -176,6 +180,14 @@ function EditorSidebar({
         onRequestDeletePage={onRequestDeletePage}
         onMovePage={onMovePage}
       />
+
+      <EditorPageTextsPanel
+        page={activePage}
+        onSelectBlock={(blockId) => onSelect({ kind: 'block', id: blockId })}
+        onUpdateBlock={onUpdateBlock}
+      />
+
+      <EditorFindReplacePanel document={document} onReplace={onReplaceText} />
 
       <EditorNavigationPanel
         document={document}

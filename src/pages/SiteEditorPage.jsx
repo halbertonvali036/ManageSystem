@@ -1,5 +1,7 @@
 import { getPublicationState } from '@/models/sitePublishing'
+import { useCallback } from 'react'
 import { resetLocalStyles, updateSiteMotion } from '@/models/siteEditor'
+import { applyFindReplace, applyTypographyToType } from '@/models/siteText'
 import PreviewBar from '@/components/editor/PreviewBar'
 import { useLocation, useParams } from 'react-router-dom'
 import EditorCanvas from '@/components/editor/EditorCanvas'
@@ -166,6 +168,37 @@ function SiteEditorDocument() {
     selectedSection,
   })
 
+  /**
+   * Find/replace is one document update, even when it spans every page.
+   *
+   * `applyFindReplace` returns a new document only when it actually matched
+   * something, so an empty or unmatched search cannot mark the draft unsaved.
+   */
+  const handleReplaceText = useCallback(
+    (options) => {
+      applyEdit((current) => applyFindReplace(current, options).document)
+    },
+    [applyEdit],
+  )
+
+  /** Copies the selected block's resolved desktop typography in one update. */
+  const handleApplyTypography = useCallback(
+    (targetType, scope) => {
+      if (!selectedBlock) {
+        return
+      }
+      applyEdit(
+        (current) =>
+          applyTypographyToType(current, {
+            sourceBlockId: selectedBlock.id,
+            targetType,
+            scope,
+          }).document,
+      )
+    },
+    [applyEdit, selectedBlock],
+  )
+
   const publication = getPublicationState(site ? { status: site.status === 'draft' ? 'unpublished' : site.status } : null, Boolean(document.updatedAt))
 
   if (draftLoading) return <div className="page-status" role="status">{t('common.loading')}</div>
@@ -200,6 +233,8 @@ function SiteEditorDocument() {
             selection={selection}
             onAddBlock={handleAddBlock}
             onSelect={handleSelect}
+            onUpdateBlock={handleUpdateBlock}
+            onReplaceText={handleReplaceText}
             onSelectPage={handleSelectPage}
             onOpenPageCreate={() => setIsPageCreateOpen(true)}
         onRenamePage={handleRenamePage}
@@ -243,6 +278,7 @@ function SiteEditorDocument() {
           ) : null}
 
           <EditorCanvas
+            key={`${isPreview ? 'preview' : 'edit'}:${activePage?.id ?? 'none'}`}
             document={document}
             activePage={activePage}
             device={device}
@@ -254,6 +290,7 @@ function SiteEditorDocument() {
             onMoveBlock={handleMoveBlock}
             onMoveSection={handleMoveSection}
             onNavigatePage={handleSelectPage}
+            onUpdateBlock={handleUpdateBlock}
           />
 
           {!isPreview ? (
@@ -280,6 +317,7 @@ function SiteEditorDocument() {
             onDuplicateSection={handleDuplicateSection}
             onDeleteSection={handleDeleteSection}
             onResetDeviceOverrides={handleResetDeviceOverrides}
+            onApplyTypography={handleApplyTypography}
             onOpenMedia={(target) => openMedia(target)}
             onClearSelection={() => setSelection(null)}
             isMobileOpen={isRightOpen}

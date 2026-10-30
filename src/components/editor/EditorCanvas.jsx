@@ -1,8 +1,8 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { CanvasDragProvider } from '@/components/editor/CanvasDrag'
 import useSiteMotion from '@/hooks/useSiteMotion'
 import useTranslation from '@/hooks/useTranslation'
-import { EDITOR_DEVICE_WIDTHS, getCanvasCssStyle } from '@/models/siteEditor'
+import { BLOCK_TYPE, EDITOR_DEVICE_WIDTHS, getCanvasCssStyle } from '@/models/siteEditor'
 import SectionRenderer from '@/components/editor/SectionRenderer'
 import SiteHeaderPreview from '@/components/editor/SiteHeaderPreview'
 
@@ -33,10 +33,49 @@ function EditorCanvas({
   onMoveBlock,
   onMoveSection,
   onNavigatePage,
+  onUpdateBlock,
 }) {
   const { t } = useTranslation()
   const motionRef = useSiteMotion(isPreview, activePage?.id)
   const width = EDITOR_DEVICE_WIDTHS[device]
+  const [inlineEdit, setInlineEdit] = useState(null)
+
+  /*
+   * Inline editing belongs to one block on one page. Storing the page beside the
+   * block id means leaving the page or entering preview simply stops matching,
+   * so no effect has to reset state after the fact; the old value is ignored the
+   * moment it no longer describes this view.
+   */
+  const editingBlockId =
+    !isPreview && inlineEdit?.pageId === activePage?.id ? inlineEdit.blockId : null
+
+  const handleStartInlineEdit = useCallback(
+    (blockId) => {
+      setInlineEdit({ blockId, pageId: activePage?.id })
+    },
+    [activePage?.id],
+  )
+
+  const handleCancelInlineEdit = useCallback(() => {
+    setInlineEdit(null)
+  }, [])
+
+  const handleCommitInlineEdit = useCallback(
+    (block, value) => {
+      const current =
+        block.type === BLOCK_TYPE.BUTTON ? block.content?.label : block.content?.text
+      if (value !== current) {
+        onUpdateBlock?.(
+          block.id,
+          block.type === BLOCK_TYPE.BUTTON
+            ? { content: { label: value } }
+            : { content: { text: value } },
+        )
+      }
+      setInlineEdit(null)
+    },
+    [onUpdateBlock],
+  )
 
   // The section being worked on owns the focusable insertion markers. Without
   // this, a page with several sections would put every marker in the tab order.
@@ -122,6 +161,10 @@ function EditorCanvas({
                   onSelectSection={onSelectSection}
                   onSelectBlock={onSelectBlock}
                   onInsertBlockAt={onInsertBlockAt}
+                  editingBlockId={editingBlockId}
+                  onStartInlineEdit={handleStartInlineEdit}
+                  onCommitInlineEdit={handleCommitInlineEdit}
+                  onCancelInlineEdit={handleCancelInlineEdit}
                 />
               ))
             ) : (

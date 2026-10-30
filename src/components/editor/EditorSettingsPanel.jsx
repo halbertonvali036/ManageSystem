@@ -38,6 +38,7 @@ function EditorSettingsPanel({
   onDuplicateSection,
   onDeleteSection,
   onResetDeviceOverrides,
+  onApplyTypography,
   onOpenMedia,
   onClearSelection,
   isMobileOpen,
@@ -170,6 +171,7 @@ function EditorSettingsPanel({
         device={device}
         onUpdateBlock={onUpdateBlock}
         onResetDeviceOverrides={onResetDeviceOverrides}
+        onApplyTypography={onApplyTypography}
         field={field}
         select={select}
         rangeField={rangeField}

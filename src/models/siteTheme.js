@@ -16,11 +16,23 @@
  * the canvas turns into CSS custom properties scoped to the canvas only.
  */
 
-/** Font stacks are named so presets stay readable and no font is fetched. */
+/**
+ * Font stacks are named so presets stay readable and no font is fetched.
+ *
+ * Every entry is a web-safe system stack: the browser only paints fonts that are
+ * already installed, so a site never downloads a font and never waits on a
+ * network request to render. The first three ids are the original set and must
+ * keep working exactly as before; the rest are additional choices.
+ */
 export const SITE_FONT_STACKS = Object.freeze({
   sans: "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+  humanist: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+  trebuchet: "'Trebuchet MS', 'Gill Sans', 'Gill Sans MT', Calibri, sans-serif",
   serif: "Georgia, 'Times New Roman', Times, serif",
+  times: "'Times New Roman', Times, serif",
+  palatino: "'Palatino Linotype', 'Book Antiqua', Palatino, serif",
   mono: "ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace",
+  courier: "'Courier New', Courier, monospace",
 })
 
 export const SITE_FONT_STACK_IDS = Object.freeze(Object.keys(SITE_FONT_STACKS))

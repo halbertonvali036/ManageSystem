@@ -9,7 +9,7 @@ export const azSiteDesign = {
   guidance: 'Mətn/fon, düymə və sahə sərhədlərinin kontrastını yoxlayın. Bu idarələr əlçatanlığa avtomatik zəmanət vermir.',
   invalidColor: 'Düzgün HEX rəngi daxil edin: #RGB və ya #RRGGBB.', hex: 'HEX', picker: 'Rəng seçimi',
   presets: { minimal: 'Minimal', modern: 'Müasir', bold: 'Cəsarətli', elegant: 'Zərif' }, presetHint: 'Yalnız saytın dizayn tokenlərini dəyişir. Məzmun və lokal üslublar qorunur.',
-  fonts: { sans: 'Sistem sans-serif', serif: 'Georgia / serif', mono: 'Sistem monospace' },
+  fonts: { sans: 'Sistem sans-serif', humanist: 'Segoe UI / humanist', trebuchet: 'Trebuchet MS / humanist', serif: 'Georgia / serif', times: 'Times New Roman / serif', palatino: 'Palatino / klassik serif', mono: 'Sistem monospace', courier: 'Courier New / monospace' },
   narrow: 'Dar', standard: 'Standart', wide: 'Geniş', custom: 'Fərdi', compact: 'Yığcam', spacious: 'Rahat',
   variant: 'Düymə növü', primaryButton: 'Əsas', secondaryButton: 'İkinci',
 }
@@ -24,7 +24,7 @@ export const enSiteDesign = {
   guidance: 'Check text/background, button and field-border contrast. These controls do not automatically guarantee accessibility.',
   invalidColor: 'Enter a valid HEX color: #RGB or #RRGGBB.', hex: 'HEX', picker: 'Color picker',
   presets: { minimal: 'Minimal', modern: 'Modern', bold: 'Bold', elegant: 'Elegant' }, presetHint: 'Changes only site design tokens. Content and local styles are preserved.',
-  fonts: { sans: 'System sans-serif', serif: 'Georgia / serif', mono: 'System monospace' },
+  fonts: { sans: 'System sans-serif', humanist: 'Segoe UI / humanist', trebuchet: 'Trebuchet MS / humanist', serif: 'Georgia / serif', times: 'Times New Roman / serif', palatino: 'Palatino / classic serif', mono: 'System monospace', courier: 'Courier New / monospace' },
   narrow: 'Narrow', standard: 'Standard', wide: 'Wide', custom: 'Custom', compact: 'Compact', spacious: 'Spacious',
   variant: 'Button variant', primaryButton: 'Primary', secondaryButton: 'Secondary',
 }

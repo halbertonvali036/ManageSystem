@@ -1,4 +1,5 @@
 import FormBlock from '@/components/editor/FormBlock'
+import InlineEditableText from '@/components/editor/InlineEditableText'
 import {
   BLOCK_TYPE,
   getBlockCssStyle,
@@ -65,14 +66,36 @@ function ImageBlock({ block, isPreview, device }) {
  * dropped below 30px on mobile becomes an `h2` there rather than staying an `h1`
  * that no longer matches the page outline.
  */
-function HeadingBlock({ block, device }) {
+function HeadingBlock({ block, device, inlineEdit }) {
   const { fontSize } = getEffectiveStyle(block, device)
   const Tag = fontSize >= 30 ? 'h1' : 'h2'
-  return <Tag style={getBlockCssStyle(block, device)}>{block.content.text}</Tag>
+  return (
+    <InlineEditableText
+      as={Tag}
+      value={block.content.text}
+      isEditing={inlineEdit?.isEditing}
+      style={getBlockCssStyle(block, device)}
+      ariaLabel={inlineEdit?.label}
+      placeholder={inlineEdit?.placeholder}
+      onCommit={(value) => inlineEdit?.onCommit(block, value)}
+      onCancel={inlineEdit?.onCancel}
+    />
+  )
 }
 
-function TextBlock({ block, device }) {
-  return <p style={getBlockCssStyle(block, device)}>{block.content.text}</p>
+function TextBlock({ block, device, inlineEdit }) {
+  return (
+    <InlineEditableText
+      as="p"
+      value={block.content.text}
+      isEditing={inlineEdit?.isEditing}
+      style={getBlockCssStyle(block, device)}
+      ariaLabel={inlineEdit?.label}
+      placeholder={inlineEdit?.placeholder}
+      onCommit={(value) => inlineEdit?.onCommit(block, value)}
+      onCancel={inlineEdit?.onCancel}
+    />
+  )
 }
 
 /**
@@ -83,7 +106,7 @@ function TextBlock({ block, device }) {
  * anchor inside it would both nest interactive elements and let a stray click
  * navigate away from an unsaved draft. The href is edited in the settings panel.
  */
-function ButtonBlock({ block, isPreview, device }) {
+function ButtonBlock({ block, isPreview, device, inlineEdit }) {
   const { label, href } = block.content
   const shared = {
     className: 'editor-block__button',
@@ -98,7 +121,22 @@ function ButtonBlock({ block, isPreview, device }) {
       </a></div>
     )
   }
-  return <div style={{ textAlign: getEffectiveStyle(block, device).align }}><span {...shared}>{label}</span></div>
+  return (
+    <div style={{ textAlign: getEffectiveStyle(block, device).align }}>
+      <InlineEditableText
+        as="span"
+        value={label}
+        isEditing={inlineEdit?.isEditing}
+        className={shared.className}
+        style={shared.style}
+        ariaLabel={inlineEdit?.label}
+        placeholder={inlineEdit?.placeholder}
+        onCommit={(value) => inlineEdit?.onCommit(block, value)}
+        onCancel={inlineEdit?.onCancel}
+        data-variant={shared['data-variant']}
+      />
+    </div>
+  )
 }
 
 function SpacerBlock({ block, device }) {
@@ -324,9 +362,9 @@ const RENDERERS = {
   [BLOCK_TYPE.SPACER]: SpacerBlock,
 }
 
-function BlockRenderer({ block, isPreview, device }) {
+function BlockRenderer({ block, isPreview, device, inlineEdit }) {
   const Renderer = RENDERERS[block.type] ?? TextBlock
-  return <Renderer block={block} isPreview={isPreview} device={device} />
+  return <Renderer block={block} isPreview={isPreview} device={device} inlineEdit={inlineEdit} />
 }
 
 export default BlockRenderer

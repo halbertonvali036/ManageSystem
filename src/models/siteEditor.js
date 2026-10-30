@@ -67,6 +67,8 @@ import {
   normalizeSiteTheme,
   resolveSiteColor,
   SITE_COLOR_TOKENS,
+  SITE_FONT_STACK_IDS,
+  SITE_FONT_STACKS,
 } from '@/models/siteTheme'
 
 /**
@@ -189,6 +191,14 @@ export const FONT_WEIGHTS = Object.freeze([
   { value: 700, labelKey: 'editor.weight.bold' },
   { value: 800, labelKey: 'editor.weight.extrabold' },
 ])
+
+/**
+ * Whether a stored block font is one of the site's web-safe stacks.
+ *
+ * A block only ever stores the stack id, never a free-form CSS family, so the
+ * renderer resolves it through the same allowlist the site-wide design uses.
+ */
+export const isSiteFontFamily = (value) => SITE_FONT_STACK_IDS.includes(value)
 
 /**
  * Block style bounds. Padding and radius share one scale so a section band and
@@ -422,6 +432,17 @@ const sanitizeStylePatch = (patch) => {
   }
   if (isTextAlign(patch.align)) {
     clean.align = patch.align
+  }
+  /*
+   * A block font is a stack id from the shared allowlist, or `null` to return to
+   * the site font. Free-form CSS families are rejected here as well as in
+   * `normalizeBlock`, so the edit path cannot store a value a stored draft could
+   * never carry.
+   */
+  if (patch.fontFamily === null) {
+    clean.fontFamily = ''
+  } else if (isSiteFontFamily(patch.fontFamily)) {
+    clean.fontFamily = patch.fontFamily
   }
   for (const key of ['textColor', 'background']) {
     if (patch[key] === null) {
@@ -788,6 +809,17 @@ export const normalizeBlock = (raw) => {
   }
   if (Number.isFinite(rawStyle.fontWeight)) {
     style.fontWeight = clamp(rawStyle.fontWeight, { min: 100, max: 900 })
+  }
+  /*
+   * Only the three text-bearing blocks carry a font override, and only from the
+   * shared web-safe stack list. A draft without the key renders exactly as it
+   * did before this field existed.
+   */
+  if (
+    [BLOCK_TYPE.HEADING, BLOCK_TYPE.TEXT, BLOCK_TYPE.BUTTON].includes(type) &&
+    isSiteFontFamily(rawStyle.fontFamily)
+  ) {
+    style.fontFamily = rawStyle.fontFamily
   }
   if (isTextAlign(rawStyle.align)) {
     style.align = rawStyle.align
@@ -1892,7 +1924,7 @@ export const getResolvedEditorStyle = (document, node, device, kind = 'block') =
     padding: kind === 'section' ? tokens.spacingScale * 48 : button ? tokens.buttonPadding : 0,
     radius: button ? tokens.buttonRadius ?? tokens.radiusScale : tokens.radiusScale,
     height: node.type === BLOCK_TYPE.SPACER ? tokens.spacingScale * 32 : 200,
-    textColor: '', background: '', ...getEffectiveStyle(node, device),
+    textColor: '', background: '', fontFamily: '', ...getEffectiveStyle(node, device),
   }
 }
 
@@ -1978,6 +2010,9 @@ export const getBlockCssStyle = (block, device) => {
   }
   if (Number.isFinite(style.fontWeight)) {
     css.fontWeight = style.fontWeight
+  }
+  if (isSiteFontFamily(style.fontFamily)) {
+    css.fontFamily = SITE_FONT_STACKS[style.fontFamily]
   }
   const textColor = resolveSiteColor(style.textColor)
   if (textColor && style.textColor !== 'transparent') {

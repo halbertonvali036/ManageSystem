@@ -14,6 +14,7 @@ import {
 } from '@/models/siteEditor'
 import { SECTION_TYPE_LABELS } from '@/models/siteSection'
 import BlockRenderer from '@/components/editor/BlockRenderer'
+import { INLINE_EDITABLE_BLOCK_TYPES } from '@/models/siteText'
 
 /**
  * One selectable block inside a section.
@@ -22,13 +23,30 @@ import BlockRenderer from '@/components/editor/BlockRenderer'
  * reports its selected state. In preview mode it degrades to a plain container,
  * so the composed page reads as a page rather than a control surface.
  */
-function CanvasBlock({ siteMotion, index, sectionId, block, isSelected, isPreview, device, onSelect }) {
+function CanvasBlock({
+  siteMotion,
+  index,
+  sectionId,
+  block,
+  isSelected,
+  isPreview,
+  device,
+  onSelect,
+  editingBlockId,
+  onStartInlineEdit,
+  onCommitInlineEdit,
+  onCancelInlineEdit,
+}) {
   const { t } = useTranslation()
   const dragItem = { kind: 'block', id: block.id, sectionId, index }
   const dropProps = useCanvasDrop(dragItem, !isPreview)
 
+  const canInlineEdit = !isPreview && INLINE_EDITABLE_BLOCK_TYPES.includes(block.type)
+  const isInlineEditing = canInlineEdit && editingBlockId === block.id
+  const label = t(BLOCK_TYPE_LABELS[block.type])
+
   const handleSelect = (event) => {
-    if (isPreview) {
+    if (isPreview || isInlineEditing) {
       return
     }
     // Cancel any default action from the rendered content, so selecting a block
@@ -40,7 +58,7 @@ function CanvasBlock({ siteMotion, index, sectionId, block, isSelected, isPrevie
   }
 
   const handleKeyDown = (event) => {
-    if (isPreview) {
+    if (isPreview || isInlineEditing) {
       return
     }
     if (event.key === 'Enter' || event.key === ' ') {
@@ -49,8 +67,17 @@ function CanvasBlock({ siteMotion, index, sectionId, block, isSelected, isPrevie
     }
   }
 
-  const isInteractive = !isPreview
-  const label = t(BLOCK_TYPE_LABELS[block.type])
+  const handleDoubleClick = (event) => {
+    if (!canInlineEdit) {
+      return
+    }
+    event.preventDefault()
+    event.stopPropagation()
+    onSelect(block.id)
+    onStartInlineEdit(block.id)
+  }
+
+  const isInteractive = !isPreview && !isInlineEditing
 
   /*
    * A block hidden on the device being previewed still has to appear in the editor.
@@ -74,14 +101,16 @@ function CanvasBlock({ siteMotion, index, sectionId, block, isSelected, isPrevie
     <div
       className={`editor-canvas__block${isSelected ? ' is-selected' : ''}${
         isHiddenOnDevice ? ' is-device-hidden' : ''
-      }`}
+      }${isInlineEditing ? ' is-inline-editing' : ''}`}
       {...getMotionProps(block.animation, siteMotion, device, isPreview)}
       {...dropProps}
       data-block-id={block.id}
       data-selected={isSelected ? 'true' : undefined}
       data-hidden-on-device={isHiddenOnDevice ? 'true' : undefined}
+      data-inline-editing={isInlineEditing ? 'true' : undefined}
       onClick={isInteractive ? handleSelect : undefined}
       onKeyDown={isInteractive ? handleKeyDown : undefined}
+      onDoubleClick={canInlineEdit ? handleDoubleClick : undefined}
       role={isInteractive ? 'button' : undefined}
       tabIndex={isInteractive ? 0 : undefined}
       aria-pressed={isInteractive ? isSelected : undefined}
@@ -100,7 +129,29 @@ function CanvasBlock({ siteMotion, index, sectionId, block, isSelected, isPrevie
           {t('editor.block.hiddenOnDevice', { device: t(`editor.device.${device}`) })}
         </span>
       ) : null}
-      {isHiddenOnDevice ? null : <BlockRenderer block={block} isPreview={isPreview} device={device} />}
+      {isHiddenOnDevice ? null : (
+        <BlockRenderer
+          block={block}
+          isPreview={isPreview}
+          device={device}
+          inlineEdit={
+            canInlineEdit
+              ? {
+                  isEditing: isInlineEditing,
+                  label: t(
+                    isInlineEditing
+                      ? 'editor.inline.editingLabel'
+                      : 'editor.inline.editLabel',
+                    { name: label },
+                  ),
+                  placeholder: t('editor.inline.placeholder'),
+                  onCommit: onCommitInlineEdit,
+                  onCancel: onCancelInlineEdit,
+                }
+              : undefined
+          }
+        />
+      )}
     </div>
     </>
   )
@@ -163,6 +214,10 @@ function SectionRenderer({
   onSelectSection,
   onSelectBlock,
   onInsertBlockAt,
+  editingBlockId,
+  onStartInlineEdit,
+  onCommitInlineEdit,
+  onCancelInlineEdit,
 }) {
   const { t } = useTranslation()
 
@@ -316,6 +371,10 @@ function SectionRenderer({
                 isPreview={isPreview}
                 device={device}
                 onSelect={onSelectBlock}
+                editingBlockId={editingBlockId}
+                onStartInlineEdit={onStartInlineEdit}
+                onCommitInlineEdit={onCommitInlineEdit}
+                onCancelInlineEdit={onCancelInlineEdit}
               />
               {isPreview ? null : (
                 <InsertMarker

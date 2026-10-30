@@ -1847,3 +1847,147 @@
   gap: var(--space-1);
 }
 
+/* ── Inline canvas text editing ───────────────────────────────── */
+
+/*
+ * The edited element keeps the block's real typography, so the user edits the
+ * copy where it will actually appear. Only a focus ring and a caret are added;
+ * no padding or size change, because that would make the text jump while being
+ * edited.
+ */
+[contenteditable].is-inline-editing {
+  outline: 2px dashed var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+  caret-color: var(--color-accent);
+  cursor: text;
+}
+
+[contenteditable].is-inline-editing:focus {
+  outline-style: solid;
+}
+
+[contenteditable].is-inline-editing:empty::before,
+[contenteditable].is-inline-editing:has(> br:only-child)::before {
+  content: attr(data-placeholder);
+  color: var(--color-text-soft);
+  pointer-events: none;
+}
+
+.editor-canvas__block.is-inline-editing {
+  z-index: 2;
+}
+
+/* ── Page texts panel ─────────────────────────────────────────── */
+
+.editor-texts__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.editor-texts__group + .editor-texts__group {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.editor-texts__group-title {
+  margin: 0;
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text-soft);
+}
+
+.editor-texts__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.editor-texts__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.editor-texts__label {
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text-soft);
+}
+
+.editor-texts__input {
+  min-height: 0;
+  resize: vertical;
+}
+
+/* ── Find and replace panel ───────────────────────────────────── */
+
+.editor-find-replace__scope {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.editor-find-replace__scope legend {
+  padding: 0 var(--space-1);
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text-soft);
+}
+
+/* ── Checkboxes and radios in editor panels ───────────────────── */
+
+.editor-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.editor-checkbox input {
+  flex-shrink: 0;
+  margin-top: 2px;
+  accent-color: var(--color-accent);
+}
+
+/* ── Apply typography to same-type blocks ─────────────────────── */
+
+.editor-apply-typography {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+}
+
+.editor-apply-typography legend {
+  padding: 0 var(--space-1);
+  font-size: var(--text-meta);
+  font-weight: 600;
+  color: var(--color-text-soft);
+}
+
+.editor-apply-typography__actions {
+  margin-top: var(--space-1);
+}
+
+.editor-apply-typography__actions .btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+
