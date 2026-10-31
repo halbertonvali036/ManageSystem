@@ -172,8 +172,9 @@ router basename and asset-path changes.
 The static frontend can be deployed for review. A functioning public service
 still requires real authentication, registration, project persistence and the
 other backend integrations listed above. `/admin/login` is an unlinked internal
-entry; its prefilled demo account exists only in development. Public navigation
-never exposes Admin or a role selector.
+entry for platform administrators; it has no prefilled credentials. Demo auth
+has been removed entirely — sign-in and registration are backend-only. Public
+navigation never exposes Admin or a role selector.
 
 ## Frontend smoke checks
 

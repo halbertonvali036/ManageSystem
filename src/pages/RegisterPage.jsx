@@ -13,7 +13,7 @@ import {
   UserPlus,
 } from 'lucide-react'
 import authService from '@/services/authService'
-import { BackendNotConnectedError } from '@/services/httpClient'
+import { BackendNotConnectedError, getRequestErrorMessage } from '@/services/httpClient'
 import ExternalAuthPanel from '@/components/auth/ExternalAuthPanel'
 import useExternalAuth from '@/hooks/useExternalAuth'
 import useTranslation from '@/hooks/useTranslation'
@@ -39,6 +39,12 @@ const INITIAL_VALUES = {
 
 const FIELD_ORDER = ['firstName', 'lastName', 'email', 'password', 'confirmPassword']
 const DETAIL_FIELD_ORDER = ['firstName', 'lastName', 'email']
+const API_FIELD_TO_FORM_FIELD = {
+  name: 'firstName',
+  surname: 'lastName',
+  email: 'email',
+  password: 'password',
+}
 
 function VerifyEmailView({ email, onResend, isResending, resendError }) {
   const { t } = useTranslation()
@@ -101,7 +107,7 @@ function VerifyEmailView({ email, onResend, isResending, resendError }) {
   )
 }
 
-function AccountCreatedView() {
+function AccountCreatedView({ message }) {
   const { t } = useTranslation()
 
   return (
@@ -119,7 +125,7 @@ function AccountCreatedView() {
           <Check size={22} />
         </span>
         <h3 className="auth-state__title">{t('auth.register.createdHeading')}</h3>
-        <p className="auth-state__text">{t('auth.register.createdText')}</p>
+        <p className="auth-state__text">{message || t('auth.register.createdText')}</p>
         <Link to="/login" className="btn btn--primary auth-cta">
           <LogIn size={16} className="auth-cta__icon" aria-hidden="true" />
           {t('auth.register.createdCta')}
@@ -137,6 +143,7 @@ function RegisterPage() {
   const [errors, setErrors] = useState({})
   const [formError, setFormError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isResending, setIsResending] = useState(false)
@@ -200,6 +207,72 @@ function RegisterPage() {
     if (firstInvalid) focusField(firstInvalid)
   }
 
+  const focusAfterRender = (name) => {
+    if (typeof window === 'undefined' || typeof window.requestAnimationFrame !== 'function') {
+      return
+    }
+    window.requestAnimationFrame(() => focusField(name))
+  }
+
+  /**
+   * Maps the backend's validation envelope onto the form.
+   *
+   * The register endpoint returns `{ message, errors: { field: [text] } }` for
+   * invalid input. Those field messages are shown on the matching inputs; the
+   * form only falls back to a localised summary when the backend gives no
+   * field-level detail. No raw response or stack trace is rendered.
+   */
+  const handleRegistrationError = (error) => {
+    if (error instanceof BackendNotConnectedError) {
+      setFormError(t('audit.registrationUnavailable'))
+      return
+    }
+
+    const fieldErrors = {}
+    const backendErrors = error?.data?.errors
+    if (backendErrors && typeof backendErrors === 'object') {
+      Object.entries(backendErrors).forEach(([apiField, messages]) => {
+        const formField = API_FIELD_TO_FORM_FIELD[apiField]
+        const message = Array.isArray(messages) ? messages[0] : messages
+        if (formField && typeof message === 'string' && message.trim()) {
+          fieldErrors[formField] = message.trim()
+        }
+      })
+    }
+
+    const requestMessage = getRequestErrorMessage(error)
+    const emailMessages = error?.data?.errors?.email
+    const duplicateText = [
+      error?.message,
+      error?.data?.message,
+      ...(Array.isArray(emailMessages) ? emailMessages : [emailMessages]),
+    ].filter((value) => typeof value === 'string').join(' ')
+    const isDuplicateEmail = error?.status === 409 ||
+      /already|in use|taken|registered|duplicate|\bexists\b|mövcud|qeydiyyatdan/i.test(duplicateText)
+
+    if (isDuplicateEmail) {
+      const duplicateMessage = fieldErrors.email ||
+        (requestMessage && !/^(validation failed|conflict|bad request)\.?$/i.test(requestMessage.trim())
+          ? requestMessage
+          : t('auth.register.emailTaken'))
+      fieldErrors.email = duplicateMessage
+      setFormError(duplicateMessage)
+    } else if (Object.keys(fieldErrors).length) {
+      setFormError(t('auth.register.validationFailed'))
+    } else {
+      setFormError(requestMessage || t('auth.register.failed'))
+    }
+
+    if (Object.keys(fieldErrors).length) {
+      setErrors((current) => ({ ...current, ...fieldErrors }))
+      const firstInvalid = FIELD_ORDER.find((name) => fieldErrors[name])
+      if (firstInvalid) {
+        setStep(DETAIL_FIELD_ORDER.includes(firstInvalid) ? 1 : 2)
+        focusAfterRender(firstInvalid)
+      }
+    }
+  }
+
   const handleContinue = (event) => {
     event.preventDefault()
     if (isSubmitting) return
@@ -241,23 +314,26 @@ function RegisterPage() {
     setFormError('')
     try {
       // No role is sent: the backend decides what the account is. Public
-      // registration can never request an Admin account.
+      // registration can never request an Admin account. The form's
+      // first/last name fields map to the API's `name`/`surname` keys.
       const response = await authService.register({
-        firstName: values.firstName.trim(),
-        lastName: values.lastName.trim(),
+        name: values.firstName.trim(),
+        surname: values.lastName.trim(),
         email: values.email.trim(),
         password: values.password,
       })
       // Post-registration flows are driven strictly by the backend response.
-      // Without a real response these states stay unreachable and no fake
-      // success, email, or redirect is simulated.
+      // The register endpoint returns a message, not a session or a
+      // verification flag, so only show a verification view when the backend
+      // explicitly asks for one. Otherwise show the backend's message.
+      setSuccessMessage(typeof response?.message === 'string' ? response.message.trim() : '')
       if (response?.requiresVerification) {
         setStatus('verify-email')
       } else {
         setStatus('created')
       }
     } catch (error) {
-      setFormError(error instanceof BackendNotConnectedError ? t('audit.registrationUnavailable') : t('auth.errors.signInFailed'))
+      handleRegistrationError(error)
     } finally {
       setIsSubmitting(false)
     }
@@ -271,7 +347,7 @@ function RegisterPage() {
     try {
       await authService.resendVerification(values.email.trim())
     } catch (error) {
-      setResendError(error.message || t('auth.register.resendFailed'))
+      setResendError(getRequestErrorMessage(error) || t('auth.register.resendFailed'))
     } finally {
       setIsResending(false)
     }
@@ -347,7 +423,7 @@ function RegisterPage() {
   }
 
   if (status === 'created') {
-    return <AccountCreatedView />
+    return <AccountCreatedView message={successMessage} />
   }
 
   const handleGoogleSignUp = () => {

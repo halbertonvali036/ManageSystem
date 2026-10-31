@@ -51,9 +51,9 @@ No backend or publishing implementation was added.
   from the error boundary recovers the destination without remounting healthy
   routes. Technical error details remain development-only.
 - Reading a saved auth session safely handles unavailable browser storage.
-  Demo login still works in development; production rejects demo credentials
-  and saved demo tokens. `/admin/login` stays unlinked. Internal `/admin` and
-  `/admin/users` routes were exercised as Admin.
+  Sign-in and registration are backend-only; demo credentials and saved demo
+  tokens are no longer accepted anywhere. `/admin/login` stays unlinked. Internal
+  `/admin` and `/admin/users` routes were exercised as Admin.
 - Azerbaijani is the first-load default. Actual language/theme switch buttons
   were exercised and their English/light preferences verified after reload.
   Theme attributes initialize before React; the saved light theme now also

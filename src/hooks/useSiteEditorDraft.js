@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react'
-import { rememberDemoDraft } from '@/services/demoSession'
 import siteEditorService from '@/services/siteEditorService'
 import { BackendNotConnectedError } from '@/services/httpClient'
 import { createLocalDraftDocument } from '@/models/siteEditor'
@@ -58,9 +57,6 @@ export default function useSiteEditorDraft(siteId, seed) {
       .finally(() => { if (active) setDraftLoading(false) })
     return () => { active = false }
   }, [siteId])
-  useEffect(() => {
-    if (!draftLoading && !draftError) rememberDemoDraft(siteId, document)
-  }, [siteId, document, draftLoading, draftError])
 
   /** Every local edit marks the document as unsaved. */
   const applyEdit = useCallback((updater) => {

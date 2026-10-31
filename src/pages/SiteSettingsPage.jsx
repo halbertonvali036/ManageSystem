@@ -1,4 +1,3 @@
-import { getDemoSession, isDemoSession } from '@/services/demoSession'
 import '@/styles/site-settings.css'
 import { ArrowLeft, Palette } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
@@ -65,7 +64,7 @@ function SiteSettingsPage() {
   const { t } = useTranslation()
 
   const [settings, setSettings] = useState(() =>
-    getDemoSession()?.settings[siteId] ?? createLocalSiteSettings({ id: siteId, name: getDemoSession()?.sites.find(site => site.id === siteId)?.name ?? '', status: 'draft' }),
+    createLocalSiteSettings({ id: siteId, name: '', status: 'draft' }),
   )
   const [isLoading, setIsLoading] = useState(() => siteSettingsService.isBackendConnected())
   const [hasChanges, setHasChanges] = useState(false)
@@ -73,10 +72,6 @@ function SiteSettingsPage() {
   const [activeSection, setActiveSection] = useState(SECTIONS[0].id)
   const [mediaField, setMediaField] = useState(null)
 
-  useEffect(() => {
-    const demo = getDemoSession()
-    if (demo?.sites.some(site => site.id === siteId)) demo.settings[siteId] = settings
-  }, [siteId, settings])
   const isBackendConnected = siteSettingsService.isBackendConnected()
 
   /* ---------------------------------------------------------------- *
@@ -125,11 +120,11 @@ function SiteSettingsPage() {
    * just chosen and blank the preview.
    */
   useEffect(() => {
-    if (!isDemoSession()) revokeMediaUrlsExcept(listSettingsMediaIdsInUse(settings))
+    revokeMediaUrlsExcept(listSettingsMediaIdsInUse(settings))
   }, [settings])
 
   // Nothing can keep an Object URL alive past this page.
-  useEffect(() => () => { if (!isDemoSession()) revokeAllMediaUrls() }, [])
+  useEffect(() => () => revokeAllMediaUrls(), [])
 
   /* ---------------------------------------------------------------- *
    * Editing

@@ -1,4 +1,3 @@
-import { resetDemoSession } from '@/services/demoSession'
 import config from '@/config'
 import { isKnownRole } from '@/utils/roles'
 import httpClient, { BackendNotConnectedError, RequestError } from '@/services/httpClient'
@@ -13,52 +12,8 @@ import {
   OAUTH_OUTCOME,
 } from '@/models/externalAuth'
 
-const MOCK_LOGIN_DELAY_MS = 600
 const SESSION_STORAGE_KEY = 'managesystem-auth-session'
 const AUTH_PATH = '/auth'
-
-/*
- * Temporary demo sign-in for frontend testing on a deployed build, until the
- * auth backend exists.
- *
- * It is compiled in only when `VITE_ENABLE_DEMO_AUTH === 'true'`. With the flag
- * false or missing — the default in `.env.example` — this list is empty, the
- * demo branch below never runs, and sign-in behaves exactly as before: real
- * backend, or BackendNotConnectedError. Nothing here is real authentication:
- * the backend remains the only authority once it is connected.
- *
- * The credentials are never displayed on a public screen: the landing page,
- * the public sign-in and registration show no credentials and create no role.
- * Only /admin/login reads from this list, and it picks the admin entry alone.
- *
- * `member@demo.com` carries the plain `user` role and `admin001@gmail.com` the
- * `admin` role — the only two roles this product defines — so the existing
- * route guards keep separating the two portals unchanged. The password is
- * compared in memory and never written to storage; only the resulting
- * `{ token, user }` session is stored, exactly as a backend session would be.
- */
-export const isDemoAuthEnabled = import.meta.env.VITE_ENABLE_DEMO_AUTH === 'true'
-
-export const DEMO_ACCOUNTS = Object.freeze(isDemoAuthEnabled ? [
-  {
-    id: 'demo-member',
-    name: 'Demo Member',
-    email: 'member@demo.com',
-    password: 'member123',
-    role: 'user',
-  },
-  {
-    id: 'demo-admin',
-    name: 'System Admin',
-    email: 'admin001@gmail.com',
-    password: 'holb1234',
-    role: 'admin',
-  },
-] : [])
-
-const MOCK_TOKEN = 'mock-jwt-token'
-
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const normalizeEmail = (email) => email.trim().toLowerCase()
 
@@ -69,8 +24,7 @@ const readStoredSession = () => {
       localStorage.getItem(SESSION_STORAGE_KEY)
     if (!raw) return null
     const session = JSON.parse(raw)
-    if (!session?.token || !isKnownRole(session?.user?.role) ||
-      (!isDemoAuthEnabled && session.token === MOCK_TOKEN)) {
+    if (!session?.token || !isKnownRole(session?.user?.role)) {
       clearStoredSession()
       return null
     }
@@ -81,7 +35,6 @@ const readStoredSession = () => {
 }
 
 const clearStoredSession = () => {
-  resetDemoSession()
   sessionStorage.removeItem(SESSION_STORAGE_KEY)
   localStorage.removeItem(SESSION_STORAGE_KEY)
 }
@@ -112,12 +65,21 @@ const resetPassword = async (token, newPassword) => {
   })
 }
 
-// Registration stays unavailable until the backend contract and role policy
-// are defined. Keeping this entry point here avoids reporting a false success.
-const register = async (_payload) => {
-  throw new BackendNotConnectedError(
-    'Account creation is unavailable until registration is configured.',
+// Registration is handled entirely by the backend. No role is sent, so a
+// public visitor can only ever create the account type the server provisions.
+// The backend contract uses `name` and `surname`; the form's first/last name
+// fields are mapped to those keys by the caller.
+const register = async (payload) => {
+  ensureBackendConnection(
+    'Account creation is unavailable until the backend is connected.',
   )
+  const response = await httpClient.post(`${AUTH_PATH}/register`, {
+    name: payload.name?.trim(),
+    surname: payload.surname?.trim(),
+    email: normalizeEmail(payload.email),
+    password: payload.password,
+  })
+  return response?.data ?? response
 }
 
 // Resending a verification email is frontend-ready only. Without a connected
@@ -130,40 +92,14 @@ const resendVerification = async (email) => {
 }
 
 const login = async (credentials, { remember = false, restrictedRole = null } = {}) => {
-  let session
-
-  // Temporary demo sign-in. Compiled in only when VITE_ENABLE_DEMO_AUTH is
-  // 'true'; with the flag false or missing this branch never runs and the
-  // flow below is the original one: real backend, or BackendNotConnectedError.
-  // The password is compared here in memory and never persisted anywhere.
-  if (isDemoAuthEnabled) {
-    const demoAccount = DEMO_ACCOUNTS.find(
-      (item) => item.email === normalizeEmail(credentials.email),
-    )
-    await delay(MOCK_LOGIN_DELAY_MS)
-    if (demoAccount && credentials.password === demoAccount.password) {
-      session = {
-        token: MOCK_TOKEN,
-        user: {
-          id: demoAccount.id, name: demoAccount.name,
-          email: demoAccount.email, role: demoAccount.role,
-        },
-      }
-    }
+  if (!config.api.baseUrl) {
+    throw new BackendNotConnectedError('Sign-in requires a connected authentication backend.')
   }
 
-  if (!session) {
-    if (config.api.baseUrl) {
-      const response = await httpClient.post(`${AUTH_PATH}/login`, {
-        email: normalizeEmail(credentials.email), password: credentials.password,
-      })
-      session = response?.data ?? response
-    } else if (isDemoAuthEnabled) {
-      throw new RequestError('Invalid email or password.', { code: 'INVALID_CREDENTIALS' })
-    } else {
-      throw new BackendNotConnectedError('Sign-in requires a connected authentication backend.')
-    }
-  }
+  const response = await httpClient.post(`${AUTH_PATH}/login`, {
+    email: normalizeEmail(credentials.email), password: credentials.password,
+  })
+  const session = response?.data ?? response
 
   if (!session?.token || !isKnownRole(session?.user?.role) ||
     (restrictedRole && session.user.role !== restrictedRole)) {

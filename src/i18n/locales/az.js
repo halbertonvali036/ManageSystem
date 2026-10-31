@@ -1,4 +1,4 @@
-import { azRecovery, demoNotices } from '@/i18n/recoveryLocales'
+import { azRecovery } from '@/i18n/recoveryLocales'
 import { azAdmin } from '@/i18n/adminLocales'
 import { azAccountPolish } from '@/i18n/accountPolishLocales'
 import { azAudit } from '@/i18n/auditLocales'
@@ -14,7 +14,6 @@ import { azForms } from '@/i18n/formLocales'
 
 const az = {
   recovery: azRecovery,
-  demo: { notice: demoNotices.az },
   landingHero: {
     badge: 'AI ilə hazırlanır',
     titleLine1: 'Növ, hər bir fikir',
@@ -355,6 +354,9 @@ language: {
       next: 'Davam et',
       submit: 'Hesab yarat',
       submitting: 'Hesab yaradılır…',
+      validationFailed: 'Zəhmət olmasa işarələnmiş xanaları düzəldin.',
+      emailTaken: 'Bu e-poçt ilə hesab artıq mövcuddur.',
+      failed: 'Qeydiyyat alınmadı. Yenidən cəhd edin.',
       hasAccount: 'Artıq hesabınız var?',
       signIn: 'Daxil ol',
       verifyEyebrow: 'Son addım',

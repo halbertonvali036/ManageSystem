@@ -24,15 +24,15 @@ import { BackendNotConnectedError } from '@/services/httpClient'
  * form serves every public account once the backend owns sign-in. There is no
  * account role selector here, and no demo credential on screen.
  *
- * `restrictedRole` and `initialCredentials` exist only for the unlisted
- * /admin/login development entry point, which stays separate from public auth.
+ * `restrictedRole` exists only for the unlisted /admin/login entry point,
+ * which stays separate from public auth.
  */
-function LoginPage({ restrictedRole = null, initialCredentials = null }) {
+function LoginPage({ restrictedRole = null }) {
   const isAdminEntry = restrictedRole === ROLES.ADMIN
   const { t } = useTranslation()
 
-  const [email, setEmail] = useState(initialCredentials?.email ?? '')
-  const [password, setPassword] = useState(initialCredentials?.password ?? '')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [errors, setErrors] = useState({})

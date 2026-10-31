@@ -18,8 +18,3 @@ export const azRecovery = {
   home: 'İş sahəsinə qayıt',
   loadDraftFailed: 'Qaralama yüklənmədi. Redaktədən əvvəl yenidən cəhd edin.',
 }
-
-export const demoNotices = {
-  az: 'Demo önbaxış · Dəyişikliklər səhifə yenilənənə və ya hesabdan çıxana qədər yaddaşda qalır. Saxlama, yayım, ödəniş və AI üçün qoşulmuş xidmətlər tələb olunur.',
-  en: 'Demo preview · Changes stay in memory until refresh or sign-out. Saving, publishing, payments and AI require connected services.',
-}

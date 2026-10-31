@@ -1,4 +1,3 @@
-import DemoNotice from '@/components/common/DemoNotice'
 import { Outlet } from 'react-router-dom'
 
 /**
@@ -12,7 +11,6 @@ import { Outlet } from 'react-router-dom'
 function SiteEditorLayout() {
   return (
     <main className="editor-shell">
-      <DemoNotice />
       <Outlet />
     </main>
   )

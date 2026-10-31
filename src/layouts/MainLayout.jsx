@@ -1,4 +1,3 @@
-import DemoNotice from '@/components/common/DemoNotice'
 import { useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import AmbientParticles from '@/components/common/AmbientParticles'
@@ -28,7 +27,6 @@ function MainLayout() {
             <AmbientParticles variant={ambientVariant} intensity="low" />
             <div className="app-container">
               <PageHeader />
-              <DemoNotice />
               <Outlet />
             </div>
           </main>

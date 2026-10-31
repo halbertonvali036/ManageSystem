@@ -13,7 +13,8 @@ const NO_SITES = Object.freeze([])
  *
  * Search and status filtering happen on already-loaded data. Without a backend
  * the list is empty and the honest empty state renders — no placeholder site is
- * invented. Demo mode serves the same contract through `siteService`.
+ * invented. `siteService` always reads from the backend and renders the honest
+ * empty state when no backend is connected.
  */
 function useSites({ enabled = true } = {}) {
   const [reloadToken, setReloadToken] = useState(0)

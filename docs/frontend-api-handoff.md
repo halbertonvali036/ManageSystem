@@ -18,15 +18,19 @@ components; every service reads `config.api.baseUrl`.
   `Content-Type: application/json`. It attaches **no bearer token** and does
   **not** set `credentials: 'include'`. The backend team and frontend must agree
   on one transport before real accounts are enabled.
-- Sign-in is mock/demo **only in Vite dev mode** (`import.meta.env.DEV`). A
-  production build has an empty demo account list, refuses any request to
-  `authService.login` without a connected backend, and discards saved sessions
-  that carry the demo token. **Remove the demo accounts when real auth lands.**
-- Registration (`authService.register`) always throws
-  `BackendNotConnectedError` until a registration contract is agreed.
+- Sign-in and registration are **backend-only**. Demo auth has been removed: the
+  frontend ships no demo accounts, mock tokens or fallback sessions, and refuses
+  to sign in without a connected backend. `VITE_ENABLE_DEMO_AUTH` is kept only
+  as a disabled configuration flag and has no effect.
+- Registration (`authService.register`) posts to `POST /auth/register` with
+  `{ name, surname, email, password }` and never sends a role. The endpoint
+  returns `200 { message }`; the UI shows that message rather than claiming a
+  verification email unless the backend asks for verification explicitly.
 - Admin is a separate internal role reachable only through the unlinked
   `/admin/login` route. It is never linked from the landing page, public sign-in
-  or registration, and public registration cannot create an admin account.
+  or registration, and public registration cannot create an admin account. The
+  admin role must come from the backend session (`user.role === 'admin'`); the
+  frontend never grants admin based on an email address.
 - **Client-side route guards and role checks are UI isolation, not security.**
   The backend must enforce every authorization rule. See
   `src/utils/roles.js` and `src/models/workspacePermission.js`.

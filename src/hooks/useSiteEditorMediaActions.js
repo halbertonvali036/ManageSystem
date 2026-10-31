@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react'
-import { isDemoSession } from '@/services/demoSession'
 import {
   listMediaIdsInUse,
   insertBlock,
@@ -128,7 +127,7 @@ export default function useSiteEditorMediaActions({
    * safe: the copy keeps the picture alive.
    */
   useEffect(() => {
-    if (draftLoading || isDemoSession()) return undefined
+    if (draftLoading) return undefined
     // Walking the whole document for media ids on every keystroke was wasted
     // work: nothing is released until editing pauses.
     const timer = window.setTimeout(() => revokeMediaUrlsExcept(listMediaIdsInUse(document)), 300)
@@ -136,7 +135,7 @@ export default function useSiteEditorMediaActions({
   }, [document, draftLoading])
 
   // Nothing can keep an Object URL alive past the editor itself.
-  useEffect(() => () => { if (!isDemoSession()) revokeAllMediaUrls() }, [])
+  useEffect(() => () => revokeAllMediaUrls(), [])
 
   return {
     isMediaOpen,
