@@ -52,17 +52,19 @@ const forgotPassword = async (email) => {
   ensureBackendConnection(
     'Password recovery is unavailable until the backend is connected.',
   )
-  await httpClient.post(`${AUTH_PATH}/forgot-password`, { email })
+  const response = await httpClient.post(`${AUTH_PATH}/forgot-password`, { email })
+  return response?.data ?? response
 }
 
 const resetPassword = async (token, newPassword) => {
   ensureBackendConnection(
     'Password reset is unavailable until the backend is connected.',
   )
-  await httpClient.post(`${AUTH_PATH}/reset-password`, {
+  const response = await httpClient.post(`${AUTH_PATH}/reset-password`, {
     token,
     newPassword,
   })
+  return response?.data ?? response
 }
 
 // Registration is handled entirely by the backend. No role is sent, so a
@@ -82,8 +84,19 @@ const register = async (payload) => {
   return response?.data ?? response
 }
 
+// Email verification is handled entirely by the backend. The frontend only
+// forwards the token from the emailed link; it never decides whether the token
+// is valid or marks an account as verified on its own.
+const verifyEmail = async (token) => {
+  ensureBackendConnection(
+    'Email verification is unavailable until the backend is connected.',
+  )
+  await httpClient.post(`${AUTH_PATH}/verify-email`, { token })
+}
+
 // Resending a verification email is frontend-ready only. Without a connected
-// backend it must never pretend the email was sent.
+// backend it must never pretend the email was sent. The backend answers 200
+// whether or not an account exists, so the UI must keep its response neutral.
 const resendVerification = async (email) => {
   ensureBackendConnection(
     'The verification email could not be sent because the backend is unavailable.',
@@ -225,6 +238,7 @@ const authService = {
   forgotPassword,
   resetPassword,
   register,
+  verifyEmail,
   resendVerification,
   getStoredSession: readStoredSession,
   clearStoredSession,

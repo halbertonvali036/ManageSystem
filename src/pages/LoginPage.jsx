@@ -6,15 +6,56 @@ import {
   EyeOff,
   KeyRound,
   LogIn,
+  Mail,
 } from 'lucide-react'
 import useAuth from '@/hooks/useAuth'
 import useExternalAuth from '@/hooks/useExternalAuth'
 import useTranslation from '@/hooks/useTranslation'
+import useVerificationResend from '@/hooks/useVerificationResend'
 import ExternalAuthPanel from '@/components/auth/ExternalAuthPanel'
 import { EXTERNAL_AUTH_INTENT } from '@/models/externalAuth'
 import { getRoleDashboardPath, ROLES, ROLE_NAMES } from '@/utils/roles'
 import { isValidEmail } from '@/utils/validation'
 import { BackendNotConnectedError } from '@/services/httpClient'
+
+const EMAIL_NOT_VERIFIED_PATTERN =
+  /(?:email|e-?poçt|address|ünvan).{0,80}(?:verif(?:y|ication)|təsdiq)|(?:verif(?:y|ication)|təsdiq).{0,80}(?:email|e-?poçt|address|ünvan)|not[\s_-]*verified|unverified|təsdiqlənmə/i
+
+/**
+ * A 403 only means "email not verified" when the backend says so. It must never
+ * be collapsed into the 401 invalid-credentials message: the two need different
+ * recovery actions.
+ */
+const isEmailNotVerifiedError = (error) => {
+  if (!error || Number(error.status) !== 403) {
+    return false
+  }
+
+  const code = typeof error.code === 'string' ? error.code : ''
+  if (/EMAIL[_\s-]*(?:NOT[_\s-]*VERIFIED|UNVERIFIED)/i.test(code)) {
+    return true
+  }
+
+  const backendErrors = error.data?.errors
+  const fieldMessages =
+    backendErrors && typeof backendErrors === 'object'
+      ? Object.values(backendErrors)
+          .flat()
+          .filter((value) => typeof value === 'string')
+      : []
+
+  const message = [
+    error.message,
+    error.data?.message,
+    error.data?.error,
+    error.data?.code,
+    ...fieldMessages,
+  ]
+    .filter((value) => typeof value === 'string')
+    .join(' ')
+
+  return EMAIL_NOT_VERIFIED_PATTERN.test(message)
+}
 
 /**
  * Public sign-in: email and password only.
@@ -37,10 +78,12 @@ function LoginPage({ restrictedRole = null }) {
   const [showPassword, setShowPassword] = useState(false)
   const [errors, setErrors] = useState({})
   const [formError, setFormError] = useState('')
+  const [emailNotVerified, setEmailNotVerified] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   const { login } = useAuth()
   const externalAuth = useExternalAuth()
+  const verificationResend = useVerificationResend()
   const navigate = useNavigate()
 
   // Google sign-in is offered on the public sign-in only. Admin access stays
@@ -84,16 +127,22 @@ function LoginPage({ restrictedRole = null }) {
 
     setIsLoading(true)
     setFormError('')
+    setEmailNotVerified(false)
+    verificationResend.resetStatus()
     try {
       // The session — and therefore the role — comes back from authentication.
       // Routing always follows that role, never a role chosen on this screen.
       const session = await login({ email: email.trim(), password }, { remember, restrictedRole })
       navigate(getRoleDashboardPath(session.user.role), { replace: true })
     } catch (error) {
-      setFormError(t(error instanceof BackendNotConnectedError ? 'audit.authUnavailable'
-        : error.code === 'ROLE_NOT_ALLOWED' ? 'audit.adminOnly'
-        : error.code === 'INVALID_CREDENTIALS' || error.status === 401 ? 'audit.invalidCredentials'
-        : 'auth.errors.signInFailed'))
+      if (isEmailNotVerifiedError(error)) {
+        setEmailNotVerified(true)
+      } else {
+        setFormError(t(error instanceof BackendNotConnectedError ? 'audit.authUnavailable'
+          : error.code === 'ROLE_NOT_ALLOWED' ? 'audit.adminOnly'
+          : error.status === 401 ? 'audit.invalidCredentials'
+          : 'auth.errors.signInFailed'))
+      }
     } finally {
       setIsLoading(false)
     }
@@ -131,6 +180,43 @@ function LoginPage({ restrictedRole = null }) {
       ) : null}
 
       <form className="form" onSubmit={handleSubmit} noValidate>
+        {emailNotVerified ? (
+          <div className="auth-notice anim-fade-up" role="alert">
+            <div className="auth-notice__head">
+              <Mail size={16} aria-hidden="true" />
+              <span>{t('auth.login.emailNotVerified')}</span>
+            </div>
+            {verificationResend.status === 'sent' ? (
+              <p className="auth-notice__message" role="status">
+                {t('auth.verification.resendSent')}
+              </p>
+            ) : null}
+            {verificationResend.status === 'failed' ? (
+              <p className="form__error">{t('auth.verification.resendFailed')}</p>
+            ) : null}
+            <button
+              type="button"
+              className="btn btn--secondary auth-notice__action"
+              onClick={() => verificationResend.resend(email)}
+              disabled={!verificationResend.canResend}
+            >
+              {verificationResend.isSending ? (
+                <>
+                  <span className="spinner" aria-hidden="true" />
+                  {t('auth.verification.resending')}
+                </>
+              ) : verificationResend.cooldown > 0 ? (
+                t('auth.verification.resendIn', { seconds: verificationResend.cooldown })
+              ) : (
+                <>
+                  <Mail size={16} aria-hidden="true" />
+                  {t('auth.verification.resend')}
+                </>
+              )}
+            </button>
+          </div>
+        ) : null}
+
         {formError ? (
           <div
             className="form__error-area anim-shake"

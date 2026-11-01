@@ -1,10 +1,28 @@
 import useTranslation from '@/hooks/useTranslation'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AlertCircle, ArrowLeft, Mail, Send } from 'lucide-react'
 import authService from '@/services/authService'
-import { BackendNotConnectedError } from '@/services/httpClient'
+import {
+  BackendNotConnectedError,
+  getRequestErrorMessage,
+  HTTP_STATUS,
+} from '@/services/httpClient'
 import { isValidEmail } from '@/utils/validation'
+
+const FORGOT_PASSWORD_COOLDOWN_SECONDS = 60
+
+const getEmailFieldMessage = (error) => {
+  const messages = error?.data?.errors?.email
+  if (!Array.isArray(messages)) {
+    return ''
+  }
+
+  const firstMessage = messages.find(
+    (message) => typeof message === 'string' && message.trim(),
+  )
+  return firstMessage ? firstMessage.trim() : ''
+}
 
 function ForgotPasswordPage() {
   const { t } = useTranslation()
@@ -13,6 +31,19 @@ function ForgotPasswordPage() {
   const [formError, setFormError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [succeeded, setSucceeded] = useState(false)
+  const [cooldown, setCooldown] = useState(0)
+  const cooldownRef = useRef(0)
+  const timerRef = useRef(null)
+  const sendingRef = useRef(false)
+
+  useEffect(
+    () => () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current)
+      }
+    },
+    [],
+  )
 
   const values = { email }
 
@@ -29,36 +60,78 @@ function ForgotPasswordPage() {
     return nextErrors
   }
 
-  const handleBlur = () => {
-    setErrors(validate())
+  const startCooldown = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current)
+    }
+    cooldownRef.current = FORGOT_PASSWORD_COOLDOWN_SECONDS
+    setCooldown(FORGOT_PASSWORD_COOLDOWN_SECONDS)
+    timerRef.current = setInterval(() => {
+      cooldownRef.current = Math.max(0, cooldownRef.current - 1)
+      setCooldown(cooldownRef.current)
+      if (cooldownRef.current === 0 && timerRef.current) {
+        clearInterval(timerRef.current)
+        timerRef.current = null
+      }
+    }, 1000)
   }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
+  const sendRecoveryEmail = async (address) => {
+    if (sendingRef.current || cooldownRef.current > 0) {
+      return
+    }
 
-    const nextErrors = validate()
+    const nextErrors = validate({ email: address })
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) {
       return
     }
 
+    sendingRef.current = true
     setIsLoading(true)
     setFormError('')
     try {
-      await authService.forgotPassword(email.trim())
+      await authService.forgotPassword(address.trim())
       setSucceeded(true)
+      startCooldown()
     } catch (error) {
       if (error instanceof BackendNotConnectedError) {
-        setFormError('recovery.recoveryUnavailable')
+        setFormError(t('recovery.recoveryUnavailable'))
+      } else if (error?.status === HTTP_STATUS.UNPROCESSABLE_ENTITY) {
+        const fieldMessage = getEmailFieldMessage(error)
+        if (fieldMessage) {
+          setErrors((prev) => ({ ...prev, emailMessage: fieldMessage }))
+        } else {
+          setFormError(
+            getRequestErrorMessage(error) || t('recovery.recoveryFailed'),
+          )
+        }
       } else {
-        setFormError('recovery.recoveryFailed')
+        setFormError(
+          getRequestErrorMessage(error) || t('recovery.recoveryFailed'),
+        )
       }
     } finally {
+      sendingRef.current = false
       setIsLoading(false)
     }
   }
 
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    await sendRecoveryEmail(email)
+  }
+
+  const handleBlur = () => {
+    setErrors(validate())
+  }
+
   if (succeeded) {
+    const resendLabel =
+      cooldown > 0
+        ? t('auth.forgot.resendIn', { seconds: cooldown })
+        : t('auth.forgot.resend')
+
     return (
       <div className="auth-card anim-scale-in">
         <div className="auth-card__head">
@@ -82,14 +155,47 @@ function ForgotPasswordPage() {
             {t('recovery.inbox')}
           </h3>
           <p className="auth-state__text">{t('auth.forgot.sent')}</p>
+
+          {formError ? (
+            <div
+              className="form__error-area anim-shake"
+              key={formError}
+              role="alert"
+            >
+              <AlertCircle size={16} aria-hidden="true" />
+              <span>{formError}</span>
+            </div>
+          ) : null}
+
           <Link to="/login" className="btn btn--primary auth-cta">
             <ArrowLeft size={16} className="auth-cta__icon" aria-hidden="true" />
             {t('recovery.back')}
           </Link>
+
+          <button
+            type="button"
+            className="btn btn--secondary"
+            onClick={() => sendRecoveryEmail(email)}
+            disabled={cooldown > 0 || isLoading}
+          >
+            {isLoading ? (
+              <>
+                <span className="spinner" aria-hidden="true" />
+                {t('auth.forgot.submitting')}
+              </>
+            ) : (
+              <>
+                <Send size={16} aria-hidden="true" />
+                {resendLabel}
+              </>
+            )}
+          </button>
         </div>
       </div>
     )
   }
+
+  const hasEmailError = Boolean(errors.email || errors.emailMessage)
 
   return (
     <div className="auth-card anim-scale-in">
@@ -111,7 +217,7 @@ function ForgotPasswordPage() {
             role="alert"
           >
             <AlertCircle size={16} aria-hidden="true" />
-            <span>{t(formError)}</span>
+            <span>{formError}</span>
           </div>
         ) : null}
 
@@ -121,23 +227,32 @@ function ForgotPasswordPage() {
           </label>
           <input
             id="forgot-email"
-            className={`form__input${errors.email ? ' form__input--error' : ''}`}
+            className={`form__input${hasEmailError ? ' form__input--error' : ''}`}
             type="email"
             name="email"
             autoComplete="email"
             placeholder="you@example.com"
             value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            onChange={(event) => {
+              setEmail(event.target.value)
+              setErrors((prev) =>
+                prev.emailMessage ? { ...prev, emailMessage: '' } : prev,
+              )
+            }}
             onBlur={handleBlur}
             disabled={isLoading}
             autoFocus
-            aria-invalid={Boolean(errors.email)}
-            aria-describedby={errors.email ? 'forgot-email-error' : 'forgot-email-hint'}
+            aria-invalid={hasEmailError}
+            aria-describedby={hasEmailError ? 'forgot-email-error' : 'forgot-email-hint'}
           />
           <p className="form__hint" id="forgot-email-hint">
             {t('recovery.recoveryHint')}
           </p>
-          {errors.email ? <p className="form__error" id="forgot-email-error">{t(errors.email)}</p> : null}
+          {hasEmailError ? (
+            <p className="form__error" id="forgot-email-error">
+              {errors.emailMessage ?? t(errors.email)}
+            </p>
+          ) : null}
         </div>
 
         <button

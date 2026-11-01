@@ -41,6 +41,7 @@ const RegisterPage = lazy(() => import('@/pages/RegisterPage'))
 const SecurityPage = lazy(() => import('@/pages/SecurityPage'))
 const ResetPasswordPage = lazy(() => import('@/pages/ResetPasswordPage'))
 const SessionExpiredPage = lazy(() => import('@/pages/SessionExpiredPage'))
+const VerifyEmailPage = lazy(() => import('@/pages/VerifyEmailPage'))
 const UnauthorizedPage = lazy(() => import('@/pages/UnauthorizedPage'))
 const UsersPage = lazy(() => import('@/pages/UsersPage'))
 
@@ -87,6 +88,12 @@ function AppRoutes() {
             <Route index element={<OAuthCallbackPage />} />
           </Route>
           <Route path="session-expired" element={<SessionExpiredPage />} />
+        </Route>
+
+        {/* Verification links must work whether the visitor is signed in or
+            not, so this page sits outside the PublicRoute redirect guard. */}
+        <Route path="verify-email" element={<AuthLayout />}>
+          <Route index element={<VerifyEmailPage />} />
         </Route>
 
         <Route element={<ProtectedRoute />}>

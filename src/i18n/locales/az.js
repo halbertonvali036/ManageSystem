@@ -309,6 +309,14 @@ language: {
       googleContinue: 'Google ilə davam et',
       googleUnavailable: 'Google ilə daxil olma hələ backend ilə birləşdirilmir.',
     },
+    verification: {
+      resend: 'Təsdiqləmə e-poçtunu yenidən göndər',
+      resending: 'Göndərilir…',
+      resendIn: '{seconds} san sonra yenidən göndər',
+      resendSent:
+        'Əgər bu ünvan üçün hesab varsa, təsdiqləmə e-poçtu göndərildi.',
+      resendFailed: 'Təsdiqləmə e-poçtu göndərilə bilmədi. Yenidən cəhd edin.',
+    },
     errors: {
       firstNameRequired: 'Ad tələb olunur.',
       lastNameRequired: 'Soyad tələb olunur.',
@@ -333,6 +341,28 @@ language: {
       createOne: 'Hesab yaradın',
       adminTitle: 'İdarəetmə üçün giriş',
       adminSubtitle: 'İdarəetmə iş sahəsinə daxil olun.',
+      emailNotVerified:
+        'E-poçt ünvanınız hələ təsdiqlənməyib. Təsdiqləmə e-poçtunu yenidən göndərə bilərsiniz.',
+    },
+    verifyEmail: {
+      eyebrow: 'E-poçt təsdiqi',
+      title: 'E-poçtunuzu təsdiqləyirik',
+      subtitle: 'Təsdiq keçidini yoxlayırıq. Bu, bir neçə saniyə çəkə bilər.',
+      verifyingTitle: 'Təsdiqlənir…',
+      verifyingText: 'E-poçt ünvanınızı təsdiqləyirik. Zəhmət olmasa gözləyin.',
+      successTitle: 'E-poçtunuz təsdiqləndi',
+      successText: 'Hesabınız aktivdir. İndi daxil ola bilərsiniz.',
+      successCta: 'Daxil ol',
+      errorTitle: 'Təsdiq keçidi yanlışdır və ya vaxtı bitib',
+      errorText:
+        'Keçid artıq istifadə edilmiş və ya vaxtı bitmiş ola bilər. Daxil olmağa cəhd edin və ya yeni təsdiq e-poçtu tələb edin.',
+      missingTitle: 'Təsdiq keçidi tapılmadı',
+      missingText:
+        'E-poçtunuzdakı təsdiq keçidini açın və ya aşağıdan yeni təsdiq e-poçtu tələb edin.',
+      signIn: 'Daxil ol',
+      resendHeading: 'Yeni təsdiq e-poçtu tələb edin',
+      unavailable:
+        'E-poçt təsdiqi üçün qoşulmuş xidmət tələb olunur. Yenidən cəhd edin.',
     },
     register: {
       eyebrow: 'Başlanğıc',
@@ -380,7 +410,9 @@ language: {
       subtitle: 'Hesabınızla bağlı e-poçt ünvanını daxil edin.',
       submit: 'Bərpa linki göndər',
       submitting: 'Göndərilir…',
-      sent: 'Əgər bu ünvan qeydiyyatda varsa, bərpa linki göndərildi.',
+      sent: 'Bu ünvanda hesab varsa, şifrə sıfırlama keçidi göndərdik.',
+      resend: 'Yenidən göndər',
+      resendIn: '{seconds} san sonra yenidən göndər',
     },
     reset: {
       eyebrow: 'Yeni şifrə',
@@ -389,6 +421,8 @@ language: {
       submit: 'Şifrəni yenilə',
       submitting: 'Yenilənir…',
       done: 'Şifrəniz yeniləndi. İndi daxil ola bilərsiniz.',
+      passwordShort: 'Şifrə ən azı 8 simvol olmalıdır.',
+      passwordHint: 'Ən azı 8 simvoldan istifadə edin. Əvvəl istifadə etmədiyiniz şifrə seçin.',
     },
     sessionExpired: {
       title: 'Sessiyanız bitdi',

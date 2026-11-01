@@ -17,6 +17,7 @@ import { BackendNotConnectedError, getRequestErrorMessage } from '@/services/htt
 import ExternalAuthPanel from '@/components/auth/ExternalAuthPanel'
 import useExternalAuth from '@/hooks/useExternalAuth'
 import useTranslation from '@/hooks/useTranslation'
+import useVerificationResend from '@/hooks/useVerificationResend'
 import { EXTERNAL_AUTH_INTENT } from '@/models/externalAuth'
 import { isValidEmail } from '@/utils/validation'
 
@@ -46,8 +47,14 @@ const API_FIELD_TO_FORM_FIELD = {
   password: 'password',
 }
 
-function VerifyEmailView({ email, onResend, isResending, resendError }) {
+function VerifyEmailView({ email, onResend, isResending, cooldown, resendStatus }) {
   const { t } = useTranslation()
+
+  const resendLabel = isResending
+    ? t('auth.verification.resending')
+    : cooldown > 0
+      ? t('auth.verification.resendIn', { seconds: cooldown })
+      : t('auth.verification.resend')
 
   return (
     <div className="auth-card anim-scale-in">
@@ -68,10 +75,17 @@ function VerifyEmailView({ email, onResend, isResending, resendError }) {
           {t('auth.register.verifyText', { email })}
         </p>
 
-        {resendError ? (
+        {resendStatus === 'sent' ? (
+          <p className="auth-verify__message" role="status">
+            <MailCheck size={16} aria-hidden="true" />
+            <span>{t('auth.verification.resendSent')}</span>
+          </p>
+        ) : null}
+
+        {resendStatus === 'failed' ? (
           <div className="form__error-area anim-shake" role="alert">
             <AlertCircle size={16} aria-hidden="true" />
-            <span>{resendError}</span>
+            <span>{t('auth.verification.resendFailed')}</span>
           </div>
         ) : null}
 
@@ -80,17 +94,17 @@ function VerifyEmailView({ email, onResend, isResending, resendError }) {
             type="button"
             className="btn btn--secondary"
             onClick={onResend}
-            disabled={isResending}
+            disabled={isResending || cooldown > 0}
           >
             {isResending ? (
               <>
                 <span className="spinner" aria-hidden="true" />
-                {t('auth.register.resending')}
+                {resendLabel}
               </>
             ) : (
               <>
                 <Mail size={16} aria-hidden="true" />
-                {t('auth.register.resend')}
+                {resendLabel}
               </>
             )}
           </button>
@@ -146,9 +160,8 @@ function RegisterPage() {
   const [successMessage, setSuccessMessage] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [isResending, setIsResending] = useState(false)
-  const [resendError, setResendError] = useState('')
   const externalAuth = useExternalAuth()
+  const verificationResend = useVerificationResend()
 
   const validate = (toValidate = values, scope = 'all') => {
     const nextErrors = {}
@@ -339,18 +352,8 @@ function RegisterPage() {
     }
   }
 
-  const handleResend = async () => {
-    if (isResending) return
-
-    setIsResending(true)
-    setResendError('')
-    try {
-      await authService.resendVerification(values.email.trim())
-    } catch (error) {
-      setResendError(getRequestErrorMessage(error) || t('auth.register.resendFailed'))
-    } finally {
-      setIsResending(false)
-    }
+  const handleResend = () => {
+    verificationResend.resend(values.email.trim())
   }
 
   const field = (name, label, options = {}) => {
@@ -416,8 +419,9 @@ function RegisterPage() {
       <VerifyEmailView
         email={values.email.trim()}
         onResend={handleResend}
-        isResending={isResending}
-        resendError={resendError}
+        isResending={verificationResend.isSending}
+        cooldown={verificationResend.cooldown}
+        resendStatus={verificationResend.status}
       />
     )
   }

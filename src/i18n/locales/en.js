@@ -309,6 +309,14 @@ const en = {
       googleUnavailable:
         'Google sign-in is still being connected to the backend.',
     },
+    verification: {
+      resend: 'Resend verification email',
+      resending: 'Sending…',
+      resendIn: 'Resend in {seconds}s',
+      resendSent:
+        'If an account exists for this address, a verification email has been sent.',
+      resendFailed: 'The verification email could not be sent. Please try again.',
+    },
     errors: {
       firstNameRequired: 'First name is required.',
       lastNameRequired: 'Last name is required.',
@@ -333,6 +341,28 @@ const en = {
       createOne: 'Create one',
       adminTitle: 'Administration sign in',
       adminSubtitle: 'Sign in to access the administration workspace.',
+      emailNotVerified:
+        'Your email address is not verified yet. You can resend the verification email below.',
+    },
+    verifyEmail: {
+      eyebrow: 'Email verification',
+      title: 'Verifying your email',
+      subtitle: 'We are checking your verification link. This only takes a moment.',
+      verifyingTitle: 'Verifying…',
+      verifyingText: 'We are confirming your email address. Please wait.',
+      successTitle: 'Your email is verified',
+      successText: 'Your account is active. You can sign in now.',
+      successCta: 'Sign in',
+      errorTitle: 'This verification link is invalid or expired',
+      errorText:
+        'The link may have already been used or may have expired. Try signing in, or request a new verification email below.',
+      missingTitle: 'Verification link missing',
+      missingText:
+        'Open the verification link from your email, or request a new verification email below.',
+      signIn: 'Sign in',
+      resendHeading: 'Request a new verification email',
+      unavailable:
+        'Email verification requires a connected service. Please try again later.',
     },
     register: {
       eyebrow: 'Get started',
@@ -383,7 +413,9 @@ const en = {
       subtitle: 'Enter the email address registered to your account.',
       submit: 'Send reset link',
       submitting: 'Sending…',
-      sent: 'If that address is registered, a reset link has been sent.',
+      sent: 'If an account exists for this address, we sent a password reset link.',
+      resend: 'Send again',
+      resendIn: 'Send again in {seconds}s',
     },
     reset: {
       eyebrow: 'New password',
@@ -392,6 +424,8 @@ const en = {
       submit: 'Update password',
       submitting: 'Updating…',
       done: 'Your password has been updated. You can sign in now.',
+      passwordShort: 'Password must be at least 8 characters.',
+      passwordHint: 'Use at least 8 characters. Choose a password you have not used before.',
     },
     sessionExpired: {
       title: 'Your session has expired',

@@ -1,6 +1,6 @@
 import useTranslation from '@/hooks/useTranslation'
-import { useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   AlertCircle,
   ArrowLeft,
@@ -10,7 +10,34 @@ import {
   KeyRound,
 } from 'lucide-react'
 import authService from '@/services/authService'
-import { BackendNotConnectedError } from '@/services/httpClient'
+import {
+  BackendNotConnectedError,
+  getRequestErrorMessage,
+  HTTP_STATUS,
+} from '@/services/httpClient'
+
+const MIN_RESET_PASSWORD_LENGTH = 8
+
+const isInvalidTokenError = (error) => {
+  if (error?.status === HTTP_STATUS.BAD_REQUEST) {
+    return true
+  }
+
+  const message = typeof error?.message === 'string' ? error.message : ''
+  return /(invalid|expired|used)/i.test(message) && /(token|link)/i.test(message)
+}
+
+const getPasswordFieldMessage = (error) => {
+  const messages = error?.data?.errors?.newPassword
+  if (!Array.isArray(messages)) {
+    return ''
+  }
+
+  const firstMessage = messages.find(
+    (message) => typeof message === 'string' && message.trim(),
+  )
+  return firstMessage ? firstMessage.trim() : ''
+}
 
 function PasswordField({
   id,
@@ -21,9 +48,11 @@ function PasswordField({
   show,
   onToggleShow,
   error,
+  errorMessage,
   disabled,
 }) {
   const { t } = useTranslation()
+  const hasError = Boolean(error || errorMessage)
   return (
     <div className="form__field">
       <label className="form__label" htmlFor={id}>
@@ -32,7 +61,7 @@ function PasswordField({
       <div className="form__input-wrapper">
         <input
           id={id}
-          className={`form__input${error ? ' form__input--error' : ''}`}
+          className={`form__input${hasError ? ' form__input--error' : ''}`}
           type={show ? 'text' : 'password'}
           name={id}
           autoComplete="new-password"
@@ -41,8 +70,8 @@ function PasswordField({
           onChange={onChange}
           onBlur={onBlur}
           disabled={disabled}
-          aria-invalid={Boolean(error)}
-          aria-describedby={error ? `${id}-error` : undefined}
+          aria-invalid={hasError}
+          aria-describedby={hasError ? `${id}-error` : undefined}
         />
         <button
           type="button"
@@ -59,15 +88,25 @@ function PasswordField({
           )}
         </button>
       </div>
-      {error ? <p className="form__error" id={`${id}-error`}>{t(error)}</p> : null}
+      {hasError ? (
+        <p className="form__error" id={`${id}-error`}>
+          {errorMessage ?? t(error)}
+        </p>
+      ) : null}
     </div>
   )
 }
 
 function ResetPasswordPage() {
   const { t } = useTranslation()
-  const [searchParams] = useSearchParams()
-  const token = searchParams.get('token')
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  // Read the token before cleaning the address bar. The state keeps the value
+  // available for the submit request even after the query string is gone.
+  const [token] = useState(
+    () => new URLSearchParams(location.search).get('token') ?? '',
+  )
 
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
@@ -77,8 +116,38 @@ function ResetPasswordPage() {
   })
   const [errors, setErrors] = useState({})
   const [formError, setFormError] = useState('')
+  const [tokenError, setTokenError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [succeeded, setSucceeded] = useState(false)
+
+  // The token must not linger in history or leak through the Referer header.
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    if (!params.has('token')) {
+      return
+    }
+    params.delete('token')
+    const search = params.toString()
+    navigate(
+      {
+        pathname: location.pathname,
+        search: search ? `?${search}` : '',
+        hash: location.hash,
+      },
+      { replace: true },
+    )
+  }, [location.hash, location.pathname, location.search, navigate])
+
+  // Reset links should never expose their token to third-party hosts.
+  useEffect(() => {
+    const meta = document.createElement('meta')
+    meta.setAttribute('name', 'referrer')
+    meta.setAttribute('content', 'no-referrer')
+    document.head.appendChild(meta)
+    return () => {
+      meta.remove()
+    }
+  }, [])
 
   if (!token) {
     return (
@@ -125,8 +194,8 @@ function ResetPasswordPage() {
 
     if (!toValidate.password) {
       nextErrors.password = 'auth.errors.passwordRequired'
-    } else if (toValidate.password.length < 6) {
-      nextErrors.password = 'auth.errors.passwordShort'
+    } else if (toValidate.password.length < MIN_RESET_PASSWORD_LENGTH) {
+      nextErrors.password = 'auth.reset.passwordShort'
     }
 
     if (!toValidate.confirm) {
@@ -157,18 +226,73 @@ function ResetPasswordPage() {
 
     setIsLoading(true)
     setFormError('')
+    setTokenError('')
     try {
       await authService.resetPassword(token, password)
+      // The password is never needed after a successful reset.
+      setPassword('')
+      setConfirm('')
+      setErrors({})
       setSucceeded(true)
     } catch (error) {
       if (error instanceof BackendNotConnectedError) {
-        setFormError('recovery.resetUnavailable')
+        setFormError(t('recovery.resetUnavailable'))
+      } else if (error?.status === HTTP_STATUS.UNPROCESSABLE_ENTITY) {
+        const fieldMessage = getPasswordFieldMessage(error)
+        if (fieldMessage) {
+          setErrors((prev) => ({ ...prev, passwordMessage: fieldMessage }))
+        } else {
+          setFormError(
+            getRequestErrorMessage(error) || t('recovery.resetFailed'),
+          )
+        }
+      } else if (isInvalidTokenError(error)) {
+        setTokenError(
+          getRequestErrorMessage(error) || t('recovery.invalidTokenText'),
+        )
       } else {
-        setFormError('recovery.resetFailed')
+        setFormError(getRequestErrorMessage(error) || t('recovery.resetFailed'))
       }
     } finally {
       setIsLoading(false)
     }
+  }
+
+  if (tokenError) {
+    return (
+      <div className="auth-card anim-scale-in">
+        <div className="auth-card__head">
+          <p className="auth-card__eyebrow anim-fade-up anim-delay-1">{t('auth.forgot.eyebrow')}</p>
+          <h1 className="auth-card__title anim-fade-up anim-delay-1">
+            {t('auth.reset.submit')}
+          </h1>
+          <p className="auth-card__subtitle anim-fade-up anim-delay-2">
+            {t('recovery.invalidToken')}
+          </p>
+        </div>
+
+        <div className="auth-state">
+          <span
+            className="auth-state__icon auth-state__icon--danger"
+            aria-hidden="true"
+          >
+            <KeyRound size={22} />
+          </span>
+          <h3 className="auth-state__title">{t('recovery.invalidToken')}</h3>
+          <p className="auth-state__text" role="alert">{tokenError}</p>
+          <p className="auth-state__text">{t('recovery.invalidTokenText')}</p>
+          <Link to="/forgot-password" className="btn btn--primary auth-cta">
+            {t('recovery.newLink')}
+          </Link>
+          <div className="auth-back">
+            <Link to="/login" className="form__link">
+              <ArrowLeft size={15} aria-hidden="true" />
+              {t('recovery.back')}
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (succeeded) {
@@ -224,7 +348,7 @@ function ResetPasswordPage() {
             role="alert"
           >
             <AlertCircle size={16} aria-hidden="true" />
-            <span>{t(formError)}</span>
+            <span>{formError}</span>
           </div>
         ) : null}
 
@@ -232,11 +356,17 @@ function ResetPasswordPage() {
           id="reset-password"
           label={t('recovery.newPassword')}
           value={password}
-          onChange={(event) => setPassword(event.target.value)}
+          onChange={(event) => {
+            setPassword(event.target.value)
+            setErrors((prev) =>
+              prev.passwordMessage ? { ...prev, passwordMessage: '' } : prev,
+            )
+          }}
           onBlur={handleBlur}
           show={showFields.password}
           onToggleShow={toggleShow('password')}
           error={errors.password}
+          errorMessage={errors.passwordMessage}
           disabled={isLoading}
         />
 
@@ -253,7 +383,7 @@ function ResetPasswordPage() {
         />
 
         <p className="form__hint">
-          {t('recovery.passwordHint')}
+          {t('auth.reset.passwordHint')}
         </p>
 
         <button
