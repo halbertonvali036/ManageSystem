@@ -1,5 +1,6 @@
 import { normalizeAnimation, normalizeSiteMotion } from '@/models/siteMotion'
 import { createStarterForm, duplicateForm, normalizeSiteForm } from '@/models/siteForm'
+import { applySiteContent, hasUserSiteContent } from '@/models/siteContent'
 /**
  * Site editor model.
  *
@@ -1148,7 +1149,7 @@ export const normalizeGlobalStyles = (raw) => {
  * The starter copy is passed in by the caller so it can be translated. The
  * fallback is only used when the editor is constructed outside the app.
  */
-export const createLocalDraftDocument = ({ name = DEFAULT_PAGE_NAME, copy, t, pageSkeletons } = {}) => {
+export const createLocalDraftDocument = ({ name = DEFAULT_PAGE_NAME, copy, t, pageSkeletons, content } = {}) => {
   const starter = {
     heading: 'Veb saytınızın başlığı',
     text: 'Bu mətni redaktorda dəyişə bilərsiniz.',
@@ -1156,9 +1157,29 @@ export const createLocalDraftDocument = ({ name = DEFAULT_PAGE_NAME, copy, t, pa
     ...(copy ?? {}),
   }
 
-  // A template skeleton wins when it has sections; otherwise fall back to a
-  // single page holding the three starter blocks.
-  const skeletons = Array.isArray(pageSkeletons) && pageSkeletons.length ? pageSkeletons : null
+  /*
+   * A template skeleton wins when it has sections. A sectionless template
+   * (notably the blank template) would otherwise open with nothing for the
+   * visitor's information to land in, so it falls back to the starter page when
+   * the wizard actually collected content. Without content it stays blank.
+   */
+  const hasSkeletonSections =
+    Array.isArray(pageSkeletons) &&
+    pageSkeletons.some(
+      (skeleton) => Array.isArray(skeleton?.sections) && skeleton.sections.length > 0,
+    )
+  const brandIsExplicit =
+    typeof content?.siteName === 'string' &&
+    content.siteName.trim() !== name.trim() &&
+    content.siteName.trim() !== ''
+  const hasContentEdits =
+    Boolean(content) && (hasUserSiteContent(content) || brandIsExplicit)
+  const skeletons =
+    Array.isArray(pageSkeletons) &&
+    pageSkeletons.length > 0 &&
+    (hasSkeletonSections || !hasContentEdits)
+      ? pageSkeletons
+      : null
 
   const pages = skeletons
     ? skeletons.map((skeleton, index) =>
@@ -1185,7 +1206,7 @@ export const createLocalDraftDocument = ({ name = DEFAULT_PAGE_NAME, copy, t, pa
         }),
       ]
 
-  return {
+  const document = {
     siteId: null,
     /** A local working state, never a persisted or published document. */
     isLocalDraft: true,
@@ -1203,6 +1224,8 @@ export const createLocalDraftDocument = ({ name = DEFAULT_PAGE_NAME, copy, t, pa
     globalStyles: { ...DEFAULT_GLOBAL_STYLES },
     updatedAt: null,
   }
+
+  return content ? applySiteContent(document, content) : document
 }
 
 /**

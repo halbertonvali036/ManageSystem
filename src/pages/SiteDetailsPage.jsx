@@ -1,9 +1,11 @@
 import PublishActions from '@/components/sites/PublishActions'
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import {
+  AlertCircle,
   ArrowLeft,
   CalendarDays,
+  CheckCircle2,
   ExternalLink,
   Globe,
   LayoutTemplate,
@@ -36,6 +38,7 @@ import {
  */
 function SiteDetailsPage() {
   const { siteId } = useParams()
+  const location = useLocation()
   const { t, locale } = useTranslation()
 
   /*
@@ -107,6 +110,7 @@ function SiteDetailsPage() {
   const addressLabel = getSiteAddressLabel(site)
   const createdLabel = formatSiteDate(site.createdAt, locale)
   const updatedLabel = formatSiteDate(site.updatedAt, locale)
+  const notice = location.state?.notice
 
   const facts = [
     {
@@ -166,6 +170,19 @@ function SiteDetailsPage() {
         <ArrowLeft size={15} aria-hidden="true" />
         {t('siteDetails.backToSites')}
       </Link>
+
+      {notice === 'created' ? (
+        <div className="alert alert--success site-details__notice" role="status">
+          <CheckCircle2 size={16} aria-hidden="true" />
+          <p>{t('createSite.createdNotice')}</p>
+        </div>
+      ) : null}
+      {notice === 'seedPending' ? (
+        <div className="alert alert--error site-details__notice" role="status">
+          <AlertCircle size={16} aria-hidden="true" />
+          <p>{t('createSite.draftSeedPending')}</p>
+        </div>
+      ) : null}
 
       <header className="site-details__head">
         <div className="site-details__identity">

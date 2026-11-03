@@ -1,11 +1,14 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import AuthContext from '@/context/AuthContext'
 import authService from '@/services/authService'
+import { AUTH_SESSION_EXPIRED_EVENT } from '@/services/authSession'
 import notificationStore from '@/stores/notificationStore'
 import { isKnownRole } from '@/utils/roles'
 
 function AuthProvider({ children }) {
   const [session, setSession] = useState(() => authService.getStoredSession())
+  const navigate = useNavigate()
 
   const login = useCallback(async (credentials, options) => {
     const nextSession = await authService.login(credentials, options)
@@ -38,6 +41,22 @@ function AuthProvider({ children }) {
     notificationStore.reset()
     setSession(null)
   }, [])
+
+  /**
+   * A 401 from an authenticated request clears the stored session in the HTTP
+   * client and dispatches this event. Routing lives here so the expired-session
+   * page is reached the same way as the rest of the app's public routes.
+   */
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      authService.logout()
+      notificationStore.reset()
+      setSession(null)
+      navigate('/session-expired', { replace: true })
+    }
+    window.addEventListener(AUTH_SESSION_EXPIRED_EVENT, handleSessionExpired)
+    return () => window.removeEventListener(AUTH_SESSION_EXPIRED_EVENT, handleSessionExpired)
+  }, [navigate])
 
   /**
    * Adopts values the backend confirmed when the account was updated.

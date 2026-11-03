@@ -4,12 +4,14 @@ import httpClient, { BackendNotConnectedError } from '@/services/httpClient'
 import { SITES_PATH } from '@/utils/constants'
 import {
   ALL_SITES_FILTER,
-  buildSiteDraft,
   buildSiteRename,
+  DEFAULT_SITE_TEMPLATE_ID,
+  DEFAULT_SITE_THEME_ID,
   normalizeSite,
   normalizeSiteStatus,
   SITE_STATUS,
 } from '@/models/site'
+import { SITE_CONTENT_FIELDS } from '@/models/siteContent'
 
 /**
  * Site project service.
@@ -68,9 +70,47 @@ const getSite = async (id) => {
   return normalizeSite(await httpClient.get(`${SITES_PATH}/${id}`))
 }
 
-const createSite = async (payload) => {
+/**
+ * The create-site request body.
+ *
+ * This is the single place that names backend fields, so a rename on the API
+ * side is a change here and nowhere else. `content` carries only the fields the
+ * visitor actually filled: empty strings would be noise on the wire, and the
+ * backend can keep ignoring any content key it does not use yet.
+ *
+ * `siteName` is dropped when it only repeats the project name. The local draft
+ * fills it in so the seeded editor has a brand even when the visitor skipped
+ * the information step, but that is a derived value, not something they typed.
+ */
+export const toCreateSitePayload = (draft = {}) => {
+  const source =
+    draft.content && typeof draft.content === 'object' ? draft.content : draft
+  const projectName = typeof draft.name === 'string' ? draft.name.trim() : ''
+  const content = {}
+  for (const field of SITE_CONTENT_FIELDS) {
+    const value = source[field]
+    if (typeof value !== 'string' || !value.trim()) {
+      continue
+    }
+    const trimmed = value.trim()
+    if (field === 'siteName' && trimmed === projectName) {
+      continue
+    }
+    content[field] = trimmed
+  }
+
+  return {
+    name: draft.name ?? '',
+    slug: draft.slug ?? '',
+    templateId: draft.templateId ?? DEFAULT_SITE_TEMPLATE_ID,
+    themePresetId: draft.themePresetId ?? DEFAULT_SITE_THEME_ID,
+    content,
+  }
+}
+
+const createSite = async (draft) => {
   requireBackend('Creating a website is unavailable until the backend is connected.')
-  return normalizeSite(await httpClient.post(SITES_PATH, buildSiteDraft(payload)))
+  return normalizeSite(await httpClient.post(SITES_PATH, toCreateSitePayload(draft)))
 }
 
 const updateSite = async (id, payload) => {

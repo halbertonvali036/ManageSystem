@@ -1,5 +1,5 @@
 import config from '@/config'
-import httpClient, { BackendNotConnectedError } from '@/services/httpClient'
+import httpClient, { BackendNotConnectedError, ERROR_CODE, getRequestErrorCode } from '@/services/httpClient'
 import {
   buildEditorDraftPayload,
   normalizeEditorDocument,
@@ -39,7 +39,21 @@ const getSiteDraft = async (siteId) => {
   if (!isBackendConnected() || !siteId) {
     return null
   }
-  return normalizeEditorDocument(await httpClient.get(EDITOR_DRAFT_ENDPOINT(siteId)))
+  try {
+    const response = await httpClient.get(EDITOR_DRAFT_ENDPOINT(siteId))
+    // A 204 response is a real "no draft yet", not an empty document.
+    return response ? normalizeEditorDocument(response) : null
+  } catch (error) {
+    /*
+     * Some backends answer "this project has no draft" with 404. The caller
+     * already treats null as that state, so a missing draft must not become an
+     * editor error page.
+     */
+    if (getRequestErrorCode(error) === ERROR_CODE.NOT_FOUND) {
+      return null
+    }
+    throw error
+  }
 }
 
 /**

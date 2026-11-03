@@ -15,6 +15,7 @@ import {
   DEFAULT_SITE_THEME_ID,
   isValidSiteThemeId,
 } from '@/models/siteTheme'
+import { normalizeSiteContent } from '@/models/siteContent'
 import { getDateFormatter } from '@/utils/intl'
 
 export const SITE_STATUS = Object.freeze({
@@ -108,24 +109,59 @@ export {
  */
 
 /**
- * Project shape used when creating a project.
+ * Local draft shape for a project being created.
+ *
+ * This is the wizard/editor's working description, not the wire contract:
+ * `siteService.toCreateSitePayload` owns the request field names. Keeping the
+ * two apart means the seed document and the API body can evolve independently.
  *
  * `templateId` names the structure the project starts from and `themePresetId`
  * the site theme it starts on. Both are validated against the libraries, so an
  * unknown id falls back to the default rather than being forwarded to a backend
  * that would have to guess what was meant.
+ *
+ * `content` carries the visitor's own copy from the "Your information" step. It
+ * accepts either a nested `content` object or the same fields at the top level,
+ * because the wizard holds them flat in its values object.
  */
 export const buildSiteDraft = ({
   name = '',
   slug = '',
   templateId = DEFAULT_SITE_TEMPLATE_ID,
   themePresetId = DEFAULT_SITE_THEME_ID,
-} = {}) => ({
-  name: name.trim(),
-  slug: slug.trim().toLowerCase(),
-  templateId: isValidSiteTemplateId(templateId) ? templateId : DEFAULT_SITE_TEMPLATE_ID,
-  themePresetId: isValidSiteThemeId(themePresetId) ? themePresetId : DEFAULT_SITE_THEME_ID,
-})
+  content,
+  siteName,
+  tagline,
+  heroTitle,
+  heroSubtitle,
+  ctaLabel,
+  aboutText,
+  email,
+  phone,
+  address,
+} = {}) => {
+  const trimmedName = name.trim()
+  const contentValues = {
+    ...(content && typeof content === 'object' ? content : {}),
+    ...(siteName !== undefined ? { siteName } : {}),
+    ...(tagline !== undefined ? { tagline } : {}),
+    ...(heroTitle !== undefined ? { heroTitle } : {}),
+    ...(heroSubtitle !== undefined ? { heroSubtitle } : {}),
+    ...(ctaLabel !== undefined ? { ctaLabel } : {}),
+    ...(aboutText !== undefined ? { aboutText } : {}),
+    ...(email !== undefined ? { email } : {}),
+    ...(phone !== undefined ? { phone } : {}),
+    ...(address !== undefined ? { address } : {}),
+  }
+
+  return {
+    name: trimmedName,
+    slug: slug.trim().toLowerCase(),
+    templateId: isValidSiteTemplateId(templateId) ? templateId : DEFAULT_SITE_TEMPLATE_ID,
+    themePresetId: isValidSiteThemeId(themePresetId) ? themePresetId : DEFAULT_SITE_THEME_ID,
+    content: normalizeSiteContent(contentValues, trimmedName),
+  }
+}
 
 /** Only the fields a rename may change. Keeps PUT updates narrow on purpose. */
 export const buildSiteRename = ({ name = '' } = {}) => ({

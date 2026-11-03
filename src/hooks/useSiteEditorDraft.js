@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 import siteEditorService from '@/services/siteEditorService'
+import { getRememberedDemoDraft, rememberDemoDraft } from '@/services/demoDraftStore'
+import {
+  forgetPendingDraftSeed,
+  takePendingDraftSeed,
+} from '@/services/pendingDraftSeedStore'
 import { BackendNotConnectedError } from '@/services/httpClient'
-import { createLocalDraftDocument } from '@/models/siteEditor'
-import { getTemplatePageSkeletons } from '@/models/siteTemplate'
-import { normalizeSiteTheme } from '@/models/siteTheme'
+import { buildSiteSeedDocument } from '@/models/siteSeed'
 import useTranslation from '@/hooks/useTranslation'
 
 /**
@@ -31,32 +34,64 @@ export const SAVE_STATUS = {
 export default function useSiteEditorDraft(siteId, seed) {
   const { t } = useTranslation()
 
-  const [document, setDocument] = useState(() =>
-    ({ ...createLocalDraftDocument({
-      name: t('editor.draftPageName'),
+  const [document, setDocument] = useState(() => {
+    /*
+     * The create wizard stores its draft seed in memory before navigating to the
+     * local editor. Location state remains the primary source; the remembered
+     * copy covers a remount inside the same tab.
+     */
+    const remembered = seed ? null : getRememberedDemoDraft(siteId)
+    if (remembered?.pages) {
+      return remembered
+    }
+    const effectiveSeed = seed ?? remembered
+    return buildSiteSeedDocument({
+      name: effectiveSeed?.name,
+      templateId: effectiveSeed?.templateId,
+      themePresetId: effectiveSeed?.themePresetId,
+      content: effectiveSeed?.content,
       t,
-      pageSkeletons: seed ? getTemplatePageSkeletons(seed.templateId).map((page) => ({ ...page, name: t(page.nameKey) })) : undefined,
-      copy: {
-        heading: t('editor.draftCopy.heading'),
-        text: t('editor.draftCopy.text'),
-        button: t('editor.draftCopy.button'),
-      },
-    }), ...(seed ? { theme: normalizeSiteTheme(seed.themePresetId) } : {}) }),
-  )
-  const [saveStatus, setSaveStatus] = useState(SAVE_STATUS.CLEAN)
+    })
+  })
+  const [saveStatus, setSaveStatus] = useState(SAVE_STATUS.UNSAVED)
   const [draftLoading, setDraftLoading] = useState(true)
   const [draftError, setDraftError] = useState(false)
   useEffect(() => {
     let active = true
     siteEditorService.getSiteDraft(siteId).then(draft => {
-      if (active && draft) {
+      if (!active) return
+      if (draft) {
         setDocument(draft)
-        if (draft.isLocalDraft) setSaveStatus(SAVE_STATUS.UNSAVED)
+        setSaveStatus(draft.isLocalDraft ? SAVE_STATUS.UNSAVED : SAVE_STATUS.CLEAN)
+        /*
+         * The server already has a draft, so a seed waiting from a failed create
+         * write is stale. Drop it rather than letting it surface on a later visit.
+         */
+        forgetPendingDraftSeed(siteId)
+        return
+      }
+      /*
+       * No server draft: consume a seed saved by the create flow. `take` removes
+       * it, so it can personalise exactly one editor visit and never linger as a
+       * second source of truth.
+       */
+      const pendingSeed = takePendingDraftSeed(siteId)
+      if (pendingSeed) {
+        setDocument({ ...pendingSeed, siteId, isLocalDraft: true })
+        setSaveStatus(SAVE_STATUS.UNSAVED)
       }
     }).catch(() => { if (active) setDraftError(true) })
       .finally(() => { if (active) setDraftLoading(false) })
     return () => { active = false }
   }, [siteId])
+
+  // A local draft is the only thing this remembers; API-backed drafts stay on
+  // the server contract and never travel through browser memory.
+  useEffect(() => {
+    if (siteId === 'local-draft' && !draftLoading && !draftError) {
+      rememberDemoDraft(siteId, document)
+    }
+  }, [siteId, document, draftLoading, draftError])
 
   /** Every local edit marks the document as unsaved. */
   const applyEdit = useCallback((updater) => {

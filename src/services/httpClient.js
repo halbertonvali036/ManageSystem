@@ -1,10 +1,17 @@
 import config from '@/config'
+import {
+  clearStoredSession,
+  getStoredSessionToken,
+  isPublicAuthPath,
+  notifySessionExpired,
+} from '@/services/authSession'
 
 export const HTTP_STATUS = Object.freeze({
   BAD_REQUEST: 400,
   UNAUTHORIZED: 401,
   FORBIDDEN: 403,
   NOT_FOUND: 404,
+  CONFLICT: 409,
   UNPROCESSABLE_ENTITY: 422,
 })
 
@@ -13,6 +20,7 @@ export const ERROR_CODE = Object.freeze({
   UNAUTHORIZED: 'UNAUTHORIZED',
   FORBIDDEN: 'FORBIDDEN',
   NOT_FOUND: 'NOT_FOUND',
+  CONFLICT: 'CONFLICT',
   VALIDATION: 'VALIDATION',
   SERVER: 'SERVER',
   UNKNOWN: 'UNKNOWN',
@@ -22,6 +30,7 @@ const DEFAULT_STATUS_MESSAGES = Object.freeze({
   [ERROR_CODE.UNAUTHORIZED]: 'Your session has expired. Please sign in again.',
   [ERROR_CODE.FORBIDDEN]: 'You do not have permission to perform this action.',
   [ERROR_CODE.NOT_FOUND]: 'The requested resource could not be found.',
+  [ERROR_CODE.CONFLICT]: 'A record with these details already exists.',
   [ERROR_CODE.VALIDATION]: 'Please review the highlighted fields and try again.',
   [ERROR_CODE.SERVER]: 'Something went wrong on our end. Please try again.',
   [ERROR_CODE.NETWORK]: 'Network request failed. Please check your connection.',
@@ -36,6 +45,9 @@ const codeForStatus = (status) => {
   }
   if (status === HTTP_STATUS.NOT_FOUND) {
     return ERROR_CODE.NOT_FOUND
+  }
+  if (status === HTTP_STATUS.CONFLICT) {
+    return ERROR_CODE.CONFLICT
   }
   if (status === HTTP_STATUS.UNPROCESSABLE_ENTITY) {
     return ERROR_CODE.VALIDATION
@@ -94,6 +106,18 @@ const request = async (path, options = {}) => {
   if (!config.api.baseUrl) throw new BackendNotConnectedError()
   const url = `${config.api.baseUrl}${path}`
   const headers = { ...DEFAULT_HEADERS, ...options.headers }
+
+  /*
+   * Public auth endpoints stay anonymous. Every other request carries the
+   * stored bearer token when there is one. The token is never logged or added to
+   * the error object.
+   */
+  const isPublicAuthRequest = isPublicAuthPath(path)
+  const token = isPublicAuthRequest ? null : getStoredSessionToken()
+  if (token) {
+    headers.Authorization = `Bearer ${token}`
+  }
+
   if (typeof FormData !== 'undefined' && options.body instanceof FormData) {
     // The browser must set the multipart boundary itself.
     delete headers['Content-Type']
@@ -110,6 +134,16 @@ const request = async (path, options = {}) => {
   }
 
   if (!response.ok) {
+    /*
+     * Only a request that actually carried a token can expire a session. A 401
+     * from a public endpoint (notably `/auth/login`) means bad credentials and
+     * must never sign the visitor out of an existing session.
+     */
+    if (response.status === HTTP_STATUS.UNAUTHORIZED && token) {
+      clearStoredSession()
+      notifySessionExpired()
+    }
+
     const data = await parseResponseBody(response)
     const code = codeForStatus(response.status)
     throw new RequestError(

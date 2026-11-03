@@ -596,6 +596,10 @@
   outline-offset: 2px;
 }
 
+.site-details__notice {
+  margin-bottom: var(--space-4);
+}
+
 .site-details__head {
   display: flex;
   flex-wrap: wrap;
@@ -902,6 +906,49 @@
   color: var(--color-accent);
 }
 
+/* ── Create Website: "Your information" ───────────────────── */
+.create-site-content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.create-site-content-grid .form__field--full {
+  grid-column: 1 / -1;
+}
+
+.create-site-content-grid textarea.form__input {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.create-site-content__note {
+  margin: var(--space-4) 0 0;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+  background: var(--color-surface-2);
+}
+
+/* The offline preview action sits outside the wizard form. */
+.local-draft-entry {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.local-draft-entry .form__hint {
+  flex: 1 1 260px;
+  margin: 0;
+}
+
 /* Template radio rendered as a selectable card. */
 .template-option {
   display: flex;
@@ -1198,6 +1245,10 @@
   }
 
   .create-site-choice__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .create-site-content-grid {
     grid-template-columns: 1fr;
   }
 }

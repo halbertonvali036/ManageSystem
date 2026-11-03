@@ -2,6 +2,11 @@ import config from '@/config'
 import { isKnownRole } from '@/utils/roles'
 import httpClient, { BackendNotConnectedError, RequestError } from '@/services/httpClient'
 import {
+  AUTH_SESSION_STORAGE_KEY,
+  clearStoredSession,
+  readStoredSession,
+} from '@/services/authSession'
+import {
   EXTERNAL_AUTH_INTENT,
   getAuthorizationUrl,
   getOAuthErrorCode,
@@ -12,32 +17,10 @@ import {
   OAUTH_OUTCOME,
 } from '@/models/externalAuth'
 
-const SESSION_STORAGE_KEY = 'managesystem-auth-session'
+const SESSION_STORAGE_KEY = AUTH_SESSION_STORAGE_KEY
 const AUTH_PATH = '/auth'
 
 const normalizeEmail = (email) => email.trim().toLowerCase()
-
-const readStoredSession = () => {
-  try {
-    const raw =
-      sessionStorage.getItem(SESSION_STORAGE_KEY) ??
-      localStorage.getItem(SESSION_STORAGE_KEY)
-    if (!raw) return null
-    const session = JSON.parse(raw)
-    if (!session?.token || !isKnownRole(session?.user?.role)) {
-      clearStoredSession()
-      return null
-    }
-    return session
-  } catch {
-    return null
-  }
-}
-
-const clearStoredSession = () => {
-  sessionStorage.removeItem(SESSION_STORAGE_KEY)
-  localStorage.removeItem(SESSION_STORAGE_KEY)
-}
 
 // Recovery mutations deliberately refuse to run without a backend.
 // They must not simulate successful password changes or email sends.
