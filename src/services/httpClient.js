@@ -11,6 +11,7 @@ export const HTTP_STATUS = Object.freeze({
   UNAUTHORIZED: 401,
   FORBIDDEN: 403,
   NOT_FOUND: 404,
+  METHOD_NOT_ALLOWED: 405,
   CONFLICT: 409,
   UNPROCESSABLE_ENTITY: 422,
 })
@@ -72,6 +73,25 @@ export const getRequestErrorMessage = (error) =>
   error?.message ??
   DEFAULT_STATUS_MESSAGES[getRequestErrorCode(error)] ??
   'Something went wrong. Please try again.'
+
+/**
+ * Whether a failed request means the *endpoint* is not served by this backend.
+ *
+ * Several planned feature families (settings, deployments, activity,
+ * notifications, billing, support, admin) have their paths declared here but are
+ * not implemented by the current Spring Boot API. Such a server answers `404`,
+ * or `403`/`405` when routing rejects an unknown method. That is not a broken
+ * page: the existing services treat it as "unavailable" and keep returning the
+ * same empty/safe state they use when no backend is configured.
+ *
+ * A genuine client error (400/409/422) and a server fault (5xx) are deliberately
+ * excluded, so a real failure still surfaces as an error.
+ */
+export const isEndpointUnavailable = (error) =>
+  error instanceof RequestError &&
+  (error.status === HTTP_STATUS.FORBIDDEN ||
+    error.status === HTTP_STATUS.NOT_FOUND ||
+    error.status === HTTP_STATUS.METHOD_NOT_ALLOWED)
 
 export class RequestError extends Error {
   constructor(message, { status = null, data = null, code = null } = {}) {

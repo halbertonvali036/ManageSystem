@@ -1,8 +1,9 @@
-import { LayoutTemplate, Plus, Search, X } from 'lucide-react'
+import { AlertCircle, LayoutTemplate, Plus, RefreshCw, Search, X } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import TemplateCard from '@/components/sites/TemplateCard'
 import TemplatePreviewDialog from '@/components/sites/TemplatePreviewDialog'
+import useTemplateCatalog from '@/hooks/useTemplateCatalog'
 import useTranslation from '@/hooks/useTranslation'
 import {
   ALL_TEMPLATE_CATEGORIES,
@@ -29,6 +30,12 @@ import { NEW_SITE_PATH } from '@/utils/constants'
  */
 function TemplatesPage() {
   const { t } = useTranslation()
+  const {
+    getAvailability,
+    isCatalogUnavailable,
+    isLoading: isCatalogLoading,
+    refetch: refetchCatalog,
+  } = useTemplateCatalog()
   const [category, setCategory] = useState(ALL_TEMPLATE_CATEGORIES)
   const [tier, setTier] = useState(ALL_TEMPLATE_TIERS)
   const [query, setQuery] = useState('')
@@ -58,11 +65,40 @@ function TemplatesPage() {
           <h1 className="sites-page__title">{t('templates.pageTitle')}</h1>
           <p className="page-description">{t('templates.pageDescription')}</p>
         </div>
-        <Link to={NEW_SITE_PATH} className="btn btn--primary sites-page__cta">
-          <Plus size={16} aria-hidden="true" />
-          {t('sites.newCta')}
-        </Link>
+        {isCatalogUnavailable ? (
+          <button type="button" className="btn btn--primary sites-page__cta" disabled>
+            <Plus size={16} aria-hidden="true" />
+            {t('sites.newCta')}
+          </button>
+        ) : (
+          <Link to={NEW_SITE_PATH} className="btn btn--primary sites-page__cta">
+            <Plus size={16} aria-hidden="true" />
+            {t('sites.newCta')}
+          </Link>
+        )}
       </header>
+
+      {isCatalogUnavailable ? (
+        <div className="templates-catalog-notice" role="alert">
+          <AlertCircle size={18} aria-hidden="true" />
+          <div className="templates-catalog-notice__copy">
+            <p className="templates-catalog-notice__title">
+              {t('templates.catalogUnavailable')}
+            </p>
+            <p className="templates-catalog-notice__text">
+              {t('templates.catalogUnavailableHint')}
+            </p>
+          </div>
+          <button
+            type="button"
+            className="btn btn--outline btn--sm"
+            onClick={refetchCatalog}
+          >
+            <RefreshCw size={14} aria-hidden="true" />
+            {t('templates.catalogRetry')}
+          </button>
+        </div>
+      ) : null}
 
       <div className="templates-browse">
         <div className="templates-browse__top">
@@ -135,7 +171,9 @@ function TemplatesPage() {
               ? t('templates.resultCountFiltered', { shown: templates.length, total })
               : t('templates.resultCount', { count: total })}
           </p>
-          <p className="templates-browse__legend">{t('templates.tierLegend')}</p>
+          <p className="templates-browse__legend">
+            {isCatalogLoading ? t('templates.catalogLoading') : t('templates.tierLegend')}
+          </p>
           {isFiltered ? (
             <button type="button" className="templates-browse__reset" onClick={resetFilters}>
               <X size={14} aria-hidden="true" />
@@ -148,7 +186,12 @@ function TemplatesPage() {
       {templates.length ? (
         <ul className="templates-grid">
           {templates.map((template) => (
-            <TemplateCard key={template.id} template={template} onPreview={setPreviewTemplate} />
+            <TemplateCard
+              key={template.id}
+              template={template}
+              availability={getAvailability(template.id)}
+              onPreview={setPreviewTemplate}
+            />
           ))}
         </ul>
       ) : (

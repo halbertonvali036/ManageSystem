@@ -12,7 +12,9 @@ import SeoSettingsSection from '@/components/sitesettings/SeoSettingsSection'
 import SettingsSectionNav from '@/components/sitesettings/SettingsSectionNav'
 import SocialSettingsSection from '@/components/sitesettings/SocialSettingsSection'
 import useTranslation from '@/hooks/useTranslation'
+import siteService from '@/services/siteService'
 import siteSettingsService from '@/services/siteSettingsService'
+import { isEndpointUnavailable } from '@/services/httpClient'
 import {
   MEDIA_SOURCE,
   createLocalPreviewMediaItem,
@@ -43,17 +45,16 @@ const SECTIONS = [
  * Site settings for one project.
  *
  * The whole page works on one local object, `settings`, which starts from the
- * site's own name and status and is otherwise empty. That is the honest shape of
- * the problem: there is no backend, so there is nothing to load and nothing to
- * save to. The read is still attempted, because the service contract is real and
- * the day a backend appears this page should already be asking it the right
- * question.
+ * site's own name and status and is otherwise empty. The settings resource is
+ * not implemented by the backend yet, so the read degrades to that local start
+ * instead of failing when it answers 404/403/405.
  *
- * The save button is present and permanently unavailable. It is not hidden,
- * because a settings page with no save affordance at all would suggest the changes
- * are being applied somewhere, and it is not a fake button, because it cannot
- * reach a success state. Pressing it runs the same `updateSiteSettings` that
- * refuses while the backend is absent, and the live region reports the refusal.
+ * Saving is real for the fields the backend owns: the project name is sent with
+ * the loaded site's slug and full editor document as
+ * `PUT /api/sites/{id} { projectName, slug, content }`. The update contract
+ * requires all three together, so a rename can never wipe the content or fail
+ * validation. "Saved" is only shown after that response; a failure keeps the
+ * dirty state and reports it in the live region.
  *
  * Each card is a section component under `components/sitesettings/`; they all
  * receive this same `settings` object and the same `patchSection` callback, so
@@ -66,6 +67,11 @@ function SiteSettingsPage() {
   const [settings, setSettings] = useState(() =>
     createLocalSiteSettings({ id: siteId, name: '', status: 'draft' }),
   )
+  /*
+   * The loaded project supplies the slug and editor document a settings save
+   * must echo. Keeping it here means the form never has to guess either value.
+   */
+  const [siteRecord, setSiteRecord] = useState(null)
   const [isLoading, setIsLoading] = useState(() => siteSettingsService.isBackendConnected())
   const [hasChanges, setHasChanges] = useState(false)
   const [saveNotice, setSaveNotice] = useState(null)
@@ -85,17 +91,43 @@ function SiteSettingsPage() {
       return undefined
     }
 
-    siteSettingsService
-      .getSiteSettings(siteId)
-      .then((stored) => {
-        if (!isCurrent || !stored) {
+    /*
+     * Two reads, both optional:
+     * - the site record is what a save must echo (slug + content);
+     * - the settings resource may not exist yet, in which case the service
+     *   resolves `null` and the form starts from the site's own values.
+     */
+    Promise.allSettled([
+      siteSettingsService.getSiteSettings(siteId),
+      siteService.getSite(siteId),
+    ])
+      .then(([settingsResult, siteResult]) => {
+        if (!isCurrent) {
           return
         }
-        setSettings(stored)
-        setHasChanges(false)
-      })
-      .catch(() => {
-        if (isCurrent) setSaveNotice({ kind: 'error', message: t('audit.loadFailed') })
+        const site =
+          siteResult.status === 'fulfilled' ? siteResult.value : null
+        const stored =
+          settingsResult.status === 'fulfilled' ? settingsResult.value : null
+
+        if (site) {
+          setSiteRecord(site)
+        }
+        if (stored) {
+          setSettings(stored)
+          setHasChanges(false)
+        } else if (site) {
+          setSettings(
+            createLocalSiteSettings({
+              id: site.id ?? siteId,
+              name: site.name,
+              status: site.status,
+            }),
+          )
+          setHasChanges(false)
+        } else if (siteResult.status === 'rejected') {
+          setSaveNotice({ kind: 'error', message: t('audit.loadFailed') })
+        }
       })
       .finally(() => {
         if (isCurrent) {
@@ -193,24 +225,33 @@ function SiteSettingsPage() {
   const handleSave = useCallback(async () => {
     setSaveNotice({ kind: 'pending', message: t('siteSettings.save.pending') })
     try {
-      await siteSettingsService.updateSiteSettings(siteId, settings)
-      /*
-       * Unreachable while the backend is absent, and that is the point. If a
-       * backend is ever connected this becomes the success path, and it is only
-       * reachable after the server has actually agreed to the write.
-       */
+      const updated = await siteSettingsService.updateSiteSettings(
+        siteId,
+        settings,
+        siteRecord,
+      )
+      if (updated) {
+        setSiteRecord(updated)
+      }
+      // Only a successful server response clears the dirty flag.
       setSaveNotice({ kind: 'saved', message: t('siteSettings.save.saved') })
       setHasChanges(false)
     } catch (error) {
+      /*
+       * A missing settings endpoint is "unavailable", not a broken page. Real
+       * failures (validation, server, network) still read as a failed save, and
+       * the form stays marked as changed.
+       */
       setSaveNotice({
         kind: 'error',
         message:
-          error?.name === 'BackendNotConnectedError'
+          error?.name === 'BackendNotConnectedError' ||
+          isEndpointUnavailable(error)
             ? t('siteSettings.save.unavailable')
             : t('siteSettings.save.failed'),
       })
     }
-  }, [siteId, settings, t])
+  }, [siteId, settings, siteRecord, t])
 
   /* ---------------------------------------------------------------- *
    * Active section

@@ -1,5 +1,8 @@
 import config from '@/config'
-import httpClient, { BackendNotConnectedError } from '@/services/httpClient'
+import httpClient, {
+  BackendNotConnectedError,
+  isEndpointUnavailable,
+} from '@/services/httpClient'
 import {
   NOTIFICATION_PREFERENCES_PATH,
   toNotificationPreferences,
@@ -45,11 +48,20 @@ const getNotifications = async (params = {}) => {
   if (!config.api.baseUrl) {
     return []
   }
-  const response = await httpClient.get(`${NOTIFICATIONS_PATH}${buildQuery(params)}`)
-  const records = Array.isArray(response)
-    ? response
-    : response?.data ?? response?.notifications ?? []
-  return Array.isArray(records) ? records : []
+  try {
+    const response = await httpClient.get(`${NOTIFICATIONS_PATH}${buildQuery(params)}`)
+    const records = Array.isArray(response)
+      ? response
+      : response?.data ?? response?.notifications ?? []
+    return Array.isArray(records) ? records : []
+  } catch (error) {
+    // The notifications resource is not implemented yet: 404/403/405 reads as
+    // "no notifications", which is the empty state the page already renders.
+    if (isEndpointUnavailable(error)) {
+      return []
+    }
+    throw error
+  }
 }
 
 /**
@@ -61,11 +73,18 @@ const getUnreadCount = async () => {
   if (!config.api.baseUrl) {
     return 0
   }
-  const response = await httpClient.get(`${NOTIFICATIONS_PATH}/unread-count`)
-  if (typeof response === 'number') {
-    return response
+  try {
+    const response = await httpClient.get(`${NOTIFICATIONS_PATH}/unread-count`)
+    if (typeof response === 'number') {
+      return response
+    }
+    return response?.count ?? 0
+  } catch (error) {
+    if (isEndpointUnavailable(error)) {
+      return 0
+    }
+    throw error
   }
-  return response?.count ?? 0
 }
 
 /**
@@ -76,22 +95,48 @@ const getNotificationPreferences = async () => {
   if (!config.api.baseUrl) {
     return null
   }
-  const response = await httpClient.get(NOTIFICATION_PREFERENCES_PATH)
-  const source = response?.data ?? response?.preferences ?? response
-  return toNotificationPreferences(source)
+  try {
+    const response = await httpClient.get(NOTIFICATION_PREFERENCES_PATH)
+    const source = response?.data ?? response?.preferences ?? response
+    return toNotificationPreferences(source)
+  } catch (error) {
+    // Not served yet: `null` means "unknown / not loaded", which the hook
+    // already renders as its unavailable state.
+    if (isEndpointUnavailable(error)) {
+      return null
+    }
+    throw error
+  }
 }
 
 // Mutations deliberately refuse to run without a backend.
-// They must not simulate successful state changes.
+// They must not simulate successful state changes. A 404/403/405 from the
+// unimplemented resource is the same refusal: the existing "unavailable" state
+// rather than a generic error.
+
+const asUnavailable = (error) => {
+  if (isEndpointUnavailable(error)) {
+    throw new BackendNotConnectedError('Notification integration is unavailable.')
+  }
+  throw error
+}
 
 const markAsRead = async (id) => {
   ensureBackendConnection()
-  await httpClient.patch(`${NOTIFICATIONS_PATH}/${id}/read`)
+  try {
+    await httpClient.patch(`${NOTIFICATIONS_PATH}/${id}/read`)
+  } catch (error) {
+    return asUnavailable(error)
+  }
 }
 
 const markAllAsRead = async () => {
   ensureBackendConnection()
-  await httpClient.post(`${NOTIFICATIONS_PATH}/read-all`)
+  try {
+    await httpClient.post(`${NOTIFICATIONS_PATH}/read-all`)
+  } catch (error) {
+    return asUnavailable(error)
+  }
 }
 
 /**
@@ -101,9 +146,13 @@ const markAllAsRead = async () => {
 const updateNotificationPreferences = async (draft) => {
   ensureBackendConnection()
   const payload = toNotificationPreferencesPayload(draft)
-  const response = await httpClient.patch(NOTIFICATION_PREFERENCES_PATH, payload)
-  const source = response?.data ?? response?.preferences ?? response
-  return toNotificationPreferences(source) ?? payload
+  try {
+    const response = await httpClient.patch(NOTIFICATION_PREFERENCES_PATH, payload)
+    const source = response?.data ?? response?.preferences ?? response
+    return toNotificationPreferences(source) ?? payload
+  } catch (error) {
+    return asUnavailable(error)
+  }
 }
 
 const notificationsService = {

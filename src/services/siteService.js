@@ -1,17 +1,24 @@
 import { publishSite, unpublishSite, getPublishStatus, getPublishedUrl } from '@/services/sitePublishService'
 import config from '@/config'
-import httpClient, { BackendNotConnectedError } from '@/services/httpClient'
-import { SITES_PATH } from '@/utils/constants'
+import httpClient, {
+  BackendNotConnectedError,
+  isEndpointUnavailable,
+  RequestError,
+} from '@/services/httpClient'
+import templateService from '@/services/templateService'
+import { SITES_API_PATH } from '@/utils/constants'
 import {
   ALL_SITES_FILTER,
-  buildSiteRename,
-  DEFAULT_SITE_TEMPLATE_ID,
-  DEFAULT_SITE_THEME_ID,
-  normalizeSite,
-  normalizeSiteStatus,
   SITE_STATUS,
 } from '@/models/site'
-import { SITE_CONTENT_FIELDS } from '@/models/siteContent'
+import {
+  normalizeSiteResponse,
+  normalizeSiteSummary,
+  normalizeTemplateResponse,
+  toCreateSitePayload,
+  toUpdateSitePayload,
+  toWireSiteStatus,
+} from '@/models/siteWire'
 
 /**
  * Site project service.
@@ -21,6 +28,10 @@ import { SITE_CONTENT_FIELDS } from '@/models/siteContent'
  * instead of placeholder projects. Every write operation refuses to run and
  * throws BackendNotConnectedError, so no action can report a change that was
  * never persisted.
+ *
+ * Field names and letter casing are translated only in `models/siteWire.js`.
+ * This file decides *when* to call the API; the wire model decides *what* the
+ * request and response look like.
  *
  * The messages below are developer-facing context for the error. User-facing
  * copy is chosen by the page from the error type, so it stays localizable.
@@ -40,7 +51,7 @@ const requireBackend = (message) => {
 const buildQuery = ({ status = ALL_SITES_FILTER, search = '' } = {}) => {
   const query = new URLSearchParams()
   if (status && status !== ALL_SITES_FILTER) {
-    query.set('status', normalizeSiteStatus(status))
+    query.set('status', toWireSiteStatus(status))
   }
   if (search.trim()) {
     query.set('search', search.trim())
@@ -51,7 +62,7 @@ const buildQuery = ({ status = ALL_SITES_FILTER, search = '' } = {}) => {
 
 const toList = (response) => {
   const items = Array.isArray(response) ? response : (response?.data ?? [])
-  return items.map(normalizeSite).filter(Boolean)
+  return items.map(normalizeSiteSummary).filter(Boolean)
 }
 
 /** All projects for the signed-in account. Empty while the API is absent. */
@@ -59,7 +70,7 @@ const getMySites = async (params = {}) => {
   if (!isBackendConnected()) {
     return []
   }
-  return toList(await httpClient.get(`${SITES_PATH}${buildQuery(params)}`))
+  return toList(await httpClient.get(`${SITES_API_PATH}${buildQuery(params)}`))
 }
 
 /** A single project, or null when it is absent or the API is not connected. */
@@ -67,76 +78,113 @@ const getSite = async (id) => {
   if (!isBackendConnected()) {
     return null
   }
-  return normalizeSite(await httpClient.get(`${SITES_PATH}/${id}`))
+  return normalizeSiteResponse(await httpClient.get(`${SITES_API_PATH}/${id}`))
 }
 
 /**
- * The create-site request body.
+ * The backend template catalogue.
  *
- * This is the single place that names backend fields, so a rename on the API
- * side is a change here and nowhere else. `content` carries only the fields the
- * visitor actually filled: empty strings would be noise on the wire, and the
- * backend can keep ignoring any content key it does not use yet.
- *
- * `siteName` is dropped when it only repeats the project name. The local draft
- * fills it in so the seeded editor has a brand even when the visitor skipped
- * the information step, but that is a derived value, not something they typed.
+ * Delegates to `templateService`, which caches the catalogue for the session.
+ * The method stays here because existing callers already import it from the
+ * site service.
  */
-export const toCreateSitePayload = (draft = {}) => {
-  const source =
-    draft.content && typeof draft.content === 'object' ? draft.content : draft
-  const projectName = typeof draft.name === 'string' ? draft.name.trim() : ''
-  const content = {}
-  for (const field of SITE_CONTENT_FIELDS) {
-    const value = source[field]
-    if (typeof value !== 'string' || !value.trim()) {
-      continue
-    }
-    const trimmed = value.trim()
-    if (field === 'siteName' && trimmed === projectName) {
-      continue
-    }
-    content[field] = trimmed
-  }
+const getTemplates = async () => templateService.listTemplates()
 
-  return {
-    name: draft.name ?? '',
-    slug: draft.slug ?? '',
-    templateId: draft.templateId ?? DEFAULT_SITE_TEMPLATE_ID,
-    themePresetId: draft.themePresetId ?? DEFAULT_SITE_THEME_ID,
-    content,
-  }
-}
+/**
+ * A template id that can safely be sent on a write, or null.
+ *
+ * A write must never guess: an unmapped frontend id means the server does not
+ * have that template yet, so the caller gets a specific error instead of a
+ * payload with a made-up id.
+ */
+const TEMPLATE_UNAVAILABLE_CODE = 'TEMPLATE_UNAVAILABLE'
 
-const createSite = async (draft) => {
+const resolveTemplateIdForWrite = (source) =>
+  templateService.resolveBackendTemplateId(source)
+
+const createSite = async (draft, options = {}) => {
   requireBackend('Creating a website is unavailable until the backend is connected.')
-  return normalizeSite(await httpClient.post(SITES_PATH, toCreateSitePayload(draft)))
+
+  // The catalogue is what turns the wizard's frontend id into a backend id.
+  // Reading it first also makes a catalogue failure surface as a failed create
+  // rather than as an invalid template id.
+  await templateService.listTemplates()
+
+  /*
+   * `options.content` is the full personalized editor document. `POST
+   * /api/sites` stores it, so there is no follow-up draft request.
+   */
+  const payload = toCreateSitePayload(draft, {
+    resolveTemplateId: resolveTemplateIdForWrite,
+    ...options,
+  })
+
+  if (payload.templateId === null) {
+    throw new RequestError(
+      'The selected template is not available on the server yet.',
+      { code: TEMPLATE_UNAVAILABLE_CODE },
+    )
+  }
+
+  return normalizeSiteResponse(await httpClient.post(SITES_API_PATH, payload))
 }
 
-const updateSite = async (id, payload) => {
+const updateSite = async (id, site, options) => {
   requireBackend('Saving website changes is unavailable until the backend is connected.')
-  return normalizeSite(await httpClient.put(`${SITES_PATH}/${id}`, payload))
+  return normalizeSiteResponse(
+    await httpClient.put(
+      `${SITES_API_PATH}/${id}`,
+      toUpdateSitePayload(site, {
+        resolveTemplateId: resolveTemplateIdForWrite,
+        ...options,
+      }),
+    ),
+  )
 }
 
-/** Narrow rename path so a rename cannot accidentally clear other fields. */
+/**
+ * Narrow rename path so a rename cannot accidentally clear other fields.
+ *
+ * The update contract requires `projectName`, `slug` and `content` together, so
+ * the current project is read first and only the name is replaced. The other
+ * values are sent back unchanged.
+ */
 const renameSite = async (id, name) => {
   requireBackend('Renaming a website is unavailable until the backend is connected.')
-  return updateSite(id, buildSiteRename({ name }))
+  const current = await getSite(id)
+  return updateSite(id, { ...(current ?? {}), name })
 }
 
 const deleteSite = async (id) => {
   requireBackend('Deleting a website is unavailable until the backend is connected.')
-  await httpClient.delete(`${SITES_PATH}/${id}`)
+  await httpClient.delete(`${SITES_API_PATH}/${id}`)
 }
 
 const duplicateSite = async (id) => {
   requireBackend('Duplicating a website is unavailable until the backend is connected.')
-  return normalizeSite(await httpClient.post(`${SITES_PATH}/${id}/duplicate`))
+  try {
+    return normalizeSiteResponse(
+      await httpClient.post(`${SITES_API_PATH}/${id}/duplicate`),
+    )
+  } catch (error) {
+    /*
+     * The duplicate endpoint is not implemented yet. A 404/403/405 is the same
+     * refusal as "no backend", so the existing unavailable state is shown
+     * instead of a generic request error.
+     */
+    if (isEndpointUnavailable(error)) {
+      throw new BackendNotConnectedError(
+        'Duplicating a website is unavailable until the backend implements it.',
+      )
+    }
+    throw error
+  }
 }
 
 const archiveSite = async (id) => {
   requireBackend('Archiving a website is unavailable until the backend is connected.')
-  return updateSite(id, { status: SITE_STATUS.ARCHIVED })
+  const current = await getSite(id)
+  return updateSite(id, { ...(current ?? {}), status: SITE_STATUS.ARCHIVED })
 }
 
 /**
@@ -147,6 +195,7 @@ const archiveSite = async (id) => {
 const siteService = {
   getMySites,
   getSite,
+  getTemplates,
   createSite,
   updateSite,
   renameSite,
@@ -157,6 +206,15 @@ const siteService = {
   unpublishSite,
   getPublishStatus,
   getPublishedUrl,
+}
+
+export {
+  TEMPLATE_UNAVAILABLE_CODE,
+  normalizeSiteResponse,
+  normalizeSiteSummary,
+  normalizeTemplateResponse,
+  toCreateSitePayload,
+  toUpdateSitePayload,
 }
 
 export default siteService

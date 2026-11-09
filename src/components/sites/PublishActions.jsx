@@ -10,7 +10,7 @@ export default function PublishActions(props) {
   useEffect(() => {
     if (!action || props.document) return undefined
     let active = true
-    siteEditorService.getSiteDraft(props.siteId).then((document) => {
+    siteEditorService.getSiteDraft(props.siteId).then(({ document }) => {
       if (active) setStoredDraft({ siteId: props.siteId, document })
     }).catch(() => {})
     return () => { active = false }

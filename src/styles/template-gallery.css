@@ -386,6 +386,99 @@
   box-shadow: none;
 }
 
+/* A backend-connected card whose template the server does not have yet. */
+.template-card__unavailable {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 1;
+  padding: 4px 10px;
+  border: 1px dashed var(--studio-edge);
+  border-radius: 999px;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  background: var(--studio-raised);
+}
+
+.templates-page .template-card[data-unavailable='true'] {
+  border-style: dashed;
+}
+
+.templates-page .template-card[data-unavailable='true'] .template-card__frame {
+  opacity: 0.72;
+}
+
+/* Catalogue notice, shared by the gallery and the create wizard. */
+.templates-catalog-notice,
+.create-site-catalog-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-accent-border);
+  border-radius: 12px;
+  color: var(--color-text);
+  background: var(--color-accent-soft);
+}
+
+.templates-catalog-notice {
+  margin-bottom: 18px;
+}
+
+.create-site-catalog-notice {
+  margin-bottom: 16px;
+}
+
+.templates-catalog-notice > svg,
+.create-site-catalog-notice > svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-accent);
+}
+
+.templates-catalog-notice__copy,
+.create-site-catalog-notice__copy {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.templates-catalog-notice__title,
+.create-site-catalog-notice__title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.templates-catalog-notice__text,
+.create-site-catalog-notice__text {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.templates-catalog-notice .btn,
+.create-site-catalog-notice .btn {
+  flex-shrink: 0;
+}
+
+.template-option__title {
+  flex-wrap: wrap;
+}
+
+.template-option__unavailable {
+  padding: 2px 7px;
+  border: 1px dashed var(--studio-edge);
+  border-radius: 999px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  background: var(--studio-raised);
+}
+
 .templates-page .template-card__actions {
   display: flex;
   flex-wrap: wrap;

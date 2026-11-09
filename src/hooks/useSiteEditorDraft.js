@@ -56,10 +56,18 @@ export default function useSiteEditorDraft(siteId, seed) {
   const [saveStatus, setSaveStatus] = useState(SAVE_STATUS.UNSAVED)
   const [draftLoading, setDraftLoading] = useState(true)
   const [draftError, setDraftError] = useState(false)
+  /*
+   * The project record the document was loaded with. Saving has to echo the
+   * current `projectName` and `slug`, so the record is kept beside the document
+   * instead of being discarded after the read.
+   */
+  const [siteRecord, setSiteRecord] = useState(null)
   useEffect(() => {
     let active = true
-    siteEditorService.getSiteDraft(siteId).then(draft => {
+    siteEditorService.getSiteDraft(siteId).then(result => {
       if (!active) return
+      const draft = result?.document
+      setSiteRecord(result?.site ?? null)
       if (draft) {
         setDocument(draft)
         setSaveStatus(draft.isLocalDraft ? SAVE_STATUS.UNSAVED : SAVE_STATUS.CLEAN)
@@ -102,7 +110,11 @@ export default function useSiteEditorDraft(siteId, seed) {
   const handleSave = useCallback(async () => {
     setSaveStatus(SAVE_STATUS.UNSAVED)
     try {
-      await siteEditorService.saveSiteDraft(siteId, document)
+      /*
+       * The site record supplies `projectName` and `slug`; the document supplies
+       * `content`. All three travel together, as the update contract requires.
+       */
+      await siteEditorService.saveSiteDraft(siteId, document, siteRecord)
       setSaveStatus(SAVE_STATUS.CLEAN)
     } catch (error) {
       setSaveStatus(
@@ -111,7 +123,7 @@ export default function useSiteEditorDraft(siteId, seed) {
           : SAVE_STATUS.ERROR,
       )
     }
-  }, [document, siteId])
+  }, [document, siteId, siteRecord])
 
   return {
     document,

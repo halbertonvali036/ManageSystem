@@ -1,25 +1,33 @@
 import config from '@/config'
-import httpClient, { BackendNotConnectedError, ERROR_CODE, getRequestErrorCode } from '@/services/httpClient'
+import httpClient, { BackendNotConnectedError } from '@/services/httpClient'
 import {
   buildEditorDraftPayload,
   normalizeEditorDocument,
 } from '@/models/siteEditor'
-import { SITES_PATH } from '@/utils/constants'
+import { SITES_API_PATH } from '@/utils/constants'
 
 /**
- * Site editor draft service.
+ * Site editor service.
  *
- * The editor is fully usable offline, so this service follows the same contract
- * as the rest of the app: reads degrade to a safe empty value when the backend
- * is absent, and every write refuses to run and throws
- * `BackendNotConnectedError`.
+ * There is no draft endpoint on the backend: the editor draft *is* the site's
+ * `content` field. Reads and writes therefore use the ordinary site resource:
  *
- * That refusal is the important part. It is what stops the editor from ever
- * showing "saved" for a draft that exists only in browser memory.
+ *   GET /api/sites/{id}  -> `content` is the stored editor document
+ *   PUT /api/sites/{id}  -> `{ projectName, slug, content }` saves it again
+ *
+ * The update contract requires `projectName`, `slug` and `content` together on
+ * every write, so a save echoes the project's current name and address instead
+ * of sending a partial body. That is why the loaded site is kept beside the
+ * document rather than thrown away.
+ *
+ * The editor is fully usable offline, so the service follows the same contract
+ * as the rest of the app: with no backend it returns "no server document" and
+ * refuses every write, which is what stops it from showing "saved" for a
+ * document that lives only in browser memory.
  */
 
 /** @param {string} siteId */
-export const EDITOR_DRAFT_ENDPOINT = (siteId) => `${SITES_PATH}/${siteId}/draft`
+export const SITE_RECORD_ENDPOINT = (siteId) => `${SITES_API_PATH}/${siteId}`
 
 export const isBackendConnected = () => Boolean(config.api.baseUrl)
 
@@ -30,50 +38,76 @@ const requireBackend = (message) => {
 }
 
 /**
- * Loads the stored draft for a site.
+ * A stored `content` value is a real draft only when it carries pages.
  *
- * Returns `null` when there is no backend or no draft yet, which the editor
- * treats as "start from a local working state" rather than an error.
+ * `null`, `{}` and an array are all "no document yet". Checking before
+ * `normalizeEditorDocument` matters because that normalizer always manufactures
+ * one empty page, which would look like a server draft and stop the template
+ * seed from ever being applied.
+ */
+const toEditorDocument = (content) => {
+  if (!content || typeof content !== 'object' || Array.isArray(content)) {
+    return null
+  }
+  if (!Array.isArray(content.pages) || content.pages.length === 0) {
+    return null
+  }
+  return normalizeEditorDocument(content)
+}
+
+const readSite = async (siteId) => {
+  const site = await httpClient.get(SITE_RECORD_ENDPOINT(siteId))
+  return site && typeof site === 'object' ? site : null
+}
+
+/**
+ * Loads the stored document and the project record it belongs to.
+ *
+ * Returns `{ document: null, site: null }` when there is no backend. A site that
+ * exists but has `content: null` (or an empty object) returns its record with a
+ * null document, which the editor treats as "start from the template seed".
  */
 const getSiteDraft = async (siteId) => {
   if (!isBackendConnected() || !siteId) {
-    return null
+    return { document: null, site: null }
   }
-  try {
-    const response = await httpClient.get(EDITOR_DRAFT_ENDPOINT(siteId))
-    // A 204 response is a real "no draft yet", not an empty document.
-    return response ? normalizeEditorDocument(response) : null
-  } catch (error) {
-    /*
-     * Some backends answer "this project has no draft" with 404. The caller
-     * already treats null as that state, so a missing draft must not become an
-     * editor error page.
-     */
-    if (getRequestErrorCode(error) === ERROR_CODE.NOT_FOUND) {
-      return null
-    }
-    throw error
+
+  const site = await readSite(siteId)
+  return {
+    document: toEditorDocument(site?.content),
+    site,
   }
 }
 
 /**
- * Persists the editor document.
+ * Persists the editor document on the site resource.
  *
- * The payload is normalised by the model before it leaves, so the future API
- * contract is already fixed. Without a backend this always throws, and the
- * editor surfaces that as "backend not connected" instead of a success message.
+ * `projectName` and `slug` come from the loaded site, never from the local
+ * document, and `content` is the normalised editor document. The body therefore
+ * always carries all three required fields.
  */
-const saveSiteDraft = async (siteId, document) => {
+const saveSiteDraft = async (siteId, document, site = null) => {
   requireBackend(
     'Saving the website draft is unavailable until the backend is connected.',
   )
-  return normalizeEditorDocument(
-    await httpClient.put(EDITOR_DRAFT_ENDPOINT(siteId), buildEditorDraftPayload(document)),
-  )
+
+  const current = site ?? (await readSite(siteId))
+  const content = buildEditorDraftPayload(document)
+
+  const response = await httpClient.put(SITE_RECORD_ENDPOINT(siteId), {
+    projectName:
+      typeof current?.projectName === 'string' ? current.projectName : '',
+    slug: typeof current?.slug === 'string' ? current.slug : '',
+    content,
+  })
+
+  // The saved response is the source of truth; fall back to the body we sent if
+  // the server acknowledges the write without echoing `content`.
+  return toEditorDocument(response?.content) ?? normalizeEditorDocument(content)
 }
 
 const siteEditorService = {
-  EDITOR_DRAFT_ENDPOINT,
+  SITE_RECORD_ENDPOINT,
   isBackendConnected,
   getSiteDraft,
   saveSiteDraft,

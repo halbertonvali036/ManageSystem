@@ -2,6 +2,7 @@ import config from '@/config'
 import httpClient, {
   BackendNotConnectedError,
   ERROR_CODE,
+  isEndpointUnavailable,
   RequestError,
 } from '@/services/httpClient'
 import { SUPPORT_REQUESTS_PATH, toSupportRequestPayload } from '@/models/support'
@@ -34,7 +35,18 @@ const supportService = {
         code: ERROR_CODE.VALIDATION,
       })
     }
-    return httpClient.post(SUPPORT_REQUESTS_PATH, payload)
+    try {
+      return await httpClient.post(SUPPORT_REQUESTS_PATH, payload)
+    } catch (error) {
+      // The intake endpoint is not implemented yet: 404/403/405 becomes the
+      // same "integration pending" refusal the no-backend path already uses.
+      if (isEndpointUnavailable(error)) {
+        throw new BackendNotConnectedError(
+          'Support requests are not connected yet — nothing was sent.',
+        )
+      }
+      throw error
+    }
   },
 }
 

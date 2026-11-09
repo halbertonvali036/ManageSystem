@@ -413,4 +413,40 @@ export const applySiteContent = (document, content) => {
   return { ...document, pages: nextPages }
 }
 
+/**
+ * Cache of probe results, keyed by the (stable, frozen) template document.
+ * The wizard renders on every keystroke, so the nine probes run once per
+ * template document instead of on every render.
+ */
+const supportedFieldsCache = new WeakMap()
+
+/**
+ * The content fields a given template document can actually host.
+ *
+ * The mapping above is the single source of truth: a field counts as supported
+ * exactly when applying a unique sentinel value for it changes the document.
+ * When the template has no slot for a field (for example `aboutText` in a
+ * template without an about band), applying it is a no-op and the field is
+ * reported as unsupported, so the wizard can hide it and explain why — without
+ * this model ever re-declaring the mapping itself.
+ *
+ * Returns every field for a document without pages, so an unexpected input
+ * degrades to the previous behaviour (all fields shown) instead of an empty form.
+ */
+export const getSupportedContentFields = (document) => {
+  if (!document || !Array.isArray(document.pages)) {
+    return [...SITE_CONTENT_FIELDS]
+  }
+  const cached = supportedFieldsCache.get(document)
+  if (cached) {
+    return cached
+  }
+  const supported = SITE_CONTENT_FIELDS.filter((field) => {
+    const sentinel = `${field} probe value`
+    return applySiteContent(document, { [field]: sentinel }) !== document
+  })
+  supportedFieldsCache.set(document, supported)
+  return supported
+}
+
 export default normalizeSiteContent

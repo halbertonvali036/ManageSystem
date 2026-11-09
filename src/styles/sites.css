@@ -933,6 +933,13 @@
   background: var(--color-surface-2);
 }
 
+/* The small "discard this attempt" action below the wizard form. */
+.create-site-startover {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-4);
+}
+
 /* The offline preview action sits outside the wizard form. */
 .local-draft-entry {
   display: flex;

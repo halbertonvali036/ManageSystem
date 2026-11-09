@@ -1824,6 +1824,8 @@ const en = {
     templateLabel: 'Starting template',
     templateTitle: 'Choose a starting template',
     templateHint: 'The template sets the structure of the first pages of your project.',
+    templateUnavailable:
+      'The selected template is not available on the server yet. Choose another template.',
     templateNone: 'Blank template',
     templateNoneText: 'An empty project to start from scratch.',
     comingSoonNote: 'Templates are coming soon.',
@@ -1837,6 +1839,8 @@ const en = {
       'This information replaces the sample copy from the template on your new site. Every field is optional.',
     contentOptionalNote:
       'Fill in only what you want on your site. The brand falls back to the project name, and you can skip this step.',
+    fieldsIgnoredByTemplate:
+      'The “{template}” template does not place these fields: {fields}. They are kept, but they will not appear on this site.',
     siteNameLabel: 'Brand / site name',
     siteNamePlaceholder: 'e.g. My Company',
     siteNameHelper: 'Leave empty to use the project name.',
@@ -1887,6 +1891,7 @@ const en = {
       'Project creation is not connected to the backend yet, so no project is created.',
     failedNotice:
       'The project could not be created. Please try again in a moment.',
+    startOver: 'Start over',
     cancel: 'Cancel',
   },
   siteTemplate: {
@@ -3378,6 +3383,12 @@ const en = {
     previewStructureNote:
       'This preview uses the same pages, sections and blocks as the editor. Image placeholders can be replaced in your draft.',
     useTemplate: 'Use template',
+    notAvailableYet: 'Not available yet',
+    catalogUnavailable: 'Template catalog is not available on the server yet',
+    catalogUnavailableHint:
+      'Site creation is disabled until the server catalog is available.',
+    catalogRetry: 'Try again',
+    catalogLoading: 'Checking template availability…',
     categoryBasic: 'Basic',
     categoryBusiness: 'Business',
     categoryPersonal: 'Personal',

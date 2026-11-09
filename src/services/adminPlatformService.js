@@ -1,5 +1,9 @@
 import config from '@/config'
-import httpClient, { BackendNotConnectedError, RequestError } from '@/services/httpClient'
+import httpClient, {
+  BackendNotConnectedError,
+  isEndpointUnavailable,
+  RequestError,
+} from '@/services/httpClient'
 import usersService from '@/services/usersService'
 import { ADMIN_COLLECTIONS } from '@/models/adminPlatform'
 import { ADMIN_PLAN_IDS } from '@/models/adminPlan'
@@ -7,6 +11,19 @@ import { readAdminText } from '@/models/adminPlatform'
 
 const requireBackend = () => {
   if (!config.api.baseUrl) throw new BackendNotConnectedError()
+}
+
+/**
+ * The platform endpoints are not implemented yet. A 404/403/405 is the
+ * backend refusing the route, which becomes the same `BackendNotConnectedError`
+ * the admin pages already render as their "unavailable" state instead of a
+ * generic load error.
+ */
+const asUnavailable = (error) => {
+  if (isEndpointUnavailable(error)) {
+    throw new BackendNotConnectedError('The admin API is not available.')
+  }
+  throw error
 }
 
 const readObject = response => {
@@ -80,54 +97,82 @@ const readTemplateMetadata = (payload, { partial = false } = {}) => {
 const adminPlatformService = {
   async getOverview() {
     requireBackend()
-    return readObject(await httpClient.get('/admin/overview'))
+    try {
+      return readObject(await httpClient.get('/admin/overview'))
+    } catch (error) {
+      return asUnavailable(error)
+    }
   },
   async getSettings() {
     requireBackend()
-    return readObject(await httpClient.get('/admin/settings'))
+    try {
+      return readObject(await httpClient.get('/admin/settings'))
+    } catch (error) {
+      return asUnavailable(error)
+    }
   },
   async getCollection(section, filters = {}) {
     requireBackend()
     if (!Object.hasOwn(ADMIN_COLLECTIONS, section)) throw new RequestError('Unknown platform resource.')
-    // Preserve the existing generic account API contract. All other platform
-    // paths are proposed read interfaces documented for backend handoff.
-    const response = section === 'users'
-      ? await usersService.getUsers(filters)
-      : await httpClient.get(`/admin/${section}`)
-    const records = response?.data ?? response
-    if (!Array.isArray(records) || records.some(record => !record || typeof record !== 'object' || Array.isArray(record))) {
-      throw new RequestError('Invalid platform collection.')
+    try {
+      // Preserve the existing generic account API contract. All other platform
+      // paths are proposed read interfaces documented for backend handoff.
+      const response = section === 'users'
+        ? await usersService.getUsers(filters)
+        : await httpClient.get(`/admin/${section}`)
+      const records = response?.data ?? response
+      if (!Array.isArray(records) || records.some(record => !record || typeof record !== 'object' || Array.isArray(record))) {
+        throw new RequestError('Invalid platform collection.')
+      }
+      return records
+    } catch (error) {
+      return asUnavailable(error)
     }
-    return records
   },
   async assignUserPlan(userId, planId) {
     requireBackend()
     if (!readAdminText(userId)) throw new RequestError('A user is required.')
     if (!ADMIN_PLAN_IDS.includes(planId)) throw new RequestError('Unknown plan.')
-    return readObject(
-      await httpClient.patch(`/admin/users/${encodeURIComponent(userId)}/plan`, { plan: planId }),
-    )
+    try {
+      return readObject(
+        await httpClient.patch(`/admin/users/${encodeURIComponent(userId)}/plan`, { plan: planId }),
+      )
+    } catch (error) {
+      return asUnavailable(error)
+    }
   },
   /** Metadata-only creation. The page/section skeleton stays a backend concern. */
   async createTemplate(payload) {
     requireBackend()
-    return readMutation(await httpClient.post('/admin/templates', readTemplateMetadata(payload)))
+    try {
+      return readMutation(await httpClient.post('/admin/templates', readTemplateMetadata(payload)))
+    } catch (error) {
+      return asUnavailable(error)
+    }
   },
   async updateTemplate(templateId, patch) {
     requireBackend()
     if (!readAdminText(templateId)) throw new RequestError('A template is required.')
     const metadata = readTemplateMetadata(patch, { partial: true })
     if (Object.keys(metadata).length === 0) throw new RequestError('No template changes were provided.')
-    return readMutation(
-      await httpClient.patch(`/admin/templates/${encodeURIComponent(templateId)}`, metadata),
-    )
+    try {
+      return readMutation(
+        await httpClient.patch(`/admin/templates/${encodeURIComponent(templateId)}`, metadata),
+      )
+    } catch (error) {
+      return asUnavailable(error)
+    }
   },
   async deleteTemplate(templateId) {
     requireBackend()
     if (!readAdminText(templateId)) throw new RequestError('A template is required.')
-    return readMutation(
-      await httpClient.delete(`/admin/templates/${encodeURIComponent(templateId)}`),
-    )
+    try {
+      return readMutation(
+        await httpClient.delete(`/admin/templates/${encodeURIComponent(templateId)}`),
+      )
+    } catch (error) {
+      return asUnavailable(error)
+    }
   },
 }
 

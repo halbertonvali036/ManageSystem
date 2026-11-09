@@ -1,5 +1,8 @@
 import config from '@/config'
-import httpClient, { BackendNotConnectedError } from '@/services/httpClient'
+import httpClient, {
+  BackendNotConnectedError,
+  isEndpointUnavailable,
+} from '@/services/httpClient'
 import { isKnownDeploymentStatus, normalizeDeployment, normalizeDeploymentList } from '@/models/deployment'
 
 /**
@@ -25,6 +28,19 @@ const requireBackend = (message) => {
   }
 }
 
+/**
+ * The deployment endpoints are not implemented yet. A 404/403/405 is the
+ * backend saying "no such resource", so it becomes the same
+ * `BackendNotConnectedError` the UI already renders as "unavailable" instead of
+ * a generic request failure.
+ */
+const asUnavailable = (error) => {
+  if (isEndpointUnavailable(error)) {
+    throw new BackendNotConnectedError('Deployment integration is unavailable.')
+  }
+  throw error
+}
+
 const DEPLOYMENTS_API_PATH = '/deployments'
 
 const DEPLOYMENT_API_PATH = (deploymentId) => `${DEPLOYMENTS_API_PATH}/${deploymentId}`
@@ -47,7 +63,14 @@ const getDeployments = async ({ siteId = null, status = null } = {}) => {
   const query = params.toString()
   const path = query ? `${DEPLOYMENTS_API_PATH}?${query}` : DEPLOYMENTS_API_PATH
 
-  return normalizeDeploymentList(await httpClient.get(path))
+  try {
+    return normalizeDeploymentList(await httpClient.get(path))
+  } catch (error) {
+    if (isEndpointUnavailable(error)) {
+      return []
+    }
+    throw error
+  }
 }
 
 /** One deployment, or null when absent or the API is not connected. */
@@ -55,7 +78,14 @@ const getDeployment = async (deploymentId) => {
   if (!isBackendConnected() || !deploymentId) {
     return null
   }
-  return normalizeDeployment(await httpClient.get(DEPLOYMENT_API_PATH(deploymentId)))
+  try {
+    return normalizeDeployment(await httpClient.get(DEPLOYMENT_API_PATH(deploymentId)))
+  } catch (error) {
+    if (isEndpointUnavailable(error)) {
+      return null
+    }
+    throw error
+  }
 }
 
 /**
@@ -72,30 +102,42 @@ const deploySite = async (siteId, { version = null } = {}) => {
     throw new Error('A site is required to deploy.')
   }
 
-  return normalizeDeployment(
-    await httpClient.post(DEPLOYMENTS_API_PATH, {
-      siteId,
-      ...(version ? { version } : {}),
-    })
-  )
+  try {
+    return normalizeDeployment(
+      await httpClient.post(DEPLOYMENTS_API_PATH, {
+        siteId,
+        ...(version ? { version } : {}),
+      })
+    )
+  } catch (error) {
+    return asUnavailable(error)
+  }
 }
 
 /** Requests a fresh build of an existing deployment. Refused until a backend is available. */
 const redeploy = async (deploymentId) => {
   requireBackend('Redeploying is unavailable until the backend is connected.')
 
-  return normalizeDeployment(
-    await httpClient.post(`${DEPLOYMENT_API_PATH(deploymentId)}/redeploy`)
-  )
+  try {
+    return normalizeDeployment(
+      await httpClient.post(`${DEPLOYMENT_API_PATH(deploymentId)}/redeploy`)
+    )
+  } catch (error) {
+    return asUnavailable(error)
+  }
 }
 
 /** Asks the backend to stop a build that is still moving. Refused until one is available. */
 const stopDeployment = async (deploymentId) => {
   requireBackend('Stopping a deployment is unavailable until the backend is connected.')
 
-  return normalizeDeployment(
-    await httpClient.post(`${DEPLOYMENT_API_PATH(deploymentId)}/stop`)
-  )
+  try {
+    return normalizeDeployment(
+      await httpClient.post(`${DEPLOYMENT_API_PATH(deploymentId)}/stop`)
+    )
+  } catch (error) {
+    return asUnavailable(error)
+  }
 }
 
 /**
@@ -108,9 +150,13 @@ const stopDeployment = async (deploymentId) => {
 const rollbackDeployment = async (deploymentId) => {
   requireBackend('Rolling back is unavailable until the backend is connected.')
 
-  return normalizeDeployment(
-    await httpClient.post(`${DEPLOYMENT_API_PATH(deploymentId)}/rollback`)
-  )
+  try {
+    return normalizeDeployment(
+      await httpClient.post(`${DEPLOYMENT_API_PATH(deploymentId)}/rollback`)
+    )
+  } catch (error) {
+    return asUnavailable(error)
+  }
 }
 
 /**
@@ -123,7 +169,14 @@ const getDeployableSites = async () => {
   if (!isBackendConnected()) {
     return []
   }
-  return httpClient.get(SITES_API_PATH)
+  try {
+    return await httpClient.get(SITES_API_PATH)
+  } catch (error) {
+    if (isEndpointUnavailable(error)) {
+      return []
+    }
+    throw error
+  }
 }
 
 const deploymentService = {

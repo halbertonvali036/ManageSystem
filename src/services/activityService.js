@@ -1,5 +1,5 @@
 import config from '@/config'
-import httpClient from '@/services/httpClient'
+import httpClient, { isEndpointUnavailable } from '@/services/httpClient'
 import {
   ACTIVITY_SCOPE,
   normalizeActivityList,
@@ -89,9 +89,21 @@ const getActivity = async ({ workspaceId, scope, query } = {}) => {
   }
   const search = params.toString()
 
-  return normalizeActivityList(
-    readActivityPayload(await httpClient.get(search ? `${basePath}?${search}` : basePath)),
-  )
+  try {
+    return normalizeActivityList(
+      readActivityPayload(await httpClient.get(search ? `${basePath}?${search}` : basePath)),
+    )
+  } catch (error) {
+    /*
+     * The activity resource is not implemented yet. A 404/403/405 means "no
+     * trail is available", which the page already renders as its empty state —
+     * not a load failure.
+     */
+    if (isEndpointUnavailable(error)) {
+      return []
+    }
+    throw error
+  }
 }
 
 /**
@@ -105,11 +117,18 @@ const getUsage = async (workspaceId, scope) => {
   if (!isBackendConnected()) {
     return null
   }
-  if (scope === ACTIVITY_SCOPE.ACCOUNT) {
-    return normalizeUsage(await httpClient.get(ACCOUNT_USAGE_PATH))
-  }
-  if (scope === ACTIVITY_SCOPE.WORKSPACE && workspaceId) {
-    return normalizeUsage(await httpClient.get(WORKSPACE_USAGE_PATH(workspaceId)))
+  try {
+    if (scope === ACTIVITY_SCOPE.ACCOUNT) {
+      return normalizeUsage(await httpClient.get(ACCOUNT_USAGE_PATH))
+    }
+    if (scope === ACTIVITY_SCOPE.WORKSPACE && workspaceId) {
+      return normalizeUsage(await httpClient.get(WORKSPACE_USAGE_PATH(workspaceId)))
+    }
+  } catch (error) {
+    if (isEndpointUnavailable(error)) {
+      return null
+    }
+    throw error
   }
   return null
 }
@@ -125,11 +144,18 @@ const getUsageLimits = async (workspaceId, scope) => {
   if (!isBackendConnected()) {
     return null
   }
-  if (scope === ACTIVITY_SCOPE.ACCOUNT) {
-    return normalizeUsageLimits(await httpClient.get(ACCOUNT_USAGE_LIMITS_PATH))
-  }
-  if (scope === ACTIVITY_SCOPE.WORKSPACE && workspaceId) {
-    return normalizeUsageLimits(await httpClient.get(WORKSPACE_USAGE_LIMITS_PATH(workspaceId)))
+  try {
+    if (scope === ACTIVITY_SCOPE.ACCOUNT) {
+      return normalizeUsageLimits(await httpClient.get(ACCOUNT_USAGE_LIMITS_PATH))
+    }
+    if (scope === ACTIVITY_SCOPE.WORKSPACE && workspaceId) {
+      return normalizeUsageLimits(await httpClient.get(WORKSPACE_USAGE_LIMITS_PATH(workspaceId)))
+    }
+  } catch (error) {
+    if (isEndpointUnavailable(error)) {
+      return null
+    }
+    throw error
   }
   return null
 }

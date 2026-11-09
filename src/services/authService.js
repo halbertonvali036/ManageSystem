@@ -1,6 +1,8 @@
 import config from '@/config'
 import { isKnownRole } from '@/utils/roles'
 import httpClient, { BackendNotConnectedError, RequestError } from '@/services/httpClient'
+import templateService from '@/services/templateService'
+import { clearCreateWizardState } from '@/services/createWizardStore'
 import {
   AUTH_SESSION_STORAGE_KEY,
   clearStoredSession,
@@ -109,6 +111,11 @@ const login = async (credentials, { remember = false, restrictedRole = null } = 
 
 const logout = () => {
   clearStoredSession()
+  // The template catalogue belongs to the signed-in session.
+  templateService.clearTemplateCache()
+  // A half-finished create wizard belongs to the session too: it must not
+  // restore for whoever signs in next in this tab.
+  clearCreateWizardState()
 }
 
 /* ── External authentication (Google) ──────────────────────── */

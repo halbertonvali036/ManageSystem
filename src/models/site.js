@@ -16,6 +16,10 @@ import {
   isValidSiteThemeId,
 } from '@/models/siteTheme'
 import { normalizeSiteContent } from '@/models/siteContent'
+import {
+  normalizeSiteResponse,
+  normalizeSiteStatus,
+} from '@/models/siteWire'
 import { getDateFormatter } from '@/utils/intl'
 
 export const SITE_STATUS = Object.freeze({
@@ -95,25 +99,29 @@ export {
 
 /**
  * @typedef {Object} Site
- * @property {string} id              Backend identifier.
- * @property {string} name            User-facing project name.
+ * @property {number|string|null} id   Backend identifier.
+ * @property {string} name            User-facing project name (`projectName` on the wire).
  * @property {string} slug            URL segment for the site.
- * @property {'draft'|'published'|'unpublished'|'archived'} status
- * @property {string|null} templateId  Starting template id.
- * @property {string|null} themePresetId Site theme preset id.
- * @property {string|null} thumbnailUrl Preview image, null until generated.
+ * @property {'draft'|'published'|'unpublished'|'archived'} status Lower-case UI status.
+ * @property {string} templateId      Frontend template id.
+ * @property {number|null} backendTemplateId Numeric template id from the API.
+ * @property {string|null} templateName       Template name from the API.
+ * @property {string} themePresetId   Site theme preset id.
+ * @property {object} themeConfig     Theme object from the API (not the preset id).
+ * @property {string|null} thumbnailUrl Preview image (`previewImageUrl` on the wire).
  * @property {string|null} publishedUrl Public address once published.
  * @property {string|null} customDomain Custom domain, null until connected.
- * @property {string|null} createdAt   ISO 8601 timestamp.
- * @property {string|null} updatedAt   ISO 8601 timestamp.
+ * @property {string|null} createdAt   ISO 8601 timestamp or null.
+ * @property {string|null} updatedAt   ISO 8601 timestamp or null.
+ * @property {object} [content]       Full site content, detail responses only.
  */
 
 /**
  * Local draft shape for a project being created.
  *
  * This is the wizard/editor's working description, not the wire contract:
- * `siteService.toCreateSitePayload` owns the request field names. Keeping the
- * two apart means the seed document and the API body can evolve independently.
+ * `models/siteWire.js` owns the request field names. Keeping the two apart means
+ * the seed document and the API body can evolve independently.
  *
  * `templateId` names the structure the project starts from and `themePresetId`
  * the site theme it starts on. Both are validated against the libraries, so an
@@ -168,36 +176,14 @@ export const buildSiteRename = ({ name = '' } = {}) => ({
   name: name.trim(),
 })
 
-export const normalizeSiteStatus = (status) =>
-  SITE_STATUSES.includes(status) ? status : SITE_STATUS.DRAFT
+export { normalizeSiteStatus }
 
 /**
- * Maps an API response onto the model above. Optional fields stay null rather
- * than becoming empty strings, so the UI can tell "not set" from "set to blank".
+ * Backwards-compatible alias for the wire normalizer. The translation itself
+ * lives in `models/siteWire.js`; this name remains for callers that already
+ * import the project model.
  */
-export const normalizeSite = (raw) => {
-  if (!raw || typeof raw !== 'object') {
-    return null
-  }
-
-  return {
-    id: raw.id ?? null,
-    name: raw.name ?? '',
-    slug: raw.slug ?? '',
-    status: normalizeSiteStatus(raw.status),
-    templateId: isValidSiteTemplateId(raw.templateId)
-      ? raw.templateId
-      : DEFAULT_SITE_TEMPLATE_ID,
-    themePresetId: isValidSiteThemeId(raw.themePresetId ?? raw.styleId)
-      ? (raw.themePresetId ?? raw.styleId)
-      : DEFAULT_SITE_THEME_ID,
-    thumbnailUrl: raw.thumbnailUrl ?? null,
-    publishedUrl: raw.publishedUrl ?? null,
-    customDomain: raw.customDomain ?? null,
-    createdAt: raw.createdAt ?? null,
-    updatedAt: raw.updatedAt ?? null,
-  }
-}
+export const normalizeSite = (raw) => normalizeSiteResponse(raw)
 
 export const isSitePublished = (site) =>
   normalizeSiteStatus(site?.status) === SITE_STATUS.PUBLISHED
@@ -229,8 +215,10 @@ export const getSiteAddressLabel = (site) => {
  */
 export const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
-export const SLUG_MAX_LENGTH = 63
-export const SITE_NAME_MAX_LENGTH = 80
+// The backend accepts a slug of up to 80 characters and a project name of up
+// to 150; these limits are the frontend's live validation of that contract.
+export const SLUG_MAX_LENGTH = 80
+export const SITE_NAME_MAX_LENGTH = 150
 
 export const isValidSiteSlug = (value) =>
   SLUG_PATTERN.test(value) && value.length <= SLUG_MAX_LENGTH

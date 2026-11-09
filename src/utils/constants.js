@@ -48,6 +48,17 @@ export const NEW_SITE_PATH = '/sites/new'
 /** The template gallery. */
 export const TEMPLATES_PATH = '/templates'
 
+// ── Backend API paths ───────────────────────────────────────────────────────
+// These are request paths, not router paths. Every path below is relative to
+// VITE_API_BASE_URL and includes the backend's `/api` prefix. Router paths stay
+// unchanged above; the two must never be mixed.
+
+/** Sites collection and item endpoints. */
+export const SITES_API_PATH = '/api/sites'
+
+/** Templates collection endpoint. */
+export const TEMPLATES_API_PATH = '/api/templates'
+
 /** The account-wide activity trail. */
 export const ACTIVITY_PATH = '/activity'
 

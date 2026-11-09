@@ -1828,6 +1828,8 @@ language: {
     templateLabel: 'Başlanğıc şablon',
     templateTitle: 'Başlanğıc şablon seçin',
     templateHint: 'Şablon yeni layihənin ilk səhifələrinin quruluşunu təyin edir.',
+    templateUnavailable:
+      'Seçilmiş şablon hələ serverdə mövcud deyil. Başqa şablon seçin.',
     templateNone: 'Boş şablon',
     templateNoneText: 'Sıfırdan başlamaq üçün boş bir layihə.',
     comingSoonNote: 'Şablonlar tezliklə əlçəda olacaq.',
@@ -1841,6 +1843,8 @@ language: {
       'Bu məlumatlar yeni saytınızda şablonun nümunə mətnini əvəz edəcək. Bütün sahələr isteğe bağlıdır.',
     contentOptionalNote:
       'Yalnız saytınızda görmək istədiyiniz məlumatları doldurun. Brend adı boş qalarsa, layihənin adı istifadə olunacaq. Bu addımı keçə bilərsiniz.',
+    fieldsIgnoredByTemplate:
+      '“{template}” şablonu bu sahələri yerləşdirmir: {fields}. Dəyərlər saxlanılır, lakin bu sayt görünməyəcək.',
     siteNameLabel: 'Brend / sayt adı',
     siteNamePlaceholder: 'Məsələn: Mənim şirkətim',
     siteNameHelper: 'Boş buraxsanız layihənin adı istifadə olunacaq.',
@@ -1892,6 +1896,7 @@ language: {
       'Layihə yaratma hələ backend ilə birləşdirilməyib, ona görə heç bir layihə yaradılmır.',
     failedNotice:
       'Layihə yaradıla bilmədi. Bir azdan sonra yenidən cəhd edin.',
+    startOver: 'Baştan başla',
     cancel: 'Ləğv et',
   },
   siteTemplate: {
@@ -3384,6 +3389,12 @@ language: {
     previewStructureNote:
       'Bu önizləmə redaktorla eyni səhifə, bölmə və bloklardan istifadə edir. Şəkil yer tutucularını qaralamada əvəz edə bilərsiniz.',
     useTemplate: 'Şablonu istifadə et',
+    notAvailableYet: 'Hələ mövcud deyil',
+    catalogUnavailable: 'Şablon kataloqu hələ serverdə mövcud deyil',
+    catalogUnavailableHint:
+      'Server kataloqu mövcud olana qədər sayt yaradılması deaktivdir.',
+    catalogRetry: 'Yenidən cəhd et',
+    catalogLoading: 'Şablonların mövcudluğu yoxlanılır…',
     categoryBasic: 'Sadə',
     categoryBusiness: 'Biznes',
     categoryPersonal: 'Şəxsi',

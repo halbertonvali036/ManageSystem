@@ -1,5 +1,8 @@
 import config from '@/config'
-import httpClient, { BackendNotConnectedError } from '@/services/httpClient'
+import httpClient, {
+  BackendNotConnectedError,
+  isEndpointUnavailable,
+} from '@/services/httpClient'
 
 /**
  * Billing service foundation.
@@ -49,6 +52,28 @@ const toList = (response, keys = []) => {
   return []
 }
 
+/**
+ * The billing endpoints are not implemented yet. A 404/403/405 from a read is
+ * "nothing is served here", so it degrades to the same empty value the service
+ * returns when no backend is configured — the page renders its existing
+ * unavailable/empty state instead of a load failure. A real failure (400/409/
+ * 422/5xx) still propagates.
+ */
+const readUnavailable = (error, fallback) => {
+  if (isEndpointUnavailable(error)) {
+    return fallback
+  }
+  throw error
+}
+
+/** The same refusal for writes: an absent endpoint must not look like a charge. */
+const writeUnavailable = (error) => {
+  if (isEndpointUnavailable(error)) {
+    throw new BackendNotConnectedError('Billing integration is unavailable.')
+  }
+  throw error
+}
+
 /* ── Reads ────────────────────────────────────────────────── */
 
 /** Current subscription summary for the signed-in account, or `null`. */
@@ -56,8 +81,12 @@ const getBillingOverview = async () => {
   if (!isBackendConnected()) {
     return null
   }
-  const response = await httpClient.get(BILLING_PATH)
-  return response?.data ?? response ?? null
+  try {
+    const response = await httpClient.get(BILLING_PATH)
+    return response?.data ?? response ?? null
+  } catch (error) {
+    return readUnavailable(error, null)
+  }
 }
 
 /** Published plan catalogue for the signed-in account, or `[]`. */
@@ -65,8 +94,12 @@ const getPlans = async () => {
   if (!isBackendConnected()) {
     return []
   }
-  const response = await httpClient.get(PLANS_PATH)
-  return toList(response, ['plans'])
+  try {
+    const response = await httpClient.get(PLANS_PATH)
+    return toList(response, ['plans'])
+  } catch (error) {
+    return readUnavailable(error, [])
+  }
 }
 
 /** Stored payment-method metadata (brand / last4 / expiry), or `[]`. */
@@ -74,8 +107,12 @@ const getPaymentMethods = async () => {
   if (!isBackendConnected()) {
     return []
   }
-  const response = await httpClient.get(PAYMENT_METHODS_PATH)
-  return toList(response, ['paymentMethods', 'payment_methods'])
+  try {
+    const response = await httpClient.get(PAYMENT_METHODS_PATH)
+    return toList(response, ['paymentMethods', 'payment_methods'])
+  } catch (error) {
+    return readUnavailable(error, [])
+  }
 }
 
 /** Invoice history for the signed-in account, or `[]`. */
@@ -83,8 +120,12 @@ const getInvoices = async () => {
   if (!isBackendConnected()) {
     return []
   }
-  const response = await httpClient.get(INVOICES_PATH)
-  return toList(response, ['invoices'])
+  try {
+    const response = await httpClient.get(INVOICES_PATH)
+    return toList(response, ['invoices'])
+  } catch (error) {
+    return readUnavailable(error, [])
+  }
 }
 
 /* ── Mutations (require backend + provider integration) ───── */
@@ -98,15 +139,23 @@ const getInvoices = async () => {
  */
 const createCheckoutSession = async (planId, cycle) => {
   ensureBackendConnection()
-  const response = await httpClient.post(CHECKOUT_PATH, { planId, cycle: cycle ?? null })
-  return response?.data ?? response ?? null
+  try {
+    const response = await httpClient.post(CHECKOUT_PATH, { planId, cycle: cycle ?? null })
+    return response?.data ?? response ?? null
+  } catch (error) {
+    return writeUnavailable(error)
+  }
 }
 
 /** Creates a provider-hosted billing portal session for self-service. */
 const openBillingPortal = async () => {
   ensureBackendConnection()
-  const response = await httpClient.post(PORTAL_PATH, {})
-  return response?.data ?? response ?? null
+  try {
+    const response = await httpClient.post(PORTAL_PATH, {})
+    return response?.data ?? response ?? null
+  } catch (error) {
+    return writeUnavailable(error)
+  }
 }
 
 /**
@@ -119,44 +168,68 @@ const openBillingPortal = async () => {
  */
 const cancelSubscription = async ({ atPeriodEnd = true } = {}) => {
   ensureBackendConnection()
-  const response = await httpClient.post(SUBSCRIPTION_PATH, {
-    cancelAtPeriodEnd: atPeriodEnd,
-  })
-  return response?.data ?? response ?? null
+  try {
+    const response = await httpClient.post(SUBSCRIPTION_PATH, {
+      cancelAtPeriodEnd: atPeriodEnd,
+    })
+    return response?.data ?? response ?? null
+  } catch (error) {
+    return writeUnavailable(error)
+  }
 }
 
 /** Un-cancels a subscription that is set to end at the close of its period. */
 const resumeSubscription = async () => {
   ensureBackendConnection()
-  const response = await httpClient.post(`${SUBSCRIPTION_PATH}/resume`, {})
-  return response?.data ?? response ?? null
+  try {
+    const response = await httpClient.post(`${SUBSCRIPTION_PATH}/resume`, {})
+    return response?.data ?? response ?? null
+  } catch (error) {
+    return writeUnavailable(error)
+  }
 }
 
 /** Card details are collected by the provider's secure component only. */
 const addPaymentMethod = async () => {
   ensureBackendConnection()
-  const response = await httpClient.post(PAYMENT_METHODS_PATH, {})
-  return response?.data ?? response ?? null
+  try {
+    const response = await httpClient.post(PAYMENT_METHODS_PATH, {})
+    return response?.data ?? response ?? null
+  } catch (error) {
+    return writeUnavailable(error)
+  }
 }
 
 const setDefaultPaymentMethod = async (paymentMethodId) => {
   ensureBackendConnection()
-  const response = await httpClient.post(
-    `${PAYMENT_METHODS_PATH}/${paymentMethodId}/default`,
-    {},
-  )
-  return response?.data ?? response ?? null
+  try {
+    const response = await httpClient.post(
+      `${PAYMENT_METHODS_PATH}/${paymentMethodId}/default`,
+      {},
+    )
+    return response?.data ?? response ?? null
+  } catch (error) {
+    return writeUnavailable(error)
+  }
 }
 
 const removePaymentMethod = async (paymentMethodId) => {
   ensureBackendConnection()
-  await httpClient.delete(`${PAYMENT_METHODS_PATH}/${paymentMethodId}`)
+  try {
+    await httpClient.delete(`${PAYMENT_METHODS_PATH}/${paymentMethodId}`)
+  } catch (error) {
+    return writeUnavailable(error)
+  }
 }
 
 const downloadInvoice = async (invoiceId) => {
   ensureBackendConnection()
-  const response = await httpClient.get(`${INVOICES_PATH}/${invoiceId}/receipt`)
-  return response?.data ?? response ?? null
+  try {
+    const response = await httpClient.get(`${INVOICES_PATH}/${invoiceId}/receipt`)
+    return response?.data ?? response ?? null
+  } catch (error) {
+    return readUnavailable(error, null)
+  }
 }
 
 const billingService = {

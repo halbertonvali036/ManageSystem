@@ -51,8 +51,9 @@ components; every service reads `config.api.baseUrl`.
   `getRequestErrorMessage` give a stable code plus a localised-safe default
   message. Reuse — do not duplicate.
 - **Error body** — the client reads `data.message` for the thrown message and
-  keeps the whole parsed body on `error.data`. **Return `{ message, errors? }`**
-  where `errors` maps field→message or field→string[].
+  keeps the whole parsed body on `error.data`. **Return exactly
+  `{ message, errors: { field: string[] } }`**; every `errors` value is an array
+  of strings and the UI shows the first one.
 - **Response unwrapping** — services accept a bare array/object *or* an
   enveloped `{ data }` / `{ items }` response (`response?.data ?? response`).
   Either shape works.
@@ -94,104 +95,220 @@ still decides which account and role the caller ends up with. The returned
 `PUT /sites or /activity or /deployments` · `DELETE /sites or /activity or /deployments` ·
 `POST /sites or /activity or /deployments`
 
-### Sites — `siteService.js`
+### Sites — `siteService.js` + `models/siteWire.js`
 
-`GET /sites` (filters `search`, `status`, …) · `GET /sites/:id` ·
-`POST /sites` · `PUT /sites/:id` · `DELETE /sites/:id` ·
-`POST /sites/:id/duplicate`
+**Base paths.** `SITES_API_PATH = '/api/sites'` and
+`TEMPLATES_API_PATH = '/api/templates'` live in `src/utils/constants.js` and are
+relative to `VITE_API_BASE_URL`. Auth keeps its own `/auth` paths; router paths
+(`/sites`, `/templates`, …) are unrelated and unchanged.
 
-#### `POST /sites` — create a project
+`GET /api/sites` (optional `status`, `search`) · `GET /api/sites/{id}` ·
+`POST /api/sites` · `PUT /api/sites/{id}` · `DELETE /api/sites/{id}` ·
+`POST /api/sites/{id}/duplicate`
 
-The create wizard sends exactly this body. `toCreateSitePayload` in
-`src/services/siteService.js` is the single place that names these fields, so a
-backend rename is a one-line change there and nowhere else.
+`GET /api/templates`
+
+Every request is Bearer-authenticated by `httpClient`.
+
+#### Site response
+
+`GET /api/sites` returns a **plain array** of summaries. A summary has no
+`content` key. `GET /api/sites/{id}` returns the same object **plus `content`**;
+`POST` and `PUT` responses also include `content`.
 
 ```json
 {
-  "name": "Acme Studio",
+  "id": 17,
+  "templateId": 4,
+  "templateName": "Nova AI",
+  "projectName": "Acme Studio",
   "slug": "acme-studio",
-  "templateId": "saas-starter",
-  "themePresetId": "aurora",
+  "status": "PUBLISHED",
+  "createdAt": "2026-02-03T09:15:30",
+  "updatedAt": "2026-02-04T10:20:05",
   "content": {
     "siteName": "Acme Studio",
-    "tagline": "Calm websites, shipped fast",
-    "heroTitle": "We build calm websites",
-    "heroSubtitle": "A small senior team",
-    "ctaLabel": "Start a project",
-    "aboutText": "We have been building for a decade.",
-    "email": "hello@acme.test",
-    "phone": "+1 555 0100",
-    "address": "12 Market Street, Baku"
+    "tagline": "Calm websites, shipped fast"
   }
 }
 ```
 
-- `name`, `slug`, `templateId` and `themePresetId` are always sent.
-- `content` is **optional and always present as an object**. It may be `{}` when
-  the visitor skipped the information step.
-- `content` contains **only trimmed, non-empty fields**: empty strings are
-  omitted, not sent. The accepted keys are
-  `siteName`, `tagline`, `heroTitle`, `heroSubtitle`, `ctaLabel`, `aboutText`,
-  `email`, `phone`, `address`.
-- `content` is plain text. `aboutText` is capped at 1000 characters and every
-  other field at 120; the frontend validates email and phone before sending.
-- Unknown `content` keys may be ignored safely. The backend should not fail a
-  create request because a key it does not use yet is present.
-- `201` should return the created site (`id` at minimum). The wizard then seeds
-  the first draft (see below) and routes to `/sites/:id`.
+- Field names and casing are exact: `projectName`, `templateId`, `templateName`,
+  `slug`, `status`, `createdAt`, `updatedAt`, `content`.
+- `templateId` is the backend's **numeric** template id. The frontend keeps it
+  as `backendTemplateId` and maps it to its own string `templateId` through
+  `src/models/templateCatalog.js` (`themeConfig.templateKey` first, then the
+  template name).
+- `status` is exactly `"DRAFT"` or `"PUBLISHED"`. The UI uses the lower-case
+  values internally and translates only at this boundary.
+- `createdAt` / `updatedAt` are `LocalDateTime` strings **without a timezone**.
+  They are parsed safely; a missing or invalid value becomes `null` and never
+  crashes a page.
+- `content` is an arbitrary object. Only detail/create/update responses carry it.
+  For a site created by this frontend it is the full editor document (pages,
+  sections, blocks, theme, navigation), so the editor can open the project
+  without a separate draft read.
 
-**Duplicate slug.** The frontend treats a duplicate URL as either `409` or
-`422`, and also recognises a plain `message` saying the slug/subdomain already
-exists. Prefer `409` (or `422` with `errors.slug`) with a user-readable
-`message`; the frontend shows it under the slug field and returns to step 1.
+#### `POST /api/sites` — create a project
 
-**Error format shown on the create step.** Return the shared error body:
+`toCreateSitePayload` in `src/models/siteWire.js` is the only place that builds
+this body.
+
+```json
+{
+  "templateId": 4,
+  "projectName": "Acme Studio",
+  "slug": "acme-studio",
+  "content": {
+    "pages": [
+      {
+        "id": "page-1",
+        "name": "Acme Studio",
+        "slug": "",
+        "isHome": true,
+        "sections": [
+          {
+            "id": "section-1",
+            "type": "hero",
+            "blocks": [
+              {
+                "id": "block-1",
+                "type": "heading",
+                "content": { "text": "We build calm websites" }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "activePageId": "page-1",
+    "navigation": { "items": [] },
+    "theme": {},
+    "motion": {},
+    "globalStyles": {}
+  },
+  "status": "DRAFT"
+}
+```
+
+- `templateId` is a number, `projectName` is the project's display name and
+  `slug` is the URL segment.
+- `content` is **required and always an object**. It is the full personalized
+  editor document, built before the request with `buildSiteSeedDocument`
+  (`createLocalDraftDocument` plus `applySiteContent`), so the visitor's brand,
+  hero, about and contact values are already applied to the template skeleton.
+  The backend stores this document; the wizard does **not** follow the create
+  with a `PUT` draft request.
+- `status` is always sent as `"DRAFT"` by the wizard.
+- Every create body has exactly the five keys above. The frontend never sends
+  `name`, `title`, `themePresetId` or any other local helper field.
+
+#### `PUT /api/sites/{id}` — update a project
+
+`toUpdateSitePayload` always sends these three keys together:
+
+```json
+{
+  "projectName": "Acme Studio",
+  "slug": "acme-studio",
+  "content": {},
+  "templateId": 4,
+  "status": "PUBLISHED"
+}
+```
+
+- `projectName`, `slug` and `content` are mandatory on **every** update, even
+  when only one value changed. `content` is always an object.
+- `templateId` and `status` are optional and are sent only when supplied.
+- A rename reads the current site first and sends all required fields back with
+  only `projectName` replaced, so it cannot clear the slug or content.
+
+#### `GET /api/templates` — template catalogue
+
+Returns an array of template objects (an enveloped `{ data: [...] }` response is
+also accepted by the service):
+
+```json
+{
+  "id": 4,
+  "name": "Nova AI",
+  "category": "ai",
+  "description": "A product-led AI landing page.",
+  "previewImageUrl": "https://cdn.example.com/nova.png",
+  "premium": true,
+  "themeConfig": {
+    "accent": "#6d5efc",
+    "radius": 12
+  }
+}
+```
+
+`normalizeTemplateResponse` keeps the numeric `id` as `backendTemplateId`, maps
+`previewImageUrl` to `thumbnailUrl`-equivalent usage, preserves `premium` as a
+boolean and `themeConfig` as an object. `templateId` is the matched frontend
+template id, or `null` when the server template has no frontend counterpart.
+
+#### Error format (create/update)
 
 ```json
 {
   "message": "Validation failed",
   "errors": {
-    "name": ["A project name is required."],
+    "projectName": ["A project name is required."],
     "slug": ["This URL is already taken."],
-    "email": ["Enter a valid email address."]
+    "content": ["Content must be an object."]
   }
 }
 ```
 
-- Each `errors` value is a `string[]`; the frontend shows the **first** item.
-- The frontend maps `title` → `name` and `subdomain` → `slug`. Content keys
-  (`siteName`, `tagline`, `heroTitle`, `heroSubtitle`, `ctaLabel`, `aboutText`,
-  `email`, `phone`, `address`) keep their names.
-- A `name`/`slug` error sends the wizard back to step 1; a content error sends it
-  to step 3. The first offending field is focused.
-- Errors on keys the form does not know are ignored as field errors, and the
-  top-level `message` is shown in the form error area instead.
-- `500` and network failures show `message` when present, otherwise the client's
-  default `SERVER`/`NETWORK` message. A `400` with a plain `message` is shown as
-  is. The generic "Could not create" copy is used only when neither exists.
-- `409`/`422` duplicate slug has no special body requirement beyond `message`;
-  without it the frontend falls back to its own "URL already taken" copy.
+- Every `errors` value is a `string[]`; the frontend shows the **first** item.
+- `projectName` errors are shown on the project-name field; `slug` errors on the
+  URL field. Content field errors keep their content key names.
+- The top-level `message` is shown when no field matches.
+- A duplicate slug should return `409`, or `422` with `errors.slug`.
+- A `400` with a plain `message` is shown as-is; `500`/network failures fall back
+  to the client's `SERVER`/`NETWORK` message.
 
 ### Editor draft & site settings
 
-- `GET|PUT /sites/:siteId/draft` — `siteEditorService.js`. Round-trips the whole
-  normalized editor document, including theme tokens, motion metadata and form
-  blocks.
-- **Draft seeding after create.** Once `POST /sites` returns an id, the wizard
-  immediately calls `PUT /sites/:siteId/draft` with a document built from the
-  chosen template plus the visitor's `content`, so the editor opens
-  personalized instead of on sample copy. `applySiteContent` is pure: it never
-  removes or reorders sections, and leaves sample copy where the visitor left a
-  field blank. A field with no matching slot in that template (for example
-  `aboutText` in a template without an about band) is simply not written.
-  A failed seed is not fatal — the project exists, the wizard stays on the
-  project's details page with a notice, and the personalized draft is kept in
-  `sessionStorage` so the editor can apply it once on open and mark the document
-  **UNSAVED** until the visitor saves.
-- The backend needs no extra endpoint for seeding: a successful `PUT` plus a
-  subsequent `GET` returning the same document is enough.
-- `GET|PUT /sites/:siteId/settings` — `siteSettingsService.js`. Publication
+- **There is no `/draft` endpoint.** The editor draft is the site's `content`
+  on the ordinary site resource:
+  - `GET /api/sites/{siteId}` — `siteEditorService.js` reads `content` and
+    normalizes it with `normalizeEditorDocument`. A `null`/empty `content`
+    (no non-empty `pages` array) means "no server draft", so the editor seeds
+    from the template exactly as before. The response's `projectName` and
+    `slug` are kept beside the document so a save can echo them.
+  - `PUT /api/sites/{siteId}` — the editor save sends
+    `{ projectName, slug, content }` together: `projectName` and `slug` from
+    the loaded site record, `content` from the edited document
+    (`buildEditorDraftPayload`). Never a partial body.
+- **Draft seeding after create.** `POST /api/sites` stores the personalized
+  editor document as `content`, so the wizard does **not** call
+  `PUT /api/sites/{siteId}` after a successful create. The document is
+  built before the request from the chosen template plus the visitor's
+  `content`; `applySiteContent` is pure: it never removes or reorders sections,
+  and leaves sample copy where the visitor left a field blank. A field with no
+  matching slot in that template (for example `aboutText` in a template without
+  an about band) is simply not written.
+- The created document is also kept in `sessionStorage` as a one-shot fallback.
+  If the editor cannot load a server draft, it applies that document once on
+  open and marks it **UNSAVED**; a server draft always wins and drops the
+  fallback. Demo mode keeps its in-memory draft store.
+- `GET /sites/{siteId}/settings` — `siteSettingsService.js` (outside this
+  sites/templates contract, not implemented by the backend yet). The read
+  degrades to `null` on `404/403/405`, so the page starts from the site's own
+  values. The settings save persists through `PUT /api/sites/{id}` with
+  `{ projectName, slug, content }` — the name comes from the form, the slug and
+  the full editor document are echoed from the loaded site — so a rename can
+  never wipe the content or fail required-field validation. The remaining
+  settings fields stay local until a settings endpoint exists. Publication
   status is **read-only** and is deliberately omitted from the mutation payload.
+- **Unimplemented endpoints.** Settings, duplicate, deployments, activity,
+  notifications, billing, support and admin paths are kept, but a
+  `404/403/405` response is treated as the existing unavailable/empty state
+  (safe empty value on reads, `BackendNotConnectedError` on mutations) instead
+  of a crash or a generic request error. `400/409/422/5xx` still surface as
+  real errors.
 
 ### Publishing — `src/services/sitePublishService.js`
 
@@ -310,9 +427,9 @@ routes through `usersService` instead.
 
 ## Backend-side requirements
 
-- **Return errors as** 401/403/404/409/422 with `{ message, errors? }` where
-  `errors` maps field→message or field→string[] (e.g. `email`, `hostname`,
-  `name`, `role`). The client surfaces these verbatim.
+- **Return errors as** 401/403/404/409/422 with exactly
+  `{ message, errors: { field: string[] } }` (for example `projectName`, `slug`,
+  `content`). The client surfaces these verbatim.
 - **Enforce authorization server-side.** `role` on the session drives UI only.
   Workspace membership and per-capability permission checks must be enforced on
   every scoped endpoint.
