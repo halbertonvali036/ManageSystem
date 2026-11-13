@@ -1002,32 +1002,16 @@
 }
 
 /* ============================================================
-   Pricing — provisional plans, no prices, no purchase
+   Pricing — published plans and prices
    ============================================================ */
 .landing-pricing {
   padding-top: clamp(56px, 6vw, 80px);
 }
 
-.landing-pricing__disclosure {
+.landing-pricing__controls {
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  max-width: 760px;
-  margin: 0 auto 34px;
-  padding: 14px 18px;
-  color: var(--color-text-muted);
-  background: var(--color-surface);
-  border: 1px dashed var(--color-border-strong);
-  border-radius: 14px;
-  font-size: 0.8rem;
-  line-height: 1.6;
-  text-align: left;
-}
-
-.landing-pricing__disclosure svg {
-  flex: 0 0 auto;
-  margin-top: 2px;
-  color: var(--color-accent);
+  justify-content: center;
+  margin: 0 0 26px;
 }
 
 .landing-pricing__grid {
@@ -1083,7 +1067,7 @@
   letter-spacing: -0.025em;
 }
 
-.landing-plan__audience {
+.landing-plan__tagline {
   min-height: 3.2em;
   margin: 8px 0 0;
   color: var(--landing-muted);
@@ -1101,25 +1085,50 @@
   border-bottom: 1px solid var(--color-hairline);
 }
 
-.landing-plan__price-label {
-  color: var(--color-text);
-  font-size: 1.05rem;
-  font-weight: 680;
-  letter-spacing: -0.02em;
+.landing-plan__price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0;
 }
 
-.landing-plan__status {
+.landing-plan__amount {
+  color: var(--color-text);
+  font-size: 1.45rem;
+  font-weight: 730;
+  letter-spacing: -0.03em;
+}
+
+.landing-plan__period {
   color: var(--color-text-soft);
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
+}
+
+.landing-plan__equivalent,
+.landing-plan__saving {
+  color: var(--color-text-soft);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.landing-plan__saving {
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.landing-plan__description {
+  margin: 16px 0 0;
+  color: var(--landing-muted);
+  font-size: 0.84rem;
+  line-height: 1.6;
 }
 
 .landing-plan__highlights {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin: 20px 0 26px;
+  margin: 16px 0 26px;
   padding: 0;
   list-style: none;
 }
@@ -1139,9 +1148,86 @@
   color: var(--color-success);
 }
 
+.landing-plan__highlights li.landing-plan__highlight--excluded {
+  color: var(--color-text-soft);
+}
+
+.landing-plan__highlights li.landing-plan__highlight--excluded svg {
+  color: var(--color-text-soft);
+}
+
 .landing-plan__cta {
   width: 100%;
   margin-top: auto;
+}
+
+/* Loading skeleton — holds the layout without inventing a price */
+.landing-plan--skeleton {
+  gap: 12px;
+  pointer-events: none;
+}
+
+.landing-plan--skeleton:hover {
+  transform: none;
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.landing-plan__skeleton-line,
+.landing-plan__skeleton-button {
+  display: block;
+  border-radius: 6px;
+  background: var(--color-surface-2);
+  animation: landing-skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+.landing-plan__skeleton-line {
+  height: 12px;
+}
+
+.landing-plan__skeleton-line--title {
+  width: 48%;
+  height: 20px;
+}
+
+.landing-plan__skeleton-line--price {
+  width: 62%;
+  height: 28px;
+  margin: 12px 0;
+}
+
+.landing-plan__skeleton-line--short {
+  width: 72%;
+}
+
+.landing-plan__skeleton-button {
+  height: 44px;
+  margin-top: auto;
+  border-radius: var(--radius-full);
+}
+
+@keyframes landing-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* Neutral fallback — never a placeholder price */
+.landing-pricing__unavailable {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 23px 24px;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: 16px;
+  font-size: 0.86rem;
+  line-height: 1.6;
+  text-align: center;
 }
 
 /* Availability list — what exists today, without inventing entitlements */
@@ -1811,7 +1897,7 @@
     margin-inline: auto;
   }
 
-  .landing-plan__audience {
+  .landing-plan__tagline {
     min-height: 0;
   }
 }
@@ -2034,11 +2120,6 @@
 
   .public-footer__base {
     margin-top: 30px;
-  }
-
-  .landing-pricing__disclosure {
-    padding: 12px 15px;
-    font-size: 0.76rem;
   }
 
   .landing-pricing__availability {

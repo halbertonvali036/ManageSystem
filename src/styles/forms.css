@@ -164,6 +164,34 @@ textarea.form__input {
   border-radius: 12px;
 }
 
+/*
+ * An action the error offers, such as "Upgrade plan". It sits at the end of the
+ * error row and keeps the message readable on narrow screens by never wrapping.
+ */
+.form__error-action {
+  flex: 0 0 auto;
+  margin-left: auto;
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+}
+
+.form__error-action:hover {
+  text-decoration-thickness: 2px;
+}
+
+@media (max-width: 480px) {
+  .form__error-area {
+    flex-wrap: wrap;
+  }
+
+  .form__error-action {
+    margin-left: 26px;
+  }
+}
+
 /* ── Form sections ───────────────────────────────────────── */
 .form__section {
   margin: 0;

@@ -32,6 +32,11 @@ export const APP_NAME = 'SiteBuilder'
  */
 export const NOTIFICATIONS_PATH = '/notifications'
 export const BILLING_PATH = '/billing'
+/** In-app checkout for one session, under the billing route. */
+export const BILLING_CHECKOUT_PATH = '/billing/checkout'
+/** @param {string} sessionId */
+export const CHECKOUT_SESSION_PATH = (sessionId) =>
+  `${BILLING_CHECKOUT_PATH}/${encodeURIComponent(sessionId)}`
 export const SECURITY_PATH = '/security'
 export const SUPPORT_PATH = '/support'
 export const ACCOUNT_PATH = '/account'

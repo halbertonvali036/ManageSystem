@@ -1,6 +1,7 @@
 import config from '@/config'
 import httpClient, {
   BackendNotConnectedError,
+  isEndpointMissing,
   isEndpointUnavailable,
 } from '@/services/httpClient'
 
@@ -8,17 +9,18 @@ import httpClient, {
  * Billing service foundation.
  *
  * Identity is always inferred by the backend from the authenticated session —
- * no `userId` is ever sent or hardcoded here.
+ * no `userId` is ever sent or hardcoded here, and prices always come from the
+ * backend rather than from frontend constants.
  *
- * While the billing backend does not exist:
- * - reads resolve with safe empty values (`null` / `[]`), matching the
- *   convention used by the other services in this project, so the UI renders
- *   real empty and unavailable states instead of demo data;
- * - mutations throw `BackendNotConnectedError`. Nothing here simulates a
- *   successful charge, subscription, payment method or receipt.
+ * Reads degrade to safe empty values (`null` / `[]`) when an endpoint is not
+ * served, so the UI renders real empty and unavailable states instead of demo
+ * data.
  *
- * No payment provider SDK is included. Checkout and the billing portal must be
- * created server-side and handed to the provider's hosted page.
+ * Checkout runs in two steps: `createCheckoutSession` either hands back a URL
+ * (same-origin path → in-app checkout, other origin → provider-hosted page) or
+ * nothing at all when there is nothing to confirm (e.g. the free tier). The
+ * card itself is only ever sent by `confirmCheckout`, straight from the form to
+ * this request — it is never logged, cached or attached to an error here.
  */
 
 const BILLING_PATH = '/billing'
@@ -53,7 +55,7 @@ const toList = (response, keys = []) => {
 }
 
 /**
- * The billing endpoints are not implemented yet. A 404/403/405 from a read is
+ * A read that is not served by this backend. A 404/403/405 from a read is
  * "nothing is served here", so it degrades to the same empty value the service
  * returns when no backend is configured — the page renders its existing
  * unavailable/empty state instead of a load failure. A real failure (400/409/
@@ -73,6 +75,21 @@ const writeUnavailable = (error) => {
   }
   throw error
 }
+
+/**
+ * Checkout-specific refusal: only `404`/`405` say "the collection route does
+ * not exist". `400`/`403`/`409`/`422` from the backend are real answers with a
+ * real message and must reach the caller untouched.
+ */
+const writeEndpointMissing = (error) => {
+  if (isEndpointMissing(error)) {
+    throw new BackendNotConnectedError('Billing integration is unavailable.')
+  }
+  throw error
+}
+
+/** The pricing table only offers the two published cycles. */
+const toCheckoutCycle = (cycle) => (cycle === 'annual' ? 'annual' : 'monthly')
 
 /* ── Reads ────────────────────────────────────────────────── */
 
@@ -96,6 +113,26 @@ const getPlans = async () => {
   }
   try {
     const response = await httpClient.get(PLANS_PATH)
+    return toList(response, ['plans'])
+  } catch (error) {
+    return readUnavailable(error, [])
+  }
+}
+
+/**
+ * Published plan catalogue for public surfaces (the landing page), or `[]`.
+ *
+ * Sent without a token (`anonymous`), because the catalogue is served to
+ * anyone: a missing or expired session must never fail this read and never
+ * triggers the session-expired redirect on a page guests can reach. A real
+ * failure still propagates so the caller can render its unavailable state.
+ */
+const getPublicPlans = async () => {
+  if (!isBackendConnected()) {
+    return []
+  }
+  try {
+    const response = await httpClient.get(PLANS_PATH, { anonymous: true })
     return toList(response, ['plans'])
   } catch (error) {
     return readUnavailable(error, [])
@@ -131,20 +168,68 @@ const getInvoices = async () => {
 /* ── Mutations (require backend + provider integration) ───── */
 
 /**
- * Creates a provider-hosted checkout session for a plan.
+ * Creates a checkout session for a plan.
  *
- * The backend must own plan pricing, taxes and the provider call. The chosen
- * cycle is forwarded as an explicit intent; the backend still decides what that
- * combination actually costs.
+ * The backend owns plan pricing, taxes and the provider call. The chosen cycle
+ * is forwarded as an explicit `monthly` | `annual` intent; the backend still
+ * decides what that combination actually costs and never receives a price from
+ * this client.
+ *
+ * The result may carry a `checkoutUrl` (or `url`): same-origin it is where the
+ * in-app checkout lives, cross-origin it is the provider's hosted page. No URL
+ * at all means there is nothing to confirm — e.g. the free tier activates
+ * directly and the caller just refreshes the billing state.
  */
 const createCheckoutSession = async (planId, cycle) => {
   ensureBackendConnection()
   try {
-    const response = await httpClient.post(CHECKOUT_PATH, { planId, cycle: cycle ?? null })
+    const response = await httpClient.post(CHECKOUT_PATH, {
+      planId,
+      cycle: toCheckoutCycle(cycle),
+    })
     return response?.data ?? response ?? null
   } catch (error) {
-    return writeUnavailable(error)
+    return writeEndpointMissing(error)
   }
+}
+
+/**
+ * Reads one checkout session by its id.
+ *
+ * Every error propagates as is — a `404` here means the session does not exist
+ * or has expired, which the checkout page renders as its own dedicated state,
+ * never as "billing is not connected".
+ */
+const getCheckoutSession = async (sessionId) => {
+  ensureBackendConnection()
+  const response = await httpClient.get(
+    `${CHECKOUT_PATH}/${encodeURIComponent(sessionId)}`,
+  )
+  return response?.data ?? response ?? null
+}
+
+/**
+ * Confirms a checkout session with card details.
+ *
+ * The card payload travels from the caller straight into this request and back
+ * out as a plain success/failure: it is never logged, never cached, and never
+ * attached to the error that is thrown. Backend answers (`400`/`403`/`409`/
+ * `422` included) propagate with the backend's own message for the page to
+ * display after stripping anything card-like from it.
+ */
+const confirmCheckout = async (sessionId, card) => {
+  ensureBackendConnection()
+  const response = await httpClient.post(
+    `${CHECKOUT_PATH}/${encodeURIComponent(sessionId)}/confirm`,
+    {
+      cardNumber: card.cardNumber,
+      expMonth: card.expMonth,
+      expYear: card.expYear,
+      cvc: card.cvc,
+      cardholderName: card.cardholderName,
+    },
+  )
+  return response?.data ?? response ?? null
 }
 
 /** Creates a provider-hosted billing portal session for self-service. */
@@ -236,9 +321,12 @@ const billingService = {
   isBackendConnected,
   getBillingOverview,
   getPlans,
+  getPublicPlans,
   getPaymentMethods,
   getInvoices,
   createCheckoutSession,
+  getCheckoutSession,
+  confirmCheckout,
   cancelSubscription,
   resumeSubscription,
   openBillingPortal,

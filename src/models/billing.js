@@ -410,6 +410,31 @@ export const getPaymentMethodTypeLabel = (method) => {
 const pickFirstDefined = (...values) => values.find((value) => !isBlank(value))
 
 /**
+ * Code of the free tier. When the backend reports no subscription at all the
+ * account sits here — for display only; no subscription is ever invented from
+ * it, so subscription actions stay gated on a real overview.
+ */
+export const FREE_PLAN_CODE = 'STARTER'
+
+/**
+ * Compares a plan against a raw backend identifier (plan id or plan code)
+ * case-insensitively, because `/billing` may report `PRO` while the catalogue
+ * carries `id: "2"` with `code: "PRO"`.
+ */
+export const matchesPlanIdentifier = (plan, identifier) => {
+  if (!plan || isBlank(identifier)) {
+    return false
+  }
+  const target = String(identifier).trim().toLowerCase()
+  if (target === '') {
+    return false
+  }
+  const id = isBlank(plan.id) ? '' : String(plan.id).trim().toLowerCase()
+  const code = isBlank(plan.code) ? '' : String(plan.code).trim().toLowerCase()
+  return target === id || (code !== '' && target === code)
+}
+
+/**
  * @typedef {Object} BillingOverview
  * @property {string|null} planId
  * @property {string|null} planName
@@ -431,7 +456,9 @@ export const toBillingOverview = (data) => {
   }
   const source = data.subscription ?? data
   return {
-    planId: pickFirstDefined(source.planId, source.plan_id) ?? null,
+    planId:
+      pickFirstDefined(source.planId, source.plan_id, source.planCode, source.plan_code) ??
+      null,
     planName: pickFirstDefined(source.planName, source.plan_name, source.name) ?? null,
     status: getBillingStatus(source.status),
     cycle: pickFirstDefined(source.billingCycle, source.billing_cycle, source.cycle) ?? null,
@@ -455,6 +482,7 @@ export const toBillingOverview = (data) => {
 /**
  * @typedef {Object} BillingPlanOption
  * @property {string} id
+ * @property {string|null} code - Stable plan code (e.g. `STARTER`), when published.
  * @property {string} name
  * @property {string|null} eyebrow
  * @property {string|null} tagline
@@ -497,6 +525,20 @@ const toCyclePrices = (record) => {
   return Object.keys(prices).length > 0 ? prices : null
 }
 
+/**
+ * A real backend plan is purchasable unless the backend explicitly says
+ * otherwise: only an explicit `purchasable: false` disables it. A record that
+ * does not mention `purchasable` at all stays purchasable so a live catalogue
+ * is never silently turned into a wall of disabled cards.
+ */
+const isRecordPurchasable = (record) => {
+  const value = record.purchasable
+  if (value === undefined || value === null || value === '') {
+    return true
+  }
+  return value !== false && value !== 'false'
+}
+
 /** Maps backend plan records onto the plan-card shape. */
 export const toPlanList = (records) => {
   if (!Array.isArray(records)) {
@@ -506,8 +548,10 @@ export const toPlanList = (records) => {
     .filter((record) => record && typeof record === 'object')
     .map((record) => {
       const rawFeatures = Array.isArray(record.features) ? record.features : []
+      const rawCode = pickFirstDefined(record.code, record.planCode, record.plan_code)
       return {
         id: String(pickFirstDefined(record.id, record.planId, record.code) ?? ''),
+        code: rawCode === undefined ? null : String(rawCode),
         name: String(pickFirstDefined(record.name, record.title) ?? 'Plan'),
         eyebrow: pickFirstDefined(record.eyebrow, record.category) ?? null,
         tagline: pickFirstDefined(record.tagline, record.summary) ?? null,
@@ -517,7 +561,7 @@ export const toPlanList = (records) => {
         cycle: pickFirstDefined(record.cycle, record.billingCycle) ?? null,
         rank: asNumber(pickFirstDefined(record.rank, record.level, record.tier)),
         prices: toCyclePrices(record),
-        purchasable: record.purchasable === true,
+        purchasable: isRecordPurchasable(record),
         recommended: record.recommended === true,
         features: rawFeatures
           .filter((feature) => feature && typeof feature === 'object')
@@ -596,4 +640,97 @@ export const toInvoice = (record) => {
     planName: pickFirstDefined(record.planName, record.plan_name, record.description) ?? null,
     receiptUrl: pickFirstDefined(record.receiptUrl, record.receipt_url, record.hostedInvoiceUrl) ?? null,
   }
+}
+
+/* ── Checkout session ─────────────────────────────────────── */
+
+/**
+ * @typedef {Object} BillingCheckoutSession
+ * @property {string|null} id
+ * @property {string|null} checkoutUrl - Provider URL, when the backend hands
+ *   checkout off. Accepted as `checkoutUrl` or `url`, absolute or a path.
+ * @property {string|null} status - Lower-cased backend status, when reported.
+ * @property {string|null} planName
+ * @property {string|null} cycle
+ * @property {number|null} amount
+ * @property {string|null} currency
+ * @property {string|null} expiresAt
+ * @property {string|null} paidAt
+ */
+
+/**
+ * Maps a checkout-session payload onto the display shape the checkout page
+ * needs. Contains no card data by construction — card details only ever exist
+ * in the confirm request the form builds.
+ */
+export const toCheckoutSession = (data) => {
+  if (!data || typeof data !== 'object') {
+    return null
+  }
+  const source = data.session ?? data
+  const planSource = source.plan && typeof source.plan === 'object' ? source.plan : {}
+  const rawStatus = pickFirstDefined(source.status, source.state)
+  const rawId = pickFirstDefined(source.id, source.sessionId, source.session_id)
+  return {
+    id: rawId === undefined ? null : String(rawId),
+    checkoutUrl:
+      pickFirstDefined(source.checkoutUrl, source.checkout_url, source.url) ?? null,
+    status: rawStatus === undefined ? null : String(rawStatus).toLowerCase(),
+    planName:
+      pickFirstDefined(source.planName, source.plan_name, planSource.name) ?? null,
+    cycle:
+      pickFirstDefined(source.cycle, source.billingCycle, source.billing_cycle) ?? null,
+    amount: asNumber(pickFirstDefined(source.amount, source.total, source.price, planSource.price)),
+    currency: pickFirstDefined(source.currency, planSource.currency) ?? null,
+    expiresAt:
+      pickFirstDefined(source.expiresAt, source.expires_at, source.expiryAt) ?? null,
+    paidAt: pickFirstDefined(source.paidAt, source.paid_at, source.confirmedAt) ?? null,
+  }
+}
+
+/** Statuses after which a session can no longer be paid from this page. */
+const CLOSED_CHECKOUT_STATUSES = Object.freeze([
+  'paid',
+  'completed',
+  'consumed',
+  'confirmed',
+  'expired',
+  'canceled',
+  'cancelled',
+  'void',
+])
+
+/**
+ * Whether a loaded session is already closed: paid, canceled or expired.
+ * Used to render the dedicated "session no longer payable" state instead of a
+ * card form that could never succeed.
+ */
+export const isCheckoutSessionClosed = (session) => {
+  if (!session) {
+    return false
+  }
+  if (!isBlank(session.paidAt)) {
+    return true
+  }
+  if (session.status && CLOSED_CHECKOUT_STATUSES.includes(session.status)) {
+    return true
+  }
+  if (!isBlank(session.expiresAt)) {
+    const expiry = new Date(String(session.expiresAt)).getTime()
+    if (Number.isFinite(expiry) && expiry < Date.now()) {
+      return true
+    }
+  }
+  return false
+}
+
+/** True when a closed session was already paid rather than expired. */
+export const isCheckoutSessionPaid = (session) => {
+  if (!session) {
+    return false
+  }
+  if (!isBlank(session.paidAt)) {
+    return true
+  }
+  return ['paid', 'completed', 'consumed', 'confirmed'].includes(session.status)
 }

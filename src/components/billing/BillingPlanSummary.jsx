@@ -48,14 +48,15 @@ const PlanValue = ({ label, children, unavailableHint }) => {
  * Values render only when the backend reports them; otherwise each field shows
  * an explicit unavailable state and no subscription is implied. The same rule
  * governs the actions: cancel and resume appear only for a status the backend
- * actually reported, and every action stays unavailable until the billing
- * backend is connected.
+ * actually reported, and they stay gated on a real subscription while the
+ * portal additionally needs the billing backend to be reachable.
  */
 function BillingPlanSummary({
   overview,
   subscriptionActions,
   cancellationScheduled,
-  canManageBilling,
+  canManageSubscription,
+  backendUnavailable,
   pendingAction,
   actionError,
   onManageSubscription,
@@ -70,8 +71,8 @@ function BillingPlanSummary({
   const renewsAt = formatBillingDate(overview?.renewsAt)
   const trialEndsAt = formatBillingDate(overview?.trialEndsAt)
   const canceledAt = formatBillingDate(overview?.canceledAt)
-  const canCancel = Boolean(subscriptionActions?.canCancel) && canManageBilling
-  const canResume = Boolean(subscriptionActions?.canResume) && canManageBilling
+  const canCancel = Boolean(subscriptionActions?.canCancel) && canManageSubscription
+  const canResume = Boolean(subscriptionActions?.canResume) && canManageSubscription
   const isCanceled = subscriptionActions?.status === BILLING_STATUS.CANCELED
   const isFree = Boolean(subscriptionActions?.isFree)
   const summaryDescription = planName
@@ -132,13 +133,15 @@ function BillingPlanSummary({
               <button
                 type="button"
                 className="btn btn--icon-left plan-summary__action"
-                disabled={!canManageBilling}
-                aria-disabled={!canManageBilling}
+                disabled={!canManageSubscription}
+                aria-disabled={!canManageSubscription}
                 onClick={onManageSubscription}
                 title={
-                  canManageBilling
+                  canManageSubscription
                     ? copy('Open the secure billing portal')
-                    : copy('Available once the billing portal is connected')
+                    : backendUnavailable
+                      ? copy('Available once the billing portal is connected')
+                      : copy('Available once this account has an active subscription')
                 }
               >
                 <CreditCard size={16} aria-hidden="true" />
@@ -204,7 +207,7 @@ function BillingPlanSummary({
         </BillingNotice>
       ) : null}
 
-      {!canManageBilling ? (
+      {backendUnavailable ? (
         <BillingNotice tone="pending" title={t('accountPolish.integrationPending')} className="plan-summary__notice">{t('accountPolish.subscriptionManagementBecomesAvailableOnceTheBillingBackendAnd')}</BillingNotice>
       ) : null}
 

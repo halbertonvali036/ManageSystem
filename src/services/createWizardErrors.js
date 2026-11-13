@@ -7,11 +7,20 @@
  * the page only has to apply the plan.
  *
  * Routing rules:
- *  - name / projectName and slug server errors (including a duplicate URL)
- *    return to the Project step with the field focused;
+ *  - a duplicate URL (a slug/subdomain field error, or a message that names the
+ *    slug/subdomain/URL as taken) returns to the Project step with the slug
+ *    focused;
+ *  - a plan/site-limit refusal (a site-limit code, or a 403/409/422 whose
+ *    message is about the plan/limit/max sites) stays on the current step with
+ *    a form error and an upgrade link;
+ *  - a duplicate project name returns to the Project step with the name focused;
+ *  - other name / projectName and slug server errors return to the Project step
+ *    with the field focused;
  *  - content-field errors go to the content step;
  *  - template errors (an unknown template id, or a 404/422 with no field to
  *    attach to) go to the Template step;
+ *  - any other 409 shows the backend message in the form error area, stays on
+ *    the current step and keeps the typed values;
  *  - network, 5xx and unknown errors stay on the current step and show
  *    `getRequestErrorMessage`.
  *
@@ -49,7 +58,38 @@ const SERVER_FIELD_ALIASES = Object.freeze({
   template: 'templateId',
 })
 
+const SLUG_FIELDS = ['slug', 'subdomain']
+const NAME_FIELDS = ['projectName', 'name', 'title']
+
 const CONTENT_FIELD_SET = new Set(SITE_CONTENT_FIELDS)
+
+/**
+ * Words a backend uses when a value must be unique. Kept deliberately broad and
+ * includes the Azerbaijani wording the API has used before.
+ */
+const TAKEN_PATTERN = /(exist|taken|already|used|unique|in use|reserved|mövcud|istifadə|artıq)/
+
+/**
+ * A machine code for "this plan cannot hold another site". Matches
+ * `SITE_LIMIT_REACHED`, `PLAN_LIMIT_EXCEEDED`, `SITE_QUOTA`, `LIMIT_REACHED`
+ * and similar spellings, in any status.
+ */
+const SITE_LIMIT_CODE_PATTERN =
+  /(SITE|PLAN|ACCOUNT)[\s_-]*(LIMIT|QUOTA)|(LIMIT|QUOTA)[\s_-]*(REACHED|EXCEEDED)|SITE_QUOTA/
+
+/**
+ * A human message about the plan or site limit. Only `limit`-style words plus a
+ * site/plan noun match, so unrelated messages ("rate limit", "URL taken")
+ * cannot be mistaken for a plan limit.
+ */
+const LIMIT_WORD_PATTERN = /\b(limit|limited|quota|maximum|max|exceeded?|upgrade)\b/
+const SITE_WORD_PATTERN = /\b(site|sites|website|websites|project|projects|plan|subscription)\b/
+
+const LIMIT_STATUSES = new Set([
+  HTTP_STATUS.FORBIDDEN,
+  HTTP_STATUS.CONFLICT,
+  HTTP_STATUS.UNPROCESSABLE_ENTITY,
+])
 
 /** The first message in a backend field error, which is a `string[]`. */
 const firstErrorMessage = (value) => {
@@ -59,6 +99,12 @@ const firstErrorMessage = (value) => {
   return typeof value === 'string' ? value.trim() : ''
 }
 
+/** The raw `errors` object of an error envelope, when it is a plain object. */
+const errorFieldMap = (error) => {
+  const raw = error?.data?.errors
+  return raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : null
+}
+
 /**
  * Reads `{ message, errors: { field: string[] } }` into form field errors.
  *
@@ -66,8 +112,8 @@ const firstErrorMessage = (value) => {
  * the form's error area than attached to a field that does not exist.
  */
 export const getServerFieldErrors = (error) => {
-  const raw = error?.data?.errors
-  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+  const raw = errorFieldMap(error)
+  if (!raw) {
     return {}
   }
 
@@ -90,28 +136,87 @@ export const getServerMessage = (error) => {
   return typeof value === 'string' ? value.trim() : ''
 }
 
+/** Backend message plus the HTTP fallback, lowercased for pattern matching. */
+const getErrorText = (error) =>
+  `${getServerMessage(error)} ${typeof error?.message === 'string' ? error.message : ''}`.toLocaleLowerCase()
+
+/** Whether the envelope carries one of the given `errors` keys. */
+const hasErrorField = (error, keys) => {
+  const raw = errorFieldMap(error)
+  return Boolean(raw) && keys.some((key) => key in raw)
+}
+
 /**
- * A duplicate URL is reported as 409, as a 422 with a slug field error, or as a
- * plain message saying the slug/subdomain already exists.
+ * The machine code a limit response can carry: `{ code }`, `{ error: { code } }`
+ * or a string `{ error }`. `error.code` is deliberately not read here — on the
+ * frontend that field is the HTTP-derived `ERROR_CODE` (e.g. `CONFLICT`).
+ */
+const getBackendErrorCode = (error) => {
+  const data = error?.data
+  const candidates = [
+    data?.code,
+    data?.error?.code,
+    typeof data?.error === 'string' ? data.error : null,
+    data?.errorCode,
+  ]
+  return candidates.find((value) => typeof value === 'string' && value.trim())?.trim() ?? ''
+}
+
+/**
+ * A duplicate URL is reported as a slug/subdomain field error or as a message
+ * that names the slug/subdomain/URL as already taken. A bare 409 is *not*
+ * enough: the backend also answers 409 when the plan's site limit is reached.
  */
 export const isDuplicateSlugError = (error) => {
   if (!(error instanceof RequestError)) {
     return false
   }
-  if (error.status === HTTP_STATUS.CONFLICT) {
+  if (hasErrorField(error, SLUG_FIELDS)) {
     return true
   }
-  if (error.status === HTTP_STATUS.UNPROCESSABLE_ENTITY) {
-    const raw = error.data?.errors
-    if (raw && typeof raw === 'object' && ('slug' in raw || 'subdomain' in raw)) {
+  const message = getErrorText(error)
+  return /\b(slug|subdomain|url)\b/.test(message) && TAKEN_PATTERN.test(message)
+}
+
+/**
+ * Whether the refusal is the plan's site limit rather than a bad value.
+ *
+ * A machine code is trusted whatever the status. Without one, only a
+ * 403/409/422 whose message talks about a limit/quota/max and a site/plan can
+ * be a limit error, so an unrelated 409 keeps its own message.
+ */
+export const isSiteLimitError = (error) => {
+  const code = getBackendErrorCode(error)
+  if (code && SITE_LIMIT_CODE_PATTERN.test(code)) {
+    return true
+  }
+  if (!(error instanceof RequestError) || !LIMIT_STATUSES.has(error.status)) {
+    return false
+  }
+  const message = getErrorText(error)
+  return LIMIT_WORD_PATTERN.test(message) && SITE_WORD_PATTERN.test(message)
+}
+
+/**
+ * A duplicate project name (not the URL) is reported as a name/projectName/title
+ * field error or as a message that names it as taken.
+ */
+export const isDuplicateNameError = (error) => {
+  if (!(error instanceof RequestError) || isDuplicateSlugError(error)) {
+    return false
+  }
+  const raw = errorFieldMap(error)
+  if (raw) {
+    const duplicated = NAME_FIELDS.some((key) => {
+      const message = firstErrorMessage(raw[key]).toLocaleLowerCase()
+      return Boolean(message) && TAKEN_PATTERN.test(message)
+    })
+    if (duplicated) {
       return true
     }
   }
-  const message = `${getServerMessage(error)} ${error.message ?? ''}`.toLocaleLowerCase()
-  return (
-    /(slug|subdomain)/.test(message) &&
-    /(exist|taken|already|used|unique|in use|mövcud|istifadə|artıq)/.test(message)
-  )
+  const message = getErrorText(error)
+  return /\b(name|title)\b/.test(message) && TAKEN_PATTERN.test(message)
 }
 
 /** The step that owns a mapped form field. */
@@ -130,8 +235,8 @@ export const stepForField = (field) => {
  *
  * Pure so the routing rules can be checked without a browser; `t` is passed in
  * so the plan carries ready-to-render messages. Returns
- * `{ step, focus, fieldErrors, formError }`; `step: null` means "stay on the
- * current step".
+ * `{ step, focus, fieldErrors, formError, formErrorAction }`; `step: null`
+ * means "stay on the current step".
  */
 export const planCreateFailure = (error, t) => {
   if (error?.code === TEMPLATE_UNAVAILABLE_CODE) {
@@ -160,6 +265,34 @@ export const planCreateFailure = (error, t) => {
       step: STEP_PROJECT,
       focus: 'slug',
       fieldErrors: { ...fieldErrors, slug: message },
+      formError: null,
+    }
+  }
+
+  /*
+   * The plan limit is not a problem with anything typed, so it must not clear
+   * a field or move the visitor to another step. The upgrade link is the only
+   * action that can resolve it.
+   */
+  if (isSiteLimitError(error)) {
+    return {
+      step: null,
+      focus: null,
+      fieldErrors: null,
+      formError: t('createSite.siteLimitReached'),
+      formErrorAction: {
+        to: '/billing',
+        labelKey: 'createSite.siteLimitUpgrade',
+      },
+    }
+  }
+
+  if (isDuplicateNameError(error)) {
+    const message = fieldErrors.name || getServerMessage(error) || t('createSite.nameTakenError')
+    return {
+      step: STEP_PROJECT,
+      focus: 'name',
+      fieldErrors: { ...fieldErrors, name: message },
       formError: null,
     }
   }
@@ -211,7 +344,11 @@ export const planCreateFailure = (error, t) => {
     }
   }
 
-  // Network, 5xx and unknown failures stay on the current step.
+  /*
+   * Network, 5xx, other 409s and unknown failures stay on the current step.
+   * A 409 keeps whatever `message` the backend sent instead of being reported
+   * as a URL problem.
+   */
   return {
     step: null,
     focus: null,

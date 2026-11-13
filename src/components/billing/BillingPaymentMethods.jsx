@@ -15,10 +15,11 @@ const UNAVAILABLE_LABEL = 'Unavailable'
  * Payment method section.
  *
  * Renders only masked metadata a payment provider returns (brand, last four,
- * expiry, default flag). Card numbers are never collected, submitted or stored
- * by this app — that happens on the provider's secure page.
+ * expiry, default flag). Card numbers never appear on this page: they are
+ * typed only on the secure checkout page, sent straight to the backend for
+ * confirmation and never stored by this app.
  */
-function BillingPaymentMethods({ paymentMethods, canManageBilling }) {
+function BillingPaymentMethods({ paymentMethods, canManageSubscription }) {
   const copy = useAccountCopy()
   const { t } = useTranslation()
   return (
@@ -33,10 +34,10 @@ function BillingPaymentMethods({ paymentMethods, canManageBilling }) {
         <button
           type="button"
           className="btn btn--outline btn--icon-left payment-section__add"
-          disabled={!canManageBilling}
-          aria-disabled={!canManageBilling}
+          disabled={!canManageSubscription}
+          aria-disabled={!canManageSubscription}
           title={
-            canManageBilling
+            canManageSubscription
               ? copy('Add a payment method on the secure provider page')
               : copy('Available once a payment provider is connected')
           }
@@ -75,10 +76,10 @@ function BillingPaymentMethods({ paymentMethods, canManageBilling }) {
                   <button
                     type="button"
                     className="btn payment-item__action"
-                    disabled={!canManageBilling}
-                    aria-disabled={!canManageBilling}
+                    disabled={!canManageSubscription}
+                    aria-disabled={!canManageSubscription}
                     title={
-                      canManageBilling
+                      canManageSubscription
                         ? copy('Replace this payment method on the secure provider page')
                         : copy('Available once a payment provider is connected')
                     }
@@ -95,7 +96,7 @@ function BillingPaymentMethods({ paymentMethods, canManageBilling }) {
         </div>
       )}
 
-      <BillingNotice tone="info" className="payment-section__notice">{t('accountPolish.cardDetailsAreEnteredOnThePaymentProviderRsquo')}</BillingNotice>
+      <BillingNotice tone="info" className="payment-section__notice">{t('accountPolish.maskedCardMetadataOnly')}</BillingNotice>
     </BillingSection>
   )
 }

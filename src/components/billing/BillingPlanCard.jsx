@@ -4,6 +4,12 @@ import { ArrowRight, Check, Minus } from 'lucide-react'
 import BillingStatusBadge from '@/components/billing/BillingStatusBadge'
 import { BILLING_PRICE_PENDING_LABEL } from '@/config/billing'
 import {
+  getPlanDescription,
+  getPlanFeatureLabel,
+  getPlanName,
+  getPlanTagline,
+} from '@/i18n/planCopy'
+import {
   BILLING_CYCLE,
   formatBillingAmount,
   getAnnualSavingPercent,
@@ -16,14 +22,19 @@ import {
 /**
  * Plan option card.
  *
- * The price shown is the one published for the cycle the customer selected.
- * An unpublished price renders as an explicit pending label and the CTA stays
- * unavailable until a payment provider is connected. `relation` is only ever
- * set from a plan the backend reports as current.
+ * The price shown is the one published for the cycle the customer selected;
+ * an unpublished price renders as an explicit pending label. The CTA starts a
+ * real checkout whenever the backend serves its catalogue and published the
+ * plan as purchasable — it only stays disabled for the current plan, for the
+ * frontend placeholder, or when the backend explicitly withholds a plan.
+ * `relation` is only ever set from a plan the backend reports as current.
  */
 function BillingPlanCard({ plan, relation, cycle, currentStatus, canSelect, isPlaceholder, onSelect }) {
   const copy = useAccountCopy()
   const { t } = useTranslation()
+  const name = getPlanName(t, plan)
+  const tagline = getPlanTagline(t, plan)
+  const description = getPlanDescription(t, plan)
   const price = getPlanPriceForCycle(plan, cycle)
   const amount = price ? formatBillingAmount(price.amount, price.currency) : null
   const period = getBillingCyclePeriod(price?.cycle ?? cycle)
@@ -34,15 +45,25 @@ function BillingPlanCard({ plan, relation, cycle, currentStatus, canSelect, isPl
       : null
   const savingPercent = getAnnualSavingPercent(plan)
   const isCurrent = relation === 'current'
+  const isNotPurchasable = plan.purchasable !== true
   const ctaLabel = getPlanRelationLabel(relation)
-  const ctaDisabled = isCurrent || !canSelect || plan.purchasable !== true
+  const ctaDisabled = isCurrent || !canSelect || isNotPurchasable
   const unavailableReason = isCurrent
     ? copy('This is your current plan')
     : !canSelect
-      ? copy('Available once your subscription is reported by the backend')
-      : plan.purchasable !== true
-        ? copy('Checkout becomes available once the payment provider is connected')
+      ? copy('Checkout is unavailable while the billing backend is not reachable')
+      : isNotPurchasable
+        ? copy('This plan is not offered for purchase')
         : `Continue to secure checkout for ${plan.name}`
+  const ctaNote = isPlaceholder
+    ? copy('Configuration placeholder — not purchasable.')
+    : isCurrent
+      ? null
+      : !canSelect
+        ? copy('Checkout is unavailable while the billing backend is not reachable')
+        : isNotPurchasable
+          ? copy('This plan is not offered for purchase')
+          : copy('Continue to secure checkout to confirm')
 
   const cardClassName = [
     'plan-card',
@@ -57,9 +78,9 @@ function BillingPlanCard({ plan, relation, cycle, currentStatus, canSelect, isPl
       <header className="plan-card__header">
         <p className="plan-card__eyebrow">{copy(plan.eyebrow) ?? copy('Plan')}</p>
         <h3 id={`plan-${plan.id}-title`} className="plan-card__name">
-          {plan.name}
+          {name}
         </h3>
-        {plan.tagline ? <p className="plan-card__tagline">{copy(plan.tagline)}</p> : null}
+        {tagline ? <p className="plan-card__tagline">{copy(tagline)}</p> : null}
         <div className="plan-card__badges">
           {isCurrent ? (
             <span className="plan-card__badge plan-card__badge--current">
@@ -99,29 +120,38 @@ function BillingPlanCard({ plan, relation, cycle, currentStatus, canSelect, isPl
         ) : null}
       </div>
 
-      {plan.description ? (
-        <p className="plan-card__description">{copy(plan.description)}</p>
+      {description ? (
+        <p className="plan-card__description">{copy(description)}</p>
       ) : null}
 
       <ul className="plan-card__features">
-        {plan.features.map((feature) => (
-          <li
-            key={copy(feature.label)}
-            className={`plan-card__feature${
-              feature.included ? '' : ' plan-card__feature--excluded'
-            }`}
-          >
-            <span className="plan-card__feature-icon" aria-hidden="true">
-              {feature.included ? <Check size={14} /> : <Minus size={14} />}
-            </span>
-            <span className="plan-card__feature-label">
-              {copy(feature.label)}
-              <span className="visually-hidden">
-                {' ('}{t(feature.included ? 'accountPolish.featureIncluded' : 'accountPolish.featureExcluded')}{')'}
+        {plan.features.map((feature) => {
+          const label = copy(getPlanFeatureLabel(t, plan, feature.label))
+          return (
+            <li
+              key={feature.label}
+              className={`plan-card__feature${
+                feature.included ? '' : ' plan-card__feature--excluded'
+              }`}
+            >
+              <span className="plan-card__feature-icon" aria-hidden="true">
+                {feature.included ? <Check size={14} /> : <Minus size={14} />}
               </span>
-            </span>
-          </li>
-        ))}
+              <span className="plan-card__feature-label">
+                {label}
+                <span className="visually-hidden">
+                  {' ('}
+                  {t(
+                    feature.included
+                      ? 'accountPolish.featureIncluded'
+                      : 'accountPolish.featureExcluded',
+                  )}
+                  {')'}
+                </span>
+              </span>
+            </li>
+          )
+        })}
       </ul>
 
       <footer className="plan-card__footer">
@@ -138,13 +168,9 @@ function BillingPlanCard({ plan, relation, cycle, currentStatus, canSelect, isPl
           {copy(ctaLabel)}
           {!isCurrent ? <ArrowRight size={16} aria-hidden="true" /> : null}
         </button>
-        <p className="plan-card__cta-note">
-          {isPlaceholder
-            ? copy('Configuration placeholder — not purchasable.')
-            : ctaDisabled
-              ? copy('Checkout is not available yet.')
-              : copy('You continue to the payment provider to confirm.')}
-        </p>
+        {ctaNote ? (
+          <p className="plan-card__cta-note">{ctaNote}</p>
+        ) : null}
       </footer>
     </article>
   )

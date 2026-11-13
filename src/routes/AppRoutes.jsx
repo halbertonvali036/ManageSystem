@@ -16,6 +16,7 @@ import {
 
 const AdminLoginPage = lazy(() => import('@/pages/AdminLoginPage'))
 const BillingPage = lazy(() => import('@/pages/BillingPage'))
+const CheckoutPage = lazy(() => import('@/pages/CheckoutPage'))
 const ForgotPasswordPage = lazy(() => import('@/pages/ForgotPasswordPage'))
 const LandingPage = lazy(() => import('@/pages/LandingPage'))
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
@@ -117,6 +118,7 @@ function AppRoutes() {
             element={<AccountLayout titleKey="account.nav.billing" path={BILLING_PATH} />}
           >
             <Route path="billing" element={<BillingPage />} />
+            <Route path="billing/checkout/:sessionId" element={<CheckoutPage />} />
           </Route>
 
           <Route

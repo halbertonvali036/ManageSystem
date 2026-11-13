@@ -305,10 +305,17 @@ function CreateWebsitePage() {
   const [step, setStep] = useState(initialState.step)
   const [errors, setErrors] = useState({})
   const [formError, setFormError] = useState('')
+  // An optional call to action rendered next to the form error (e.g. upgrade).
+  const [formErrorAction, setFormErrorAction] = useState(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const panelRef = useRef(null)
   const fieldRefs = useRef({})
   const submitLockRef = useRef(false)
+
+  const clearFormError = () => {
+    setFormError('')
+    setFormErrorAction(null)
+  }
 
   /*
    * Every change is mirrored into sessionStorage so a reload restores the
@@ -349,7 +356,7 @@ function CreateWebsitePage() {
       return next
     })
     setErrors((current) => ({ ...current, [name]: undefined }))
-    setFormError('')
+    clearFormError()
   }
 
   const handleSlugChange = (event) => {
@@ -431,7 +438,7 @@ function CreateWebsitePage() {
 
   const goToStep = (nextStep) => {
     setStep(nextStep)
-    setFormError('')
+    clearFormError()
     // Move focus to the new panel so keyboard and screen-reader users land on
     // the step that just opened instead of the stepper above it.
     window.requestAnimationFrame(() => panelRef.current?.focus())
@@ -484,12 +491,13 @@ function CreateWebsitePage() {
      * catalogue that failed after the review step rendered.
      */
     if (!canCreateSite) {
+      // Move first: goToStep clears the banner, so the message is set after it.
+      goToStep(2)
       setFormError(
         isCatalogUnavailable
           ? t('templates.catalogUnavailable')
           : t('createSite.templateUnavailable'),
       )
-      goToStep(2)
       return
     }
 
@@ -510,7 +518,7 @@ function CreateWebsitePage() {
     // state has not reached the DOM yet.
     submitLockRef.current = true
     setIsSubmitting(true)
-    setFormError('')
+    clearFormError()
     try {
       // The draft is the local description of the project. `siteService` owns
       // the wire shape, and the same draft seeds the editor after creation.
@@ -594,6 +602,7 @@ function CreateWebsitePage() {
       // Set after goToStep, which clears the banner on every step change.
       if (plan.formError) {
         setFormError(plan.formError)
+        setFormErrorAction(plan.formErrorAction ?? null)
       }
     } finally {
       submitLockRef.current = false
@@ -627,7 +636,7 @@ function CreateWebsitePage() {
   const handleStartOver = () => {
     clearCreateWizardState()
     setErrors({})
-    setFormError('')
+    clearFormError()
     setValues(createDefaultValues(hasRequestedTemplate ? requestedTemplateId : null))
     goToStep(hasRequestedTemplate ? 2 : 1)
   }
@@ -784,6 +793,11 @@ function CreateWebsitePage() {
             <div className="form__error-area" role="alert">
               <AlertCircle size={16} aria-hidden="true" />
               <span>{formError}</span>
+              {formErrorAction ? (
+                <Link className="form__error-action" to={formErrorAction.to}>
+                  {t(formErrorAction.labelKey)}
+                </Link>
+              ) : null}
             </div>
           ) : null}
 

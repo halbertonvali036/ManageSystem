@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { BILLING_PLANS } from '@/config/billing'
 import {
+  FREE_PLAN_CODE,
   getPlanPriceForCycle,
   getSubscriptionActions,
   getToggleableCycle,
   isCancellationScheduled,
+  matchesPlanIdentifier,
   toBillingOverview,
   toInvoice,
   toPaymentMethod,
@@ -12,6 +15,7 @@ import {
 } from '@/models/billing'
 import billingService from '@/services/billingService'
 import { BackendNotConnectedError } from '@/services/httpClient'
+import { CHECKOUT_SESSION_PATH } from '@/utils/constants'
 
 const NOT_CONNECTED_MESSAGE =
   'Billing is not connected yet. No plan changes or payments can be made from this page.'
@@ -23,6 +27,38 @@ const getActionErrorMessage = (error) => {
   return error?.message ?? 'Billing action is unavailable right now.'
 }
 
+/** The session hand-off URL, accepted as `checkoutUrl` or `url`. */
+const getCheckoutUrl = (session) => {
+  const value = session?.checkoutUrl ?? session?.url ?? null
+  return typeof value === 'string' && value.trim() !== '' ? value.trim() : null
+}
+
+/** The session id the backend created, when it is not handed over as a URL. */
+const getCheckoutSessionId = (session) => {
+  const value = session?.sessionId ?? session?.session_id ?? session?.id ?? null
+  if (value === null || value === undefined || String(value).trim() === '') {
+    return null
+  }
+  return String(value).trim()
+}
+
+/**
+ * Decides how to follow a checkout URL: an app-relative path (or an absolute
+ * URL on this origin) stays inside the router, anything else is a hosted page
+ * on another origin and needs a full page load.
+ */
+const resolveCheckoutTarget = (value) => {
+  try {
+    const url = new URL(value, window.location.origin)
+    if (url.origin !== window.location.origin) {
+      return { external: url.href }
+    }
+    return { path: `${url.pathname}${url.search}${url.hash}` }
+  } catch {
+    return null
+  }
+}
+
 const normalizePaymentMethods = (records) =>
   records.map(toPaymentMethod).filter(Boolean)
 
@@ -31,12 +67,14 @@ const normalizeInvoices = (records) => records.map(toInvoice).filter(Boolean)
 /**
  * Reads the signed-in account's billing state.
  *
- * Until a billing backend exists the service resolves safe empty values, so
- * this hook reports `backendUnavailable` and the page renders honest
- * unavailable / empty states. Actions are exposed for the future integration
- * but never simulate a successful payment.
+ * The backend owns every value shown: plans, prices, subscription state and
+ * checkout sessions all come from the API, and actions surface the backend's
+ * own answers. `canManageBilling` is about *plan selection* — it only needs the
+ * backend's plan catalogue, never a pre-existing subscription — while cancel,
+ * resume and the billing portal stay gated on `hasSubscription`.
  */
 function useBillingOverview() {
+  const navigate = useNavigate()
   const [overview, setOverview] = useState(null)
   const [backendPlans, setBackendPlans] = useState([])
   const [paymentMethods, setPaymentMethods] = useState([])
@@ -45,6 +83,7 @@ function useBillingOverview() {
   const [loadError, setLoadError] = useState(null)
   const [backendUnavailable, setBackendUnavailable] = useState(false)
   const [actionError, setActionError] = useState(null)
+  const [actionNotice, setActionNotice] = useState(null)
   const [pendingAction, setPendingAction] = useState(null)
   const [requestedCycle, setRequestedCycle] = useState(null)
   const mountedRef = useRef(true)
@@ -115,6 +154,7 @@ function useBillingOverview() {
   const runAction = useCallback(async (name, action) => {
     setPendingAction(name)
     setActionError(null)
+    setActionNotice(null)
     try {
       await action()
       return true
@@ -130,10 +170,46 @@ function useBillingOverview() {
     }
   }, [])
 
+  /**
+   * Starts checkout for `planId` on the selected cycle.
+   *
+   * Where checkout happens is the backend's decision:
+   * - a same-origin URL (or the `/billing/checkout/:sessionId` path) is opened
+   *   with the router, so the account chrome stays;
+   * - a URL on another origin is the provider's hosted page → full navigation;
+   * - no URL at all means there was nothing to confirm (the free tier just
+   *   activated), so the billing state is re-read silently and a success notice
+   *   is shown next to the plan cards.
+   * Backend refusals (403/422/…) land in `actionError` with the backend's own
+   * message.
+   */
   const startCheckout = useCallback(
     (planId, checkoutCycle) =>
-      runAction('checkout', () => billingService.createCheckoutSession(planId, checkoutCycle)),
-    [runAction],
+      runAction('checkout', async () => {
+        const session = await billingService.createCheckoutSession(planId, checkoutCycle)
+        const checkoutUrl = getCheckoutUrl(session)
+        if (checkoutUrl) {
+          const target = resolveCheckoutTarget(checkoutUrl)
+          if (target?.external) {
+            window.location.assign(target.external)
+          } else if (target?.path) {
+            navigate(target.path)
+          }
+          return session
+        }
+        const sessionId = getCheckoutSessionId(session)
+        if (sessionId) {
+          navigate(CHECKOUT_SESSION_PATH(sessionId))
+          return session
+        }
+        // Nothing to confirm — the change is already live (e.g. free STARTER).
+        await refetch({ silent: true })
+        if (mountedRef.current) {
+          setActionNotice('accountPolish.checkoutNotRequiredPlanActivated')
+        }
+        return session
+      }),
+    [navigate, refetch, runAction],
   )
 
   const openBillingPortal = useCallback(
@@ -164,21 +240,39 @@ function useBillingOverview() {
   const selectCycle = useCallback((cycle) => {
     setRequestedCycle(getToggleableCycle(cycle))
     setActionError(null)
+    setActionNotice(null)
   }, [])
 
   const hasBackendPlans = backendPlans.length > 0
   const plans = hasBackendPlans ? backendPlans : BILLING_PLANS
   const isPlaceholderCatalogue = !hasBackendPlans
   const hasSubscription = Boolean(overview)
-  const canManageBilling = hasSubscription && !backendUnavailable
+  /**
+   * Selecting a plan only needs the backend's own catalogue — a subscription
+   * must not be a precondition for buying one. When no catalogue is served
+   * (backend down or nothing published) the cards are the frontend placeholder
+   * and stay unselectable.
+   */
+  const canManageBilling = !backendUnavailable && hasBackendPlans
+  /** Cancel, resume and the portal still require a real subscription to manage. */
+  const canManageSubscription = hasSubscription && !backendUnavailable
 
   // The toggle starts on whatever the backend says the account is billed on,
   // and the customer's choice wins afterwards.
   const cycle = requestedCycle ?? getToggleableCycle(overview?.cycle)
-  const currentPlan = useMemo(
-    () => plans.find((plan) => plan.id === overview?.planId) ?? null,
-    [overview?.planId, plans],
-  )
+  const currentPlan = useMemo(() => {
+    if (overview?.planId) {
+      // `planId` may be a numeric id or a code (`STARTER`/`PRO`/`AGENCY`).
+      return plans.find((plan) => matchesPlanIdentifier(plan, overview.planId)) ?? null
+    }
+    if (!overview && hasBackendPlans) {
+      // No subscription reported: the account sits on the free tier — display
+      // only, so the badge and plan relations have something real to compare
+      // against while `hasSubscription` and every action stay untouched.
+      return plans.find((plan) => matchesPlanIdentifier(plan, FREE_PLAN_CODE)) ?? null
+    }
+    return null
+  }, [overview, hasBackendPlans, plans])
   const actions = useMemo(() => getSubscriptionActions(overview), [overview])
 
   return {
@@ -188,11 +282,14 @@ function useBillingOverview() {
     paymentMethods,
     invoices,
     hasSubscription,
+    hasBackendPlans,
     canManageBilling,
+    canManageSubscription,
     isLoading,
     loadError,
     backendUnavailable,
     actionError,
+    actionNotice,
     pendingAction,
     refetch,
     startCheckout,

@@ -9,6 +9,7 @@ are the maintained checks and are what CI should run.
 | Script | Scope |
 | --- | --- |
 | `admin-platform-check.cjs` | Admin console: routes, AZ/EN, theme persistence, keyboard drawer, API error/empty states, user isolation |
+| `create-wizard-errors-check.cjs` | Create-site error routing: bare 409 vs duplicate slug, plan-limit message + upgrade link, duplicate name |
 | `phase11-check.cjs` … `phase15-check.cjs` | Superseded per-phase UI workflows, kept for reference |
 | `phase16-check.cjs` | Broad phase 16 route/overflow/a11y sweep |
 | `phase16-production-check.cjs` | Production build (`npm run preview`) deep links, guards, 404s |
@@ -44,6 +45,7 @@ a Chromium/Chrome binary you already have.
 npm run dev                      # terminal 1 — serves on 5173
 node scripts/validation/phase16-check.cjs
 node scripts/validation/phase16-runtime-check.cjs
+node scripts/validation/create-wizard-errors-check.cjs
 
 npm run build && npm run preview # terminal 1 — serves on 4173
 node scripts/validation/phase16-production-check.cjs

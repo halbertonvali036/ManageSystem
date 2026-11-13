@@ -1,20 +1,23 @@
 /**
  * Billing frontend configuration (presentation only).
  *
- * The plan catalogue below is scaffolding for the Plan & Billing page until
- * commercial pricing, a billing backend and a payment provider are decided.
- * It describes structure and copy only:
+ * The plan catalogue below is a layout placeholder. It is used only at runtime
+ * when `billingService.getPlans()` serves no catalogue — the backend is not
+ * reachable or nothing is published yet — so the page can still lay itself out
+ * without inventing an offer. It describes structure and copy only:
  * - `price`, `currency` and `cycle` stay `null` — no price is published.
  * - `prices` carries a `null` amount per cycle so the monthly/yearly toggle
  *   can render a real period without inventing a number for either.
- * - `purchasable` stays `false` — checkout cannot be started from the UI.
+ * - `purchasable` stays `false` — the placeholder itself is never purchasable.
  * - `recommended` stays `false` — no plan is promoted as the current one.
  *
  * `rank` is structural only: it is what lets the page tell an upgrade from a
  * downgrade without relying on the order the cards happen to be rendered in.
  *
  * Real plans returned by `billingService.getPlans()` replace this list at
- * runtime. To change the catalogue before then, edit this file only.
+ * runtime; every backend plan is purchasable unless the backend itself sends
+ * `purchasable: false`. To change the placeholder before then, edit this file
+ * only.
  */
 
 export const BILLING_CATALOGUE_SOURCE = Object.freeze({
@@ -25,8 +28,6 @@ export const BILLING_CATALOGUE_SOURCE = Object.freeze({
 export const BILLING_PRICE_PENDING_LABEL = 'Pricing not published'
 
 export const BILLING_CYCLE_PENDING_LABEL = 'Billing cycle not set'
-
-export const BILLING_PURCHASE_PENDING_LABEL = 'Checkout not available yet'
 
 /** No price exists for either cycle yet — both render as pending. */
 const pendingCyclePrices = Object.freeze({ monthly: null, annual: null })

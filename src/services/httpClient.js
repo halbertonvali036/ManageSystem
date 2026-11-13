@@ -93,6 +93,21 @@ export const isEndpointUnavailable = (error) =>
     error.status === HTTP_STATUS.NOT_FOUND ||
     error.status === HTTP_STATUS.METHOD_NOT_ALLOWED)
 
+/**
+ * Whether a failed request means the *endpoint itself* is not routed — and
+ * nothing else.
+ *
+ * Narrower than `isEndpointUnavailable` on purpose: `404`/`405` are the only
+ * statuses that say "this route does not exist". `403`/`400`/`409`/`422` on a
+ * concrete billing call (checkout creation, confirmation) carry the backend's
+ * decision and its message, so services like `billingService` must let them
+ * propagate instead of turning them into "not connected".
+ */
+export const isEndpointMissing = (error) =>
+  error instanceof RequestError &&
+  (error.status === HTTP_STATUS.NOT_FOUND ||
+    error.status === HTTP_STATUS.METHOD_NOT_ALLOWED)
+
 export class RequestError extends Error {
   constructor(message, { status = null, data = null, code = null } = {}) {
     super(message)
@@ -124,28 +139,32 @@ const parseResponseBody = async (response) => {
 
 const request = async (path, options = {}) => {
   if (!config.api.baseUrl) throw new BackendNotConnectedError()
+  const { anonymous = false, ...requestOptions } = options
   const url = `${config.api.baseUrl}${path}`
-  const headers = { ...DEFAULT_HEADERS, ...options.headers }
+  const headers = { ...DEFAULT_HEADERS, ...requestOptions.headers }
 
   /*
-   * Public auth endpoints stay anonymous. Every other request carries the
-   * stored bearer token when there is one. The token is never logged or added to
-   * the error object.
+   * Public auth endpoints stay anonymous, and so does any request marked
+   * `anonymous` (e.g. the landing page's plan catalogue): it never carries the
+   * stored token, so a missing or expired session can neither fail the read nor
+   * trigger the session-expired redirect on a page guests can see. Every other
+   * request carries the stored bearer token when there is one. The token is
+   * never logged or added to the error object.
    */
   const isPublicAuthRequest = isPublicAuthPath(path)
-  const token = isPublicAuthRequest ? null : getStoredSessionToken()
+  const token = isPublicAuthRequest || anonymous ? null : getStoredSessionToken()
   if (token) {
     headers.Authorization = `Bearer ${token}`
   }
 
-  if (typeof FormData !== 'undefined' && options.body instanceof FormData) {
+  if (typeof FormData !== 'undefined' && requestOptions.body instanceof FormData) {
     // The browser must set the multipart boundary itself.
     delete headers['Content-Type']
   }
 
   let response
   try {
-    response = await fetch(url, { ...options, headers })
+    response = await fetch(url, { ...requestOptions, headers })
   } catch {
     const networkErrorCode = ERROR_CODE.NETWORK
     throw new RequestError(DEFAULT_STATUS_MESSAGES[networkErrorCode], {

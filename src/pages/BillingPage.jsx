@@ -24,10 +24,12 @@ function BillingPage() {
     paymentMethods,
     invoices,
     canManageBilling,
+    canManageSubscription,
     isLoading,
     loadError,
     backendUnavailable,
     actionError,
+    actionNotice,
     pendingAction,
     refetch,
     startCheckout,
@@ -72,7 +74,8 @@ function BillingPage() {
         overview={overview}
         subscriptionActions={subscriptionActions}
         cancellationScheduled={cancellationScheduled}
-        canManageBilling={canManageBilling}
+        canManageSubscription={canManageSubscription}
+        backendUnavailable={backendUnavailable}
         pendingAction={pendingAction}
         actionError={actionError}
         onManageSubscription={openBillingPortal}
@@ -88,13 +91,15 @@ function BillingPage() {
         cycle={cycle}
         onCycleChange={selectCycle}
         canSelect={canManageBilling}
+        actionError={actionError}
+        actionNotice={actionNotice}
         onSelect={(plan) => startCheckout(plan.id, cycle)}
       />
 
       <div className="billing-columns">
         <BillingPaymentMethods
           paymentMethods={paymentMethods}
-          canManageBilling={canManageBilling}
+          canManageSubscription={canManageSubscription}
         />
         <BillingInvoiceHistory
           invoices={invoices}

@@ -15,6 +15,10 @@ import { getPlanRelation } from '@/models/billing'
  *
  * The cycle switch re-reads published prices for the chosen period. It does not
  * subscribe anyone to anything: checkout stays a separate, explicit step.
+ *
+ * `actionError` / `actionNotice` are the results of a checkout attempt, shown
+ * right next to the cards — where the customer pressed the button — rather than
+ * only up in the summary.
  */
 function BillingPlansSection({
   plans,
@@ -24,6 +28,8 @@ function BillingPlansSection({
   cycle,
   onCycleChange,
   canSelect,
+  actionError,
+  actionNotice,
   onSelect,
 }) {
   const { t } = useTranslation()
@@ -47,6 +53,18 @@ function BillingPlansSection({
         <BillingNotice tone="pending" title={t('accountPolish.frontendConfiguration')} className="plans-section__notice">{t('accountPolish.thisCatalogueIsPlaceholderConfigurationUsedToLayOut')}</BillingNotice>
       ) : null}
 
+      {actionError ? (
+        <div className="alert alert--error plans-section__notice" role="alert">
+          {actionError}
+        </div>
+      ) : null}
+
+      {actionNotice ? (
+        <div className="alert alert--success plans-section__notice" role="status">
+          {t(actionNotice)}
+        </div>
+      ) : null}
+
       {plans.length ? (
         <div className="plans-grid">
           {plans.map((plan, index) => (
@@ -57,7 +75,7 @@ function BillingPlansSection({
               cycle={cycle}
               currentStatus={currentStatus}
               canSelect={canSelect}
-              isPlaceholder={isPlaceholderCatalogue || plan.purchasable !== true}
+              isPlaceholder={isPlaceholderCatalogue}
               onSelect={onSelect}
             />
           ))}
