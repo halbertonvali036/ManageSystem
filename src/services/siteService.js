@@ -48,6 +48,12 @@ const requireBackend = (message) => {
   }
 }
 
+/**
+ * A LIKE pattern that matches every row. Only used as the last-resort read
+ * described in `getMySites`, never as a user-facing search value.
+ */
+const MATCH_EVERYTHING_SEARCH = '%'
+
 const buildQuery = ({ status = ALL_SITES_FILTER, search = '' } = {}) => {
   const query = new URLSearchParams()
   if (status && status !== ALL_SITES_FILTER) {
@@ -70,7 +76,29 @@ const getMySites = async (params = {}) => {
   if (!isBackendConnected()) {
     return []
   }
-  return toList(await httpClient.get(`${SITES_API_PATH}${buildQuery(params)}`))
+  try {
+    return toList(await httpClient.get(`${SITES_API_PATH}${buildQuery(params)}`))
+  } catch (error) {
+    /*
+     * Temporary workaround for a backend defect: the list query fails with a
+     * 500 whenever `search` is absent, because the SQL statement binds a null
+     * `search` parameter. Until the server is fixed, an *unfiltered* read is
+     * retried once with a LIKE wildcard, which the very same query treats as
+     * "match everything" — the result is the full list either way. The retry
+     * only runs for a server fault on a request that carried no search term,
+     * so a real search or a real failure is never rewritten.
+     */
+    const carriedSearchTerm = Boolean(params.search?.trim())
+    const isServerFault = error instanceof RequestError && error.status >= 500
+    if (carriedSearchTerm || !isServerFault) {
+      throw error
+    }
+    return toList(
+      await httpClient.get(
+        `${SITES_API_PATH}${buildQuery({ ...params, search: MATCH_EVERYTHING_SEARCH })}`,
+      ),
+    )
+  }
 }
 
 /** A single project, or null when it is absent or the API is not connected. */

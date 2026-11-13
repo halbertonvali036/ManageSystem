@@ -93,6 +93,7 @@ function BillingPage() {
         canSelect={canManageBilling}
         actionError={actionError}
         actionNotice={actionNotice}
+        pendingAction={pendingAction}
         onSelect={(plan) => startCheckout(plan.id, cycle)}
       />
 

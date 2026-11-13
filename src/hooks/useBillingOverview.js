@@ -15,7 +15,7 @@ import {
 } from '@/models/billing'
 import billingService from '@/services/billingService'
 import { BackendNotConnectedError } from '@/services/httpClient'
-import { CHECKOUT_SESSION_PATH } from '@/utils/constants'
+import { BILLING_CHECKOUT_PATH, CHECKOUT_SESSION_PATH } from '@/utils/constants'
 
 const NOT_CONNECTED_MESSAGE =
   'Billing is not connected yet. No plan changes or payments can be made from this page.'
@@ -46,11 +46,17 @@ const getCheckoutSessionId = (session) => {
  * Decides how to follow a checkout URL: an app-relative path (or an absolute
  * URL on this origin) stays inside the router, anything else is a hosted page
  * on another origin and needs a full page load.
+ *
+ * The backend builds `checkoutUrl` from its own `FRONTEND_URL`, which in
+ * deployments defaults to `http://localhost:3000`. When that URL still points
+ * at this app's own checkout route it is followed in-app instead of loading
+ * the foreign origin — the session id is the same either way.
  */
 const resolveCheckoutTarget = (value) => {
   try {
     const url = new URL(value, window.location.origin)
-    if (url.origin !== window.location.origin) {
+    const isOwnCheckoutRoute = url.pathname.startsWith(`${BILLING_CHECKOUT_PATH}/`)
+    if (url.origin !== window.location.origin && !isOwnCheckoutRoute) {
       return { external: url.href }
     }
     return { path: `${url.pathname}${url.search}${url.hash}` }

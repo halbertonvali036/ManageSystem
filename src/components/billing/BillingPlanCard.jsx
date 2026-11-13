@@ -29,7 +29,16 @@ import {
  * frontend placeholder, or when the backend explicitly withholds a plan.
  * `relation` is only ever set from a plan the backend reports as current.
  */
-function BillingPlanCard({ plan, relation, cycle, currentStatus, canSelect, isPlaceholder, onSelect }) {
+function BillingPlanCard({
+  plan,
+  relation,
+  cycle,
+  currentStatus,
+  canSelect,
+  isPlaceholder,
+  isPending,
+  onSelect,
+}) {
   const copy = useAccountCopy()
   const { t } = useTranslation()
   const name = getPlanName(t, plan)
@@ -46,18 +55,20 @@ function BillingPlanCard({ plan, relation, cycle, currentStatus, canSelect, isPl
   const savingPercent = getAnnualSavingPercent(plan)
   const isCurrent = relation === 'current'
   const isNotPurchasable = plan.purchasable !== true
-  const ctaLabel = getPlanRelationLabel(relation)
-  const ctaDisabled = isCurrent || !canSelect || isNotPurchasable
+  const ctaLabel = isPending ? 'Starting checkout…' : getPlanRelationLabel(relation)
+  const ctaDisabled = isCurrent || !canSelect || isNotPurchasable || isPending
   const unavailableReason = isCurrent
     ? copy('This is your current plan')
-    : !canSelect
-      ? copy('Checkout is unavailable while the billing backend is not reachable')
-      : isNotPurchasable
-        ? copy('This plan is not offered for purchase')
-        : `Continue to secure checkout for ${plan.name}`
+    : isPending
+      ? copy('Starting checkout…')
+      : !canSelect
+        ? copy('Checkout is unavailable while the billing backend is not reachable')
+        : isNotPurchasable
+          ? copy('This plan is not offered for purchase')
+          : `Continue to secure checkout for ${plan.name}`
   const ctaNote = isPlaceholder
     ? copy('Configuration placeholder — not purchasable.')
-    : isCurrent
+    : isCurrent || isPending
       ? null
       : !canSelect
         ? copy('Checkout is unavailable while the billing backend is not reachable')
@@ -165,8 +176,11 @@ function BillingPlanCard({ plan, relation, cycle, currentStatus, canSelect, isPl
           onClick={() => onSelect?.(plan)}
           title={unavailableReason}
         >
+          {isPending ? (
+            <span className="spinner" aria-hidden="true" />
+          ) : null}
           {copy(ctaLabel)}
-          {!isCurrent ? <ArrowRight size={16} aria-hidden="true" /> : null}
+          {!isCurrent && !isPending ? <ArrowRight size={16} aria-hidden="true" /> : null}
         </button>
         {ctaNote ? (
           <p className="plan-card__cta-note">{ctaNote}</p>

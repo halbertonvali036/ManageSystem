@@ -30,6 +30,7 @@ function BillingPlansSection({
   canSelect,
   actionError,
   actionNotice,
+  pendingAction,
   onSelect,
 }) {
   const { t } = useTranslation()
@@ -76,6 +77,7 @@ function BillingPlansSection({
               currentStatus={currentStatus}
               canSelect={canSelect}
               isPlaceholder={isPlaceholderCatalogue}
+              isPending={pendingAction === 'checkout'}
               onSelect={onSelect}
             />
           ))}
