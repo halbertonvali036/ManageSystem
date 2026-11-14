@@ -24,8 +24,9 @@ const DEVICE_ICONS = {
  * The template preview dialog.
  *
  * Builds an ordinary local draft and renders its active page with EditorCanvas.
- * The gallery cards remain lightweight schematics; only this open dialog renders
- * blocks and preview motion. Page/device switching keeps the draft stable.
+ * The gallery cards keep their schematic except where a template opts into a
+ * real render; only this open dialog always renders blocks and preview motion.
+ * Page/device switching keeps the draft stable.
  *
  * Nothing here creates a project. The primary action is a link to the create
  * wizard with the template id in the query string, exactly like the card's.

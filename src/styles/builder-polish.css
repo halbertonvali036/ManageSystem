@@ -25,9 +25,50 @@
 .templates-page__eyebrow { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; color: var(--studio-quiet); font-size: .72rem; letter-spacing: .06em; font-weight: 700; }
 .templates-page .sites-page__title { font-size: clamp(1.5rem, 2.7vw, 2.15rem); letter-spacing: -.035em; }
 .templates-page .page-description { max-width: 56ch; line-height: 1.75; }
-.templates-page .templates-filter { margin: 0; gap: 6px; }
-.templates-page .templates-filter__item { min-height: 40px; padding: 9px 15px; border-radius: 10px; background: var(--studio-surface); color: var(--color-text-muted); border-color: var(--studio-edge); }
-.templates-page .templates-filter__item[aria-pressed='true'] { color: var(--color-text); background: var(--studio-raised); border-color: var(--color-accent); box-shadow: inset 0 -2px var(--color-accent); }
+.templates-page .templates-filter { margin: 0; gap: 8px; }
+/*
+ * Category chips.
+ *
+ * Quiet by default — a hairline pill with muted text — so the grid keeps the
+ * emphasis. Hover tints the pill toward the accent, and the pressed chip is the
+ * one filled with it, which makes the current category readable at a glance
+ * instead of being implied by a 2px underline.
+ */
+.templates-page .templates-filter__item {
+  min-height: 34px;
+  padding: 7px 15px;
+  border: 1px solid var(--studio-edge);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: .76rem;
+  font-weight: 650;
+  letter-spacing: .01em;
+  white-space: nowrap;
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+}
+.templates-page .templates-filter__item:hover {
+  color: var(--color-text);
+  background: var(--studio-raised);
+  border-color: color-mix(in srgb, var(--color-accent) 40%, var(--studio-edge));
+  transform: translateY(-1px);
+}
+.templates-page .templates-filter__item[aria-pressed='true'] {
+  color: var(--color-accent-text, #fff);
+  background: var(--color-accent);
+  border-color: transparent;
+  box-shadow: 0 10px 20px -12px color-mix(in srgb, var(--color-accent) 85%, transparent);
+  transform: none;
+}
+.templates-page .templates-filter__item[aria-pressed='true']:hover {
+  color: var(--color-accent-text, #fff);
+  background: var(--color-accent);
+}
 .templates-page__count { margin: 0; color: var(--color-text-muted); font-size: .8rem; font-variant-numeric: tabular-nums; }
 .templates-page .templates-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr)); gap: 24px; align-items: start; }
 .templates-page .template-card { min-width: 0; height: 100%; background: var(--studio-surface); border-color: var(--studio-edge); border-radius: var(--radius-lg); box-shadow: var(--studio-shadow); }

@@ -134,7 +134,19 @@ function EditorCanvas({
             <span className="editor-canvas__frame-dots"><i /><i /><i /></span>
             <span>{activePage?.name}</span>
           </div>}
-          <article ref={motionRef} className="editor-canvas__page" style={canvasStyle} onClick={handlePreviewLink}>
+          {/*
+            * The page is where the site's own theme lives, so it also carries the
+            * theme's id: a preset that needs more than tokens (a palette with a
+            * dark band of its own, say) can scope that polish here instead of
+            * leaking rules onto every other template's canvas.
+            */}
+          <article
+            ref={motionRef}
+            className="editor-canvas__page"
+            data-site-theme={theme?.themePresetId}
+            style={canvasStyle}
+            onClick={handlePreviewLink}
+          >
             <SiteHeaderPreview
               siteDocument={document}
               device={device}

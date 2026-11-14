@@ -696,6 +696,20 @@ export const normalizeSiteTemplate = (raw) => {
 export const countTemplateSections = (template) =>
   (template?.pages ?? []).reduce((total, entry) => total + entry.sections.length, 0)
 
+/**
+ * Templates whose gallery card renders the real page instead of the schematic.
+ *
+ * A real render is richer but costs a full canvas per card, so it is opted into
+ * per template rather than assumed for all thirteen. Everything not listed here
+ * keeps the lightweight structure preview; the dialog always renders the real
+ * page either way.
+ */
+export const TEMPLATE_RENDER_PREVIEW_IDS = Object.freeze(['saas-starter'])
+
+/** Whether a card for this template should render its actual page. */
+export const hasRenderPreview = (templateId) =>
+  TEMPLATE_RENDER_PREVIEW_IDS.includes(templateId)
+
 export const filterTemplatesByCategory = (category = ALL_TEMPLATE_CATEGORIES) =>
   filterTemplates({ category })
 

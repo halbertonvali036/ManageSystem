@@ -164,6 +164,61 @@
 }
 
 /*
+ * The card thumbnail rendered from the template's real page.
+ *
+ * Same ratio, shadow and bottom fade as the schematic, so a grid that mixes the
+ * two still reads as one row of cards. The stage keeps the desktop canvas width
+ * and is scaled from the top-left to the card's width, which means the page is
+ * cropped rather than squashed: the hero fills the frame and the rest of the
+ * page continues underneath the fade.
+ */
+.template-render {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 11;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow:
+    0 12px 28px -16px #0006,
+    inset 0 0 0 1px color-mix(in srgb, currentColor 8%, transparent);
+}
+
+.template-render__stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+  pointer-events: none;
+}
+
+/* The thumbnail is a picture of the page: no canvas chrome, no scrolling. */
+.template-render .editor-canvas-area {
+  padding: 0;
+  overflow: hidden;
+}
+
+.template-render :is(.editor-canvas-scroll, .editor-canvas, .editor-canvas__page) {
+  min-height: 0;
+}
+
+.template-render .editor-canvas__page {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.template-render::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 46px;
+  background: linear-gradient(to bottom, transparent, var(--template-bg, transparent));
+  pointer-events: none;
+}
+
+/*
  * The dialog view.
  *
  * Full height and labelled: the sections are the information here, so they are

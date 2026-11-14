@@ -1,0 +1,408 @@
+/* ============================================================
+   SaaS Starter — polish scoped to its own theme.
+
+   The tokens in `siteTheme.js` give this template its three colours;
+   these rules give them a composition. Ink carries the top and bottom
+   of the page (header, hero, footer), amber carries the highlights
+   (kickers, eyebrows, the closing card) and indigo carries every
+   action. Everything between them is white or a cool neutral derived
+   from the ink — no fourth hue is introduced anywhere.
+
+   Every selector is scoped to a canvas whose theme id is `saas`, so the
+   other twelve templates never see a line of this, and nothing here
+   leaves the canvas: it is the site's own design, not builder chrome.
+
+   Band backgrounds and padding come back from the renderer as inline
+   styles taken from the section's shared definition, so the handful
+   that must change carry `!important`. That is the price of restyling
+   a template without forking its sections: the section library stays
+   shared, and the override lives beside the palette it belongs to.
+   ============================================================ */
+
+/* ── The palette, as local custom properties ──────────────────── */
+
+.editor-canvas__page[data-site-theme='saas'] {
+  --saas-ink: #15161d;
+  --saas-ink-2: #1e2130;
+  --saas-ink-line: #2b2f42;
+  --saas-indigo: #4f46e5;
+  --saas-amber: #f5a524;
+  --saas-amber-deep: #b45309;
+  --saas-amber-soft: #fff4e2;
+  --saas-on-ink: #f5f6fb;
+  --saas-on-ink-muted: #a9aec6;
+}
+
+/* ── Type ─────────────────────────────────────────────────────── */
+
+/* Headings sit tight against their own measure; copy stays open. */
+.editor-canvas__page[data-site-theme='saas'] :is(h1, h2, h3) {
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.editor-canvas__page[data-site-theme='saas'] .editor-canvas__block > p {
+  text-wrap: pretty;
+}
+
+/*
+ * A short amber rule above the first heading of a section.
+ *
+ * It is the page's repeating rhythm: no text, so it needs no
+ * translation, and it is the one place the third colour appears in an
+ * otherwise typographic band.
+ */
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section
+  > .editor-canvas__section-band
+  > .editor-canvas__section-inner
+  > .editor-canvas__block-slot[data-block-type='heading']:not(
+    .editor-canvas__block-slot ~ .editor-canvas__block-slot
+  )::before {
+  content: '';
+  display: block;
+  width: 46px;
+  height: 4px;
+  margin-bottom: 18px;
+  border-radius: 2px;
+  background: var(--saas-amber);
+}
+
+/* Centred bands carry the rule centred with their heading. */
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section:is([data-section-type='logoCloud'], [data-section-type='cta'])
+  > .editor-canvas__section-band
+  > .editor-canvas__section-inner
+  > .editor-canvas__block-slot[data-block-type='heading']::before {
+  margin-inline: auto;
+}
+
+/* ── Header ───────────────────────────────────────────────────── */
+
+/* The header continues the hero's ink, so the page opens as one dark block. */
+.editor-canvas__page[data-site-theme='saas'] .editor-site-header {
+  color: var(--saas-on-ink);
+  background: var(--saas-ink);
+  border-bottom-color: var(--saas-ink-line);
+  /* The note and any empty-menu line are painted with the muted token, so the
+     token has to follow the band they sit on. */
+  --site-muted: var(--saas-on-ink-muted);
+  --site-border: var(--saas-ink-line);
+}
+
+.editor-canvas__page[data-site-theme='saas'] .editor-site-header__name {
+  color: var(--saas-on-ink);
+}
+
+.editor-canvas__page[data-site-theme='saas'] .editor-site-header__link {
+  color: var(--saas-on-ink-muted);
+}
+
+.editor-canvas__page[data-site-theme='saas'] .editor-site-header__link:hover,
+.editor-canvas__page[data-site-theme='saas']
+  .editor-site-header__link[aria-current='page'] {
+  color: var(--saas-on-ink);
+}
+
+.editor-canvas__page[data-site-theme='saas'] .editor-site-header__toggle {
+  color: var(--saas-on-ink);
+  background: var(--saas-ink-2);
+  border-color: var(--saas-ink-line);
+}
+
+/* ── Hero ─────────────────────────────────────────────────────── */
+
+/*
+ * The hero is the page's first statement, so it takes the ink: white type,
+ * an indigo button, the amber rule above the heading. The gradient keeps the
+ * band from reading as a flat black rectangle at 1440px wide.
+ */
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='hero']
+  .editor-canvas__section-band {
+  padding: clamp(72px, 8vw, 104px) 32px !important;
+  background: linear-gradient(165deg, var(--saas-ink) 0%, var(--saas-ink-2) 100%) !important;
+  color: var(--saas-on-ink);
+  /* Anything painted with theme tokens inside the band reads on ink. */
+  --site-muted: var(--saas-on-ink-muted);
+  --site-surface: var(--saas-ink-2);
+  --site-border: var(--saas-ink-line);
+  --site-text: var(--saas-on-ink);
+}
+
+/* Body copy under the hero heading sits back from the headline. */
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='hero']
+  .editor-canvas__block
+  > p {
+  color: var(--saas-on-ink-muted);
+}
+
+/* ── Logo cloud ───────────────────────────────────────────────── */
+
+/*
+ * A quiet white strip between the ink hero and the first content band,
+ * held by hairlines rather than by a colour change. The label takes the
+ * amber in text form — small enough that the deep tone keeps its
+ * contrast — and the wordmarks sit at reduced ink.
+ */
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='logoCloud']
+  .editor-canvas__section-band {
+  padding: 36px 32px !important;
+  background: #ffffff !important;
+  border-block: 1px solid var(--site-border);
+}
+
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='logoCloud']
+  [data-block-type='heading']
+  :is(h1, h2) {
+  font-size: 12px !important;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--saas-amber-deep);
+}
+
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='logoCloud']
+  [data-block-type='text'] {
+  color: color-mix(in srgb, var(--site-text) 42%, transparent);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* ── Bands and cards ──────────────────────────────────────────── */
+
+/* The feature grid reads best on white: its cards are the grey. */
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='featureGrid']
+  .editor-canvas__section-band {
+  background: #ffffff !important;
+}
+
+/*
+ * One card treatment for the whole page.
+ *
+ * The base renderer already gives a card a surface, a border and a
+ * shadow; this tightens the corners, lifts it on hover and lets the
+ * border drift toward indigo, so a card reads as interactive without a
+ * second colour being spent on it.
+ */
+.editor-canvas__page[data-site-theme='saas'] .editor-block__panel {
+  border-radius: calc(var(--site-radius) + 2px);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.editor-canvas__page[data-site-theme='saas'] .editor-block__panel:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--saas-indigo) 35%, var(--site-border));
+  box-shadow: 0 26px 46px -34px rgb(21 22 29 / 55%);
+}
+
+/* Feature and pricing cards sit on white, so they keep the cool grey. */
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section:is([data-section-type='featureGrid'], [data-section-type='pricing'])
+  .editor-block__panel {
+  background: var(--site-surface);
+}
+
+/* Testimonials and FAQ sit on the grey band, so theirs flip to white. */
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section:is([data-section-type='testimonials'], [data-section-type='faq'])
+  .editor-block__panel {
+  background: #ffffff;
+}
+
+/* A pull-quote mark in amber: decoration only, so it needs no copy. */
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='testimonials']
+  .editor-block__panel::before {
+  content: '\201C';
+  display: block;
+  height: 0.5em;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 46px;
+  line-height: 1;
+  color: var(--saas-amber);
+}
+
+/* ── Product preview ──────────────────────────────────────────── */
+
+/* The picture slot gets the palette instead of a dashed grey box. */
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='productPreview']
+  .editor-block__image-placeholder {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--saas-indigo) 30%, var(--site-border));
+  background:
+    radial-gradient(120% 140% at 12% 8%, color-mix(in srgb, var(--saas-amber) 35%, transparent), transparent 62%),
+    radial-gradient(130% 120% at 92% 20%, color-mix(in srgb, var(--saas-indigo) 30%, transparent), transparent 58%),
+    linear-gradient(135deg, var(--saas-amber-soft), #eef1fe);
+}
+
+/* ── Pricing ──────────────────────────────────────────────────── */
+
+/* Plan labels become amber pills — the third colour, in small doses. */
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='pricing']
+  .editor-block__panel-eyebrow {
+  align-self: flex-start;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: calc(var(--site-base-size) * 0.7);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--saas-amber-deep);
+  background: var(--saas-amber-soft);
+}
+
+/* The plan actions are the section's own buttons, so they take the indigo. */
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='pricing']
+  .editor-block__panel-action {
+  color: #ffffff;
+  background: var(--saas-indigo);
+  box-shadow: 0 14px 28px -18px color-mix(in srgb, var(--saas-indigo) 90%, transparent);
+}
+
+/*
+ * The middle plan.
+ *
+ * The three panels are the last three children of the section in both
+ * edit and preview mode — the same trick the bento layout uses — so
+ * counting back from the end picks the middle one either way. It gets
+ * the indigo ring, the lift and a white ground: emphasis without a
+ * fourth colour.
+ */
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='pricing']
+  .editor-canvas__block-slot[data-block-type='panel']:nth-last-child(2)
+  .editor-block__panel {
+  background: #ffffff;
+  border-color: var(--saas-indigo);
+  box-shadow: 0 30px 60px -40px color-mix(in srgb, var(--saas-indigo) 70%, transparent);
+  transform: translateY(-6px);
+}
+
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='pricing']
+  .editor-canvas__block-slot[data-block-type='panel']:nth-last-child(2)
+  .editor-block__panel:hover {
+  transform: translateY(-9px);
+}
+
+/* ── FAQ ──────────────────────────────────────────────────────── */
+
+/* Question rows are white on the grey band and answer in muted ink. */
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='faq']
+  .editor-block__panel-title {
+  color: var(--site-text);
+}
+
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='faq']
+  .editor-block__panel-text {
+  color: var(--site-muted);
+}
+
+/* ── Closing card ─────────────────────────────────────────────── */
+
+/*
+ * The CTA stops being a full-width tint and becomes a floating amber
+ * card with the page's white showing at its edges — the one warm
+ * surface on the site, and the last thing above the footer.
+ */
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='cta']
+  .editor-canvas__section-band {
+  margin: 16px;
+  padding: clamp(48px, 6vw, 72px) 32px !important;
+  background: linear-gradient(135deg, var(--saas-amber-soft) 0%, #ffedcf 100%) !important;
+  border-radius: 24px !important;
+}
+
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='cta']
+  .editor-canvas__block
+  > p {
+  color: color-mix(in srgb, var(--site-text) 72%, transparent);
+}
+
+/* ── Footer ───────────────────────────────────────────────────── */
+
+/* The page closes on the same ink it opened with. */
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='footer']
+  .editor-canvas__section-band {
+  background: var(--saas-ink) !important;
+  color: var(--saas-on-ink-muted);
+  --site-muted: var(--saas-on-ink-muted);
+  --site-text: var(--saas-on-ink);
+}
+
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='footer']
+  .editor-canvas__block
+  > p {
+  color: var(--saas-on-ink-muted);
+}
+
+/* The first line is the site's own sentence, so it holds the bright tone. */
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section[data-section-type='footer']
+  .editor-canvas__block-slot:first-child
+  > .editor-canvas__block
+  > p {
+  color: var(--saas-on-ink);
+}
+
+/* ── Actions ──────────────────────────────────────────────────── */
+
+/*
+ * One button treatment: indigo, softly lifted off whatever it stands
+ * on. The glow is a shadow of the button's own colour, so it reads as
+ * light rather than as a border.
+ */
+.editor-canvas__page[data-site-theme='saas'] .editor-block__button {
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.editor-canvas__page[data-site-theme='saas'] .editor-block__button[data-variant='primary'],
+.editor-canvas__page[data-site-theme='saas']
+  .editor-canvas__section-band
+  .editor-block__button:not([data-variant='secondary']) {
+  box-shadow: 0 16px 32px -18px color-mix(in srgb, var(--saas-indigo) 95%, transparent);
+}
+
+.editor-canvas__page[data-site-theme='saas'] .editor-block__button:hover {
+  transform: translateY(-2px);
+}
+
+/* ── Narrow canvases ──────────────────────────────────────────── */
+
+/* The frame is the query container, so this follows the device, not the window. */
+@container (max-width: 640px) {
+  .editor-canvas__page[data-site-theme='saas']
+    .editor-canvas__section[data-section-type='hero']
+    .editor-canvas__section-band {
+    padding: 56px 20px !important;
+  }
+
+  .editor-canvas__page[data-site-theme='saas']
+    .editor-canvas__section[data-section-type='cta']
+    .editor-canvas__section-band {
+    margin: 10px;
+    padding: 40px 20px !important;
+    border-radius: 18px !important;
+  }
+}

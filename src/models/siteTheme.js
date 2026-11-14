@@ -190,24 +190,33 @@ export const SITE_THEME_PRESETS = Object.freeze([
     }),
   },
   {
+    /*
+     * SaaS.
+     *
+     * Three colours carry the whole design: ink for the dark bands and the
+     * type, indigo for every action, amber for the highlights — on a white
+     * page with cool neutrals derived from the ink rather than from grey.
+     * The palette is deliberately only three hues: anything a fourth colour
+     * would do here is done by weight or by tint of one of these.
+     */
     id: 'saas',
     nameKey: 'siteTheme.saas.name',
     descriptionKey: 'siteTheme.saas.description',
     tokens: Object.freeze({
       fontHeading: SITE_FONT_STACKS.sans,
       fontBody: SITE_FONT_STACKS.sans,
-      primary: '#4338ca',
-      accent: '#6366f1',
-      accentSoft: '#eef2ff',
+      primary: '#15161d',
+      accent: '#4f46e5',
+      accentSoft: '#fff4e2',
       background: '#ffffff',
-      surface: '#f8fafc',
-      text: '#0f172a',
-      muted: '#64748b',
-      border: '#e2e8f0',
-      radiusScale: 12,
-      headingScale: 2.35,
+      surface: '#f4f6fc',
+      text: '#14151c',
+      muted: '#5b6072',
+      border: '#e2e6f4',
+      radiusScale: 14,
+      headingScale: 2.4,
       headingWeight: 800,
-      buttonRadius: 10,
+      buttonRadius: 12,
       spacingScale: 1.25,
     }),
   },

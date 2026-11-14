@@ -1,9 +1,11 @@
 import { ArrowRight, Check, Eye, LayoutTemplate } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import useTranslation from '@/hooks/useTranslation'
+import TemplateRenderPreview from '@/components/sites/TemplateRenderPreview'
 import TemplateStructurePreview from '@/components/sites/TemplateStructurePreview'
 import {
   countTemplateSections,
+  hasRenderPreview,
   TEMPLATE_CATEGORY_LABELS,
   TEMPLATE_TIER_LABELS,
 } from '@/models/siteTemplate'
@@ -15,9 +17,10 @@ import { NEW_SITE_PATH } from '@/utils/constants'
  * One starter template.
  *
  * The card shows the template's own identity rather than a generic placeholder:
- * the preview is drawn from its real first page with its own theme tokens, and
- * those tokens also tint the frame and the category label, so the grid does not
- * read as one repeated card thirteen times.
+ * templates opted into a real render show their actual first page in their own
+ * theme, the rest draw a schematic from that same page and theme, and those
+ * tokens also tint the frame and the category label, so the grid does not read
+ * as one repeated card thirteen times.
  *
  * When a real backend is connected, `availability` says whether the server has
  * this template. A template with no backend match stays visible — the preview
@@ -50,6 +53,10 @@ function TemplateCard({ template, onPreview, availability = null }) {
       : backendTemplate.category
     : t(TEMPLATE_CATEGORY_LABELS[template.category] ?? 'templates.categoryBasic')
 
+  // Only the templates that opted in pay for a real canvas on the card; the
+  // rest keep the schematic, which costs nothing and never disagrees with it.
+  const showRealPage = hasRenderPreview(template.id)
+
   return (
     <li
       className={`template-card${isUnavailable ? ' template-card--unavailable' : ''}`}
@@ -67,7 +74,11 @@ function TemplateCard({ template, onPreview, availability = null }) {
             {t('templates.notAvailableYet')}
           </span>
         ) : null}
-        <TemplateStructurePreview template={template} variant="card" />
+        {showRealPage ? (
+          <TemplateRenderPreview template={template} />
+        ) : (
+          <TemplateStructurePreview template={template} variant="card" />
+        )}
       </div>
 
       <div className="template-card__body">
