@@ -830,37 +830,197 @@
   white-space: nowrap;
   border: 0;
 }
-.create-site-theme-swatch {
-  display: flex;
-  flex-shrink: 0;
+/* ── Create Website: "Site theme" ──────────────────────────── */
+
+/*
+ * Each theme card carries a miniature of the page it paints: the preset's own
+ * background, surface, accent, text and heading font, drawn as a header, a
+ * hero and a row of cards. The tokens arrive as custom properties so the whole
+ * mock re-colours from one style attribute, and every value inside it is
+ * decorative — the radio's label (name, description, corner/font/light chips)
+ * is what assistive tech reads.
+ */
+.create-site-choice__grid--themes {
+  grid-template-columns: repeat(auto-fit, minmax(258px, 1fr));
+}
+
+.template-option--theme {
   flex-direction: column;
-  gap: var(--space-2);
-  width: 44px;
-  height: 44px;
-  padding: var(--space-2);
-  border: 1px solid var(--color-border);
+  align-items: stretch;
+  gap: var(--space-3);
+  padding: var(--space-3);
 }
 
-.create-site-theme-swatch__accent {
-  height: 8px;
-  border-radius: var(--radius-full);
+/*
+ * A vertical card reads its selection as a ring around the whole tile rather
+ * than the inset accent bar the horizontal template rows use — on a stacked
+ * card that bar would sit against the preview and read as a stray border.
+ */
+.create-site-page .template-option--theme[data-checked='true'] {
+  border-color: var(--color-accent);
+  background: var(--studio-raised);
+  box-shadow: 0 0 0 1px var(--color-accent);
 }
 
-.create-site-theme-swatch__line {
+.theme-preview {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 10px 10px 12px;
+  overflow: hidden;
+  border: 1px solid var(--tm-border, var(--color-border));
+  border-radius: calc(var(--tm-radius, 8px) + 4px);
+  background: var(--tm-bg, #ffffff);
+}
+
+.theme-preview__bar {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--tm-border, var(--color-border)) 70%, transparent);
+}
+
+.theme-preview__bar > i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--tm-accent, var(--color-accent));
+  opacity: 0.5;
+}
+
+.theme-preview__bar > i:nth-child(2) {
+  opacity: 0.32;
+}
+
+.theme-preview__bar > i:nth-child(3) {
+  opacity: 0.18;
+}
+
+.theme-preview__links {
+  display: flex;
+  gap: 5px;
+  margin-left: auto;
+}
+
+.theme-preview__links i {
+  width: 13px;
   height: 4px;
-  border-radius: var(--radius-full);
-  opacity: 0.6;
+  border-radius: 2px;
+  background: var(--tm-muted, var(--color-text-muted));
+  opacity: 0.45;
 }
 
-.create-site-theme-swatch__line::after {
-  content: '';
-  display: block;
-  width: 60%;
-  height: 100%;
-  margin-top: 4px;
-  border-radius: var(--radius-full);
-  background: currentcolor;
+.theme-preview__hero {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.theme-preview__kicker {
+  width: 26px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--tm-accent, var(--color-accent));
+}
+
+/* The "Aa" is the heading font itself — serif vs sans shows, no copy needed. */
+.theme-preview__title {
+  font-family: var(--tm-heading, inherit);
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--tm-text, var(--color-text));
+}
+
+.theme-preview__line {
+  width: 92%;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--tm-muted, var(--color-text-muted));
   opacity: 0.4;
+}
+
+.theme-preview__line--short {
+  width: 64%;
+  margin-bottom: 3px;
+}
+
+.theme-preview__cta {
+  width: 58px;
+  height: 16px;
+  border-radius: calc(var(--tm-radius, 8px) * 0.6);
+  background: var(--tm-accent, var(--color-accent));
+}
+
+.theme-preview__cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: auto;
+}
+
+.theme-preview__cards i {
+  height: 30px;
+  border: 1px solid
+    color-mix(in srgb, var(--tm-border, var(--color-border)) 80%, transparent);
+  border-radius: var(--tm-radius, 8px);
+  background: var(--tm-surface, var(--color-surface));
+}
+
+.theme-preview__check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: none;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  color: var(--color-accent-text, #ffffff);
+  background: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--tm-bg, #ffffff);
+}
+
+.template-option--theme[data-checked='true'] .theme-preview__check {
+  display: grid;
+}
+
+/* Colour dots plus one chip per fact: corners, heading font, light or dark. */
+.theme-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.theme-meta__dots {
+  display: inline-flex;
+  gap: 3px;
+  padding: 4px 6px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+}
+
+.theme-meta__dots i {
+  width: 10px;
+  height: 10px;
+  border: 1px solid rgb(0 0 0 / 14%);
+  border-radius: 50%;
+}
+
+.theme-meta__chip {
+  padding: 3px 9px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-meta);
+  color: var(--color-text-muted);
+  background: var(--color-surface);
 }
 
 .create-site-page__preset {

@@ -1,0 +1,598 @@
+/* ============================================================
+   Site theme polish — the composition layer over `siteTheme.js`.
+
+   The tokens give a preset its colours; these rules give them a page.
+   Two layers, in order:
+
+     1. Shared, token-driven polish. Driven only by `--site-*`, so it
+        raises every preset at once — including a theme a visitor picks
+        in the wizard rather than the one its template ships with.
+     2. Per-theme composition. Which bands go dark, which card carries
+        the accent: the decisions a token set cannot make alone.
+
+   Every selector is scoped to `.editor-canvas__page[data-site-theme]`
+   (or its `data-site-scheme`), so nothing here can leave the canvas —
+   this is the site's design, not the builder's. `site-theme-saas.css`
+   is imported after this file, so SaaS Starter's own rules still win
+   wherever the two overlap.
+
+   Band backgrounds and padding arrive as inline styles from the
+   section's shared definition, so anything that must change carries
+   `!important`. That is the price of restyling a template without
+   forking its sections: the library stays shared and the override
+   lives beside the palette it belongs to.
+   ============================================================ */
+
+/* ── 1. Shared, token-driven polish ────────────────────────────── */
+
+/* Type sits tight against its own measure; copy stays open. */
+.editor-canvas__page[data-site-theme] :is(h1, h2, h3) {
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.editor-canvas__page[data-site-theme] .editor-canvas__block > p {
+  text-wrap: pretty;
+}
+
+/*
+ * A short accent rule above the first heading of a section.
+ *
+ * It is the page's repeating rhythm: no text, so it needs no
+ * translation, and it is the one place the accent appears in an
+ * otherwise typographic band.
+ */
+.editor-canvas__page[data-site-theme]
+  .editor-canvas__section
+  > .editor-canvas__section-band
+  > .editor-canvas__section-inner
+  > .editor-canvas__block-slot[data-block-type='heading']:not(
+    .editor-canvas__block-slot ~ .editor-canvas__block-slot
+  )::before {
+  content: '';
+  display: block;
+  width: 46px;
+  height: 4px;
+  margin-bottom: 18px;
+  border-radius: 2px;
+  background: var(--site-accent);
+}
+
+/* Centred bands carry the rule centred with their heading. */
+.editor-canvas__page[data-site-theme]
+  .editor-canvas__section:is(
+    [data-section-type='aiHero'],
+    [data-section-type='cta'],
+    [data-section-type='contactCta'],
+    [data-section-type='logoCloud'],
+    [data-section-type='metrics'],
+    [data-section-type='heroImage'],
+    [data-section-type='statement'],
+    [data-section-type='hours'],
+    [data-section-type='trust']
+  )
+  > .editor-canvas__section-band
+  > .editor-canvas__section-inner
+  > .editor-canvas__block-slot[data-block-type='heading']::before {
+  margin-inline: auto;
+}
+
+/* Header: a hairline under the bar and an accent on hover. */
+.editor-canvas__page[data-site-theme] .editor-site-header {
+  border-bottom-width: 1px;
+}
+
+.editor-canvas__page[data-site-theme] .editor-site-header__link:hover {
+  color: var(--site-accent);
+}
+
+/* ── Cards ─────────────────────────────────────────────────────── */
+
+/*
+ * One card treatment for the whole page: a lift on hover and a border
+ * that drifts toward the accent, so a card reads as interactive
+ * without a second colour being spent on it.
+ */
+.editor-canvas__page[data-site-theme] .editor-block__panel {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.editor-canvas__page[data-site-theme] .editor-block__panel:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--site-accent) 35%, var(--site-border));
+  box-shadow: 0 26px 46px -34px rgb(0 0 0 / 55%);
+}
+
+/* Footer columns are not cards: they keep their chrome off. */
+.editor-canvas__page[data-site-theme]
+  .editor-canvas__section:is([data-section-type='footerColumns'], [data-section-type='footerDetailed'])
+  .editor-block__panel:hover {
+  transform: none;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* Plan / menu / step / year labels become accent pills. */
+.editor-canvas__page[data-site-theme]
+  .editor-canvas__section:is(
+    [data-section-type='pricing'],
+    [data-section-type='menu'],
+    [data-section-type='offering'],
+    [data-section-type='workflow'],
+    [data-section-type='recognition']
+  )
+  .editor-block__panel-eyebrow {
+  align-self: flex-start;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: calc(var(--site-base-size) * 0.7);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--site-on-accent);
+  background: var(--site-accent);
+}
+
+/* A pull-quote mark in the accent: decoration only, no copy. */
+.editor-canvas__page[data-site-theme]
+  .editor-canvas__section[data-section-type='testimonials']
+  .editor-block__panel::before {
+  content: '\201C';
+  display: block;
+  height: 0.5em;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 46px;
+  line-height: 1;
+  color: var(--site-accent);
+}
+
+/* ── Logo cloud ────────────────────────────────────────────────── */
+
+/* The label becomes an uppercase eyebrow; the wordmarks sit back. */
+.editor-canvas__page[data-site-theme]
+  .editor-canvas__section[data-section-type='logoCloud']
+  [data-block-type='heading']
+  :is(h1, h2) {
+  font-size: 12px !important;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--site-accent);
+}
+
+.editor-canvas__page[data-site-theme]
+  .editor-canvas__section[data-section-type='logoCloud']
+  [data-block-type='text'] {
+  color: color-mix(in srgb, var(--site-text) 45%, transparent);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* ── Actions ───────────────────────────────────────────────────── */
+
+/* One button treatment: lifted off whatever it stands on. */
+.editor-canvas__page[data-site-theme] .editor-block__button {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    filter 180ms ease;
+}
+
+.editor-canvas__page[data-site-theme] .editor-block__button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+}
+
+.editor-canvas__page[data-site-theme]
+  .editor-canvas__section-band
+  .editor-block__button:not([data-variant='secondary']) {
+  box-shadow: 0 16px 32px -18px color-mix(in srgb, var(--site-primary) 92%, transparent);
+}
+
+/* ── Picture slots ─────────────────────────────────────────────── */
+
+/* The slot gets the palette instead of a dashed grey box. */
+.editor-canvas__page[data-site-theme] .editor-block__image-placeholder {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--site-accent) 30%, var(--site-border));
+  background:
+    radial-gradient(120% 140% at 12% 8%, color-mix(in srgb, var(--site-accent) 32%, transparent), transparent 62%),
+    radial-gradient(130% 120% at 92% 20%, color-mix(in srgb, var(--site-primary) 26%, transparent), transparent 58%),
+    linear-gradient(135deg, var(--site-accent-soft), var(--site-surface));
+}
+
+/* ── Closing card ──────────────────────────────────────────────── */
+
+/*
+ * The CTA stops being a full-width tint and becomes a floating card
+ * with the page showing at its edges — the last warm surface above
+ * the footer.
+ */
+.editor-canvas__page[data-site-theme]
+  .editor-canvas__section:is([data-section-type='cta'], [data-section-type='contactCta'])
+  .editor-canvas__section-band {
+  margin: 16px;
+  padding: clamp(48px, 6vw, 72px) 32px !important;
+  border-radius: calc(var(--site-radius) + 12px) !important;
+  background-color: var(--site-accent-soft) !important;
+  background-image: linear-gradient(
+    135deg,
+    var(--site-accent-soft) 0%,
+    color-mix(in srgb, var(--site-accent) 18%, var(--site-accent-soft)) 100%
+  ) !important;
+}
+
+.editor-canvas__page[data-site-theme]
+  .editor-canvas__section:is([data-section-type='cta'], [data-section-type='contactCta'])
+  .editor-canvas__block
+  > p {
+  color: color-mix(in srgb, var(--site-text) 72%, transparent);
+}
+
+/* ── Closing band ──────────────────────────────────────────────── */
+
+/*
+ * The page closes on a deliberate colour rather than on the section
+ * library's default surface. Light themes take their primary (always
+ * a dark, readable tone by construction); dark themes go one step
+ * below the page so the footer still reads as the end of it.
+ */
+.editor-canvas__page[data-site-scheme='light']
+  .editor-canvas__section:is(
+    [data-section-type='footer'],
+    [data-section-type='footerColumns'],
+    [data-section-type='footerDetailed']
+  )
+  .editor-canvas__section-band {
+  background-color: var(--site-primary) !important;
+  color: color-mix(in srgb, var(--site-on-primary) 78%, transparent);
+  --site-text: var(--site-on-primary);
+  --site-muted: color-mix(in srgb, var(--site-on-primary) 72%, transparent);
+  --site-border: color-mix(in srgb, var(--site-on-primary) 26%, transparent);
+  --site-surface: color-mix(in srgb, var(--site-on-primary) 8%, var(--site-primary));
+  --site-accent: color-mix(in srgb, var(--site-on-primary) 86%, transparent);
+}
+
+.editor-canvas__page[data-site-scheme='dark']
+  .editor-canvas__section:is(
+    [data-section-type='footer'],
+    [data-section-type='footerColumns'],
+    [data-section-type='footerDetailed']
+  )
+  .editor-canvas__section-band {
+  background-color: color-mix(in srgb, var(--site-background) 68%, #000000) !important;
+  color: var(--site-muted);
+  --site-border: color-mix(in srgb, var(--site-border) 70%, transparent);
+}
+
+/* The site's own first sentence holds the bright tone. */
+.editor-canvas__page[data-site-theme]
+  .editor-canvas__section:is(
+    [data-section-type='footer'],
+    [data-section-type='footerColumns'],
+    [data-section-type='footerDetailed']
+  )
+  .editor-canvas__block-slot:first-child
+  > .editor-canvas__block
+  > p {
+  color: var(--site-text);
+}
+
+/* ── Narrow canvases ───────────────────────────────────────────── */
+
+/* The frame is the query container, so this follows the device. */
+@container (max-width: 640px) {
+  .editor-canvas__page[data-site-theme]
+    .editor-canvas__section:is([data-section-type='cta'], [data-section-type='contactCta'])
+    .editor-canvas__section-band {
+    margin: 10px;
+    padding: 40px 20px !important;
+  }
+}
+
+/* ── 2. Per-theme composition ──────────────────────────────────── */
+
+/* ---- Aurora (blank / default) ---------------------------------- */
+
+.editor-canvas__page[data-site-theme='aurora']
+  .editor-canvas__section[data-section-type='hero']
+  .editor-canvas__section-band {
+  background-color: #ffffff !important;
+}
+
+/* ---- Atelier — editorial portfolio, bronze on ivory ------------ */
+
+.editor-canvas__page[data-site-theme='atelier'] {
+  --tp-ink: #1a1a1a;
+}
+
+.editor-canvas__page[data-site-theme='atelier']
+  .editor-canvas__section:is([data-section-type='editorialHero'], [data-section-type='hero'])
+  .editor-canvas__section-band {
+  background-color: #ffffff !important;
+  padding: clamp(72px, 8vw, 112px) 32px !important;
+}
+
+.editor-canvas__page[data-site-theme='atelier']
+  .editor-canvas__section[data-section-type='projects']
+  .editor-canvas__section-band {
+  background-color: #ffffff !important;
+}
+
+.editor-canvas__page[data-site-theme='atelier']
+  .editor-canvas__section[data-section-type='contactCta']
+  .editor-canvas__section-band {
+  border: 1px solid var(--site-border);
+}
+
+/* ---- Nova — deep space, violet glow ---------------------------- */
+
+.editor-canvas__page[data-site-theme='nova']
+  .editor-canvas__section:is([data-section-type='aiHero'], [data-section-type='hero'])
+  .editor-canvas__section-band {
+  background-color: #05070f !important;
+  box-shadow:
+    inset 0 -140px 160px -120px color-mix(in srgb, var(--site-accent) 55%, transparent),
+    inset 0 120px 160px -140px color-mix(in srgb, var(--site-primary) 60%, transparent);
+}
+
+/* The picture slot in the AI hero reads as a product surface. */
+.editor-canvas__page[data-site-theme='nova']
+  .editor-canvas__section[data-section-type='aiHero']
+  .editor-block__image-placeholder {
+  border-radius: calc(var(--site-radius) + 6px);
+}
+
+/* The middle plan carries the violet ring. */
+.editor-canvas__page[data-site-theme='nova']
+  .editor-canvas__section[data-section-type='pricing']
+  .editor-canvas__block-slot[data-block-type='panel']:nth-last-child(2)
+  .editor-block__panel {
+  border-color: var(--site-accent);
+  box-shadow: 0 30px 60px -40px color-mix(in srgb, var(--site-accent) 75%, transparent);
+  transform: translateY(-6px);
+}
+
+/* ---- Maison — brass on ivory, hairline formal ------------------ */
+
+.editor-canvas__page[data-site-theme='maison']
+  .editor-canvas__section:is([data-section-type='heroSplit'], [data-section-type='editorialHero'])
+  .editor-canvas__section-band {
+  background-color: #ffffff !important;
+}
+
+.editor-canvas__page[data-site-theme='maison']
+  .editor-canvas__section[data-section-type='stats']
+  .editor-canvas__section-band {
+  background-color: var(--site-accent-soft) !important;
+}
+
+.editor-canvas__page[data-site-theme='maison']
+  .editor-canvas__section[data-section-type='projects']
+  .editor-canvas__section-band {
+  background-color: #ffffff !important;
+}
+
+.editor-canvas__page[data-site-theme='maison']
+  .editor-canvas__section[data-section-type='contactCta']
+  .editor-canvas__section-band {
+  border: 1px solid color-mix(in srgb, var(--site-accent) 40%, var(--site-border));
+}
+
+/* ---- Agency — ink opening, orange signal ----------------------- */
+
+.editor-canvas__page[data-site-theme='agency']
+  .editor-canvas__section:is([data-section-type='heroSplit'], [data-section-type='hero'])
+  .editor-canvas__section-band {
+  background-color: #111319 !important;
+  color: #f7f8fa;
+  --site-text: #f7f8fa;
+  --site-muted: #a7adb9;
+  --site-border: #2a2f3a;
+  --site-surface: #1b1f27;
+  --site-accent-soft: color-mix(in srgb, var(--site-accent) 26%, #111319);
+}
+
+/* On the ink, the action has to be the signal colour. */
+.editor-canvas__page[data-site-theme='agency']
+  .editor-canvas__section:is([data-section-type='heroSplit'], [data-section-type='hero'])
+  .editor-block__button:not([data-variant='secondary']) {
+  color: var(--site-on-accent);
+  background: var(--site-accent);
+  border-color: var(--site-accent);
+}
+
+/* ---- Bistro — terracotta on cream ------------------------------ */
+
+.editor-canvas__page[data-site-theme='bistro']
+  .editor-canvas__section[data-section-type='menu']
+  .editor-canvas__section-band {
+  background-color: #ffffff !important;
+}
+
+.editor-canvas__page[data-site-theme='bistro']
+  .editor-canvas__section[data-section-type='story']
+  .editor-canvas__section-band {
+  background-color: var(--site-accent-soft) !important;
+}
+
+.editor-canvas__page[data-site-theme='bistro']
+  .editor-canvas__section[data-section-type='contactCta']
+  .editor-canvas__section-band {
+  border: 1px solid color-mix(in srgb, var(--site-accent) 35%, var(--site-border));
+}
+
+/* ---- Vertex — electric blue, hard corners, big type ------------ */
+
+.editor-canvas__page[data-site-theme='vertex']
+  .editor-canvas__section:is([data-section-type='heroType'], [data-section-type='heroSplit'])
+  .editor-canvas__section-band {
+  background-color: #ffffff !important;
+}
+
+/* The one dark band on an otherwise pale page. */
+.editor-canvas__page[data-site-theme='vertex']
+  .editor-canvas__section[data-section-type='statement']
+  .editor-canvas__section-band {
+  background-color: #111111 !important;
+  color: #f5f5f5;
+  --site-text: #f5f5f5;
+  --site-muted: #a8a8a8;
+  --site-border: #2e2e2e;
+}
+
+/* ---- Noir — deeper blacks, gold hairlines ---------------------- */
+
+.editor-canvas__page[data-site-theme='noir']
+  .editor-canvas__section:is([data-section-type='heroImage'], [data-section-type='hero'])
+  .editor-canvas__section-band {
+  background-color: #050506 !important;
+}
+
+.editor-canvas__page[data-site-theme='noir']
+  .editor-canvas__section[data-section-type='statement']
+  .editor-canvas__section-band {
+  background-color: #000000 !important;
+  color: #f2f1ee;
+  --site-text: #f2f1ee;
+  --site-muted: #9c9a95;
+  --site-border: #232326;
+}
+
+.editor-canvas__page[data-site-theme='noir']
+  .editor-canvas__section[data-section-type='logoCloud']
+  .editor-canvas__section-band {
+  border-block: 1px solid var(--site-border);
+}
+
+/* ---- Corporate — navy opening, teal signal --------------------- */
+
+.editor-canvas__page[data-site-theme='corporate']
+  .editor-canvas__section:is([data-section-type='heroSplit'], [data-section-type='hero'])
+  .editor-canvas__section-band {
+  background-color: #16283d !important;
+  color: #f2f6fa;
+  --site-text: #f2f6fa;
+  --site-muted: #b3c0cd;
+  --site-border: #2a405a;
+  --site-surface: #1e3450;
+  --site-accent-soft: color-mix(in srgb, var(--site-accent) 30%, #16283d);
+}
+
+.editor-canvas__page[data-site-theme='corporate']
+  .editor-canvas__section:is([data-section-type='heroSplit'], [data-section-type='hero'])
+  .editor-block__button:not([data-variant='secondary']) {
+  color: var(--site-on-accent);
+  background: var(--site-accent);
+  border-color: var(--site-accent);
+}
+
+.editor-canvas__page[data-site-theme='corporate']
+  .editor-canvas__section[data-section-type='stats']
+  .editor-block__stat-value {
+  color: var(--site-accent);
+}
+
+/* ---- Forge — concrete, safety amber, hard edges ---------------- */
+
+.editor-canvas__page[data-site-theme='forge']
+  .editor-canvas__section:is([data-section-type='heroSplit'], [data-section-type='heroImage'])
+  .editor-canvas__section-band {
+  background-color: #1a1f24 !important;
+  color: #eef0f1;
+  --site-text: #eef0f1;
+  --site-muted: #a4adb4;
+  --site-border: #2c343b;
+  --site-surface: #232a31;
+  --site-accent-soft: color-mix(in srgb, var(--site-accent) 24%, #1a1f24);
+}
+
+.editor-canvas__page[data-site-theme='forge']
+  .editor-canvas__section:is([data-section-type='heroSplit'], [data-section-type='heroImage'])
+  .editor-block__button:not([data-variant='secondary']) {
+  color: #14181d;
+  background: var(--site-accent);
+  border-color: var(--site-accent);
+}
+
+.editor-canvas__page[data-site-theme='forge']
+  .editor-canvas__section[data-section-type='trust']
+  .editor-block__panel {
+  border-top: 3px solid var(--site-accent);
+}
+
+/* ---- Aurelia — clay on ivory, rounded, airy -------------------- */
+
+.editor-canvas__page[data-site-theme='aurelia']
+  .editor-canvas__section:is([data-section-type='editorialHero'], [data-section-type='hero'])
+  .editor-canvas__section-band {
+  background-color: #ffffff !important;
+  padding: clamp(72px, 8vw, 112px) 32px !important;
+}
+
+.editor-canvas__page[data-site-theme='aurelia']
+  .editor-canvas__section[data-section-type='offering']
+  .editor-block__panel {
+  background: #ffffff;
+}
+
+/* ---- Ledger — navy opening, cyan data -------------------------- */
+
+.editor-canvas__page[data-site-theme='ledger']
+  .editor-canvas__section:is([data-section-type='heroSplit'], [data-section-type='hero'])
+  .editor-canvas__section-band {
+  background-color: #0b1f2a !important;
+  color: #f2f8fa;
+  --site-text: #f2f8fa;
+  --site-muted: #a8bcc6;
+  --site-border: #1e3a48;
+  --site-surface: #132b38;
+  --site-accent-soft: color-mix(in srgb, var(--site-accent) 30%, #0b1f2a);
+}
+
+.editor-canvas__page[data-site-theme='ledger']
+  .editor-canvas__section:is([data-section-type='heroSplit'], [data-section-type='hero'])
+  .editor-block__button:not([data-variant='secondary']) {
+  color: var(--site-on-accent);
+  background: var(--site-accent);
+  border-color: var(--site-accent);
+}
+
+.editor-canvas__page[data-site-theme='ledger']
+  .editor-canvas__section[data-section-type='metrics']
+  .editor-block__stat-value {
+  color: var(--site-accent);
+}
+
+.editor-canvas__page[data-site-theme='ledger']
+  .editor-canvas__section[data-section-type='pricing']
+  .editor-canvas__block-slot[data-block-type='panel']:nth-last-child(2)
+  .editor-block__panel {
+  border-color: var(--site-accent);
+  box-shadow: 0 30px 60px -40px color-mix(in srgb, var(--site-accent) 70%, transparent);
+  transform: translateY(-6px);
+}
+
+/* ---- Atlas — dark application chrome --------------------------- */
+
+.editor-canvas__page[data-site-theme='atlas']
+  .editor-canvas__section[data-section-type='appBar']
+  .editor-canvas__section-band {
+  background-color: #070b16 !important;
+  border-bottom: 1px solid var(--site-border);
+}
+
+.editor-canvas__page[data-site-theme='atlas']
+  .editor-canvas__section[data-section-type='appBar']
+  .editor-block__button:not([data-variant='secondary']) {
+  color: #04121b;
+  background: var(--site-accent);
+  border-color: var(--site-accent);
+}
+
+.editor-canvas__page[data-site-theme='atlas'] .editor-block__panel:hover {
+  border-color: color-mix(in srgb, var(--site-accent) 45%, var(--site-border));
+}

@@ -20,7 +20,7 @@ import {
   SLUG_MAX_LENGTH,
   TEMPLATE_TIER_LABELS,
 } from '@/models/site'
-import { SITE_THEME_PRESETS } from '@/models/siteTheme'
+import { SITE_THEME_PRESETS, siteColorScheme } from '@/models/siteTheme'
 import { buildSiteSeedDocument } from '@/models/siteSeed'
 import {
   buildSiteContent,
@@ -151,6 +151,27 @@ const contentFieldSpecs = (t) => [
 ]
 
 /**
+ * The three facts a theme card shows beside its name: how round the corners
+ * are, what the heading font reads as, and whether the page is dark. All three
+ * are derived from the preset's own tokens — never stored — so the card always
+ * describes exactly the theme its radio selects.
+ *
+ * The font label keeps the words the design world already uses in every
+ * language ("serif", "sans", "mono"), so it needs no translation; only the
+ * corner and light/dark labels do.
+ */
+const describeTheme = (tokens) => {
+  const radius = tokens.radiusScale <= 0 ? 'sharp' : tokens.radiusScale <= 10 ? 'soft' : 'round'
+  const stack = String(tokens.fontHeading ?? '')
+  const font = /mono/i.test(stack)
+    ? 'Mono'
+    : /serif/i.test(stack.replace(/sans-serif/gi, ''))
+      ? 'Serif'
+      : 'Sans'
+  return { radius, font, scheme: siteColorScheme(tokens.background) }
+}
+
+/**
  * The blank form for a visit with no saved state. A `?template=` in the URL
  * picks the starting template and theme; without one the defaults apply.
  */
@@ -178,10 +199,19 @@ const createDefaultValues = (requestedTemplateId) => ({
  * Restores a previous attempt on mount.
  *
  * A `?template=` that differs from the stored selection starts fresh with the
- * URL's template (on the Template step), so "use this template" can never be
- * hijacked by an earlier half-finished wizard. Everything else — the stored
- * values and the step — comes back as it was, with unknown ids falling back to
- * the defaults instead of a template the catalogue cannot resolve.
+ * URL's template, so "use this template" can never be hijacked by an earlier
+ * half-finished wizard. Everything else — the stored values and the step —
+ * comes back as it was, with unknown ids falling back to the defaults instead
+ * of a template the catalogue cannot resolve.
+ *
+ * A fresh attempt always opens on the Project step. Opening on the Template
+ * step instead used to skip the name field entirely: the visitor filled the
+ * remaining steps, pressed create, and `validateProject` sent them back to the
+ * start asking for a name they had never been shown. The template is still
+ * preselected and announced by the preset badge, so nothing about the choice is
+ * lost — only the order is honest. The same guard clamps a restored step when
+ * the saved name is no longer valid, so a stale session cannot reproduce the
+ * dead end.
  */
 const resolveInitialState = (requestedTemplateId) => {
   const defaults = createDefaultValues(requestedTemplateId)
@@ -189,10 +219,10 @@ const resolveInitialState = (requestedTemplateId) => {
 
   if (requestedTemplateId && saved?.values?.templateId !== requestedTemplateId) {
     clearCreateWizardState()
-    return { values: defaults, step: 2 }
+    return { values: defaults, step: 1 }
   }
   if (!saved) {
-    return { values: defaults, step: requestedTemplateId ? 2 : 1 }
+    return { values: defaults, step: 1 }
   }
 
   const values = { ...defaults, ...saved.values }
@@ -202,7 +232,7 @@ const resolveInitialState = (requestedTemplateId) => {
   if (!SITE_THEME_PRESETS.some((preset) => preset.id === values.themePresetId)) {
     values.themePresetId = defaults.themePresetId
   }
-  return { values, step: saved.step }
+  return { values, step: isValidSiteName(values.name) ? saved.step : 1 }
 }
 
 /**
@@ -217,9 +247,11 @@ const resolveInitialState = (requestedTemplateId) => {
  * project opens with the visitor's brand, hero and contact details instead of
  * the template's sample copy.
  *
- * The wizard opens on the template step when it is reached from a template card
- * (`?template=saas-starter`), so "start from this template" does not drop the
- * visitor back into an empty wizard with their choice forgotten.
+ * The wizard always opens on the Project step, including when it is reached
+ * from a template card (`?template=saas-starter`): the choice is kept and
+ * announced by the preset badge, but the name field is never skipped, because
+ * create validates it and would otherwise bounce the visitor back to a step
+ * they never saw.
  */
 function CreateWebsitePage() {
   const { t } = useTranslation()
@@ -629,16 +661,15 @@ function CreateWebsitePage() {
 
   /**
    * Discards the saved attempt and returns to the wizard's starting point:
-   * the Template step when the URL carried a template, the Project step
-   * otherwise. The stored state is dropped first, so the next mount starts
-   * fresh as well.
+   * the Project step, where the name is asked for. The stored state is dropped
+   * first, so the next mount starts fresh as well.
    */
   const handleStartOver = () => {
     clearCreateWizardState()
     setErrors({})
     clearFormError()
     setValues(createDefaultValues(hasRequestedTemplate ? requestedTemplateId : null))
-    goToStep(hasRequestedTemplate ? 2 : 1)
+    goToStep(1)
   }
 
   const field = (name, label, options = {}) => {
@@ -942,54 +973,102 @@ function CreateWebsitePage() {
             ) : null}
 
             {/*
-              The theme step shows real token previews rather than the old
-              "palette / font / radius" word salad, because those are the things
-              the visitor will actually see on their site.
+              The theme step shows a miniature of the page the theme paints —
+              its own background, surface, accent and heading font — plus the
+              three facts a name and a sentence cannot carry: how round the
+              corners are, what the heading reads as, and whether the page is
+              dark. Every value is read from the preset's own tokens, so the
+              card cannot describe a theme other than the one it selects.
             */}
             {step === 4 ? (
               <fieldset className="create-site-choice">
                 <legend className="form__panel-title">{t('createSite.themeTitle')}</legend>
                 <p className="form__hint">{t('createSite.themeHint')}</p>
-                <div className="create-site-choice__grid">
-                  {SITE_THEME_PRESETS.map((preset) => (
-                    <label
-                      className="template-option"
-                      key={preset.id}
-                      data-checked={activeThemePresetId === preset.id ? 'true' : undefined}
-                    >
-                      <input
-                        className="create-site-choice__input"
-                        type="radio"
-                        name="themePresetId"
-                        value={preset.id}
-                        checked={activeThemePresetId === preset.id}
-                        onChange={updateField}
-                        disabled={isSubmitting}
-                      />
-                      <span
-                        className="create-site-theme-swatch"
-                        aria-hidden="true"
-                        style={{
-                          background: preset.tokens.background,
-                          color: preset.tokens.text,
-                          borderRadius: preset.tokens.radiusScale,
-                        }}
+                <div className="create-site-choice__grid create-site-choice__grid--themes">
+                  {SITE_THEME_PRESETS.map((preset) => {
+                    const { radius, font, scheme } = describeTheme(preset.tokens)
+                    const radiusLabel = t(
+                      radius === 'sharp'
+                        ? 'createSite.themeRadiusSharp'
+                        : radius === 'round'
+                          ? 'createSite.themeRadiusRound'
+                          : 'createSite.themeRadiusSoft',
+                    )
+                    return (
+                      <label
+                        className="template-option template-option--theme"
+                        key={preset.id}
+                        data-checked={activeThemePresetId === preset.id ? 'true' : undefined}
                       >
-                        <span
-                          className="create-site-theme-swatch__accent"
-                          style={{ background: preset.tokens.accent }}
+                        <input
+                          className="create-site-choice__input"
+                          type="radio"
+                          name="themePresetId"
+                          value={preset.id}
+                          checked={activeThemePresetId === preset.id}
+                          onChange={updateField}
+                          disabled={isSubmitting}
                         />
                         <span
-                          className="create-site-theme-swatch__line"
-                          style={{ background: preset.tokens.muted }}
-                        />
-                      </span>
-                      <span className="template-option__copy">
-                        <span className="template-option__title">{t(preset.nameKey)}</span>
-                        <span className="template-option__text">{t(preset.descriptionKey)}</span>
-                      </span>
-                    </label>
-                  ))}
+                          className="theme-preview"
+                          aria-hidden="true"
+                          style={{
+                            '--tm-bg': preset.tokens.background,
+                            '--tm-surface': preset.tokens.surface,
+                            '--tm-accent': preset.tokens.accent,
+                            '--tm-text': preset.tokens.text,
+                            '--tm-muted': preset.tokens.muted,
+                            '--tm-border': preset.tokens.border,
+                            '--tm-radius': `${preset.tokens.radiusScale}px`,
+                            '--tm-heading': preset.tokens.fontHeading,
+                          }}
+                        >
+                          <span className="theme-preview__bar">
+                            <i />
+                            <i />
+                            <i />
+                            <span className="theme-preview__links">
+                              <i />
+                              <i />
+                              <i />
+                            </span>
+                          </span>
+                          <span className="theme-preview__hero">
+                            <span className="theme-preview__kicker" />
+                            <span className="theme-preview__title">Aa</span>
+                            <span className="theme-preview__line" />
+                            <span className="theme-preview__line theme-preview__line--short" />
+                            <span className="theme-preview__cta" />
+                          </span>
+                          <span className="theme-preview__cards">
+                            <i />
+                            <i />
+                            <i />
+                          </span>
+                          <span className="theme-preview__check">
+                            <Check size={12} strokeWidth={3} />
+                          </span>
+                        </span>
+                        <span className="template-option__copy">
+                          <span className="template-option__title">{t(preset.nameKey)}</span>
+                          <span className="template-option__text">{t(preset.descriptionKey)}</span>
+                          <span className="theme-meta">
+                            <span className="theme-meta__dots" aria-hidden="true">
+                              <i style={{ background: preset.tokens.background }} />
+                              <i style={{ background: preset.tokens.surface }} />
+                              <i style={{ background: preset.tokens.accent }} />
+                              <i style={{ background: preset.tokens.text }} />
+                            </span>
+                            <span className="theme-meta__chip">{radiusLabel}</span>
+                            <span className="theme-meta__chip">{font}</span>
+                            <span className="theme-meta__chip">
+                              {t(scheme === 'dark' ? 'createSite.themeDark' : 'createSite.themeLight')}
+                            </span>
+                          </span>
+                        </span>
+                      </label>
+                    )
+                  })}
                 </div>
                 <p className="form__hint">{t('createSite.themeNote')}</p>
               </fieldset>

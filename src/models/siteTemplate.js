@@ -699,12 +699,27 @@ export const countTemplateSections = (template) =>
 /**
  * Templates whose gallery card renders the real page instead of the schematic.
  *
- * A real render is richer but costs a full canvas per card, so it is opted into
- * per template rather than assumed for all thirteen. Everything not listed here
- * keeps the lightweight structure preview; the dialog always renders the real
- * page either way.
+ * Every template with sections is opted in: a real render is the only picture
+ * that cannot go stale or disagree with what the template actually creates, and
+ * the card already throttles to a single scaled canvas. The blank template is
+ * deliberately left out — it has no sections, so its real page would be an
+ * empty frame while the schematic explains the choice better.
  */
-export const TEMPLATE_RENDER_PREVIEW_IDS = Object.freeze(['saas-starter'])
+export const TEMPLATE_RENDER_PREVIEW_IDS = Object.freeze([
+  'saas-starter',
+  'portfolio-minimal',
+  'nova-ai',
+  'maison',
+  'agency-clean',
+  'restaurant-simple',
+  'vertex-studio',
+  'noir-portfolio',
+  'business-starter',
+  'forge-construction',
+  'aurelia-wellness',
+  'pulse-finance',
+  'atlas-dashboard',
+])
 
 /** Whether a card for this template should render its actual page. */
 export const hasRenderPreview = (templateId) =>

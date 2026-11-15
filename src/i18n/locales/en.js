@@ -1879,6 +1879,11 @@ const en = {
       'The site theme changes only what a visitor sees on your website — colours, fonts and corners. The editor interface itself does not change.',
     themeNote:
       'Every theme is a starting point: fonts, one accent colour, a background and a radius scale. You can change it in the editor at any time.',
+    themeRadiusSharp: 'Sharp corners',
+    themeRadiusSoft: 'Soft corners',
+    themeRadiusRound: 'Round corners',
+    themeDark: 'Dark',
+    themeLight: 'Light',
     contentTitle: 'About your website',
     contentHint:
       'This information replaces the sample copy from the template on your new site. Every field is optional.',

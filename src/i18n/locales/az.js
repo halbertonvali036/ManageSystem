@@ -1884,6 +1884,11 @@ language: {
       'Sayt üslubu yalnız ziyarətçinin saytınızda gördüyü rəng, şrift və bucaqları dəyişir. Redaktorun öz görünüşü dəyişmir.',
     themeNote:
       'Hər üslub başlanğıcdır — şrift, vurğu rəngi, fon və bucaq miqyası. Redaktorda istədiyiniz vaxt dəyişə bilərsiniz.',
+    themeRadiusSharp: 'Kəskin künclər',
+    themeRadiusSoft: 'Yumşaq künclər',
+    themeRadiusRound: 'Dairəvi künclər',
+    themeDark: 'Tünd',
+    themeLight: 'Aydınlıq',
     contentTitle: 'Saytınız haqqında məlumatlar',
     contentHint:
       'Bu məlumatlar yeni saytınızda şablonun nümunə mətnini əvəz edəcək. Bütün sahələr isteğe bağlıdır.',

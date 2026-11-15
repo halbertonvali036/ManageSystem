@@ -3,6 +3,7 @@ import { CanvasDragProvider } from '@/components/editor/CanvasDrag'
 import useSiteMotion from '@/hooks/useSiteMotion'
 import useTranslation from '@/hooks/useTranslation'
 import { BLOCK_TYPE, EDITOR_DEVICE_WIDTHS, getCanvasCssStyle } from '@/models/siteEditor'
+import { normalizeSiteTheme, siteColorScheme } from '@/models/siteTheme'
 import SectionRenderer from '@/components/editor/SectionRenderer'
 import SiteHeaderPreview from '@/components/editor/SiteHeaderPreview'
 
@@ -103,6 +104,15 @@ function EditorCanvas({
     () => getCanvasCssStyle({ theme, globalStyles }),
     [theme, globalStyles],
   )
+  /*
+   * Light or dark, from the page's own background. The polish layer reads it
+   * to decide how the footer closes, and it is derived — not stored — so a
+   * hand-built theme is classified the same way a preset is.
+   */
+  const siteScheme = useMemo(
+    () => siteColorScheme(normalizeSiteTheme(theme).tokens.background),
+    [theme],
+  )
 
   const handlePreviewLink = (event) => {
     if (!isPreview) return
@@ -144,6 +154,7 @@ function EditorCanvas({
             ref={motionRef}
             className="editor-canvas__page"
             data-site-theme={theme?.themePresetId}
+            data-site-scheme={siteScheme}
             style={canvasStyle}
             onClick={handlePreviewLink}
           >

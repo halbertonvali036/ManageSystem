@@ -568,14 +568,27 @@ export const normalizeSiteTheme = (raw) => {
   return { themePresetId: preset.id, tokens: base }
 }
 
-// Readability aid for solid button text only; never a WCAG compliance claim.
-export const siteButtonTextColor = (hex) => {
+const relativeLuminance = (hex) => {
   const full = hex.length === 4 ? '#' + [...hex.slice(1)].map(char => char + char).join('') : hex
   const rgb = [1, 3, 5].map(offset => parseInt(full.slice(offset, offset + 2), 16) / 255)
   const linear = rgb.map(value => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4)
-  const luminance = linear[0] * .2126 + linear[1] * .7152 + linear[2] * .0722
-  return luminance > .179 ? '#000000' : '#ffffff'
+  return linear[0] * .2126 + linear[1] * .7152 + linear[2] * .0722
 }
+
+// Readability aid for solid button text only; never a WCAG compliance claim.
+export const siteButtonTextColor = (hex) =>
+  relativeLuminance(hex) > .179 ? '#000000' : '#ffffff'
+
+/**
+ * Whether a colour reads as a light or a dark page.
+ *
+ * The polish layer closes light themes on their primary and dark themes on a
+ * deeper background, so the canvas publishes which of the two it is as
+ * `data-site-scheme`. Derived from the page's own background, so a theme a
+ * visitor builds by hand is classified the same way a preset is.
+ */
+export const siteColorScheme = (hex) =>
+  relativeLuminance(hex) > .179 ? 'light' : 'dark'
 
 /**
  * Turns theme tokens into CSS custom properties.
