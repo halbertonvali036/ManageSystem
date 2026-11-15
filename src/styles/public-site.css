@@ -1,0 +1,22 @@
+.public-site .editor-canvas-area,
+.public-site .editor-canvas-scroll {
+  display: block;
+  padding: 0;
+  overflow: visible;
+  height: auto;
+  min-height: 100dvh;
+}
+
+.public-site .editor-canvas {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.public-site .editor-canvas__page {
+  min-height: 100dvh;
+  border-radius: 0;
+}

@@ -1,198 +1,290 @@
-﻿# SiteBuilder (Frontend)
+# SiteBuilder — Frontend və backend inteqrasiya qeydləri
 
-Responsive React frontend for a website-builder product: create a website
-project, customize pages in the visual editor, preview a local draft, and review
-publishing readiness.
+React 19 + Vite 8 ilə hazırlanmış sayt qurucusu. İstifadəçi sayt yaradır,
+şablon seçir, vizual redaktorda məzmunu dəyişir və backend-də saxlayır.
+İnterfeys dilləri Azərbaycan dili və ingilis dilidir.
 
-`SiteBuilder` is a temporary, neutral working name. Application components read the product name from `APP_NAME` in
-`src/utils/constants.js`; the static document title and favicon label also need
-updating when a final brand is decided.
+## Layihələr
 
-## Current phase
+- Frontend: https://github.com/halbertonvali036/ManageSystem
+- Backend (Spring Boot): https://github.com/fatimasultanova/sitebuilder-back
+- Vercel layihəsi: https://vercel.com/holbss/manage-system
+- Mövcud dashboard ünvanı: https://manage-system-phi.vercel.app
 
-The frontend includes the public product surface, authenticated site workspace,
-template wizard, visual page editor, navigation, local media, forms, site themes,
-settings, preview, and publishing readiness UI. Local drafts are session-scoped;
-empty states remain honest when project data is unavailable.
+Bu sənəd repodakı frontend davranışını təsvir edir. Kodun mövcudluğu production
+deployment-in, env-lərin və ya bütün inteqrasiyaların işlədiyinin təsdiqi deyil.
+`docs/` daxilindəki əvvəlki mərhələ hesabatları tarixi qeydlərdir; cari endpoint
+istifadəsi üçün `src/services/` və bu README əsas götürülməlidir.
 
-Deliberately **not** implemented yet, because each needs a backend contract
-first:
+## Lokal işə salma
 
-- server persistence for projects, editor drafts and media
-- live publishing, domains and hosting
-- form delivery and submission storage
-- payments and plan purchase
-- Google sign-in completion
-- the mobile app
+Node.js 22.12+ və npm tələb olunur.
 
-Where a feature is missing the UI says so instead of faking it. Nothing in the
-app invents a website project, price, discount or successful request.
-
-## Product areas
-
-- **Public** â€” landing page, pricing, sign-in, registration, language and
-  theme controls.
-- **Workspace** â€” dashboard, site list, Create Website (`/sites/new`), editor,
-  site settings, Templates and per-workspace applications.
-- **Account** â€” Profile, Security, Plan & Billing, Notifications, Support. Google
-  sign-in is a frontend-ready entry point that stays disabled until the backend
-  is connected.
-
-## Roles
-
-- A normal public account is a platform **user**. Sign-up and sign-in never ask
-  for a role: authentication decides it.
-- **Admin** is a separate internal role. It is reachable only through the
-  unlinked `/admin/login` development entry and is never self-registered.
-- Client-side route guards are UI isolation, not security: the backend must
-  enforce every authorization rule.
-
-## Localization
-
-- Azerbaijani (`az`) is the default; English (`en`) is secondary.
-- One `LocaleProvider` owns the active language. Components read words through
-  `useTranslation()` rather than hardcoding labels.
-- `index.html` sets `lang` before first paint so assistive technology sees the
-  right locale from the first frame.
-
-## Theming
-
-Dark is the default expression. Light is a deliberate alternative, not a
-fallback. A saved preference always wins over the default. Colors resolve
-through the tokens in `src/styles/theme.css`; the neon dark palette is built on
-`#39ff14` over deep green-black surfaces with restrained glow.
-
-## Tech stack
-
-- React 19 + Vite
-- React Router v7
-- Lucide icons
-- Oxlint (linting)
-- No CSS framework; custom CSS in `src/styles`
-
-## Folder structure
-
-```
-src/
-  components/   Shared + feature components (sites, landing, layout, auth)
-  config/       App config (API base URL from env)
-  context/      React contexts (auth, locale, theme)
-  hooks/        Data hooks (useWebsites, useAuth, ...)
-  i18n/         Locale provider, dictionaries (az, en)
-  layouts/      Workspace, editor, auth, billing and security layouts
-  models/       Domain constants, validation and formatters
-  pages/        Route-level pages
-  routes/       Route definitions and guards
-  services/     HTTP client + per-resource API services
-  styles/       Global, theme and portal stylesheets
-  utils/        Validation, role guards, constants
-docs/
-  frontend-api-handoff.md   API contract notes for the backend developer
-scripts/
-  validation/   Archived browser smoke harnesses (not part of the build)
-```
-
-## Setup
-
-Use Node.js 22.12+ (validated with 22.20.0) and npm.
-
-```bash
+```sh
 npm ci
 ```
 
-## Environment variable
+`.env.example` faylını `.env` kimi kopyalayın və backend origin-ini yazın:
 
-Copy `.env.example` to `.env` and set the API base URL:
-
-```bash
-VITE_API_BASE_URL=https://api.example.com
+```dotenv
+VITE_API_BASE_URL=https://your-backend.up.railway.app
+VITE_PLATFORM_BASE_DOMAIN=
+VITE_PUBLIC_SITE_MODE=
 ```
 
-Leave it empty (the default) while the backend is unavailable. Reads then
-return empty lists and writes refuse with an explicit "not connected" state
-rather than reporting false success.
-
-## Scripts
-
-```bash
-npm run dev    # start the Vite dev server
-npm run lint   # run Oxlint
-npm run build  # production build to dist/
-npm run preview # local check of dist/; not a production server
+```sh
+npm run dev
+npm run lint
+npm run build
+npm run preview
 ```
 
-## Backend status
+Build nəticəsi `dist/` qovluğundadır. `preview` production server deyil.
+Env dəyişiklikləri üçün dev server restartı və ya production rebuild lazımdır.
 
-The backend is a separate deliverable. All data flows through `src/services`
-using `VITE_API_BASE_URL`; there is no bundled backend and no fake data.
+### Frontend env-ləri
 
-## Development authentication
+| Dəyişən | Mənası |
+| --- | --- |
+| `VITE_API_BASE_URL` | Backend origin-i. Sonuna `/api` əlavə etməyin: sayt endpoint-ləri özləri `/api` prefiksi daşıyır. Boş olduqda real yazma əməliyyatları mümkün deyil. |
+| `VITE_PLATFORM_BASE_DOMAIN` | Platformanın saytlar üçün baza domeni, məsələn `sites.example.com`. `https://`, path və wildcard yazılmır. |
+| `VITE_PUBLIC_SITE_MODE` | Dashboard üçün boş saxlayın. Ayrıca istifadəçi-saytları deployment-ində `host` yazın. Aşağıdakı public hosting bölməsinə baxın. |
+| `VITE_ENABLE_DEMO_AUTH` | Köhnə uyğunluq qeydi; `false` qalmalıdır. Demo giriş mövcud deyil. |
 
-With an empty API URL, `authService` allows local accounts only in Vite
-development mode (`npm run dev`). Production builds exclude these credentials,
-reject saved demo tokens, and require the authentication backend. A configured
-API URL sends sign-in to `/auth/login`; registration remains unavailable pending
-its backend contract. They are never displayed on a public screen: the public
-sign-in shows no credentials and public registration creates no role. The
-`/admin/login` entry is unlinked from the public site. These accounts must be
-removed once real authentication is available.
+`VITE_` dəyişənləri brauzer bundle-ına daxil olur və public-dir. Backend
+tokenləri, Brevo açarı, DB parolu və SSL provider açarı burada saxlanılmır.
 
+## Cari inteqrasiya vəziyyəti
 
-## Deployment handoff
+| Hissə | Frontend-in faktiki davranışı |
+| --- | --- |
+| Auth | Giriş, qeydiyyat, email təsdiqi və parol bərpası real API sorğuları göndərir. Demo hesab yoxdur. |
+| Saytlar / şablonlar | `/api/sites` və `/api/templates` üzərindən işləyir. |
+| Redaktor | Qaralama saytın `content` sahəsində GET/PUT ilə saxlanılır. Ayrı draft endpoint-i istifadə edilmir. |
+| Domenlər | GET / PUT / verify / DELETE realdır. GET xətaları boş domen kimi gizlədilmir; təkrar yoxlama düyməsi var. |
+| Platforma subdomeni | Mövcud saytın `slug` dəyəri göstərilir və ayrıca “Saxla” ilə PUT edilir. Bu əməliyyat DNS/hosting yaratmır və saytı yayımlamır. |
+| Public sayt renderer-i | `host` rejimində backend-in yayımlanmış snapshot-u göstərilir. Dashboard və giriş ekranı göstərilmir. |
+| Site Settings | Ümumi “Saxla” hazırda layihə adını saxlayır. Domen və slug ayrıca saxlanılır. Digər identity/SEO/privacy parametrləri üçün tam settings persistence yoxdur. |
+| Deployment ekranları | `deploymentService.js` real sorğu adapteridir; endpoint uyğunluğu aşağıda qeyd olunub. |
+| Redaktordakı Publish / Unpublish | `sitePublishService.js` hələ stub-dır və əməliyyatı rədd edir. Public renderer əlavə edilməsi bu düymələri aktivləşdirmir. |
+| Formalar | Vizual quruluş və lokal validasiya var; `siteFormService.js` göndərişi rədd edir. Public saytda da form çatdırılması hazır deyil. |
+| Media | Lokal blob/ön baxış qalıcı upload demək deyil. Public snapshot üçün əlçatan, qalıcı media URL-ləri lazımdır. |
+| Billing / security / notifications / profile / admin | API adapterləri var; hər adapterin olması bütün backend endpoint-lərinin mövcudluğu və ya real ödəniş provayderi demək deyil. |
+| Google OAuth | Frontend adapterləri var; backend provider axını ayrıca uyğunlaşdırılmalıdır. |
 
-Deploy the contents of `dist/` to a static host at the origin root (`/`). No
-hosting platform is selected, so no provider-specific configuration is included.
-Subdirectory hosting is not configured: it would require coordinated Vite base,
-router basename and asset-path changes.
+## HTTP və autentifikasiya müqaviləsi
 
-- Configure the host to serve existing assets normally and internally rewrite
-  other application routes to `/index.html` with HTTP 200. Preserve the requested
-  path and query string. Test direct loads and refreshes of `/login`, `/sites`,
-  `/sites/<siteId>/editor`, `/sites/<siteId>/settings` and `/admin/login`.
-- Exclude API paths and missing static assets from the HTML fallback; they should
-  return their actual response/404. Unknown application paths use the app's 404.
-- Revalidate `index.html` on every deployment; hashed `/assets/*` can be cached
-  immutably. Deploy HTML and assets together and retain old hashed assets during
-  rollouts so open sessions can still load lazy routes.
-- Set `VITE_API_BASE_URL` before building (an HTTPS API URL, optionally including
-  a path prefix, or a same-origin prefix such as `/api`). Environment changes
-  require a rebuild. Every `VITE_` value is public: never use secrets or private
-  credentials. `.env.example` lists all optional configuration values.
-- Leave publishing-domain and companion-app values blank until those services
-  exist. Setting them does not enable hosting, publishing or a mobile app.
-- The backend must agree on authentication transport and enforce authorization.
-  The shared client currently does not attach a bearer token or enable
-  cross-origin cookies. API CORS/session integration must be validated before
-  enabling real accounts; client-side role guards are not server authorization.
-- Fonts use Google Fonts with a local sans-serif fallback. A restrictive CSP
-  must account for those origins and the two inline theme/locale bootstrap
-  scripts (use hashes); blocking the bootstrap can cause a theme flash.
-- Production source maps are disabled by Vite's default. No PWA is configured.
+`src/services/httpClient.js` URL-i `VITE_API_BASE_URL + path` kimi qurur.
+JSON body üçün `Content-Type: application/json` göndərilir.
+Multipart upload-da boundary-ni brauzer təyin edir.
 
-The static frontend can be deployed for review. A functioning public service
-still requires real authentication, registration, project persistence and the
-other backend integrations listed above. `/admin/login` is an unlinked internal
-entry for platform administrators; it has no prefilled credentials. Demo auth
-has been removed entirely — sign-in and registration are backend-only. Public
-navigation never exposes Admin or a role selector.
+- Qorunan sorğularda saxlanmış token `Authorization: Bearer <token>` ilə göndərilir.
+- Sessiya `sessionStorage`, yaxud “remember me” seçiminə uyğun `localStorage`
+  daxilində `managesystem-auth-session` açarı ilə saxlanılır.
+- Public auth sorğuları və `{ anonymous: true }` sorğuları token göndərmir.
+- Public sayt oxunması anonimdir; onun `401` cavabı dashboard sessiyasını silmir.
+- Token daşıyan sorğu `401` qaytaranda sessiya təmizlənir və session-expired axını işləyir.
+- Cross-origin cookie üçün `credentials: include` aktiv deyil; cari transport bearer-dir.
+- Backend ownership, rol və plan limitlərini özü yoxlamalıdır.
 
-## Frontend smoke checks
+## Sayt və redaktor API-si
 
-`npm run lint` and `npm run build` are the maintained checks, and there is no
-unit-test runner. The archived per-phase browser harnesses live in
-[`scripts/validation`](scripts/validation) with their own README. The one that
-matches today's UI is:
+Əsas yollar:
 
-```bash
-npm run dev                                          # terminal 1 â€” serves on 5173
-node scripts/validation/phase16-runtime-check.cjs     # passes
+```text
+GET    /api/templates
+GET    /api/sites
+POST   /api/sites
+GET    /api/sites/{id}
+PUT    /api/sites/{id}
+DELETE /api/sites/{id}
 ```
 
-It uses a local Chromium executable (set `CHROMIUM_PATH` if needed), writes
-screenshots to the OS temporary directory and adds no project dependency. The
-older harnesses pin the UI of the phase that wrote them; `scripts/validation/README.md`
-lists the specific assertions that are known to be stale, so read that before
-treating a failure there as a defect.
+Sayt yeniləməsində üç sahə birlikdə göndərilir:
 
-See [Phase 16 validation](docs/phase16-readiness.md) for the recorded results.
+```json
+{
+  "projectName": "Mənim saytım",
+  "slug": "menim-saytim",
+  "content": {
+    "pages": []
+  }
+}
+```
 
+`content` nümunəsi yalnız envelope-u göstərir: real sorğuda redaktorun tam
+sənədi (pages, sections, blocks, navigation, theme və digər sahələr) saxlanmalıdır.
+Slug yazarkən frontend əvvəlcə cari saytı oxuyur və məzmunu qoruyaraq PUT edir.
+Slug sahəsi DNS label-i üçün maksimum 63 simvol, kiçik latın hərfləri,
+rəqəmlər və tək defislərlə məhdudlaşdırılır. Unikallıq backend-in qərarıdır.
+
+## Domen API-si
+
+```text
+GET    /api/sites/{id}/domain
+PUT    /api/sites/{id}/domain          body: { "hostname": "example.com" }
+POST   /api/sites/{id}/domain/verify   body: {}
+DELETE /api/sites/{id}/domain          success: 204
+```
+
+Frontend-in qəbul etdiyi cavab:
+
+```json
+{
+  "hostname": "example.com",
+  "status": "pending",
+  "ssl": "pending",
+  "records": [
+    {
+      "type": "TXT",
+      "name": "_sitebuilder-verify.example.com",
+      "value": "sitebuilder-verification=..."
+    }
+  ],
+  "verifiedAt": null,
+  "lastCheckedAt": null,
+  "error": null
+}
+```
+
+- `status`: `unconfigured | pending | connected | error`
+- `ssl`: `unconfigured | pending | active | error`
+- DNS növləri: `TXT`, `A`, `CNAME`; frontend serverin verdiyi qeydləri göstərir.
+- Domen olmadıqda GET uğurlu `unconfigured` cavabı qaytarmalıdır.
+  `403/404/405`, şəbəkə və server xətaları oxuma xətası kimi göstərilir.
+- GET uğursuzdursa yazma düymələri bloklanır; “Yenidən cəhd et” ilə GET təkrarlanır.
+- Plan bloklanması: `403` və `errors.code: ["CUSTOM_DOMAIN_NOT_ALLOWED"]`
+  Azərbaycan/ingilis dilində plan mesajına çevrilir.
+- `400` validasiya və digər yazma xətalarının backend mesajı göstərilir.
+- TXT təsdiqi HTTPS-in hazır olması demək deyil. `connected` və aktiv olmayan
+  SSL ayrıca izahla göstərilir. Frontend sertifikat yaratmır.
+
+## Public saytların göstərilməsi
+
+Eyni frontend kodunu **ayrıca public-site deployment-i** kimi build edin:
+
+```dotenv
+VITE_API_BASE_URL=https://your-backend.up.railway.app
+VITE_PLATFORM_BASE_DOMAIN=sites.example.com
+VITE_PUBLIC_SITE_MODE=host
+```
+
+Dashboard deployment-ində `VITE_PUBLIC_SITE_MODE` boş qalmalıdır; `host` bütün
+path-ləri istifadəçi saytının səhifələri kimi qəbul edir.
+
+Host seçimi:
+
+| Brauzerdəki host | Anonim API sorğusu |
+| --- | --- |
+| `demo.sites.example.com` | `GET /api/public/sites/demo` |
+| `customer.com` | `GET /api/public/sites/by-domain?host=customer.com` |
+
+Platforma subdomeni yalnız baza domeninin birbaşa altındakı valid slug üçün
+çıxarılır. Baza domeninin özü tenant sayılmır.
+
+Backend cavabının renderer üçün tələb olunan hissəsi:
+
+```json
+{
+  "siteId": "42",
+  "slug": "demo",
+  "projectName": "Demo",
+  "version": 1,
+  "publishedUrl": "https://demo.sites.example.com",
+  "publishedAt": "...",
+  "snapshot": {
+    "site": {
+      "content": {
+        "pages": [
+          { "id": "home", "name": "Home", "slug": "", "isHome": true, "sections": [] }
+        ]
+      }
+    }
+  }
+}
+```
+
+Renderer yalnız `snapshot.site.content` istifadə edir; şəxsi draft endpoint-inə
+müraciət etmir və boş snapshot-u şablonla əvəz etmir. `/` ana səhifəni,
+`/about` uyğun page slug-ını göstərir. Daxili/xarici linklər normal brauzer
+naviqasiyası ilə işləyir. Naməlum sayt/səhifə üçün tapılmadı ekranı,
+şəbəkə/server xətası üçün təkrar cəhd göstərilir. Bu SPA-dır:
+tapılmadı ekranı HTTP səviyyəsində SSR `404` deyil.
+
+### Hosting tərəfinin ayrıca təmin etməli olduğu şərtlər
+
+1. Custom domenlər və platforma wildcard DNS public-site deployment-inə yönəlməlidir.
+2. Hosting provayderi həmin host-ları qəbul etməli və HTTPS sertifikatını təmin etməlidir.
+   Backend-ə domen əlavə etmək Vercel-ə avtomatik domen əlavə etmək demək deyil.
+3. Frontend deep link-ləri (`/about` və s.) `index.html`-ə SPA fallback almalıdır.
+   Repodakı `vercel.json` bunu təmin edir.
+4. Backend public endpoint-ləri visitor origin-ləri üçün CORS icazəsi verməlidir,
+   yaxud ayrıca təsdiqlənmiş same-origin API proxy qurulmalıdır.
+5. Backend-in `PUBLISHED_URL_TEMPLATE` dəyəri real public hosting ünvanına
+   uyğunlaşdırılmalıdır, məsələn `https://{slug}.sites.example.com`.
+
+## Backendçiyə açıq qalan məsələlər
+
+Bu frontend dəyişiklikləri backend kodunu və Railway/Vercel env-lərini dəyişmir.
+Araşdırılan backend kodunda:
+
+- `LoggingSslProvisioner` sertifikat yaratmır, yalnız log yazır; SSL `pending`
+  qalır. Real provisioner və ya hosting-provider inteqrasiyası ayrıca tələb olunur.
+- Domen yoxlaması TXT sahibliyini təsdiqləyir; A/CNAME routing və HTTPS readiness
+  bununla eyni şey deyil.
+- `SiteDomainServiceImpl.isApex()` domeni nöqtə sayına görə təsnif edir.
+  `example.co.uk` kimi kök domenlər üçün DNS record seçimi düzəldilməlidir.
+- `SecurityConfig` CORS siyahısı dashboard, Railway və localhost origin-ləri ilə
+  məhduddur; custom visitor domenləri üçün public API CORS işi qalır.
+- `DOMAINS_CNAME_TARGET`, `DOMAINS_A_RECORDS`, `DOMAINS_PLATFORM_BASE_DOMAIN`
+  real hosting arxitekturasına uyğun qurulmalıdır. Sonuncu frontend-in baza
+  domeni ilə uyğun olmalıdır.
+- STARTER planında custom-domain PUT üçün `403` gözlənilən plan qaydasıdır.
+  Tam uğurlu domen sınağı üçün uyğun plan və idarə olunan real domen lazımdır.
+
+### Digər endpoint uyğunluqları
+
+Frontend bütün endpoint-lər üçün eyni prefiksdən istifadə etmir. Backend
+marşrutlarını aşağıdakı faktiki çağırışlarla tutuşdurun:
+
+| Adapter | İstifadə etdiyi yol |
+| --- | --- |
+| `authService` | `/auth/*` |
+| `siteService`, `siteEditorService`, `siteDomainService` | `/api/sites/*` |
+| `templateService` / şablon oxunması | `/api/templates` |
+| `publicSiteService` | `/api/public/sites/*` |
+| `deploymentService` | `/deployments/*`; sayt seçimi üçün `/sites` |
+| `siteSettingsService` | GET `/sites/{id}/settings`; hazırda fallback. Yazma `/api/sites/{id}`. |
+| `billingService` | `/billing/*` |
+| `accountSecurityService` | `/account/security/*` |
+| `notificationsService` | `/notifications/*` |
+| `profileService` | `/profile`, `/profile/avatar` |
+| `activityService` | `/activity`, `/usage`, `/usage/limits`; legacy workspace yolları da var |
+| `adminPlatformService`, `usersService` | `/admin/*`, `/users/*` |
+
+Məsələn, `/sites` və `/api/sites` avtomatik eyni yol deyil. Adapterin görünməsi
+endpoint-in backend-də implementasiya olunduğu mənasına gəlmir.
+
+## Kodun yerləşməsi və yoxlama
+
+```text
+src/components/   UI və redaktor renderer-ləri
+src/pages/        Dashboard və public sayt ekranları
+src/routes/       Dashboard route-ları və giriş qoruyucuları
+src/services/     Faktiki HTTP adapterləri
+src/models/       Normalizasiya və məlumat modelləri
+src/i18n/         az / en mətnləri
+src/styles/       CSS və mövzu stilləri
+scripts/validation/  Brauzer smoke yoxlamaları və tarixi ssenarilər
+```
+
+Əsas yoxlamalar `npm run lint` və `npm run build`-dir. Domen/public renderer
+dəyişiklikləri üçün mock API ilə brauzer sınağı:
+
+```sh
+node scripts/validation/domain-public-runtime-check.cjs
+```
+
+Skript lokal Vite və headless Chromium başladır; production məlumatına yazmır.
+Chromium yolu fərqlidirsə `CHROMIUM_PATH` təyin edin. Mock sınağı real DNS, SSL,
+CORS və production deployment-in end-to-end yoxlanmasını əvəz etmir.

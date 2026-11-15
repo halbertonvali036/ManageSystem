@@ -396,9 +396,9 @@ function SiteSettingsPage() {
 
           {/* ---------------- Domain ---------------- */}
           <DomainSettingsSection
-            settings={settings}
-            patchSection={patchSection}
             siteId={siteId}
+            site={siteRecord}
+            onSiteChange={setSiteRecord}
           />
 
           {/* ---------------- Privacy ---------------- */}

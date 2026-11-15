@@ -1,7 +1,6 @@
 import config from '@/config'
 import httpClient, {
   BackendNotConnectedError,
-  isEndpointUnavailable,
 } from '@/services/httpClient'
 import { normalizeDomainStatus } from '@/models/sitePublishing'
 import { SITES_API_PATH } from '@/utils/constants'
@@ -41,10 +40,8 @@ const requireBackend = (message) => {
 /**
  * Reads the stored state of a site's domain.
  *
- * Resolves `null` when there is no backend, no site id, or the endpoint is not
- * routed (`404`/`403`/`405`) — that is "nothing known about a domain", not a
- * failure, and the caller renders its empty state. A real failure (network,
- * `400`, `5xx`) still rejects so the caller can report it.
+ * Resolves `null` only without a backend or site id. Every HTTP failure
+ * propagates: only a successful response can establish "unconfigured".
  *
  * @param {string} siteId
  * @returns {Promise<ReturnType<typeof normalizeDomainStatus> | null>}
@@ -53,15 +50,11 @@ const getSiteDomain = async (siteId) => {
   if (!isBackendConnected() || !siteId) {
     return null
   }
-  try {
-    const response = await httpClient.get(SITE_DOMAIN_ENDPOINT(siteId))
-    return response ? normalizeDomainStatus(response) : null
-  } catch (error) {
-    if (isEndpointUnavailable(error)) {
-      return null
-    }
-    throw error
+  const response = await httpClient.get(SITE_DOMAIN_ENDPOINT(siteId))
+  if (!response || typeof response !== 'object') {
+    throw new Error('Invalid domain response.')
   }
+  return normalizeDomainStatus(response)
 }
 
 /**

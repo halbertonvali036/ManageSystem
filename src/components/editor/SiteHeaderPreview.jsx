@@ -22,7 +22,7 @@ import { MENU_ITEM_TYPE } from '@/models/siteNavigation'
  * `document` shadows the global of the same name, and the Escape handler below
  * needs the real one.
  */
-function SiteHeaderPreview({ siteDocument, device, isPreview, onNavigatePage }) {
+function SiteHeaderPreview({ siteDocument, device, isPreview, isPublished = false, onNavigatePage }) {
   const { t } = useTranslation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -53,6 +53,10 @@ function SiteHeaderPreview({ siteDocument, device, isPreview, onNavigatePage }) 
   }, [isMenuOpen])
 
   const handleClick = (event, item) => {
+    if (isPublished) {
+      setIsMenuOpen(false)
+      return
+    }
     // A preview is not a page, so the link is real but its default is not taken.
     event.preventDefault()
     if (item.type === MENU_ITEM_TYPE.PAGE) {

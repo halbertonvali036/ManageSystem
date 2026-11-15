@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import config from '@/config'
 import useTranslation from '@/hooks/useTranslation'
 import { normalizeDomainStatus } from '@/models/sitePublishing'
 import { isValidDomainShape } from '@/models/siteSettings'
@@ -34,12 +33,11 @@ export default function DomainFoundation({
   isLoading = false,
   loadFailed = false,
   onDomainChange,
+  onRetry,
 }) {
   const { t } = useTranslation()
-  const [slug, setSlug] = useState('')
   const [busy, setBusy] = useState(null)
   const [notice, setNotice] = useState(null)
-  const base = config.publishing.baseDomain
   const domain = normalizeDomainStatus(remote)
 
   const typed = hostname.trim().toLowerCase()
@@ -47,7 +45,7 @@ export default function DomainFoundation({
   const isStored = domain.status !== 'unconfigured' && Boolean(domain.hostname)
   const isAlreadyStored = isStored && domain.hostname === typed
   const isReady = siteDomainService.isBackendConnected() && Boolean(siteId)
-  const isIdle = busy === null && !isLoading
+  const isIdle = busy === null && !isLoading && !loadFailed
 
   /*
    * Disabled state, decided from facts the button needs rather than from the
@@ -116,7 +114,7 @@ export default function DomainFoundation({
       () => siteDomainService.verifySiteDomain(siteId),
       (updated) => {
         if (updated?.status === 'connected') {
-          return t('publishing.domainConnected')
+          return t(updated.ssl === 'active' ? 'publishing.domainConnected' : 'publishing.domainVerifiedSslPending')
         }
         if (updated?.status === 'error') {
           return t('publishing.domainVerifyFailed')
@@ -153,9 +151,6 @@ export default function DomainFoundation({
 
   return (
     <div className="domain-foundation">
-      <label htmlFor="platform-subdomain">{t('publishing.subdomain')}</label>
-      <div className="domain-subdomain"><input id="platform-subdomain" className="editor-input" value={slug} maxLength={63} onChange={(event) => setSlug(event.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))} placeholder={t('publishing.slug')} aria-describedby="subdomain-note" /><span>{base ? `.${base}` : t('publishing.baseUndefined')}</span></div>
-      <p id="subdomain-note">{t('publishing.subdomainNote')}</p>
       <h4>{t('publishing.customDomain')}</h4>
       <ol className="domain-steps">
         {['addDomain', 'dns', 'verify', 'connected'].map((key) => (
@@ -170,13 +165,16 @@ export default function DomainFoundation({
         <strong>
           {isLoading
             ? t('common.loading')
-            : t(`publishing.domainStates.${domain.status}`)}
+            : loadFailed ? t('publishing.unknown') : t(`publishing.domainStates.${domain.status}`)}
         </strong>
         {domain.hostname ? <> · {domain.hostname}</> : null}
       </p>
       <p>
-        SSL: <strong>{t(`publishing.sslStates.${domain.ssl}`)}</strong>
+        SSL: <strong>{isLoading || loadFailed ? t('publishing.unknown') : t(`publishing.sslStates.${domain.ssl}`)}</strong>
       </p>
+      {domain.status === 'connected' && domain.ssl !== 'active' ? (
+        <p className="settings-note">{t('publishing.domainVerifiedSslPending')}</p>
+      ) : null}
       {domain.lastCheckedAt ? (
         <p className="domain-foundation__meta">
           {t('publishing.lastChecked')}:{' '}
@@ -200,6 +198,11 @@ export default function DomainFoundation({
       </p>
 
       <div className="publish-actions">
+        {loadFailed ? (
+          <button className="btn btn--outline" type="button" onClick={onRetry} disabled={isLoading}>
+            {t('common.retry')}
+          </button>
+        ) : null}
         <button
           className="btn btn--primary"
           type="button"

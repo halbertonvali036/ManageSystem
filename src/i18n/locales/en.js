@@ -136,7 +136,11 @@ const en = {
     checkIntegration: 'Check integration', dns: 'DNS records', type: 'Type', host: 'Host', value: 'Value',
     noDns: 'The backend has not supplied DNS records. There are no records to add yet.',
     subdomain: 'Platform subdomain', slug: 'site-name', baseUndefined: 'Base domain is undefined',
-    subdomainNote: 'A local suggestion only; no subdomain is reserved or saved. The base domain will be configured once deployment architecture is decided.',
+    subdomainNote: 'The saved site URL slug: lowercase letters, digits and single hyphens, up to 63 characters. Changing it may affect the old address. DNS, hosting and a published version are required to serve it online.',
+    subdomainSaved: 'Site URL slug saved. This does not publish the site.',
+    domainVerifiedSslPending: 'Domain ownership is verified, but active SSL has not been confirmed. HTTPS and hosting must be ready separately.',
+    publicNotFound: 'The published site or page was not found.',
+    publicLoadFailed: 'The published site could not be loaded.',
     customDomain: 'Custom domain', addDomain: 'Add domain', verify: 'Verify', connected: 'Connected',
     removeDomain: 'Remove domain',
     domainHint:
@@ -145,7 +149,7 @@ const en = {
     domainAdding: 'Adding…', domainChecking: 'Checking…', domainRemoving: 'Removing…',
     domainAdded: 'Domain added. Apply the DNS records, then verify.',
     domainRemoved: 'Domain removed.',
-    domainConnected: 'Domain connected.',
+    domainConnected: 'Domain verified; the backend reports active SSL.',
     domainVerifyPending:
       'Verification started. Wait for DNS to propagate, then verify again.',
     domainVerifyFailed:
@@ -2853,7 +2857,7 @@ const en = {
       invalid:
         'That is not a domain name. Enter the name only, such as example.com — with no scheme or path.',
       notConnectedNote:
-        'This field only shows the domain you typed. It is stored on the server — and counts as connected — only after “Add domain” is pressed.',
+        '“Add domain” saves the hostname. “Verify” checks DNS ownership; hosting and SSL must be ready separately.',
     },
     privacy: {
       title: 'Privacy and indexing',

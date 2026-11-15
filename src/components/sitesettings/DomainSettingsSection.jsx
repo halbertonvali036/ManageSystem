@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react'
 import DomainFoundation from '@/components/sitesettings/DomainFoundation'
 import SettingsCard from '@/components/sitesettings/SettingsCard'
 import SettingsField from '@/components/sitesettings/SettingsField'
-import { getDomainState } from '@/models/siteSettings'
+import { isValidDomainShape } from '@/models/siteSettings'
+import PlatformSubdomain from './PlatformSubdomain'
 import siteDomainService from '@/services/siteDomainService'
 import useTranslation from '@/hooks/useTranslation'
 
@@ -20,10 +21,12 @@ import useTranslation from '@/hooks/useTranslation'
  * has exactly one source of truth — the backend — without the settings form
  * ever claiming a domain is connected because a field was filled in.
  */
-export default function DomainSettingsSection({ settings, patchSection, siteId }) {
+export default function DomainSettingsSection({ siteId, site, onSiteChange }) {
   const { t } = useTranslation()
   const [remote, setRemote] = useState(null)
   const [loadFailed, setLoadFailed] = useState(false)
+  const [hostname, setHostname] = useState('')
+  const [attempt, setAttempt] = useState(0)
   const [isLoading, setIsLoading] = useState(
     () => siteDomainService.isBackendConnected() && Boolean(siteId),
   )
@@ -42,6 +45,7 @@ export default function DomainSettingsSection({ settings, patchSection, siteId }
       .then((status) => {
         if (isCurrent) {
           setRemote(status)
+          setHostname(status?.hostname ?? '')
         }
       })
       .catch(() => {
@@ -60,9 +64,7 @@ export default function DomainSettingsSection({ settings, patchSection, siteId }
     return () => {
       isCurrent = false
     }
-  }, [siteId])
-
-  const domainState = getDomainState(settings)
+  }, [siteId, attempt])
 
   return (
     <SettingsCard
@@ -71,13 +73,14 @@ export default function DomainSettingsSection({ settings, patchSection, siteId }
       description={t('siteSettings.domain.description')}
       icon={Globe}
     >
+      <PlatformSubdomain siteId={siteId} site={site} onSiteChange={onSiteChange} />
       <div className="settings-grid">
         <SettingsField
           id="settings-domain-hostname"
           label={t('siteSettings.domain.hostname')}
           hint={t('siteSettings.domain.hostnameHint')}
           error={
-            domainState.isConfigured && !domainState.isValid
+            hostname && !isValidDomainShape(hostname)
               ? t('siteSettings.domain.invalid')
               : null
           }
@@ -87,10 +90,10 @@ export default function DomainSettingsSection({ settings, patchSection, siteId }
             type="text"
             className="editor-input"
             placeholder="example.com"
-            value={settings.domain.hostname}
-            onChange={(event) =>
-              patchSection('domain', { hostname: event.target.value })
-            }
+            value={hostname}
+            maxLength={253}
+            disabled={isLoading || loadFailed}
+            onChange={(event) => setHostname(event.target.value)}
           />
         </SettingsField>
 
@@ -100,11 +103,20 @@ export default function DomainSettingsSection({ settings, patchSection, siteId }
       </div>
       <DomainFoundation
         siteId={siteId}
-        hostname={settings.domain.hostname}
+        hostname={hostname}
         remote={remote}
         isLoading={isLoading}
         loadFailed={loadFailed}
-        onDomainChange={setRemote}
+        onRetry={() => {
+          setLoadFailed(false)
+          setIsLoading(true)
+          setAttempt((value) => value + 1)
+        }}
+        onDomainChange={(status) => {
+          setRemote(status)
+          setHostname(status?.hostname ?? '')
+          setLoadFailed(false)
+        }}
       />
     </SettingsCard>
   )

@@ -28,6 +28,7 @@ function EditorCanvas({
   device,
   selection,
   isPreview,
+  isPublished = false,
   onSelectSection,
   onSelectBlock,
   onInsertBlockAt,
@@ -115,7 +116,7 @@ function EditorCanvas({
   )
 
   const handlePreviewLink = (event) => {
-    if (!isPreview) return
+    if (!isPreview || isPublished) return
     const link = event.target.closest('a[href]')
     if (!link) return
     const href = link.getAttribute('href')
@@ -162,6 +163,7 @@ function EditorCanvas({
               siteDocument={document}
               device={device}
               isPreview={isPreview}
+              isPublished={isPublished}
               onNavigatePage={onNavigatePage}
             />
 
