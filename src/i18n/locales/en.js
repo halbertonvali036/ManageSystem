@@ -138,7 +138,22 @@ const en = {
     subdomain: 'Platform subdomain', slug: 'site-name', baseUndefined: 'Base domain is undefined',
     subdomainNote: 'A local suggestion only; no subdomain is reserved or saved. The base domain will be configured once deployment architecture is decided.',
     customDomain: 'Custom domain', addDomain: 'Add domain', verify: 'Verify', connected: 'Connected',
-    domainPending: 'Adding domains, DNS verification and SSL provisioning await backend integration. An entered domain is not connected.',
+    removeDomain: 'Remove domain',
+    domainHint:
+      'Add the domain, then apply the DNS records at your registrar and check them with “Verify”.',
+    domainLoadFailed: 'The domain state could not be read. Reload the page and try again.',
+    domainAdding: 'Adding…', domainChecking: 'Checking…', domainRemoving: 'Removing…',
+    domainAdded: 'Domain added. Apply the DNS records, then verify.',
+    domainRemoved: 'Domain removed.',
+    domainConnected: 'Domain connected.',
+    domainVerifyPending:
+      'Verification started. Wait for DNS to propagate, then verify again.',
+    domainVerifyFailed:
+      'Verification did not pass. Check the DNS records and try again.',
+    domainPlanLocked:
+      'This plan does not include custom domains. Upgrade your plan to connect one.',
+    domainUnavailable: 'Domain actions require the backend to be connected.',
+    lastChecked: 'Last checked',
     domainStates: { unconfigured: 'Not connected', pending: 'Verification pending', connected: 'Connected', error: 'Connection error' },
     sslStates: { unconfigured: 'Not provisioned', pending: 'Provisioning pending', active: 'Active', error: 'SSL error' },
     draft: 'Draft', published: 'Published', unpublished: 'Unpublished', changes: 'Changes pending',
@@ -2831,14 +2846,14 @@ const en = {
     domain: {
       title: 'Domain',
       description:
-        'A custom domain will be added later. No domain is connected or checked at the moment.',
+        'Connect a custom domain: type the hostname, send it with “Add domain”, apply the DNS records and verify.',
       hostname: 'Domain name',
       hostnameHint:
-        'Just the domain, with no scheme. For example: example.com. There is no check, DNS or SSL yet.',
+        'Just the domain, with no scheme. For example: example.com. Sent with the Add domain button.',
       invalid:
         'That is not a domain name. Enter the name only, such as example.com — with no scheme or path.',
       notConnectedNote:
-        'No domain is connected. This value is not saved, but it does show which domain you want.',
+        'This field only shows the domain you typed. It is stored on the server — and counts as connected — only after “Add domain” is pressed.',
     },
     privacy: {
       title: 'Privacy and indexing',

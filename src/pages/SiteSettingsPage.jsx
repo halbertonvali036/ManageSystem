@@ -395,7 +395,11 @@ function SiteSettingsPage() {
           <BrandingSettingsSection settings={settings} patchSection={patchSection} />
 
           {/* ---------------- Domain ---------------- */}
-          <DomainSettingsSection settings={settings} patchSection={patchSection} />
+          <DomainSettingsSection
+            settings={settings}
+            patchSection={patchSection}
+            siteId={siteId}
+          />
 
           {/* ---------------- Privacy ---------------- */}
           <PrivacySettingsSection settings={settings} patchSection={patchSection} />

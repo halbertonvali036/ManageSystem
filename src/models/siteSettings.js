@@ -352,11 +352,12 @@ export const getSearchPreview = (settings) => ({
 })
 
 /**
- * The state of the domain field, as a fact rather than a claim.
+ * The state of the domain *field*, as a fact rather than a claim.
  *
- * Only two answers exist. "not configured" is the only one reachable today, and
- * there is no code path that could report a domain as verified, connected or
- * secured.
+ * This is only about what the visitor typed: empty, or a shape that is (or is
+ * not) a hostname. Whether a domain is actually connected is the backend's
+ * answer and reaches the UI through `normalizeDomainStatus`, never from here —
+ * a filled-in field says nothing about DNS, verification or SSL.
  */
 export const getDomainState = (settings) => {
   const hostname = settings?.domain?.hostname ?? ''

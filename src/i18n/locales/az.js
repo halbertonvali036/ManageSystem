@@ -140,7 +140,22 @@ const az = {
     subdomain: 'Platforma subdomeni', slug: 'sayt-adi', baseUndefined: 'Baza domeni təyin edilməyib',
     subdomainNote: 'Yalnız yerli təklifdir; subdomen rezerv edilmir və saxlanılmır. Baza domeni yerləşdirmə arxitekturası müəyyənləşdikdən sonra təyin ediləcək.',
     customDomain: 'Xüsusi domen', addDomain: 'Domen əlavə et', verify: 'Yoxla', connected: 'Qoşulub',
-    domainPending: 'Domen əlavə edilməsi, DNS yoxlaması və SSL təminatı üçün backend inteqrasiyası gözlənilir. Daxil edilmiş domen qoşulmuş sayılmır.',
+    removeDomain: 'Domeni sil',
+    domainHint:
+      'Domeni əlavə edin, sonra domen provayderinizdə göstərilən DNS qeydlərini tətbiq edin və "Yoxla" ilə yoxlayın.',
+    domainLoadFailed: 'Domen vəziyyətini oxumaq mümkün olmadı. Səhifəni yeniləyib yenidən cəhd edin.',
+    domainAdding: 'Əlavə olunur…', domainChecking: 'Yoxlanılır…', domainRemoving: 'Silinir…',
+    domainAdded: 'Domen əlavə edildi. DNS qeydlərini tətbiq edib yoxlayın.',
+    domainRemoved: 'Domen silindi.',
+    domainConnected: 'Domen qoşulub.',
+    domainVerifyPending:
+      'Yoxlama başladıldı. DNS yenilənməsini gözləyin və yenidən yoxlayın.',
+    domainVerifyFailed:
+      'Yoxlama uğursuz oldu. DNS qeydlərini yoxlayıb yenidən cəhd edin.',
+    domainPlanLocked:
+      'Bu plan fərdi domeni dəstəkləmir. Domen qoşmaq üçün planınızı yeniləyin.',
+    domainUnavailable: 'Domen əməliyyatları backend qoşulmadan mövcud deyil.',
+    lastChecked: 'Son yoxlama',
     domainStates: { unconfigured: 'Qoşulmayıb', pending: 'Yoxlama gözləyir', connected: 'Qoşulub', error: 'Qoşulma xətası' },
     sslStates: { unconfigured: 'Təmin edilməyib', pending: 'Təminat gözləyir', active: 'Aktiv', error: 'SSL xətası' },
     draft: 'Qaralama', published: 'Yayımlanıb', unpublished: 'Yayımlanmayıb', changes: 'Dəyişikliklər var',
@@ -2842,14 +2857,14 @@ language: {
     domain: {
       title: 'Domen',
       description:
-        'Fərdi domen sonradan əlavə olunacaq. Hazırda heç bir domen qoşulmur və yoxlanmır.',
+        'Fərdi domeni qoşun: domen adını yazın, "Domen əlavə et" ilə göndərin, DNS qeydlərini tətbiq edin və yoxlayın.',
       hostname: 'Domen adı',
       hostnameHint:
-        'Yalnız domen adı, sxemasız. Məsələn: example.com. Yoxlama, DNS və SSL hələ yoxdur.',
+        'Yalnız domen adı, sxemasız. Məsələn: example.com. Yoxlama düyməsi ilə göndərilir.',
       invalid:
         'Bu, domen adı deyil. Yalnız ad yazın, məsələn: example.com — sxema və yol olmadan.',
       notConnectedNote:
-        'Domen hələ qoşulmayıb. Bu dəyər yadda saxlanmasa da, sizə hansı domen istədiyinizi göstərir.',
+        'Bu sahə yalnız yazdığınız domeni göstərir. Domen serverdə yalnız "Domen əlavə et" basıldıqdan sonra saxlanılır və qoşulmuş sayılır.',
     },
     privacy: {
       title: 'Məxfilik və indeksləşdirmə',
