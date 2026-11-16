@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import deploymentService from '@/services/deploymentService'
+import { isPendingDeployment } from '@/models/deployment'
 
 /**
  * Loads one deployment by id.
@@ -21,12 +22,13 @@ function useDeployment(deploymentId, { enabled = true } = {}) {
     }
 
     let isActive = true
-
-    deploymentService
+    let timer
+    const load = () => deploymentService
       .getDeployment(deploymentId)
       .then((deployment) => {
         if (isActive) {
           setResult({ key: requestKey, deployment, error: null })
+          if (isPendingDeployment(deployment?.status)) timer = setTimeout(load, 2500)
         }
       })
       .catch((error) => {
@@ -34,9 +36,11 @@ function useDeployment(deploymentId, { enabled = true } = {}) {
           setResult({ key: requestKey, deployment: null, error })
         }
       })
+    load()
 
     return () => {
       isActive = false
+      clearTimeout(timer)
     }
   }, [requestKey, deploymentId])
 

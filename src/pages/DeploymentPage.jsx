@@ -4,7 +4,7 @@ import { ArrowLeft, CircleSlash, Globe, RotateCcw, Square } from 'lucide-react'
 import useTranslation from '@/hooks/useTranslation'
 import useDeployment from '@/hooks/useDeployment'
 import deploymentService from '@/services/deploymentService'
-import { BackendNotConnectedError } from '@/services/httpClient'
+import { BackendNotConnectedError, getRequestErrorMessage } from '@/services/httpClient'
 import Card from '@/components/common/Card'
 import ConfirmDialog from '@/components/common/ConfirmDialog'
 import DeploymentTimeline from '@/components/deployments/DeploymentTimeline'
@@ -46,7 +46,7 @@ function DeploymentPage() {
       setActionError(
         err instanceof BackendNotConnectedError
           ? t('workspaceDeployments.unavailableNotice')
-          : t('workspaceDeployments.actionFailed')
+          : getRequestErrorMessage(err)
       )
     } finally {
       setIsBusy(false)
@@ -80,15 +80,15 @@ function DeploymentPage() {
             <Link className="btn btn--primary" to={DEPLOYMENTS_PATH}>
               {t('workspaceDeployments.backToList')}
             </Link>
+            {error ? <button className="btn btn--outline" type="button" onClick={refetch}>{t('common.retry')}</button> : null}
           </div>
         </Card>
       </div>
     )
   }
 
-  // The list view passes the currently-live row so the card can hide "rollback" on
-  // the version that is already serving. This page has only its own record, so the
-  // guard falls back to offering rollback for any finished build.
+  // Rollback is offered only for a finished, superseded row. The backend also
+  // rejects a rollback while another build is in progress.
   const actions = getDeploymentActions(deployment)
   const isRunning = isPendingDeployment(deployment.status)
 

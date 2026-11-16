@@ -93,7 +93,7 @@ export default function DomainFoundation({
       if (updated) {
         onDomainChange?.(updated)
       }
-      setNotice({ kind: 'success', message: describe(updated ?? result) })
+      setNotice({ kind: updated?.error ? 'error' : 'success', message: describe(updated ?? result) })
     } catch (error) {
       setNotice({ kind: 'error', message: describeFailure(error) })
     } finally {
@@ -105,7 +105,7 @@ export default function DomainFoundation({
     run(
       'add',
       () => siteDomainService.setSiteDomain(siteId, typed),
-      () => t('publishing.domainAdded'),
+      (updated) => updated?.error || t('publishing.domainAdded'),
     )
 
   const handleVerify = () =>
@@ -113,6 +113,7 @@ export default function DomainFoundation({
       'verify',
       () => siteDomainService.verifySiteDomain(siteId),
       (updated) => {
+        if (updated?.error) return updated.error
         if (updated?.status === 'connected') {
           return t(updated.ssl === 'active' ? 'publishing.domainConnected' : 'publishing.domainVerifiedSslPending')
         }

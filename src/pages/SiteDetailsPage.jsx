@@ -48,6 +48,12 @@ function SiteDetailsPage() {
    * effect never has to synchronously clear state on mount.
    */
   const [result, setResult] = useState({ siteId: null, site: null, isLoading: true })
+  const [revision, setRevision] = useState(0)
+  useEffect(() => {
+    const refresh = () => setRevision(value => value + 1)
+    window.addEventListener('site-publication-changed', refresh)
+    return () => window.removeEventListener('site-publication-changed', refresh)
+  }, [])
 
   useEffect(() => {
     if (!siteId) {
@@ -72,7 +78,7 @@ function SiteDetailsPage() {
     return () => {
       isActive = false
     }
-  }, [siteId])
+  }, [siteId, revision])
 
   const isLoading = result.siteId !== siteId || result.isLoading
   const site = result.siteId === siteId ? result.site : null

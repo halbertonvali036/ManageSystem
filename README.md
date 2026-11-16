@@ -65,8 +65,9 @@ tokenləri, Brevo açarı, DB parolu və SSL provider açarı burada saxlanılm�
 | Platforma subdomeni | Mövcud saytın `slug` dəyəri göstərilir və ayrıca “Saxla” ilə PUT edilir. Bu əməliyyat DNS/hosting yaratmır və saytı yayımlamır. |
 | Public sayt renderer-i | `host` rejimində backend-in yayımlanmış snapshot-u göstərilir. Dashboard və giriş ekranı göstərilmir. |
 | Site Settings | Ümumi “Saxla” hazırda layihə adını saxlayır. Domen və slug ayrıca saxlanılır. Digər identity/SEO/privacy parametrləri üçün tam settings persistence yoxdur. |
-| Deployment ekranları | `deploymentService.js` real sorğu adapteridir; endpoint uyğunluğu aşağıda qeyd olunub. |
-| Redaktordakı Publish / Unpublish | `sitePublishService.js` hələ stub-dır və əməliyyatı rədd edir. Public renderer əlavə edilməsi bu düymələri aktivləşdirmir. |
+| Deployment ekranları | `/api/deployments` real sorğuları, sayt seçimi `/api/sites` ilə. Davam edən yayım avtomatik yenilənir; yayım uğuru yalnız backend sətri ilə təsdiqlənir. |
+| Fəaliyyət | `/api/activity`, `/api/usage`, `/api/usage/limits` real oxunuşları; səhifələmə və yeniləmə var. İstifadə xətası hadisə qeydlərini gizlətmir. |
+| Redaktordakı Publish / Unpublish | `/api/sites/{id}/publication` real sorğuları. Publish `202` qaytarır və yayımı Yayımlar bölməsində izləməyə yönəldir; Unpublish live versiyanı dayandırır. |
 | Formalar | Vizual quruluş və lokal validasiya var; `siteFormService.js` göndərişi rədd edir. Public saytda da form çatdırılması hazır deyil. |
 | Media | Lokal blob/ön baxış qalıcı upload demək deyil. Public snapshot üçün əlçatan, qalıcı media URL-ləri lazımdır. |
 | Billing / security / notifications / profile / admin | API adapterləri var; hər adapterin olması bütün backend endpoint-lərinin mövcudluğu və ya real ödəniş provayderi demək deyil. |
@@ -223,24 +224,25 @@ tapılmadı ekranı HTTP səviyyəsində SSR `404` deyil.
 5. Backend-in `PUBLISHED_URL_TEMPLATE` dəyəri real public hosting ünvanına
    uyğunlaşdırılmalıdır, məsələn `https://{slug}.sites.example.com`.
 
-## Backendçiyə açıq qalan məsələlər
+## Backend tələbləri və açıq qalan məsələlər
 
 Bu frontend dəyişiklikləri backend kodunu və Railway/Vercel env-lərini dəyişmir.
-Araşdırılan backend kodunda:
+Activity, deployment və domen uçları üçün uyğun backend versiyası deploy
+olunmalıdır. Backend `ddl-auto=validate` işlədiyi üçün əvvəlcə
+`activity_migration.sql` tətbiq edilməlidir; detallar backend deposunun
+README-sindədir.
 
 - `LoggingSslProvisioner` sertifikat yaratmır, yalnız log yazır; SSL `pending`
   qalır. Real provisioner və ya hosting-provider inteqrasiyası ayrıca tələb olunur.
 - Domen yoxlaması TXT sahibliyini təsdiqləyir; A/CNAME routing və HTTPS readiness
   bununla eyni şey deyil.
-- `SiteDomainServiceImpl.isApex()` domeni nöqtə sayına görə təsnif edir.
-  `example.co.uk` kimi kök domenlər üçün DNS record seçimi düzəldilməlidir.
-- `SecurityConfig` CORS siyahısı dashboard, Railway və localhost origin-ləri ilə
-  məhduddur; custom visitor domenləri üçün public API CORS işi qalır.
 - `DOMAINS_CNAME_TARGET`, `DOMAINS_A_RECORDS`, `DOMAINS_PLATFORM_BASE_DOMAIN`
   real hosting arxitekturasına uyğun qurulmalıdır. Sonuncu frontend-in baza
   domeni ilə uyğun olmalıdır.
 - STARTER planında custom-domain PUT üçün `403` gözlənilən plan qaydasıdır.
   Tam uğurlu domen sınağı üçün uyğun plan və idarə olunan real domen lazımdır.
+- Custom domenin Vercel/hosting tərəfində əlavə olunması və sertifikat verilməsi
+  backend sorğusu ilə avtomatik baş vermir.
 
 ### Digər endpoint uyğunluqları
 
@@ -253,13 +255,14 @@ marşrutlarını aşağıdakı faktiki çağırışlarla tutuşdurun:
 | `siteService`, `siteEditorService`, `siteDomainService` | `/api/sites/*` |
 | `templateService` / şablon oxunması | `/api/templates` |
 | `publicSiteService` | `/api/public/sites/*` |
-| `deploymentService` | `/deployments/*`; sayt seçimi üçün `/sites` |
+| `deploymentService` | `/api/deployments/*`; sayt seçimi `/api/sites` |
+| `sitePublishService` | `/api/sites/{id}/publication` (GET/POST/DELETE) |
 | `siteSettingsService` | GET `/sites/{id}/settings`; hazırda fallback. Yazma `/api/sites/{id}`. |
 | `billingService` | `/billing/*` |
 | `accountSecurityService` | `/account/security/*` |
 | `notificationsService` | `/notifications/*` |
 | `profileService` | `/profile`, `/profile/avatar` |
-| `activityService` | `/activity`, `/usage`, `/usage/limits`; legacy workspace yolları da var |
+| `activityService` | `/api/activity`, `/api/usage`, `/api/usage/limits`; workspace/admin scope üçün ayrı yollar |
 | `adminPlatformService`, `usersService` | `/admin/*`, `/users/*` |
 
 Məsələn, `/sites` və `/api/sites` avtomatik eyni yol deyil. Adapterin görünməsi
@@ -283,8 +286,15 @@ dəyişiklikləri üçün mock API ilə brauzer sınağı:
 
 ```sh
 node scripts/validation/domain-public-runtime-check.cjs
+node scripts/validation/activity-deployments-runtime-check.cjs
 ```
 
-Skript lokal Vite və headless Chromium başladır; production məlumatına yazmır.
+Sonuncu skript Activity, Yayımlar, yayım detalları və Publish/Unpublish
+axınlarını mock backend ilə real React route-larında yoxlayır: istifadə xətası
+hadisələri gizlətmir, API xətası boş siyahı kimi göstərilmir, sayt seçimi işləyir,
+rəqəmsal versiya düzgün oxunur, superseded/rollback qaydası və `409` mesajı
+görünür, yayım polling ilə `live` olur və unpublish `DELETE` göndərir.
+
+Skriptlər lokal Vite və headless Chromium başladır; production məlumatına yazmır.
 Chromium yolu fərqlidirsə `CHROMIUM_PATH` təyin edin. Mock sınağı real DNS, SSL,
 CORS və production deployment-in end-to-end yoxlanmasını əvəz etmir.

@@ -31,6 +31,7 @@ function useActivity(workspaceId, { scope, enabled = true } = {}) {
   const resolvedScope = scope ?? (workspaceId ? ACTIVITY_SCOPE.WORKSPACE : ACTIVITY_SCOPE.PLATFORM)
 
   const [revision, setRevision] = useState(0)
+  const [page, setPage] = useState(0)
   const [result, setResult] = useState({ key: null, events: [], usage: null, limits: null, error: null })
 
   const [type, setType] = useState(ACTIVITY_FILTER_ALL)
@@ -39,7 +40,7 @@ function useActivity(workspaceId, { scope, enabled = true } = {}) {
   const [from, setFrom] = useState('')
   const [to, setTo] = useState('')
 
-  const requestKey = enabled ? `${resolvedScope}|${workspaceId ?? ''}|${revision}` : null
+  const requestKey = enabled ? `${resolvedScope}|${workspaceId ?? ''}|${revision}|${page}` : null
 
   useEffect(() => {
     if (requestKey === null) {
@@ -52,7 +53,7 @@ function useActivity(workspaceId, { scope, enabled = true } = {}) {
     // them being missing must not hide the activity trail, which is the page's
     // primary content.
     Promise.allSettled([
-      activityService.getActivity({ workspaceId, scope: resolvedScope }),
+      activityService.getActivity({ workspaceId, scope: resolvedScope, query: { page, size: 100 } }),
       resolvedScope === ACTIVITY_SCOPE.ACCOUNT || workspaceId
         ? activityService.getUsage(workspaceId, resolvedScope)
         : Promise.resolve(null),
@@ -62,7 +63,7 @@ function useActivity(workspaceId, { scope, enabled = true } = {}) {
     ]).then(([activityResult, usageResult, limitsResult]) => {
       if (!isActive) return
 
-      const failed = [activityResult, usageResult, limitsResult].find(
+      const failed = [usageResult, limitsResult].find(
         (outcome) => outcome.status === 'rejected',
       )
 
@@ -71,14 +72,15 @@ function useActivity(workspaceId, { scope, enabled = true } = {}) {
         events: activityResult.status === 'fulfilled' ? activityResult.value : [],
         usage: usageResult.status === 'fulfilled' ? usageResult.value : null,
         limits: limitsResult.status === 'fulfilled' ? limitsResult.value : null,
-        error: failed ? failed.reason : null,
+        error: activityResult.status === 'rejected' ? activityResult.reason : null,
+        usageError: failed ? failed.reason : null,
       })
     })
 
     return () => {
       isActive = false
     }
-  }, [requestKey, workspaceId, resolvedScope])
+  }, [requestKey, workspaceId, resolvedScope, page])
 
   const isMatched = result.key === requestKey
   const events = useMemo(() => (isMatched ? sortActivity(result.events) : []), [isMatched, result.events])
@@ -118,6 +120,10 @@ function useActivity(workspaceId, { scope, enabled = true } = {}) {
   }, [])
 
   return {
+    page,
+    setPage,
+    hasNextPage: events.length === 100,
+    usageError: isMatched ? result.usageError : null,
     events,
     visibleEvents,
     actors,

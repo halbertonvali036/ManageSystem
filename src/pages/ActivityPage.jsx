@@ -36,6 +36,10 @@ function ActivityPage() {
     limits,
     isLoading,
     error,
+    usageError,
+    page,
+    setPage,
+    hasNextPage,
     isUnavailable,
     type,
     setType,
@@ -85,6 +89,7 @@ function ActivityPage() {
 
       <Card>
         <UsageMetricsGrid usage={usage} limits={limits} />
+        {usageError ? <p role="status">{t('workspaceActivity.usageLoadFailed')} <button type="button" className="btn btn--outline" onClick={refetch}>{t('common.retry')}</button></p> : null}
       </Card>
 
       <Card>
@@ -140,6 +145,11 @@ function ActivityPage() {
           </>
         )}
       </section>
+      <div className="publish-actions">
+        <button type="button" className="btn btn--outline" disabled={isLoading || page === 0} onClick={() => setPage(value => value - 1)}>{t('workspaceActivity.previousPage')}</button>
+        <button type="button" className="btn btn--outline" disabled={isLoading || !hasNextPage} onClick={() => setPage(value => value + 1)}>{t('workspaceActivity.nextPage')}</button>
+        <button type="button" className="btn btn--outline" disabled={isLoading} onClick={refetch}>{t('workspaceActivity.refresh')}</button>
+      </div>
     </div>
   )
 }

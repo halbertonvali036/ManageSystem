@@ -126,13 +126,17 @@ const az = {
   siteDesign: azSiteDesign,
   forms: azForms,
   publishing: {
+    savedVersionNote: 'Serverdə saxlanmış versiya yayımlanır. Redaktorda son dəyişiklikləri əvvəlcə saxlayın.',
+    queued: 'Yayım sorğusu qəbul edildi. Nəticəni Yayımlar bölməsindən izləyin.',
+    unpublishedSuccess: 'Saytın yayımı dayandırıldı.',
+    openDeployments: 'Yayımlara keç',
     publish: 'Yayımla', unpublish: 'Yayımı dayandır',
     pending: 'Yayımlama inteqrasiyası gözlənilir. Bu əməliyyat üçün backend tələb olunur.',
     name: 'Saytın adı', home: 'Ana səhifə', pages: 'Səhifələr', domain: 'Domen',
     missing: 'Tamamlanmayıb', unknown: 'Məlumat təsdiqlənməyib', ready: 'Hazırdır',
     localChecks: 'Qaralamanın hazırlığı',
     remoteChecks: 'Backend, saxlanmış qaralama, domen və SSL hazırlığı server tərəfindən ayrıca yoxlanmalıdır. Yerli yoxlamalar yayımlama icazəsi vermir.',
-    unpublishConfirm: 'Gələcəkdə təsdiqdən sonra saytın yayımı dayandırılacaq. Hazırda inteqrasiya mövcud deyil və heç bir dəyişiklik edilmir.',
+    unpublishConfirm: 'Təsdiqdən sonra canlı versiya yayından çıxarılacaq və davam edən yayım dayandırılacaq.',
     noChange: 'İnteqrasiya mövcud deyil. Yayımlama vəziyyəti dəyişdirilmədi.',
     notLive: 'Bu baxış saytın internetdə yayımlandığını təsdiqləmir.',
     checkIntegration: 'İnteqrasiyanı yoxla', dns: 'DNS qeydləri', type: 'Növ', host: 'Host', value: 'Dəyər',
@@ -733,12 +737,13 @@ language: {
     },
   },
   workspaceDeployments: {
+    sitesLoadFailed: 'Sayt siyahısı yüklənmədi. Yenidən cəhd edin.',
     pageTitle: 'Yayımlar',
     pageDescription:
-      'Workspace saytlarının yayım tarixçəsi. Hər yayım yalnız backend tərəfdən qeyd olunduqda burada görünür.',
+      'Hesabınızdakı saytların yayım tarixçəsi. Davam edən yayımların vəziyyəti avtomatik yenilənir.',
     loading: 'Yayımlar yüklənir…',
     loadFailed: 'Yayımlar yüklənə bilmədi',
-    loadFailedText: 'Yayım tarixçəsi oxuna bilmədi. Backend gözlənilir.',
+    loadFailedText: 'Yayım tarixçəsi oxuna bilmədi. Yenidən cəhd edin.',
     currentTitle: 'Cari canlı versiya',
     currentHint:
       'Canlı versiya yalnız backend tərəfindən təyin olunur. Sorğu göndərmək yayımı təsdiqləmir.',
@@ -758,7 +763,7 @@ language: {
     clearFilters: 'Süzgələri təmizlə',
     emptyTitle: 'Hələ yayım yoxdur',
     emptyText:
-      'Bu workspace üçün heç bir yayım qeydə alınmayıb. Nümunə "Canlı" yayım göstərmək üçün heç bir yerdə saxta qeyd yaradılmır.',
+        'Hələ yayım yoxdur. Başlamaq üçün saxlanmış saytınızı seçib “Yayımla” düyməsini basın.',
     backToList: 'Yayımlara qayıt',
     notFoundTitle: 'Yayım tapılmadı',
     notFoundText: 'Bu yayım hələ yüklənməyib və ya mövcud deyil.',
@@ -784,6 +789,7 @@ language: {
       live: 'Canlı',
       failed: 'Uğursuz',
       stopped: 'Dayandırıldı',
+      superseded: 'Əvvəlki versiya',
     },
     card: {
       unversioned: 'Versiyasız yayım',
@@ -1461,15 +1467,19 @@ language: {
     },
   },
   workspaceActivity: {
+    usageLoadFailed: 'İstifadə və ya limit göstəricilərinin bir hissəsi yüklənmədi.',
+    previousPage: 'Əvvəlki qeydlər',
+    nextPage: 'Növbəti qeydlər',
+    refresh: 'Yenilə',
     pageTitle: 'Fəaliyyət',
     pageDescription:
-      'Bu workspace-də baş verən əməliyyatların qeydi, istifadə göstəriciləri və plan limitləri.',
+      'Hesabınızdakı əməliyyatların qeydi, istifadə göstəriciləri və plan limitləri.',
     notice:
       'Bu səhifə yalnız oxumaq üçündür və yalnız backend tərəfdən gələn qeydləri göstərir. Hədisə yazmaq mümkün deyil — qeyd yalnız serverdə baş verən əməliyyatlardan sonra yaranır.',
     loading: 'Fəaliyyət yüklənir…',
     loadFailed: 'Fəaliyyət yüklənə bilmədi',
     loadFailedText:
-      'Hadisə qeydləri oxuna bilmədi. Backend inteqrasiyası gözlənilir.',
+      'Hadisə qeydləri oxuna bilmədi. Yenidən cəhd edin.',
     filters: {
       searchLabel: 'Hadisələrdə axtar',
       searchPlaceholder: 'Əməliyyat, hədəf və ya şəxs ilə axtarın…',

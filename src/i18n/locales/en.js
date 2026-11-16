@@ -125,12 +125,16 @@ const en = {
   siteDesign: enSiteDesign,
   forms: enForms,
   publishing: {
+    savedVersionNote: 'The version saved on the server will be published. Save your latest editor changes first.',
+    queued: 'Deployment accepted. Follow the outcome on the Deployments page.',
+    unpublishedSuccess: 'The site has been unpublished.',
+    openDeployments: 'Open deployments',
     publish: 'Publish', unpublish: 'Unpublish',
     pending: 'Publishing integration is pending. This action requires a backend.',
     name: 'Site name', home: 'Homepage', pages: 'Pages', domain: 'Domain',
     missing: 'Incomplete', unknown: 'Not confirmed', ready: 'Ready', localChecks: 'Draft readiness',
     remoteChecks: 'Backend, persisted draft, domain and SSL readiness require separate server checks. Local checks do not authorize publishing.',
-    unpublishConfirm: 'Once integrated, confirmation will take the site offline. The integration is unavailable and no changes will be made.',
+    unpublishConfirm: 'Confirming takes the live version offline and cancels any deployment in progress.',
     noChange: 'Integration unavailable. Publication status was not changed.',
     notLive: 'This review does not confirm that the site is live.',
     checkIntegration: 'Check integration', dns: 'DNS records', type: 'Type', host: 'Host', value: 'Value',
@@ -735,12 +739,13 @@ const en = {
     },
   },
   workspaceDeployments: {
+    sitesLoadFailed: 'The site list could not be loaded. Try again.',
     pageTitle: 'Deployments',
     pageDescription:
-      'The publish history for every site in this workspace. A deployment appears here only once the backend has recorded it.',
+      'The publish history for your account’s sites. In-progress deployments update automatically.',
     loading: 'Loading deployments…',
     loadFailed: 'Could not load the deployments',
-    loadFailedText: 'The deployment history could not be read. Pending backend integration.',
+    loadFailedText: 'The deployment history could not be read. Try again.',
     currentTitle: 'Currently live',
     currentHint:
       'The live version is named by the backend alone. Sending a request does not confirm a deployment.',
@@ -760,7 +765,7 @@ const en = {
     clearFilters: 'Clear filters',
     emptyTitle: 'No deployments yet',
     emptyText:
-      'Nothing has been published for this workspace. No sample "live" record is seeded anywhere, because a fabricated deployment is indistinguishable from a real one.',
+       'No deployments yet. Select a saved site and choose Deploy to get started.',
     backToList: 'Back to deployments',
     notFoundTitle: 'Deployment not found',
     notFoundText: 'This deployment has not been loaded yet or no longer exists.',
@@ -786,6 +791,7 @@ const en = {
       live: 'Live',
       failed: 'Failed',
       stopped: 'Stopped',
+      superseded: 'Superseded',
     },
     card: {
       unversioned: 'Unversioned deployment',
@@ -1457,15 +1463,19 @@ const en = {
     },
   },
   workspaceActivity: {
+    usageLoadFailed: 'Some usage or limit figures could not be loaded.',
+    previousPage: 'Previous page',
+    nextPage: 'Next page',
+    refresh: 'Refresh',
     pageTitle: 'Activity',
     pageDescription:
-      'The record of operations in this workspace, usage figures, and plan limits.',
+      'Your account’s operation history, usage figures, and plan limits.',
     notice:
       'This page is read-only and shows only records supplied by the backend. Nothing here can be added to the log — an entry exists only after an operation happens on the server.',
     loading: 'Loading activity…',
     loadFailed: 'Activity could not be loaded',
     loadFailedText:
-      'The event log could not be read. Backend integration is pending.',
+      'The event log could not be read. Try again.',
     filters: {
       searchLabel: 'Search events',
       searchPlaceholder: 'Search by operation, target, or person…',

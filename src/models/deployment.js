@@ -37,6 +37,7 @@ export const DEPLOYMENT_STATUS = Object.freeze({
   LIVE: 'live',
   FAILED: 'failed',
   STOPPED: 'stopped',
+  SUPERSEDED: 'superseded',
 })
 
 export const DEPLOYMENT_STATUSES = Object.freeze(Object.values(DEPLOYMENT_STATUS))
@@ -48,6 +49,7 @@ export const DEPLOYMENT_STATUS_LABEL_KEYS = Object.freeze({
   [DEPLOYMENT_STATUS.LIVE]: 'workspaceDeployments.status.live',
   [DEPLOYMENT_STATUS.FAILED]: 'workspaceDeployments.status.failed',
   [DEPLOYMENT_STATUS.STOPPED]: 'workspaceDeployments.status.stopped',
+  [DEPLOYMENT_STATUS.SUPERSEDED]: 'workspaceDeployments.status.superseded',
 })
 
 export const DEPLOYMENT_STATUS_VARIANTS = Object.freeze({
@@ -57,6 +59,7 @@ export const DEPLOYMENT_STATUS_VARIANTS = Object.freeze({
   [DEPLOYMENT_STATUS.LIVE]: 'live',
   [DEPLOYMENT_STATUS.FAILED]: 'failed',
   [DEPLOYMENT_STATUS.STOPPED]: 'stopped',
+  [DEPLOYMENT_STATUS.SUPERSEDED]: 'stopped',
 })
 
 export const isKnownDeploymentStatus = (status) => DEPLOYMENT_STATUSES.includes(status)
@@ -108,7 +111,7 @@ export const normalizeDeployment = (raw) => {
     siteId: readString(raw, 'siteId', 'site_id', 'site'),
     // The backend's own words, or null.
     status,
-    version: readString(raw, 'version', 'buildVersion', 'build_version', 'commit'),
+    version: Number.isFinite(raw.version) ? String(raw.version) : readString(raw, 'version', 'buildVersion', 'build_version', 'commit'),
     // Passed through exactly as sent, or null. Never assembled from a site slug.
     publishedUrl: readString(raw, 'publishedUrl', 'published_url', 'url'),
     // The backend's own words, or null. Never substituted.
@@ -213,7 +216,7 @@ export const getDeploymentActions = (deployment, { latestLive = null } = {}) => 
     canRedeploy: isFinished && !isRunning,
     // Rolling back to a version only makes sense for a finished build that is not
     // the version currently serving.
-    canRollback: isFinished && !isLatestLive && !isRunning,
+    canRollback: deployment.status === DEPLOYMENT_STATUS.SUPERSEDED && isFinished && !isLatestLive,
     isLive,
   }
 }

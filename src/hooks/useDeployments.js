@@ -36,12 +36,15 @@ function useDeployments({ enabled = true } = {}) {
     }
 
     let isActive = true
-
-    deploymentService
+    let timer
+    const load = () => deploymentService
       .getDeployments()
       .then((deployments) => {
         if (isActive) {
           setResult({ key: requestKey, deployments, error: null })
+          if (deployments.some(item => isPendingDeployment(item.status))) {
+            timer = setTimeout(load, 2500)
+          }
         }
       })
       .catch((error) => {
@@ -49,9 +52,11 @@ function useDeployments({ enabled = true } = {}) {
           setResult({ key: requestKey, deployments: [], error })
         }
       })
+    load()
 
     return () => {
       isActive = false
+      clearTimeout(timer)
     }
   }, [requestKey])
 

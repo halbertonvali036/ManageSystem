@@ -1,192 +1,55 @@
 import config from '@/config'
-import httpClient, {
-  BackendNotConnectedError,
-  isEndpointUnavailable,
-} from '@/services/httpClient'
+import httpClient, { BackendNotConnectedError, RequestError } from '@/services/httpClient'
 import { isKnownDeploymentStatus, normalizeDeployment, normalizeDeploymentList } from '@/models/deployment'
+import siteService from '@/services/siteService'
 
-/**
- * Deployment service.
- *
- * Follows the same contract as the rest of the app:
- *  - Read operations return a safe empty value ([] / null) when the backend is not
- *    connected, so the page shows an honest state instead of a seeded history.
- *  - Every write calls requireBackend() first and throws BackendNotConnectedError,
- *    so nothing here can report a build that did not run.
- *
- * Every method below is a *request*. None of them waits for a build, none of them
- * invents a result, and none of them returns a deployment the backend did not send.
- * A deploy that is accepted comes back `queued`; what it reaches afterwards is the
- * backend's to report on a later read.
- */
-
-const isBackendConnected = () => Boolean(config.api.baseUrl)
-
-const requireBackend = (message) => {
-  if (!isBackendConnected()) {
-    throw new BackendNotConnectedError(message)
-  }
+const PATH = '/api/deployments'
+const itemPath = id => `${PATH}/${encodeURIComponent(id)}`
+const requireBackend = () => {
+  if (!config.api.baseUrl) throw new BackendNotConnectedError()
+}
+const readDeployment = response => {
+  const result = normalizeDeployment(response)
+  if (!result) throw new RequestError('Invalid deployment response.')
+  return result
 }
 
-/**
- * The deployment endpoints are not implemented yet. A 404/403/405 is the
- * backend saying "no such resource", so it becomes the same
- * `BackendNotConnectedError` the UI already renders as "unavailable" instead of
- * a generic request failure.
- */
-const asUnavailable = (error) => {
-  if (isEndpointUnavailable(error)) {
-    throw new BackendNotConnectedError('Deployment integration is unavailable.')
-  }
-  throw error
-}
-
-const DEPLOYMENTS_API_PATH = '/deployments'
-
-const DEPLOYMENT_API_PATH = (deploymentId) => `${DEPLOYMENTS_API_PATH}/${deploymentId}`
-
-/** The backend's site list, used to resolve a site name to its id. */
-const SITES_API_PATH = '/sites'
-
-/** Every deployment the backend reports for the account. Empty while the API is absent. */
 const getDeployments = async ({ siteId = null, status = null } = {}) => {
-  if (!isBackendConnected()) {
-    return []
-  }
-
-  // Filtering happens server-side when the backend is present; the local filters in
-  // the model stay available for narrowing a page that is already loaded.
+  if (!config.api.baseUrl) return []
   const params = new URLSearchParams()
   if (siteId) params.set('siteId', siteId)
   if (status && isKnownDeploymentStatus(status)) params.set('status', status)
-
-  const query = params.toString()
-  const path = query ? `${DEPLOYMENTS_API_PATH}?${query}` : DEPLOYMENTS_API_PATH
-
-  try {
-    return normalizeDeploymentList(await httpClient.get(path))
-  } catch (error) {
-    if (isEndpointUnavailable(error)) {
-      return []
-    }
-    throw error
-  }
+  const response = await httpClient.get(`${PATH}${params.size ? `?${params}` : ''}`)
+  if (!Array.isArray(response)) throw new RequestError('Invalid deployment list.')
+  return normalizeDeploymentList(response)
 }
 
-/** One deployment, or null when absent or the API is not connected. */
-const getDeployment = async (deploymentId) => {
-  if (!isBackendConnected() || !deploymentId) {
-    return null
-  }
-  try {
-    return normalizeDeployment(await httpClient.get(DEPLOYMENT_API_PATH(deploymentId)))
-  } catch (error) {
-    if (isEndpointUnavailable(error)) {
-      return null
-    }
-    throw error
-  }
+const getDeployment = async id => {
+  if (!config.api.baseUrl || !id) return null
+  return readDeployment(await httpClient.get(itemPath(id)))
 }
 
-/**
- * Requests a publish of a site. Refused until a backend is available.
- *
- * `siteId` is required and checked here so a request can never go out without
- * naming what to publish. The returned deployment is whatever the backend replied
- * with — usually `queued` — not a promise that the build succeeded.
- */
 const deploySite = async (siteId, { version = null } = {}) => {
-  requireBackend('Deploying is unavailable until the backend is connected.')
-
-  if (!siteId) {
-    throw new Error('A site is required to deploy.')
-  }
-
-  try {
-    return normalizeDeployment(
-      await httpClient.post(DEPLOYMENTS_API_PATH, {
-        siteId,
-        ...(version ? { version } : {}),
-      })
-    )
-  } catch (error) {
-    return asUnavailable(error)
-  }
+  requireBackend()
+  if (!siteId) throw new Error('A site is required to deploy.')
+  return readDeployment(await httpClient.post(PATH, {
+    siteId, ...(version !== null ? { version } : {}),
+  }))
 }
 
-/** Requests a fresh build of an existing deployment. Refused until a backend is available. */
-const redeploy = async (deploymentId) => {
-  requireBackend('Redeploying is unavailable until the backend is connected.')
-
-  try {
-    return normalizeDeployment(
-      await httpClient.post(`${DEPLOYMENT_API_PATH(deploymentId)}/redeploy`)
-    )
-  } catch (error) {
-    return asUnavailable(error)
-  }
+const action = async (id, name) => {
+  requireBackend()
+  return readDeployment(await httpClient.post(`${itemPath(id)}/${name}`, {}))
 }
 
-/** Asks the backend to stop a build that is still moving. Refused until one is available. */
-const stopDeployment = async (deploymentId) => {
-  requireBackend('Stopping a deployment is unavailable until the backend is connected.')
-
-  try {
-    return normalizeDeployment(
-      await httpClient.post(`${DEPLOYMENT_API_PATH(deploymentId)}/stop`)
-    )
-  } catch (error) {
-    return asUnavailable(error)
-  }
-}
-
-/**
- * Asks the backend to promote a previous version back to live. Refused until one is
- * available.
- *
- * The backend owns which version serves traffic, so this does not touch any local
- * state: the list only changes once the backend reports a new live deployment.
- */
-const rollbackDeployment = async (deploymentId) => {
-  requireBackend('Rolling back is unavailable until the backend is connected.')
-
-  try {
-    return normalizeDeployment(
-      await httpClient.post(`${DEPLOYMENT_API_PATH(deploymentId)}/rollback`)
-    )
-  } catch (error) {
-    return asUnavailable(error)
-  }
-}
-
-/**
- * The sites available to deploy, or an empty list while the API is absent.
- *
- * Separate from the deployments list on purpose: an account with no deployment
- * history may still have sites, and the deploy form should not invent either one.
- */
 const getDeployableSites = async () => {
-  if (!isBackendConnected()) {
-    return []
-  }
-  try {
-    return await httpClient.get(SITES_API_PATH)
-  } catch (error) {
-    if (isEndpointUnavailable(error)) {
-      return []
-    }
-    throw error
-  }
+  if (!config.api.baseUrl) return []
+  return siteService.getMySites()
 }
 
-const deploymentService = {
-  getDeployments,
-  getDeployment,
-  deploySite,
-  redeploy,
-  stopDeployment,
-  rollbackDeployment,
-  getDeployableSites,
+export default {
+  getDeployments, getDeployment, deploySite, getDeployableSites,
+  redeploy: id => action(id, 'redeploy'),
+  stopDeployment: id => action(id, 'stop'),
+  rollbackDeployment: id => action(id, 'rollback'),
 }
-
-export default deploymentService

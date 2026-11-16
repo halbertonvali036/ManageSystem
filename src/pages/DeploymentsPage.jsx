@@ -3,7 +3,7 @@ import { Rocket } from 'lucide-react'
 import useTranslation from '@/hooks/useTranslation'
 import useDeployments from '@/hooks/useDeployments'
 import deploymentService from '@/services/deploymentService'
-import { BackendNotConnectedError } from '@/services/httpClient'
+import { BackendNotConnectedError, getRequestErrorMessage } from '@/services/httpClient'
 import Card from '@/components/common/Card'
 import DeploymentCard from '@/components/deployments/DeploymentCard'
 import {
@@ -53,6 +53,7 @@ function DeploymentsPage() {
   const [siteResult, setSiteResult] = useState({ loaded: false, sites: [] })
   const [selectedSiteId, setSelectedSiteId] = useState('')
   const [isDeploying, setIsDeploying] = useState(false)
+  const [siteRevision, setSiteRevision] = useState(0)
 
   useEffect(() => {
     let isActive = true
@@ -62,16 +63,16 @@ function DeploymentsPage() {
       .then((rows) => {
         if (isActive) setSiteResult({ loaded: true, sites: Array.isArray(rows) ? rows : [] })
       })
-      .catch(() => {
+      .catch((error) => {
         // A missing site list is not a page-level failure: the history below is still
         // valid, and the deploy form simply stays unavailable.
-        if (isActive) setSiteResult({ loaded: true, sites: [] })
+        if (isActive) setSiteResult({ loaded: true, sites: [], error })
       })
 
     return () => {
       isActive = false
     }
-  }, [])
+  }, [siteRevision])
 
   const sites = siteResult.sites
   const isLoadingSites = !siteResult.loaded
@@ -95,7 +96,7 @@ function DeploymentsPage() {
       setActionError(
         err instanceof BackendNotConnectedError
           ? t('workspaceDeployments.unavailableNotice')
-          : t('workspaceDeployments.actionFailed')
+           : getRequestErrorMessage(err)
       )
     } finally {
       setIsDeploying(false)
@@ -119,7 +120,7 @@ function DeploymentsPage() {
       setActionError(
         err instanceof BackendNotConnectedError
           ? t('workspaceDeployments.unavailableNotice')
-          : t('workspaceDeployments.actionFailed')
+           : getRequestErrorMessage(err)
       )
     } finally {
       setIsBusy(false)
@@ -144,7 +145,7 @@ function DeploymentsPage() {
           </p>
         </div>
 
-        <div className="dep-page__summary" role="status">
+        {!error && !isLoading ? <div className="dep-page__summary" role="status">
           <span className="dep-page__count">
             {t('workspaceDeployments.totalCount', { count: total })}
           </span>
@@ -154,7 +155,7 @@ function DeploymentsPage() {
           <span className="dep-page__count">
             {t('workspaceDeployments.failedCount', { count: failedCount })}
           </span>
-        </div>
+        </div> : null}
       </header>
 
       <Card>
@@ -201,10 +202,11 @@ function DeploymentsPage() {
               ))}
             </select>
             <p className="form__hint" id="dep-deploy-hint">
-              {sites.length === 0 && !isLoadingSites
+               {siteResult.error ? t('workspaceDeployments.sitesLoadFailed') : sites.length === 0 && !isLoadingSites
                 ? t('workspaceDeployments.deploy.noSites')
                 : t('workspaceDeployments.deploy.hint')}
             </p>
+            {siteResult.error ? <button type="button" className="btn btn--outline" onClick={() => setSiteRevision(value => value + 1)}>{t('common.retry')}</button> : null}
           </div>
 
           <button
