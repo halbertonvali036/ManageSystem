@@ -1550,6 +1550,8 @@ language: {
       site: {
         created: 'Sayt yaradıldı',
         updated: 'Sayt yeniləndi',
+        deleted: 'Sayt silindi',
+        duplicated: 'Sayt kopyalandı',
         published: 'Sayt yayımlandı',
       },
       member: {

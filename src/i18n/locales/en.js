@@ -1546,6 +1546,8 @@ const en = {
       site: {
         created: 'Site created',
         updated: 'Site updated',
+        deleted: 'Site deleted',
+        duplicated: 'Site duplicated',
         published: 'Site published',
       },
       member: {

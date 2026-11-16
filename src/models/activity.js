@@ -66,6 +66,8 @@ export const ACTIVITY_TYPE = Object.freeze({
   WORKSPACE_UPDATED: 'workspace.updated',
   SITE_CREATED: 'site.created',
   SITE_UPDATED: 'site.updated',
+  SITE_DELETED: 'site.deleted',
+  SITE_DUPLICATED: 'site.duplicated',
   SITE_PUBLISHED: 'site.published',
   MEMBER_INVITED: 'member.invited',
   MEMBER_ROLE_CHANGED: 'member.role_changed',
