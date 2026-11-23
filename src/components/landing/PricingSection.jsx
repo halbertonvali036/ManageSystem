@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Check, CircleDashed } from 'lucide-react'
+import { ArrowRight, Check, CircleDashed, Layers3, Rocket, Sparkles } from 'lucide-react'
 import BillingCycleToggle from '@/components/billing/BillingCycleToggle'
 import useAuth from '@/hooks/useAuth'
 import usePublicPlans from '@/hooks/usePublicPlans'
@@ -15,7 +15,6 @@ import {
   BILLING_CYCLE,
   formatBillingAmount,
   getAnnualSavingPercent,
-  getBillingCyclePeriod,
   getMonthlyEquivalent,
   getPlanPriceForCycle,
 } from '@/models/billing'
@@ -30,6 +29,7 @@ import {
 } from '@/models/landingPricing'
 
 const SKELETON_CARDS = [0, 1, 2]
+const PLAN_ICONS = [Sparkles, Rocket, Layers3]
 
 /**
  * Landing pricing.
@@ -83,10 +83,13 @@ function PricingSection() {
           </div>
 
           <div className="landing-pricing__grid">
-            {plans.map((plan) => {
+            {plans.map((plan, index) => {
+              const PlanIcon = PLAN_ICONS[index % PLAN_ICONS.length]
               const price = getPlanPriceForCycle(plan, cycle)
               const amount = price ? formatBillingAmount(price.amount, price.currency) : null
-              const period = amount ? getBillingCyclePeriod(price?.cycle ?? cycle) : null
+              const period = amount
+                ? t((price?.cycle ?? cycle) === BILLING_CYCLE.ANNUAL ? 'pricing.perYear' : 'pricing.perMonth')
+                : null
               const savingPercent = getAnnualSavingPercent(plan)
               const monthlyEquivalent =
                 cycle === BILLING_CYCLE.ANNUAL ? getMonthlyEquivalent(plan) : null
@@ -102,9 +105,12 @@ function PricingSection() {
                   className={`landing-plan${plan.recommended ? ' landing-plan--featured' : ''}`}
                   key={plan.id}
                 >
-                  {plan.recommended ? (
-                    <span className="landing-plan__badge">{t('accountPolish.recommended')}</span>
-                  ) : null}
+                  <div className="landing-plan__top">
+                    <span className="landing-plan__icon"><PlanIcon size={22} aria-hidden="true" /></span>
+                    {plan.recommended ? (
+                      <span className="landing-plan__badge">{t('accountPolish.recommended')}</span>
+                    ) : null}
+                  </div>
 
                   <h3 className="landing-plan__name">{getPlanName(t, plan)}</h3>
                   {tagline ? <p className="landing-plan__tagline">{tagline}</p> : null}
@@ -119,7 +125,7 @@ function PricingSection() {
                     {equivalentAmount ? (
                       <span className="landing-plan__equivalent">
                         {t('accountPolish.billedYearly')}: {equivalentAmount}
-                        {getBillingCyclePeriod(BILLING_CYCLE.MONTHLY)}
+                        {t('pricing.perMonth')}
                       </span>
                     ) : null}
                     {savingPercent ? (
@@ -152,9 +158,7 @@ function PricingSection() {
                   </ul>
 
                   <Link
-                    className={`landing-button ${
-                      plan.recommended ? 'landing-button--primary' : 'landing-button--secondary'
-                    } landing-plan__cta`}
+                    className="landing-button landing-button--primary landing-plan__cta"
                     to={cta.to}
                   >
                     {t(cta.labelKey)}

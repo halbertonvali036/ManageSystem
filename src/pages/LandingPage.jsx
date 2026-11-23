@@ -10,7 +10,6 @@ import {
   Settings2,
   ShieldCheck,
   SlidersHorizontal,
-  Zap,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import BuilderVisual from '@/components/common/BuilderVisual'
@@ -31,19 +30,19 @@ const STEPS = [
     key: 'step1',
     icon: PanelsTopLeft,
     tone: 'amber',
-    flows: ['sites.emptyTitle', 'createSite.templateNone', 'createSite.reviewTitle'],
+    flows: ['landing.step1.flow1', 'landing.step1.flow2', 'landing.step1.flow3'],
   },
   {
     key: 'step2',
     icon: SlidersHorizontal,
     tone: 'lime',
-    flows: ['capabilities.pages.title', 'capabilities.appearance.title', 'capabilities.content.title'],
+    flows: ['landing.step2.flow1', 'landing.step2.flow2', 'landing.step2.flow3'],
   },
   {
     key: 'step3',
     icon: Send,
     tone: 'accent',
-    flows: ['capabilities.preview.title', 'workspace.publishingNote', 'nav.getStarted'],
+    flows: ['landing.step3.flow1', 'landing.step3.flow2', 'landing.step3.flow3'],
   },
 ]
 
@@ -90,10 +89,6 @@ function LandingPage() {
           </svg>
           <div className="landing-hero__inner">
             <div className="landing-hero__copy">
-              <span className="landing-hero__badge anim-fade-up anim-delay-1">
-                <Zap size={16} aria-hidden="true" />
-                <span>{t('landingHero.badge')}</span>
-              </span>
               <h1 id="landing-title" className="anim-fade-up anim-delay-2">
                 {t('landingHero.titleLine1')}<br />
                 {t('landingHero.titlePrefix')} <span className="landing-hero__accent">{t('landingHero.titleAccent')}</span>
@@ -127,7 +122,7 @@ function LandingPage() {
           <div className="landing-roles__grid">
             {STEPS.map(({ key, icon: Icon, tone, flows }, position) => (
               <article
-                className={`landing-role-card landing-role-card--${tone}${position === 0 ? ' landing-role-card--lead' : ''}`}
+                className={`landing-role-card landing-role-card--${tone}`}
                 key={key}
               >
                 <div className="landing-role-card__top">

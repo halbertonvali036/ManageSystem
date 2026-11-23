@@ -62,6 +62,11 @@ function useSites({ enabled = true } = {}) {
     setReloadToken((token) => token + 1)
   }, [enabled])
 
+  useEffect(() => {
+    window.addEventListener('site-publication-changed', refetch)
+    return () => window.removeEventListener('site-publication-changed', refetch)
+  }, [refetch])
+
   const visibleSites = useMemo(() => {
     const matched = filterSites(sites, { query, status })
     // Parse each date once instead of once per comparison in the sort.

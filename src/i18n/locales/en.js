@@ -15,9 +15,9 @@ const en = {
   recovery: {"back": "Back to sign in", "inbox": "Check your inbox", "recoveryHint": "We will send recovery instructions to this address.", "recoveryUnavailable": "Password recovery requires a connected service. No email was sent.", "recoveryFailed": "Unable to request recovery instructions. Please try again.", "resetUnavailable": "Password reset requires a connected service. Your password has not changed.", "resetFailed": "Unable to reset your password. Please try again.", "invalidToken": "Invalid or missing reset link", "invalidTokenText": "This password reset link is invalid or has expired. Request a new one to continue.", "newLink": "Request a new link", "newPassword": "New password", "confirmPassword": "Confirm new password", "passwordPlaceholder": "Enter your new password", "passwordHint": "Use at least 6 characters. Choose a password you have not used before.", "denied": "Access denied", "deniedText": "Your account does not have permission to access this area. Contact your administrator if you need access.", "home": "Return to workspace", "loadDraftFailed": "The draft could not be loaded. Try again before editing."},
   landingHero: {
     badge: 'Built with AI',
-    titleLine1: 'A new home',
-    titlePrefix: 'for',
-    titleAccent: 'every idea.',
+    titleLine1: 'Turn your idea',
+    titlePrefix: 'into',
+    titleAccent: 'a website.',
     description: 'Build your website with a clear workflow. Create a project, customize a template, preview your work and get ready to publish.',
     getStarted: 'Get started', signIn: 'Sign in', whatsInside: 'What’s inside?',
     steps: [
@@ -248,18 +248,27 @@ const en = {
       description:
         'Start a new website project and pick a starting point that matches what you want to build.',
       tag: 'Start',
+      flow1: 'New project',
+      flow2: 'Ready-made template',
+      flow3: 'First page',
     },
     step2: {
       title: 'Customize',
       description:
         'Shape the structure and content of your pages before you commit to a final look.',
       tag: 'Shape',
+      flow1: 'Colors and fonts',
+      flow2: 'Text and images',
+      flow3: 'Page layout',
     },
     step3: {
       title: 'Publish',
       description:
         'Preview your work on real device sizes, keep drafts tidy, and publish when everything is ready.',
       tag: 'Launch',
+      flow1: 'Preview',
+      flow2: 'Mobile view',
+      flow3: 'Publish',
     },
     ctaEyebrow: 'Ready when you are',
     ctaTitle: 'Your next website starts here.',
@@ -315,6 +324,8 @@ const en = {
     },
   },
   pricing: {
+    perMonth: '/month',
+    perYear: '/year',
     eyebrow: 'Plans',
     title: 'A plan shape for every kind of project.',
     description:
@@ -1817,6 +1828,13 @@ const en = {
     archived: 'Archived',
   },
   sites: {
+    actionNameInvalid: 'The site name must contain 1–150 characters.',
+    actionMessage: {
+      rename: 'Enter a new name for “{name}”.',
+      duplicate: 'Create a new draft with the contents of “{name}”?',
+      archive: 'Archive “{name}”?',
+      delete: '“{name}” and its content will be deleted. This cannot be undone.',
+    },
     pageTitle: 'My Websites',
     pageDescription:
       'Every website project in your workspace, most recently updated first.',

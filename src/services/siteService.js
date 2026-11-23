@@ -2,7 +2,6 @@ import { publishSite, unpublishSite, getPublishStatus, getPublishedUrl } from '@
 import config from '@/config'
 import httpClient, {
   BackendNotConnectedError,
-  isEndpointUnavailable,
   RequestError,
 } from '@/services/httpClient'
 import templateService from '@/services/templateService'
@@ -190,23 +189,9 @@ const deleteSite = async (id) => {
 
 const duplicateSite = async (id) => {
   requireBackend('Duplicating a website is unavailable until the backend is connected.')
-  try {
-    return normalizeSiteResponse(
-      await httpClient.post(`${SITES_API_PATH}/${id}/duplicate`),
-    )
-  } catch (error) {
-    /*
-     * The duplicate endpoint is not implemented yet. A 404/403/405 is the same
-     * refusal as "no backend", so the existing unavailable state is shown
-     * instead of a generic request error.
-     */
-    if (isEndpointUnavailable(error)) {
-      throw new BackendNotConnectedError(
-        'Duplicating a website is unavailable until the backend implements it.',
-      )
-    }
-    throw error
-  }
+  return normalizeSiteResponse(
+    await httpClient.post(`${SITES_API_PATH}/${id}/duplicate`),
+  )
 }
 
 const archiveSite = async (id) => {
@@ -215,11 +200,7 @@ const archiveSite = async (id) => {
   return updateSite(id, { ...(current ?? {}), status: SITE_STATUS.ARCHIVED })
 }
 
-/**
- * Publishing is declared so the project UI can already show the action and its
- * pending state, but it always refuses. It must never report that a site went
- * live while no publishing backend exists.
- */
+/** Project operations backed by the site and publication APIs. */
 const siteService = {
   getMySites,
   getSite,

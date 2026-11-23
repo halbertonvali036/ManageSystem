@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { EDITOR_DEVICE } from '@/models/siteEditor'
 
 /**
@@ -8,8 +9,9 @@ import { EDITOR_DEVICE } from '@/models/siteEditor'
  * the document and none of them may mark it dirty.
  */
 export default function useSiteEditorUiState() {
+  const [searchParams] = useSearchParams()
   const [device, setDevice] = useState(EDITOR_DEVICE.DESKTOP)
-  const [isPreview, setIsPreview] = useState(false)
+  const [isPreview, setIsPreview] = useState(() => searchParams.get('preview') === '1')
   const [isLeftOpen, setIsLeftOpen] = useState(false)
   const [isRightOpen, setIsRightOpen] = useState(false)
   const [isSectionLibraryOpen, setIsSectionLibraryOpen] = useState(false)

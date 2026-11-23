@@ -105,7 +105,7 @@ function SitesPage() {
           <ul className="site-grid">
             {visibleSites.map((site) => (
               <li key={site.id}>
-                <SiteCard site={site} />
+                <SiteCard site={site} onChanged={refetch} />
               </li>
             ))}
           </ul>

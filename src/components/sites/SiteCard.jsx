@@ -10,19 +10,12 @@ import {
   Trash2,
 } from 'lucide-react'
 import SiteStatusBadge from '@/components/sites/SiteStatusBadge'
+import SiteActionDialog from '@/components/sites/SiteActionDialog'
 import useTranslation from '@/hooks/useTranslation'
 import { formatSiteDate, getSiteAddress, getSiteAddressLabel } from '@/models/site'
-import { SITE_DETAILS_PATH } from '@/utils/constants'
+import { SITE_DETAILS_PATH, SITE_EDITOR_PATH } from '@/utils/constants'
 
-/**
- * Future project actions.
- *
- * The action set is declared now so the card can present the real vocabulary of
- * a website workspace, but every entry except Open is disabled and the menu
- * states once that they are not connected. None of them mutate local state, so a
- * click can never look like it renamed, duplicated, archived, deleted or
- * published anything.
- */
+/** Navigation and persisted project actions. */
 const ACTIONS = [
   { key: 'open', icon: Pencil, to: true },
   { key: 'preview', icon: ExternalLink },
@@ -72,11 +65,11 @@ function SiteThumbnail({ src, name }) {
  * real buttons, so keyboard and screen-reader users reach every control without
  * the card swallowing clicks.
  */
-function SiteCard({ site }) {
+function SiteCard({ site, onChanged }) {
   const { t, locale } = useTranslation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const menuId = useId()
-  const noteId = useId()
+  const [action, setAction] = useState(null)
   const menuRef = useRef(null)
   const triggerRef = useRef(null)
 
@@ -217,23 +210,19 @@ function SiteCard({ site }) {
 
           {isMenuOpen ? (
             <>
-              <p className="visually-hidden" id={noteId}>
-                {t('sites.actionPending')}
-              </p>
               <div
                 id={menuId}
                 className="site-card__menu-list"
                 role="menu"
                 aria-label={t('sites.projectActions')}
-                aria-describedby={noteId}
               >
                 {ACTIONS.map(({ key, icon: Icon, to, destructive }) => {
                   const label = t(`sites.action.${key}`)
-                  if (to && projectHref) {
+                  if ((to || key === 'preview') && projectHref) {
                     return (
                       <Link
                         key={key}
-                        to={projectHref}
+                        to={key === 'preview' ? `${SITE_EDITOR_PATH(site.id)}?preview=1` : projectHref}
                         role="menuitem"
                         className="site-card__menu-item"
                         onClick={closeMenu}
@@ -248,10 +237,14 @@ function SiteCard({ site }) {
                       key={key}
                       type="button"
                       role="menuitem"
-                      className={`site-card__menu-item site-card__menu-item--disabled${
+                      className={`site-card__menu-item${
                         destructive ? ' site-card__menu-item--destructive' : ''
                       }`}
-                      disabled
+                      disabled={!site.id}
+                      onClick={() => {
+                        closeMenu({ restoreFocus: true })
+                        setAction(key)
+                      }}
                     >
                       <Icon size={15} aria-hidden="true" />
                       {label}
@@ -263,6 +256,7 @@ function SiteCard({ site }) {
           ) : null}
         </div>
       </div>
+      {action && <SiteActionDialog site={site} action={action} onChanged={onChanged} onClose={() => setAction(null)} />}
     </article>
   )
 }
