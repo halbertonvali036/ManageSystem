@@ -29,6 +29,7 @@ function EditorCanvas({
   selection,
   isPreview,
   isPublished = false,
+  isThumbnail = false,
   onSelectSection,
   onSelectBlock,
   onInsertBlockAt,
@@ -38,7 +39,7 @@ function EditorCanvas({
   onUpdateBlock,
 }) {
   const { t } = useTranslation()
-  const motionRef = useSiteMotion(isPreview, activePage?.id)
+  const motionRef = useSiteMotion(isPreview && !isThumbnail, activePage?.id)
   const width = EDITOR_DEVICE_WIDTHS[device]
   const [inlineEdit, setInlineEdit] = useState(null)
 

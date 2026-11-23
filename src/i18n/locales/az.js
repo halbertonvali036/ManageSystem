@@ -1832,6 +1832,9 @@ language: {
     archived: 'Arxiv',
   },
   sites: {
+    previewLoading: 'Saytın görünüşü yüklənir…',
+    previewFailed: 'Saytın görünüşü yüklənmədi.',
+    previewEmpty: 'Bu saytın səhifəsi hələ hazırlanmayıb.',
     actionNameInvalid: 'Saytın adı 1–150 simvoldan ibarət olmalıdır.',
     actionMessage: {
       rename: '“{name}” üçün yeni ad daxil edin.',

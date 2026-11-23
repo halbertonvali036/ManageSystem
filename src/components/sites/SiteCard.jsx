@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import SiteStatusBadge from '@/components/sites/SiteStatusBadge'
 import SiteActionDialog from '@/components/sites/SiteActionDialog'
+import SiteThumbnail from '@/components/sites/SiteThumbnail'
 import useTranslation from '@/hooks/useTranslation'
 import { formatSiteDate, getSiteAddress, getSiteAddressLabel } from '@/models/site'
 import { SITE_DETAILS_PATH, SITE_EDITOR_PATH } from '@/utils/constants'
@@ -25,37 +26,6 @@ const ACTIONS = [
   { key: 'publish', icon: Send },
   { key: 'delete', icon: Trash2, destructive: true },
 ]
-
-function SiteThumbnail({ src, name }) {
-  /*
-   * The failed URL is remembered rather than a boolean, so a project that
-   * receives a new thumbnail retries on its own instead of staying blank until
-   * the page is reloaded. No effect is needed to reset the state.
-   */
-  const [failedSrc, setFailedSrc] = useState(null)
-  const hasFailed = src !== null && failedSrc === src
-
-  if (!src || hasFailed) {
-    return (
-      <div className="site-card__thumb site-card__thumb--placeholder" aria-hidden="true">
-        <span className="site-card__thumb-initial">
-          {(name?.trim()?.[0] ?? '?').toUpperCase()}
-        </span>
-      </div>
-    )
-  }
-
-  return (
-    <img
-      className="site-card__thumb"
-      src={src}
-      alt=""
-      loading="lazy"
-      decoding="async"
-      onError={() => setFailedSrc(src)}
-    />
-  )
-}
 
 /**
  * Project card.
@@ -146,7 +116,7 @@ function SiteCard({ site, onChanged }) {
   return (
     <article className="site-card" data-status={site.status}>
       <div className="site-card__media">
-        <SiteThumbnail src={site.thumbnailUrl} name={site.name} />
+        <SiteThumbnail key={`${site.id}:${site.updatedAt}`} site={site} />
         <span className="site-card__status">
           <SiteStatusBadge status={site.status} />
         </span>

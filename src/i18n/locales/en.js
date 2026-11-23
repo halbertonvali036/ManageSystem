@@ -1828,6 +1828,9 @@ const en = {
     archived: 'Archived',
   },
   sites: {
+    previewLoading: 'Loading website preview…',
+    previewFailed: 'Website preview could not be loaded.',
+    previewEmpty: 'This website has no page content yet.',
     actionNameInvalid: 'The site name must contain 1–150 characters.',
     actionMessage: {
       rename: 'Enter a new name for “{name}”.',
