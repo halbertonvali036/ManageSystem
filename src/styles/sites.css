@@ -238,8 +238,15 @@
   box-shadow: none;
 }
 
+/* Stretch the saved page across the whole 16:10 stage so its own background
+   closes the preview, even when the page has little content. */
 .site-card__preview-stage .editor-canvas__page {
   padding: 0;
+  min-height: 100%;
+}
+
+.site-card__preview-stage :is(.editor-canvas-area, .editor-canvas-scroll, .editor-canvas) {
+  height: 100%;
 }
 
 .site-card__preview-stage *,
@@ -270,15 +277,13 @@
   object-fit: cover;
 }
 
-.site-card__status {
-  position: absolute;
-  top: var(--space-2);
-  left: var(--space-2);
-}
-
-/* The badge sits on the preview image, so it needs its own surface. */
-.site-card__status .site-status {
-  box-shadow: var(--shadow-xs);
+/* The status lives beside the title, not on top of the design preview: the
+   thumbnail is evidence of the user's own work and should stay unobstructed. */
+.site-card__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
 }
 
 .site-card__body {

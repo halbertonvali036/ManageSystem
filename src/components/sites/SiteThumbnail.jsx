@@ -6,6 +6,10 @@ import { EDITOR_DEVICE, EDITOR_DEVICE_WIDTHS, getCanvasCssStyle } from '@/models
 
 const EditorCanvas = lazy(() => import('@/components/editor/EditorCanvas'))
 const WIDTH = EDITOR_DEVICE_WIDTHS[EDITOR_DEVICE.DESKTOP]
+// The card media is 16:10, so the rendered page needs the same ratio. Without
+// an explicit height a short page would stop mid-card and expose the app's dark
+// surface below it instead of the site's own background.
+const HEIGHT = (WIDTH * 10) / 16
 // Share only in-flight reads (including StrictMode mounts), never stale drafts.
 const requests = new Map()
 function loadDraft(id) {
@@ -65,7 +69,7 @@ export default function SiteThumbnail({ site }) {
       {state.loading ? loading : home ? (
         <Suspense fallback={loading}>
           <div className="site-card__preview-stage" inert aria-hidden="true"
-            style={{ width: WIDTH, transform: `scale(${scale})`, ...getCanvasCssStyle(draft) }}>
+            style={{ width: WIDTH, height: HEIGHT, transform: `scale(${scale})`, ...getCanvasCssStyle(draft) }}>
             <EditorCanvas document={draft} activePage={home} device={EDITOR_DEVICE.DESKTOP} isPreview isThumbnail />
           </div>
         </Suspense>

@@ -117,21 +117,21 @@ function SiteCard({ site, onChanged }) {
     <article className="site-card" data-status={site.status}>
       <div className="site-card__media">
         <SiteThumbnail key={`${site.id}:${site.updatedAt}`} site={site} />
-        <span className="site-card__status">
-          <SiteStatusBadge status={site.status} />
-        </span>
       </div>
 
       <div className="site-card__body">
-        <h3 className="site-card__name">
-          {projectHref ? (
-            <Link to={projectHref} className="site-card__link">
-              {site.name}
-            </Link>
-          ) : (
-            site.name
-          )}
-        </h3>
+        <div className="site-card__heading">
+          <h3 className="site-card__name">
+            {projectHref ? (
+              <Link to={projectHref} className="site-card__link">
+                {site.name}
+              </Link>
+            ) : (
+              site.name
+            )}
+          </h3>
+          <SiteStatusBadge status={site.status} />
+        </div>
 
         <p className="site-card__address">
           {address ? (
