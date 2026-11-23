@@ -52,7 +52,7 @@ const CAPABILITIES = [
     tone: 'accent',
     size: 'lead',
     copyKey: 'projects',
-    flows: ['sites.pageTitle', 'status.draft', 'workspace.recentTitle'],
+    flows: ['sites.pageTitle', 'siteStatus.draft', 'workspace.recentTitle'],
   },
   {
     icon: Settings2,
