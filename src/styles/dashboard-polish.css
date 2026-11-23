@@ -83,7 +83,9 @@
   background: linear-gradient(155deg, var(--overview-sheen), transparent 48%), var(--overview-surface);
   border-color: var(--overview-edge); box-shadow: var(--overview-shadow);
 }
-.premium-dashboard :is(.workspace-grid, .site-grid) { grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); gap: 22px; }
+.premium-dashboard .workspace-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); gap: 22px; }
+/* Site cards carry a design preview, so a single project keeps its column width instead of stretching full-bleed. */
+.premium-dashboard .site-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); gap: 22px; }
 .premium-dashboard :is(.workspace-grid, .site-grid) > li { min-width: 0; }
 .premium-dashboard .workspace-card { height: 100%; padding: 26px; border-radius: var(--radius-lg); }
 .premium-dashboard .workspace-card__icon { background: var(--overview-raised); color: var(--overview-accent); border: 1px solid var(--overview-edge); }
